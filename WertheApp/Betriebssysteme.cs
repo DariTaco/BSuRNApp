@@ -31,8 +31,28 @@ namespace WertheApp
             var listView = new ListView();
 			listView.ItemsSource = new string[]
             {
-                "Allocation Strategies", "Buddy System", "PageReplacement Strategies"
+                "Allocation Strategies", "Buddy System", "Page Replacement Strategies"
             };
+			//after an item was clicked, open the respective app 
+			listView.ItemTapped += async (sender, e) =>
+			{
+				var appName = e.Item.ToString();
+
+				switch (appName)
+				{
+					case "Allocation Strategies":
+                        await Navigation.PushAsync(new AllocationStrategies());
+						break;
+					case "Buddy System":
+						await Navigation.PushAsync(new BuddySystem());
+						break;
+                    case "Page Replacement Strategies":
+                        await Navigation.PushAsync(new PageReplacementStrategies());
+                        break;
+				}
+
+			};
+
             stackLayout.Children.Add(listView);
 		}
     }

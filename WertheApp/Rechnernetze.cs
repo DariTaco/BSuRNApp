@@ -27,6 +27,31 @@ namespace WertheApp
 
 			var l_space = new Label();
 			stackLayout.Children.Add(l_space);
+
+            //creates a list with all Apps of the course
+			var listView = new ListView();
+			listView.ItemsSource = new string[]
+			{
+				"Congestion Avoidance", "Pipeline Protocols"
+			};
+            //after an item was clicked, open the respective app 
+			listView.ItemTapped += async (sender, e) =>
+            {
+                var appName = e.Item.ToString ();
+
+                switch(appName)
+                {
+                    case "Congestion Avoidance":
+                        await Navigation.PushAsync(new CongestionAvoidance());
+                        break;
+                    case "Pipeline Protocols":
+                        await Navigation.PushAsync(new PipelineProtocols());
+                        break;
+                }
+
+            };
+
+			stackLayout.Children.Add(listView);
 		}
     }
 }

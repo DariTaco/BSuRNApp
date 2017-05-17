@@ -11,7 +11,9 @@ namespace WertheApp
         {
             InitializeComponent();
 
-            Title = "WertheApp Start Screen";
+            Title = "WertheApp";
+            //Title = "Start Screen"
+
 			// This is the top-level grid, which will split our page in half
 			var grid = new Grid();
 			this.Content = grid;
@@ -24,12 +26,37 @@ namespace WertheApp
 			CreateBottomHalf(grid);
         }
 
+
+		//VARIABLES
+		private double width = 0;
+		private double height = 0;
+        Image i_hsLogo = new Image { Aspect = Aspect.AspectFit, Margin = new Thickness(10)};
+
+
 		//METHODS
+		//this method is called everytime the device is rotated
+		protected override void OnSizeAllocated(double width, double height)
+		{
+			base.OnSizeAllocated(width, height); //must be called
+			if (this.width != width || this.height != height)
+			{
+				this.width = width;
+				this.height = height;
+
+				//reconfigure layout
+				if (width < height)
+				{
+					i_hsLogo.Source = ImageSource.FromResource("hsLogo.png");
+				}
+				else
+				{
+					i_hsLogo.Source = ImageSource.FromResource("hsLogo2.png");
+				}
+			}
+		}
+
 		void CreateTopHalf(Grid grid)
 		{
-			var i_hsLogo = new Image { Aspect = Aspect.AspectFit };
-            i_hsLogo.Source = ImageSource.FromResource("hsLogo.png");
-
             //add content to Toplevel grid
             grid.Children.Add(i_hsLogo, 0, 0);
 		}
