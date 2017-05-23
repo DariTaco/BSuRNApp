@@ -10,7 +10,7 @@ namespace WertheApp
         public Betriebssysteme()
         {
             Title = "Betriebssysteme";
-            var stackLayout = new StackLayout();
+            var stackLayout = new StackLayout { Margin = new Thickness(10) };
             this.Content = stackLayout;
 
             CreateContent(stackLayout);

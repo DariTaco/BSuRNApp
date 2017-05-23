@@ -18,7 +18,7 @@ namespace WertheApp
 			var grid = new Grid();
 			this.Content = grid;
 			grid.RowDefinitions = new RowDefinitionCollection {
-            // Each half will be the same size:
+            // Bottom half will be twice as big as top half:
             new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)},
 			new RowDefinition{ Height = new GridLength(2, GridUnitType.Star)},
             };
