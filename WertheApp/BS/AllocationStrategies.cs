@@ -66,8 +66,8 @@ namespace WertheApp.BS
 			var gameView = sender as CCGameView;
 			if (gameView != null)
 			{
-				// This sets the game "world" resolution to 100x100:
-				gameView.DesignResolution = new CCSizeI(100, 100);
+				// This sets the game "world" resolution to 200x100:
+				gameView.DesignResolution = new CCSizeI(330, 100);
 				// GameScene is the root of the CocosSharp rendering hierarchy:
 				gameScene = new AllocationStrategiesScene(gameView);
 				// Starts CocosSharp:
