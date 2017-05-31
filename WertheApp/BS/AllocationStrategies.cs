@@ -1,17 +1,27 @@
 ﻿using System;
 using CocosSharp;
 using Xamarin.Forms;
+using System.Collections.Generic;
+
+using System.Diagnostics;
 
 namespace WertheApp.BS
 {
+    //This class splits the Content in 2 halfs. 
+    //Top half is the animated scene, which is actually defined in AllocationStrategiesScene
+    //Bottom half are buttons and labels that interact with the scene
     public class AllocationStrategies : ContentPage
     {
-		//VARIABLES
+        //VARIABLES
+        public static List<int> fragmentList { get; set; } //List of fragments. From Settings Page passed to the constructor and later accesed from Scene
+        public static String strategy { get; set; } //Choosen strategy (Firts Fit, ...) from Settings Page passed to the constructor and later accesed from Scene
+
 		private double width = 0;
 		private double height = 0;
 
         bool isContentCreated = false; //indicates weather the Content of the page was already created
 
+        //values for labels
         String size = "-";
         String free = "-";
         String diff = "-";
@@ -19,10 +29,14 @@ namespace WertheApp.BS
 
 
         //CONSTRUCTOR
-        public AllocationStrategies()
+        public AllocationStrategies(List<int> l, String s)
         {
-			Title = "Allocation Strategies";
+            fragmentList = l;
+            strategy = s;
 
+            Title = "Allocation Strategies";
+
+            //do only create content if device is rotated in landscape
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
             {
                 CreateContent();
@@ -34,7 +48,6 @@ namespace WertheApp.BS
         }
 
 		//METHODS
-	
 		void CreateContent()
 		{   
             // This is the top-level grid, which will split our page in half
@@ -59,6 +72,7 @@ namespace WertheApp.BS
 			isContentCreated = false;
         }
 
+        //sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
 			AllocationStrategiesScene gameScene;
@@ -66,7 +80,8 @@ namespace WertheApp.BS
 			var gameView = sender as CCGameView;
 			if (gameView != null)
 			{
-				// This sets the game "world" resolution to 200x100:
+				// This sets the game "world" resolution to 330x100:
+                //Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
 				gameView.DesignResolution = new CCSizeI(330, 100);
 				// GameScene is the root of the CocosSharp rendering hierarchy:
 				gameScene = new AllocationStrategiesScene(gameView);
@@ -81,6 +96,7 @@ namespace WertheApp.BS
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.FillAndExpand,
+                BackgroundColor = Color.White,
                 // This gets called after CocosSharp starts up:
                 ViewCreated = HandleViewCreated
 			};

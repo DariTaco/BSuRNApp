@@ -55,6 +55,7 @@
     <Compile Include="Rechnernetze.cs" />
     <Compile Include="Helping Classes\Metrics.cs" />
     <Compile Include="BS\AllocationStrategiesScene.cs" />
+    <Compile Include="BS\AllocationStrategiesSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">

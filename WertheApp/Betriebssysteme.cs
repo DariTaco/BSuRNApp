@@ -41,7 +41,7 @@ namespace WertheApp
 				switch (appName)
 				{
 					case "Allocation Strategies":
-                        await Navigation.PushAsync(new AllocationStrategies());
+                        await Navigation.PushAsync(new AllocationStrategiesSettings());
 						break;
 					case "Buddy System":
 						await Navigation.PushAsync(new BuddySystem());
