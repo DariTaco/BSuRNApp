@@ -70,9 +70,17 @@ namespace WertheApp.BS
                 if(s[i]==','){
                     int frag = Int32.Parse(ss);
                     fragmentsList.Add(frag);
+
                     ss = "";
-                }else{ ss += s[i]; }
-				
+				}
+                else if(i == s.Length-1){ //if end of String is reached
+                    ss += s[i];
+					int frag = Int32.Parse(ss);
+					fragmentsList.Add(frag);
+					ss = "";
+                }
+				else{ss += s[i]; }
+	
 			}
 
         }

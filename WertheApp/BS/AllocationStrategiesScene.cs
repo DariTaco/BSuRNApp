@@ -25,10 +25,7 @@ namespace WertheApp.BS
             fragmentList = AllocationStrategies.fragmentList;
             strategy = AllocationStrategies.strategy;
 
-            Debug.WriteLine(strategy);
-            Debug.WriteLine("##############");
-            Debug.WriteLine(fragmentList.ElementAt(0));
-          
+            CalculateNeededVariables();
 
 			//add a layer to draw on
             var layer = new CCLayer();
@@ -48,7 +45,22 @@ namespace WertheApp.BS
 		}
 
         //METHODS
+        //Calculates availableMemory, numerOfFragments, totalMemorySize
+        void CalculateNeededVariables(){
+            int sizeOfList = fragmentList.Count();
+            availableMemory = 0;
+            numberOfFragments = sizeOfList;
+            for (int i = 0; i < sizeOfList; i++)
+            {
+                availableMemory += fragmentList.ElementAt(i);
+            }
+            totalMemorySize = availableMemory + numberOfFragments - 1;
 
+			Debug.WriteLine("##############");
+			Debug.WriteLine(availableMemory);
+			Debug.WriteLine(numberOfFragments);
+            Debug.WriteLine(totalMemorySize);
+        }
 
     }
 }
