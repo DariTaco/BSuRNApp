@@ -44,10 +44,10 @@ namespace WertheApp
                         await Navigation.PushAsync(new AllocationStrategiesSettings());
 						break;
 					case "Buddy System":
-						await Navigation.PushAsync(new BuddySystem());
+						await Navigation.PushAsync(new BuddySystemSettings());
 						break;
                     case "Page Replacement Strategies":
-                        await Navigation.PushAsync(new PageReplacementStrategies());
+                        await Navigation.PushAsync(new PageReplacementStrategiesSettings());
                         break;
 				}
 

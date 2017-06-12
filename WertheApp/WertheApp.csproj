@@ -56,6 +56,14 @@
     <Compile Include="Helping Classes\Metrics.cs" />
     <Compile Include="BS\AllocationStrategiesScene.cs" />
     <Compile Include="BS\AllocationStrategiesSettings.cs" />
+    <Compile Include="BS\BuddySystemSettings.cs" />
+    <Compile Include="BS\PageReplacementStrategiesSettings.cs" />
+    <Compile Include="BS\BuddySystemScene.cs" />
+    <Compile Include="BS\PageReplacementStrategiesScene.cs" />
+    <Compile Include="RN\CongestionAvoidanceSettings.cs" />
+    <Compile Include="RN\CongestionAvoidanceScene.cs" />
+    <Compile Include="RN\PipelineProtocolsSettings.cs" />
+    <Compile Include="RN\PipelineProtocolsScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">

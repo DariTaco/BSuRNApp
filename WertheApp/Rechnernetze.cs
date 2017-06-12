@@ -42,10 +42,10 @@ namespace WertheApp
                 switch(appName)
                 {
                     case "Congestion Avoidance":
-                        await Navigation.PushAsync(new CongestionAvoidance());
+                        await Navigation.PushAsync(new CongestionAvoidanceSettings());
                         break;
                     case "Pipeline Protocols":
-                        await Navigation.PushAsync(new PipelineProtocols());
+                        await Navigation.PushAsync(new PipelineProtocolsSettings());
                         break;
                 }
 
