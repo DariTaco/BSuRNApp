@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Text.RegularExpressions;
 using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms;
@@ -22,11 +23,14 @@ namespace WertheApp.BS
 
         //METHODS
         void CreateContent(){
-            var stackLayout = new StackLayout
+            var scrollView = new ScrollView
             {
                 Margin = new Thickness(10)
             };
-            this.Content = stackLayout;
+            var stackLayout = new StackLayout();
+ 
+            this.Content = scrollView;
+            scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             var l_Algorithm = new Label { Text = "Algorithm:" };
             p_Algorithm = new Picker { Title = "Select a Strategy" };

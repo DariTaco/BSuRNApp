@@ -34,7 +34,7 @@ namespace WertheApp.BS
             fragmentList = l;
             strategy = s;
 
-            Title = "Allocation Strategies";
+            Title = "Allocation Strategies: " + strategy;
 
             //do only create content if device is rotated in landscape
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
@@ -149,11 +149,16 @@ namespace WertheApp.BS
 
 			var b_Next = new Button{ Text = "Next", WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center };
+            b_Next.Clicked += B_Next_Clicked;
             stackLayout.Children.Add(b_Next);
 
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
+        void B_Next_Clicked(object sender, EventArgs e)
+        {
+            
+        }
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)
 		{

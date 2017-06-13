@@ -16,7 +16,7 @@ namespace WertheApp.BS
         int availableMemory; //sum of all fragment values
         int numberOfFragments; //numberOfFragments-1 = number of parting lines(Size = 1) between fragments
         int totalMemorySize; //totalMemorySize = availableMemory + numberOfFragments -1
-        double relativeFragmentSize; //rule of three -> 300px XYtotalMemorySize
+        float relativeFragmentSize; //rule of three -> 300px XYtotalMemorySize //I chose float instead of double because in order to draw a box with CCSharp you need a float value
 
         CCDrawNode cc_box;
 
@@ -35,7 +35,7 @@ namespace WertheApp.BS
 		}
 
         //METHODS
-        //Calculates availableMemory, numerOfFragments, totalMemorySize
+        //Calculates availableMemory, numerOfFragments, totalMemorySize, relativeFragmentSize
         void CalculateNeededVariables(){
             int sizeOfList = fragmentList.Count();
             availableMemory = 0;
@@ -46,20 +46,17 @@ namespace WertheApp.BS
             }
             totalMemorySize = availableMemory + numberOfFragments - 1;
             //300 because memorybox is set to be 300px
-            relativeFragmentSize =   Double.Parse("300") /Double.Parse(totalMemorySize.ToString());//nicht gerade elegant, ich weiß
-
-			Debug.WriteLine("##############");
-			Debug.WriteLine(availableMemory);
-			Debug.WriteLine(numberOfFragments);
-            Debug.WriteLine(totalMemorySize);
-            Debug.WriteLine(relativeFragmentSize);
+            relativeFragmentSize = float.Parse("300") /float.Parse(totalMemorySize.ToString());//nicht gerade elegant, ich weiß
         }
 
 
         void DrawMemory(){
-            
+			//the problem with drawing lines is, that they don't start at a point and have a witdth in only one direction. 
+			//The width actually spreads in both directions. wich makes it kinda difficult
+
 			//draw the outlines of the memorybox
-			var box = new CCRect(15, 1, 300, 70);
+			//since the border width is 1, in order to achieve exactly 300 entities space, we have to add 2 entities
+			var box = new CCRect(15, 1, 302, 70);//CCRect(x,y,legth,width)
 			cc_box = new CCDrawNode();
 			cc_box.DrawRect(
 				box,
@@ -69,8 +66,76 @@ namespace WertheApp.BS
 			//add box to layer
 			layer.AddChild(cc_box);
 
-            //draw fragmentation of memorybox
+            //draw fragmentation of memorybox //it's only necessary to draw the gaps/parting lines
+            int fragmentSize;
+            float sizeInBox;
+			float partingLineWidth = relativeFragmentSize / 2;
+            float startX = 16; //kinda fixed value, since I set the starting point of the whole memorybox to 15// also add the border with and start after that
+
+            for (int i = 0; i < numberOfFragments-1; i++){
+                fragmentSize = fragmentList.ElementAt(i);
+				sizeInBox = fragmentSize * relativeFragmentSize;
+                startX += sizeInBox + partingLineWidth;
+
+                //draw the line
+				CCDrawNode cc_partingLine = new CCDrawNode();
+				cc_partingLine.DrawLine(
+					from: new CCPoint(startX, 2),
+					to: new CCPoint(startX, 70),
+					lineWidth: partingLineWidth,
+                    color: CCColor4B.Gray);
+				layer.AddChild(cc_partingLine);
+                startX += partingLineWidth;
+ 
+            }
+
+            /*
+            Debug.WriteLine("total memorysize = "+totalMemorySize);
+            Debug.WriteLine("relative fragment size = "+ relativeFragmentSize);
+            Debug.WriteLine("total memorysize *relativefragmentsize = " +totalMemorySize*relativeFragmentSize);
+
+
+            Debug.WriteLine("##############");
+            Debug.WriteLine(availableMemory);
+            Debug.WriteLine(numberOfFragments);
+            Debug.WriteLine(totalMemorySize);
+            Debug.WriteLine(relativeFragmentSize);*/
+
+			//test for 2 Fragments with size 1 
+			/*
+            bool colorS = true;
+            for (int i = 0; i < 3; i++)
+            {
+                if (colorS)
+                {
+                    CCDrawNode cc_partingLine = new CCDrawNode();
+                    cc_partingLine.DrawLine(
+                        from: new CCPoint(startX, 2),
+                        to: new CCPoint(startX, 70),
+                        lineWidth: partingLineWidth,
+                        color: CCColor4B.Blue);
+                    layer.AddChild(cc_partingLine);
+					startX += relativeFragmentSize;
+                    colorS = false;
+                    continue;
+                }
+                else if(!colorS)
+                {
+                    CCDrawNode cc_partingLine = new CCDrawNode();
+                    cc_partingLine.DrawLine(
+                        from: new CCPoint(startX, 2),
+                        to: new CCPoint(startX, 70),
+                        lineWidth: partingLineWidth,
+                        color: CCColor4B.Orange);
+                    layer.AddChild(cc_partingLine);
+                    startX += relativeFragmentSize;
+                    colorS = true;
+                    continue;
+                }
+            }*/
 
         }
+
+
     }
 }

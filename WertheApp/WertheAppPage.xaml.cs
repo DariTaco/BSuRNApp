@@ -16,7 +16,9 @@ namespace WertheApp
 
 			// This is the top-level grid, which will split our page in half
 			var grid = new Grid();
-			this.Content = grid;
+			var scrollView = new ScrollView();
+			scrollView.Content = grid; //Wrap ScrollView around StackLayout to be able to scroll the content
+			this.Content = scrollView;
 			grid.RowDefinitions = new RowDefinitionCollection {
             // Bottom half will be twice as big as top half:
             new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)},
