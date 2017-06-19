@@ -1,7 +1,7 @@
 ﻿using System;
 using CocosSharp;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; //fragmentList.ElementAt(i);
 using System.Diagnostics;
 
 namespace WertheApp.BS

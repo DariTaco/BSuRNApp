@@ -2,8 +2,9 @@
 using CocosSharp;
 using Xamarin.Forms;
 using System.Collections.Generic;
+using System.Linq; //fragmentList.ElementAt(i);
 
-using System.Diagnostics;
+using System.Diagnostics; //Debug.WriteLine("");
 
 namespace WertheApp.BS
 {
@@ -12,14 +13,28 @@ namespace WertheApp.BS
     //Bottom half are buttons and labels that interact with the scene
     public class AllocationStrategies : ContentPage
     {
+     
         //VARIABLES
         public static List<int> fragmentList { get; set; } //List of fragments. From Settings Page passed to the constructor and later accesed from Scene
         public static String strategy { get; set; } //Choosen strategy (Firts Fit, ...) from Settings Page passed to the constructor and later accesed from Scene
+        public static int[] memoryBlocks; //=array of framents from fragmentList
+        public static int memoryRequest; //gets its value from the modal page
 
 		private double width = 0;
 		private double height = 0;
 
         bool isContentCreated = false; //indicates weather the Content of the page was already created
+
+        enum myEnum
+        {
+            newRequest = 0, //new request was entered after clicking th next button
+            searchingForBlock = 1, // currently searching for a memory block which is big enough 
+            successfull = 2, //free memory found 
+            unsuccessfull = 3, //no memory block found which is big enough to fit in the request
+            noRequestYet = 4   //the application just started an no memory has been requested yet
+		}
+        myEnum memoryRequestState;
+
 
         //values for labels
         String size = "-";
@@ -33,6 +48,13 @@ namespace WertheApp.BS
         {
             fragmentList = l;
             strategy = s;
+            memoryRequestState = myEnum.noRequestYet;
+
+            //create an array for all fragments=memoryblocks
+            memoryBlocks = new int[fragmentList.Count];
+            for (int i = 0; i < memoryBlocks.Length; i++){
+                memoryBlocks[i] = fragmentList.ElementAt(i);
+            }
 
             Title = "Allocation Strategies: " + strategy;
 
@@ -45,6 +67,15 @@ namespace WertheApp.BS
             {
 				this.Content = new Label { Text = "please rotate your device" };
             }
+
+			//subscribe to Message in order to know if a new memory request was made
+            MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{ 
+                Debug.WriteLine("#####################"); 
+                Debug.WriteLine("" + memoryRequest);
+                Debug.WriteLine("");
+                memoryRequestState = myEnum.newRequest;
+            });
+            
         }
 
 		//METHODS
@@ -155,9 +186,9 @@ namespace WertheApp.BS
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
-        void B_Next_Clicked(object sender, EventArgs e)
+        async void B_Next_Clicked(object sender, EventArgs e)
         {
-            
+            await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
         }
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)
