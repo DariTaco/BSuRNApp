@@ -77,6 +77,8 @@ namespace WertheApp.RN
 				Margin = new Thickness(10),
 
 			};
+
+			grid.Children.Add(stackLayout, 0, 1);
 		}
 
 		/// <summary> deletes all content and informs the user to rotate the device </summary>

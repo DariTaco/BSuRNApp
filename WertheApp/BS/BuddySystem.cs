@@ -63,9 +63,9 @@ namespace WertheApp.BS
 
         void CreateBottomHalf(Grid grid){
 			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (9)
+			//Screen Width is divided by the amount of elements (2)
 			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 9;
+			double StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -76,7 +76,38 @@ namespace WertheApp.BS
 				Margin = new Thickness(10),
 
 			};
+
+            //add elements to stacklayout
+			var b_Start = new Button
+			{
+				Text = "START PROCESS",
+				WidthRequest = StackChildSize,
+				VerticalOptions = LayoutOptions.Center
+			};
+			b_Start.Clicked += B_Start_Clicked;
+			stackLayout.Children.Add(b_Start);
+
+			var b_End = new Button
+			{
+				Text = "END PROCESS",
+				WidthRequest = StackChildSize,
+				VerticalOptions = LayoutOptions.Center
+			};
+			b_End.Clicked += B_End_Clicked;
+			stackLayout.Children.Add(b_End);
+
+			grid.Children.Add(stackLayout, 0, 1);
         }
+
+		async void B_Start_Clicked(object sender, EventArgs e)
+		{
+			await Navigation.PushModalAsync(new BuddySystemModal(), true);
+		}
+
+		/*async*/void B_End_Clicked(object sender, EventArgs e)
+		{
+            //await pop up drop down menu
+		}
 
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
 		void DeleteContent()

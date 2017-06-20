@@ -10,7 +10,7 @@ namespace WertheApp.BS
     public class AllocationStrategiesSettings : ContentPage
     {
         //VARIABLES
-        Picker p_Algorithm; //has to be definded here instead of Constructor because value is also needed method
+        Picker p_Algorithm; //has to be definded here instead of Constructor because value is also needed in method
         Entry e_Fragmentation; //same as above
 		List<int> fragmentsList; //will be given to the Constructor of AllocationStrategies
 
@@ -39,6 +39,7 @@ namespace WertheApp.BS
             p_Algorithm.Items.Add("Best Fit");
             p_Algorithm.Items.Add("Worst Fit");
             p_Algorithm.Items.Add("Tailoring Best Fit");
+            p_Algorithm.SelectedIndex = 0; //pre selects First Fit
 
             var l_Space = new Label { Text = " " };
             var l_Fragmentation = new Label { Text = "Fragmentation:" };
