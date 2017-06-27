@@ -7,10 +7,10 @@ namespace WertheApp.BS
     public class PageReplacementStrategiesSettings : ContentPage
     {
         //VARIABLES
-        Picker p_Strategy;
-        Picker p_RAM;
-        Picker p_DISC;
-        Entry e_Sequence;
+        Picker p_Strategy;//has to be definded here instead of Constructor because value is also needed in method
+		Picker p_RAM;//same
+        Picker p_DISC;//same
+        Entry e_Sequence;//same
 
 		//CONSTRUCTOR
 		public PageReplacementStrategiesSettings()
