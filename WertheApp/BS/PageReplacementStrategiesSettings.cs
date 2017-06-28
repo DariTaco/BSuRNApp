@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Diagnostics; //Debug.WriteLine("");
+using System.Text.RegularExpressions; ////Regex.IsMatch();
 using Xamarin.Forms;
 
 namespace WertheApp.BS
@@ -89,6 +90,7 @@ namespace WertheApp.BS
             var l_Space = new Label { Text = "  " };
             var l_Sequence = new Label { Text = "Reference sequence:" };
             var b_DefaultValue = new Button { Text = "Default Value", HorizontalOptions = LayoutOptions.Start };
+            b_DefaultValue.Clicked += B_DefaultValue_Clicked;
             var l_Space2 = new Label { Text = "  " };
             var l_MemorySize = new Label { Text = "Memory size:" };
             var l_MaxSize = new Label{
@@ -116,7 +118,26 @@ namespace WertheApp.BS
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
-            await Navigation.PushAsync(new PageReplacementStrategies());
+            if (ValidateSequenceInput())
+            {
+                await Navigation.PushAsync(new PageReplacementStrategies());
+            }else{
+                await DisplayAlert("Alert", "Please enter a valid reference sequence", "OK");
+            }
+		}
+
+        //Apply default value for Reference Sequence
+        void B_DefaultValue_Clicked(object sender, EventArgs e)
+        {
+            e_Sequence.Text = "12340156012356";
+        }
+
+		//validates the string in e_Sequence. For example a Fragment with size 0 is not allowed.
+		//returns true if string is valid 
+		bool ValidateSequenceInput()
+		{
+			String s = e_Sequence.Text;
+			return Regex.IsMatch(s, "^[0-9]*$"); //matches only a sequence of numbers
 		}
     }
 }

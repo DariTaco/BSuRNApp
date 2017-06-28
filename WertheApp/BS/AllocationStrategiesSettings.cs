@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Text.RegularExpressions;
+using System.Text.RegularExpressions; //Regex.IsMatch();
 using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms;
 

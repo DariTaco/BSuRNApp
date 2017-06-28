@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms;
 
 namespace WertheApp.BS
@@ -8,7 +8,7 @@ namespace WertheApp.BS
     {
         //VARIABLES
         Picker p_Exponent; //has to be definded here instead of Constructor because value is also needed method
-        String absouluteMemorySize = "-";
+        Label l_AbsoluteMemorySize;
 
 		//CONSTRUCTOR
 		public BuddySystemSettings()
@@ -48,12 +48,13 @@ namespace WertheApp.BS
             p_Exponent.Items.Add("12");
             p_Exponent.Items.Add("13");
             p_Exponent.Items.Add("14");
-            p_Exponent.Items.Add("15");
-            p_Exponent.SelectedIndex = 4;
-            //been to lazy to programm aloop.sorry
+            p_Exponent.Items.Add("15");//been to lazy to programm a loop.sorry
+			p_Exponent.SelectedIndex = 4; //5
+            p_Exponent.SelectedIndexChanged += P_Exponent_SelectedIndexChanged; //add method
+
 
             //TO DO: Fire Event when absoulute memorysize needs to be calculated
-            var l_AbsoluteMemorySize = new Label { Text = "Absoulute memory size: " + absouluteMemorySize };
+            l_AbsoluteMemorySize = new Label { Text = "Absoulute memory size: 32"};
             var l_Space = new Label { Text = "  " };
             var b_Start = new Button { Text = "Start" };
 			b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
@@ -70,6 +71,15 @@ namespace WertheApp.BS
         async void B_Start_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new BuddySystem());
+        }
+
+        //If an exponent was picked
+        void P_Exponent_SelectedIndexChanged(object sender, EventArgs e){
+            Debug.WriteLine("############################");
+            Debug.WriteLine("     ");
+            double absoluteMemorySize;
+            absoluteMemorySize = Math.Pow(2, Double.Parse(p_Exponent.SelectedItem.ToString())); //2ExponentX
+            l_AbsoluteMemorySize.Text = "Absolute memory size : " + absoluteMemorySize;
         }
     }
 }

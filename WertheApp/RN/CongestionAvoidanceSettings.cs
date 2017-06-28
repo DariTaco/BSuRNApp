@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms;
 
 namespace WertheApp.RN
