@@ -120,8 +120,6 @@ namespace WertheApp.BS
 
         void CreateSequenceList(){
             String s = e_Sequence.Text;
-            Debug.WriteLine("############");
-            Debug.WriteLine(s);
             sequenceList = new List<int>();
             sequenceList.Add(0); //leading zero in settings
             for(int i = 0; i < s.Length; i++){
