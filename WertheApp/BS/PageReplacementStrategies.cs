@@ -2,21 +2,39 @@
 using CocosSharp;
 using Xamarin.Forms;
 using System.Collections.Generic;
+using System.Linq; //fragmentList.ElementAt(i);
 
 using System.Diagnostics;
 namespace WertheApp.BS
 {
     public class PageReplacementStrategies : ContentPage
     {
-		//VARIABLES
+        //VARIABLES
+        public static List<int> sequenceList { get; set; }
+        public static String strategy;
+        public static int ram;
+        public static int disc;
+
+
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
 		private double height = 0;
 
 		//CONSTRUCTOR
-		public PageReplacementStrategies()
+		public PageReplacementStrategies(List<int> l, String s, int r, int d)
         {
+            sequenceList = l;
+            strategy = s;
+            ram = r;
+            disc = d;
+
+			Debug.WriteLine("##########");
+            Debug.WriteLine("strategy: " + strategy);
+            Debug.WriteLine("ram: " + ram);
+            Debug.WriteLine("disc: "+ disc);
+            Debug.WriteLine("seq: " + sequenceList.ElementAt(2));
+
 			Title = "Page Replacement Strategies"; //since the name is longer than average, 
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"
 
@@ -64,9 +82,9 @@ namespace WertheApp.BS
 		void CreateBottomHalf(Grid grid)
 		{
 			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (9)
+			//Screen Width is divided by the amount of elements (3)
 			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 9;
+			double StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -78,11 +96,53 @@ namespace WertheApp.BS
 
 			};
 
+            Button b_Reset_Rbits = new Button
+            {
+                Text = "Reset R-Bits",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Reset_Rbits.Clicked += B_Reset_Rbits_Clicked;
+            stackLayout.Children.Add(b_Reset_Rbits);
+
+            Button b_Set_Mbit = new Button
+            {
+                Text = "Set M-Bit",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Set_Mbit.Clicked += B_Set_Mbit_Clicked;
+            stackLayout.Children.Add(b_Set_Mbit);
+
+            Button b_Next = new Button
+            {
+                Text = "Next",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Next.Clicked += B_Next_Clicked;
+            stackLayout.Children.Add(b_Next);
+
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
-		/// <summary> deletes all content and informs the user to rotate the device </summary>
-		void DeleteContent()
+        void B_Reset_Rbits_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        void B_Set_Mbit_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        void B_Next_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary> deletes all content and informs the user to rotate the device </summary>
+        void DeleteContent()
 		{
 			this.Content = null;
 			this.Content = new Label { Text = "please rotate your device" };

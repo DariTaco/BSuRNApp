@@ -2,23 +2,24 @@
 using CocosSharp;
 using Xamarin.Forms;
 using System.Collections.Generic;
-
-using System.Diagnostics;
+using System.Diagnostics; //Debug.WriteLine("");
 
 namespace WertheApp.BS
 {
     public class BuddySystem : ContentPage
     {
 		//VARIABLES
+        public static int absoluteMemorySize;
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
 		private double height = 0;
         					   
         //CONSTRUCTOR
-		public BuddySystem()
+		public BuddySystem(int a)
         {
-
+            absoluteMemorySize = a;
+         
 			Title = "Buddy System";
 
             //do only create content if device is rotated in landscape

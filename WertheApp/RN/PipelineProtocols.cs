@@ -10,7 +10,7 @@ namespace WertheApp.RN
     public class PipelineProtocols : ContentPage
     {
 		//VARIABLES
-		bool isContentCreated = false; //indicates weather the Content of the page was already created
+        bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
 		private double height = 0;
@@ -20,8 +20,8 @@ namespace WertheApp.RN
         {
 			Title = "Pipeline Protocols";
 
-            //do only create content if device is rotated in landscape
-			if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            //do only create content if device is not roated
+			if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)
 			{
 				CreateContent();
 			}
@@ -39,13 +39,13 @@ namespace WertheApp.RN
 			this.Content = grid;
 			grid.RowDefinitions = new RowDefinitionCollection {
                     // Each half will be the same size:
-                    new RowDefinition{ Height = new GridLength(4, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(8, GridUnitType.Star)},
 					new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
 				};
 			CreateTopHalf(grid);
 			CreateBottomHalf(grid);
 
-			isContentCreated = true;
+            isContentCreated = true;
 		}
 
 		void CreateTopHalf(Grid grid)
@@ -66,20 +66,48 @@ namespace WertheApp.RN
 			//set the size of the elements in such a way, that they all fit on the screen
 			//Screen Width is divided by the amount of elements (9)
 			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 9;
+			double StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
 			//For example l_Size, size
 			var stackLayout = new StackLayout
 			{
-				Orientation = StackOrientation.Horizontal,
+                Orientation = StackOrientation.Horizontal,
 				Margin = new Thickness(10),
 
 			};
 
+            Button b_Send = new Button
+            {
+                Text = "Send Package",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Send.Clicked += B_Send_Clicked;
+            stackLayout.Children.Add(b_Send);
+
+            Button b_Stop = new Button
+            {
+                Text = "Stop",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Stop.Clicked += B_Stop_Clicked;
+            stackLayout.Children.Add(b_Stop);
+
 			grid.Children.Add(stackLayout, 0, 1);
 		}
+
+        void B_Send_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        void B_Stop_Clicked(object sender, EventArgs e)
+        {
+
+        }
 
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
 		void DeleteContent()
@@ -118,15 +146,16 @@ namespace WertheApp.RN
 			}
 
 			//reconfigure layout
-			if (width > height && isContentCreated == false)
-			{
-				CreateContent();
-			}
-			else if (height > width && isContentCreated)
+			if (width > height && isContentCreated)
 			{
 				DeleteContent();
 			}
+			else if (height > width && isContentCreated == false)
+			{
+				CreateContent();
+			}
 		}
+
 
 	}
 }

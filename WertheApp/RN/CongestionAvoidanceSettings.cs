@@ -42,11 +42,15 @@ namespace WertheApp.RN
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Tahoe"};
             s_Tahoe = new Switch();
+            s_Tahoe.IsToggled = true;
+            s_Tahoe.Toggled += S_Tahoe_Toggled; //adds an event 
             var l_Reno = new Label { 
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Reno" };
             s_Reno = new Switch();
+            s_Reno.IsToggled = true;
+            s_Reno.Toggled += S_Reno_Toggled; // adds an event 
 
             stackLayout2.Children.Add(l_Tahoe);
             stackLayout2.Children.Add(s_Tahoe);
@@ -92,7 +96,7 @@ namespace WertheApp.RN
             p_ErrorTreshold.Items.Add("13");
             p_ErrorTreshold.Items.Add("14");
             p_ErrorTreshold.Items.Add("15");
-            p_ErrorTreshold.SelectedIndex = 11;
+            p_ErrorTreshold.SelectedIndex = 11; //12
             var b_Default = new Button { Text = "Set default values" , HorizontalOptions = LayoutOptions.Start };
             b_Default.Clicked += B_Default_Clicked; //add Click Event(Method)
 			var b_Start = new Button { Text = "Start" };
@@ -117,9 +121,27 @@ namespace WertheApp.RN
             await Navigation.PushAsync(new CongestionAvoidance());
 		}
 
+        //sets default values
         void B_Default_Clicked(object sender, EventArgs e)
         {
+            s_Reno.IsToggled = true;
+            s_Tahoe.IsToggled = true;
+            p_ErrorTreshold.SelectedIndex = 11; //12
+            p_Treshold.SelectedIndex = 7; //8
+        }
 
+        void S_Tahoe_Toggled(object sender, ToggledEventArgs e)
+        {
+            if(!s_Tahoe.IsToggled){
+                s_Reno.IsToggled = true;
+            }
+        }
+
+        void S_Reno_Toggled(object sender, ToggledEventArgs e)
+        {
+            if(!s_Reno.IsToggled){
+                s_Tahoe.IsToggled = true;
+            }
         }
     }
 }

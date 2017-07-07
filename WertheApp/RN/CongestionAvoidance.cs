@@ -64,9 +64,9 @@ namespace WertheApp.RN
 		void CreateBottomHalf(Grid grid)
 		{
 			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (9)
+			//Screen Width is divided by the amount of elements (3)
 			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 9;
+			double StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -78,11 +78,53 @@ namespace WertheApp.RN
 
 			};
 
+            Button b_Triple = new Button
+            {
+                Text = "Triple Duplicate Ack",
+				WidthRequest = StackChildSize,
+				VerticalOptions = LayoutOptions.Center
+            };
+            b_Triple.Clicked += B_Triple_Clicked;
+            stackLayout.Children.Add(b_Triple);
+
+            Button b_Set_ErrorValue = new Button
+            {
+                Text = "Set Error-Value",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Set_ErrorValue.Clicked += B_Set_ErrorValue_Clicked;
+            stackLayout.Children.Add(b_Set_ErrorValue);
+
+            Button b_Next = new Button
+            {
+                Text = "Next Step",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Next.Clicked += B_Next_Clicked;
+            stackLayout.Children.Add(b_Next);
+
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
-		/// <summary> deletes all content and informs the user to rotate the device </summary>
-		void DeleteContent()
+        void B_Triple_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        void B_Set_ErrorValue_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        void B_Next_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary> deletes all content and informs the user to rotate the device </summary>
+        void DeleteContent()
 		{
 			this.Content = null;
 			this.Content = new Label { Text = "please rotate your device" };

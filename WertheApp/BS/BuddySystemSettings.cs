@@ -9,6 +9,7 @@ namespace WertheApp.BS
         //VARIABLES
         Picker p_Exponent; //has to be definded here instead of Constructor because value is also needed method
         Label l_AbsoluteMemorySize;
+        double absoluteMemorySize = 32;
 
 		//CONSTRUCTOR
 		public BuddySystemSettings()
@@ -70,14 +71,13 @@ namespace WertheApp.BS
         //If Button Start is clicked
         async void B_Start_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new BuddySystem());
+            await Navigation.PushAsync(new BuddySystem(Int32.Parse(absoluteMemorySize.ToString())));
         }
 
         //If an exponent was picked
         void P_Exponent_SelectedIndexChanged(object sender, EventArgs e){
             Debug.WriteLine("############################");
             Debug.WriteLine("     ");
-            double absoluteMemorySize;
             absoluteMemorySize = Math.Pow(2, Double.Parse(p_Exponent.SelectedItem.ToString())); //2ExponentX
             l_AbsoluteMemorySize.Text = "Absolute memory size : " + absoluteMemorySize;
         }

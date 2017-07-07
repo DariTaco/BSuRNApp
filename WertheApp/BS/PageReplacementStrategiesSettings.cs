@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections;
 using System.Diagnostics; //Debug.WriteLine("");
 using System.Text.RegularExpressions; ////Regex.IsMatch();
 using Xamarin.Forms;
@@ -12,6 +14,7 @@ namespace WertheApp.BS
 		Picker p_RAM;//same
         Picker p_DISC;//same
         Entry e_Sequence;//same
+        List<int> sequenceList; //will be given to the Constructor
 
 		//CONSTRUCTOR
 		public PageReplacementStrategiesSettings()
@@ -115,12 +118,37 @@ namespace WertheApp.BS
             //note : a space label element can somehow only be added once, therefore I needed to define 4 of them
 		}
 
+        void CreateSequenceList(){
+            String s = e_Sequence.Text;
+            Debug.WriteLine("############");
+            Debug.WriteLine(s);
+            sequenceList = new List<int>();
+            sequenceList.Add(0); //leading zero in settings
+            for(int i = 0; i < s.Length; i++){
+                sequenceList.Add(Int32.Parse(s[i].ToString()));
+			}
+        }
+
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
             if (ValidateSequenceInput())
             {
-                await Navigation.PushAsync(new PageReplacementStrategies());
+                if(ValidateRAMandDISC())
+                {
+                    CreateSequenceList();
+                    await Navigation.PushAsync(new PageReplacementStrategies(sequenceList, 
+                                                                             p_Strategy.SelectedItem.ToString(), 
+                                                                             Int32.Parse(p_RAM.SelectedItem.ToString()), 
+                                                                             Int32.Parse(p_DISC.SelectedItem.ToString())
+                                                                            )); 
+
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Maximal size of RAM and DISC together must be equal or smaller than 8", "OK");
+                }
+
             }else{
                 await DisplayAlert("Alert", "Please enter a valid reference sequence", "OK");
             }
@@ -139,6 +167,14 @@ namespace WertheApp.BS
 			String s = e_Sequence.Text;
 			return Regex.IsMatch(s, "^[0-9]*$"); //matches only a sequence of numbers
 		}
+
+        //validates if the sum of ram and disc together is smaller than eight
+        bool ValidateRAMandDISC(){
+            int ram = Int32.Parse(p_RAM.SelectedItem.ToString());
+            int disc = Int32.Parse(p_DISC.SelectedItem.ToString());
+
+            return ram + disc <= 8;
+        }
     }
 }
 
