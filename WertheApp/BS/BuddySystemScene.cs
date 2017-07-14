@@ -12,6 +12,7 @@ namespace WertheApp.BS
     {
 		//VARIABLES
 		CCLayer layer;
+        int absoluteMemorySize;
 
         //CONSTRUCTOR
         public BuddySystemScene(CCGameView gameView): base(gameView)
@@ -19,6 +20,8 @@ namespace WertheApp.BS
 			//add a layer to draw on
 			layer = new CCLayer();
 			this.AddLayer(layer);
+
+            absoluteMemorySize = BuddySystem.absoluteMemorySize;
 		}
 
         //METHODS

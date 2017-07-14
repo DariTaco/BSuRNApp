@@ -42,7 +42,8 @@ namespace WertheApp.BS
             e_MemoryRequest = new Entry { Keyboard = Keyboard.Numeric }; //only numbers are allowed
 			var b_OK = new Button { Text = "OK" };
             b_OK.Clicked += B_OK_Clicked;
-			var l_AvailableMemory = new Label { Text = availableMemory };
+			var l_AvailableMemory = new Label { FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
+                Text = availableMemory };
 
             stackLayout.Children.Add(l_Instructions);
             stackLayout.Children.Add(e_MemoryRequest);
@@ -71,7 +72,7 @@ namespace WertheApp.BS
 				await Navigation.PopModalAsync(); // close Modal
             }
             else if (e_MemoryRequest.Text == null) { await DisplayAlert("Alert", "Please enter size of memory request", "OK"); }
-            else if (!ValidateMemoryRequestInput()) { await DisplayAlert("Alert", "Please enter a valid memory request (only integers greater than zero)", "OK"); }
+            else if (!ValidateMemoryRequestInput()) { await DisplayAlert("Alert", "Please enter a valid memory request (only integers > 0)", "OK"); }
         }
     }
 }

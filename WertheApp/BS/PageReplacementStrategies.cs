@@ -29,11 +29,11 @@ namespace WertheApp.BS
             ram = r;
             disc = d;
 
-			Debug.WriteLine("##########");
+			/*Debug.WriteLine("##########");
             Debug.WriteLine("strategy: " + strategy);
             Debug.WriteLine("ram: " + ram);
             Debug.WriteLine("disc: "+ disc);
-            Debug.WriteLine("seq: " + sequenceList.ElementAt(2));
+            Debug.WriteLine("seq: " + sequenceList.ElementAt(2));*/
 
 			Title = "Page Replacement Strategies"; //since the name is longer than average, 
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"

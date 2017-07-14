@@ -9,15 +9,25 @@ namespace WertheApp.RN
 {
     public class PipelineProtocols : ContentPage
     {
-		//VARIABLES
+        //VARIABLES
+        public static int windowSize;
+        public static String strategy;
+
         bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
 		private double height = 0;
 
 		//CONSTRUCTOR
-		public PipelineProtocols()
+		public PipelineProtocols(int a, String s)
         {
+            windowSize = a;
+            strategy = s;
+
+            /*Debug.WriteLine("########");
+            Debug.WriteLine("window Size: " + windowSize);
+            Debug.WriteLine("strategy: "+strategy);*/
+
 			Title = "Pipeline Protocols";
 
             //do only create content if device is not roated

@@ -12,6 +12,8 @@ namespace WertheApp.RN
     {
 		//VARIABLES
 		CCLayer layer;
+		int windowSize;
+		String strategy;
 
         //CONSTRUCTOR
         public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
@@ -19,6 +21,9 @@ namespace WertheApp.RN
 			//add a layer to draw on
 			layer = new CCLayer();
 			this.AddLayer(layer);
+
+            windowSize = PipelineProtocols.windowSize;
+            strategy = PipelineProtocols.strategy;
         }
 
         //METHODS

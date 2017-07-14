@@ -12,6 +12,10 @@ namespace WertheApp.RN
     {
 		//VARIABLES
 		CCLayer layer;
+		int errorTreshold;
+		int treshold;
+		bool reno;
+		bool tahoe;
 
         //CONSTRUCTOR
         public CongestionAvoidanceScene(CCGameView gameView) : base(gameView)
@@ -19,6 +23,11 @@ namespace WertheApp.RN
 			//add a layer to draw on
 			layer = new CCLayer();
 			this.AddLayer(layer);
+
+            errorTreshold = CongestionAvoidance.errorTreshold;
+            treshold = CongestionAvoidance.treshold;
+            reno = CongestionAvoidance.reno;
+            tahoe = CongestionAvoidance.tahoe;
         }
 
         //METHODS

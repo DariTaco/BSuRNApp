@@ -10,6 +10,10 @@ namespace WertheApp.BS
     {
 		//VARIABLES
         public static int absoluteMemorySize;
+		public static int startedProcessSize; //gets its value from the modal page
+        public static string startedProcessName; //gets its value from the modal page
+        public static string endedProcessName; //gets its value from modal page
+
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
@@ -31,6 +35,21 @@ namespace WertheApp.BS
 			{
 				this.Content = new Label { Text = "please rotate your device" };
 			}
+
+			//subscribe to Message in order to know if a new process was started
+			MessagingCenter.Subscribe<BuddySystemModal>(this, "new process started", (args) =>
+			{
+				Debug.WriteLine("#####################");
+                Debug.WriteLine("new Process size: " + startedProcessSize);
+                Debug.WriteLine("new Process name: " + startedProcessName);
+			});
+
+			//subscribe to Message in order to know if a new process was ended
+			MessagingCenter.Subscribe<BuddySystemModal>(this, "process ended", (args) =>
+			{
+				Debug.WriteLine("#####################");
+				Debug.WriteLine("ended Process name: " + endedProcessName);
+			});
         }
 
 		//METHODS
@@ -105,9 +124,9 @@ namespace WertheApp.BS
 			await Navigation.PushModalAsync(new BuddySystemModal(), true);
 		}
 
-		/*async*/void B_End_Clicked(object sender, EventArgs e)
+		async void B_End_Clicked(object sender, EventArgs e)
 		{
-            //await pop up drop down menu
+            await Navigation.PushModalAsync(new BuddySystemModal2(), true); //await pop up drop down menu wegen Konsistenz nicht verwendet
 		}
 
 		/// <summary> deletes all content and informs the user to rotate the device </summary>

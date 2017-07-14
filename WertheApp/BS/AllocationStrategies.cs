@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq; //fragmentList.ElementAt(i);
 
+
 using System.Diagnostics; //Debug.WriteLine("");
 
 namespace WertheApp.BS

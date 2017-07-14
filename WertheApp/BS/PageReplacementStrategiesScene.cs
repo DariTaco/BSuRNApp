@@ -12,6 +12,10 @@ namespace WertheApp.BS
     {
 		//VARIABLES
 		CCLayer layer;
+		List<int> sequenceList { get; set; }
+		String strategy;
+		int ram; 
+        int disc;
 
         //CONSTRUCTOR
         public PageReplacementStrategiesScene(CCGameView gameView): base(gameView)
@@ -19,6 +23,11 @@ namespace WertheApp.BS
 			//add a layer to draw on
 			layer = new CCLayer();
 			this.AddLayer(layer);
+
+            sequenceList = PageReplacementStrategies.sequenceList;
+            strategy = PageReplacementStrategies.strategy;
+            ram = PageReplacementStrategies.ram;
+            disc = PageReplacementStrategies.disc;
 		}
 
         //METHODS

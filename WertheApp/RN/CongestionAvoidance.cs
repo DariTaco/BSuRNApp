@@ -9,15 +9,32 @@ namespace WertheApp.RN
 {
     public class CongestionAvoidance : ContentPage
     {
-		//VARIABLES
+        //VARIABLES
+        public static int errorTreshold;
+        public static int treshold;
+        public static bool reno;
+        public static bool tahoe;
+
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
 		private double height = 0;
 
 		//CONSTRUCTOR
-		public CongestionAvoidance()
+		public CongestionAvoidance(int eth, int th, bool r, bool t)
         {
+
+            errorTreshold = eth;
+            treshold = th;
+            reno = r;
+            tahoe = t;
+
+			/*Debug.WriteLine("##########");
+            Debug.WriteLine("error Treshold: " + errorTreshold);
+			Debug.WriteLine("treshold: " + treshold);
+			Debug.WriteLine("reno: " + reno);
+			Debug.WriteLine("tahoe: " + tahoe);*/
+
 			Title = "Congestion Avoidance";
 
 			//do only create content if device is rotated in landscape

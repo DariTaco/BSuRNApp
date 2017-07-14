@@ -59,7 +59,9 @@ namespace WertheApp.RN
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
-            await Navigation.PushAsync(new PipelineProtocols());
+            await Navigation.PushAsync(new PipelineProtocols(
+                Int32.Parse(p_WindowSize.SelectedItem.ToString()),
+                p_Strategy.SelectedItem.ToString()));
 		}
     }
 }
