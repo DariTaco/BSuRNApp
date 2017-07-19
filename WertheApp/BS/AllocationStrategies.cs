@@ -18,7 +18,8 @@ namespace WertheApp.BS
         //VARIABLES
         public static List<int> fragmentList { get; set; } //List of fragments. From Settings Page passed to the constructor and later accesed from Scene
         public static String strategy { get; set; } //Choosen strategy (Firts Fit, ...) from Settings Page passed to the constructor and later accesed from Scene
-        public static int[] memoryBlocks; //=array of framents from fragmentList
+        //public static int[] memoryBlocks; //=array of framents from fragmentList
+
         public static int memoryRequest; //gets its value from the modal page
 
 		private double width = 0;
@@ -26,7 +27,7 @@ namespace WertheApp.BS
 
         bool isContentCreated = false; //indicates weather the Content of the page was already created
 
-        enum myEnum
+        public enum myEnum
         {
             newRequest = 0, //new request was entered after clicking th next button
             searchingForBlock = 1, // currently searching for a memory block which is big enough 
@@ -34,7 +35,7 @@ namespace WertheApp.BS
             unsuccessfull = 3, //no memory block found which is big enough to fit in the request
             noRequestYet = 4   //the application just started an no memory has been requested yet
 		}
-        myEnum memoryRequestState;
+        public static myEnum memoryRequestState;
 
 
         //values for labels
@@ -51,11 +52,11 @@ namespace WertheApp.BS
             strategy = s;
             memoryRequestState = myEnum.noRequestYet;
 
-            //create an array for all fragments=memoryblocks
+            /*//create an array for all fragments=memoryblocks
             memoryBlocks = new int[fragmentList.Count];
             for (int i = 0; i < memoryBlocks.Length; i++){
                 memoryBlocks[i] = fragmentList.ElementAt(i);
-            }
+            }*/
 
             Title = "Allocation Strategies: " + strategy;
 
@@ -69,14 +70,12 @@ namespace WertheApp.BS
 				this.Content = new Label { Text = "please rotate your device" };
             }
 
+            //EVENT LISTENER
 			//subscribe to Message in order to know if a new memory request was made
             MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{ 
-                Debug.WriteLine("#####################"); 
-                Debug.WriteLine("" + memoryRequest);
-                Debug.WriteLine("");
-                memoryRequestState = myEnum.newRequest;
+                memoryRequestState = myEnum.searchingForBlock;
+                AllocationStrategiesScene.RequestNew(memoryRequest); 
             });
-            
         }
 
 		//METHODS
@@ -189,7 +188,38 @@ namespace WertheApp.BS
 
         async void B_Next_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
+            if (memoryRequestState == myEnum.searchingForBlock)
+            {
+                switch (strategy)
+                {
+                    case "First Fit":
+                        AllocationStrategiesScene.pos++;
+                        AllocationStrategiesScene.FirstFit(memoryRequest);
+                        break;
+                    case "Next Fit":
+
+                        break;
+                    case "Best Fit":
+
+                        break;
+                    case "Worst Fit":
+
+                        break;
+                    case "Tailoring Best Fit":
+
+                        break;
+                }
+            }
+
+            else if(memoryRequestState == myEnum.unsuccessfull)
+            {
+                await DisplayAlert("Alert", "No free space has been found", "OK");
+                memoryRequestState = myEnum.newRequest; //ready for a new request
+            }         
+            else //new request or successfull or no request yet
+			{
+				await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
+			}
         }
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)

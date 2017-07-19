@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions; //Regex.IsMatch
 
-using Xamarin.Forms;
+using Xamarin.Forms; //Messaging Center
 
 namespace WertheApp.BS
 {
@@ -15,11 +15,11 @@ namespace WertheApp.BS
 		public AllocationStrategiesModal()
 		{
             //put all memory blocks from previous page into a String
-            for (int i = 0; i < AllocationStrategies.memoryBlocks.Length; i++){
-                if(i == AllocationStrategies.memoryBlocks.Length-1){
-                    availableMemory += AllocationStrategies.memoryBlocks[i] + " ";
+            for (int i = 0; i < AllocationStrategiesScene.memoryBlocks.Length; i++){
+                if(i == AllocationStrategiesScene.memoryBlocks.Length-1){
+                    availableMemory += AllocationStrategiesScene.memoryBlocks[i] + " ";
                 }else{
-                    availableMemory += AllocationStrategies.memoryBlocks[i] + ", ";
+                    availableMemory += AllocationStrategiesScene.memoryBlocks[i] + ", ";
                 }
             }
 			//Title = "";
