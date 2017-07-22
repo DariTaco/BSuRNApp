@@ -15,11 +15,11 @@ namespace WertheApp.BS
 		public AllocationStrategiesModal()
 		{
             //put all memory blocks from previous page into a String
-            for (int i = 0; i < AllocationStrategiesScene.memoryBlocks.Length; i++){
-                if(i == AllocationStrategiesScene.memoryBlocks.Length-1){
-                    availableMemory += AllocationStrategiesScene.memoryBlocks[i] + " ";
+            for (int i = 0; i < AllocationStrategiesScene.memoryBlocks.GetLength(0); i++){
+                if(i == AllocationStrategiesScene.memoryBlocks.GetLength(0)-1){
+                    availableMemory += AllocationStrategiesScene.memoryBlocks[i,0] + " ";
                 }else{
-                    availableMemory += AllocationStrategiesScene.memoryBlocks[i] + ", ";
+                    availableMemory += AllocationStrategiesScene.memoryBlocks[i,0] + ", ";
                 }
             }
 			//Title = "";
