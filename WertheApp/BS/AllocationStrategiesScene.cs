@@ -41,6 +41,8 @@ namespace WertheApp.BS
         static CCDrawNode cc_arrow2b;
         static float posArrow2;
 
+        //fill
+        static CCDrawNode cc_fill;
 
         //CONSTRUCTOR
 		public AllocationStrategiesScene(CCGameView gameView) : base(gameView)
@@ -137,8 +139,8 @@ namespace WertheApp.BS
             float c = 0;
             for (int i = 0; i <= pos; i++)
             {
-                c += memoryBlocks[i, 1]*relativeFragmentSize + memoryBlocks[i, 0]*relativeFragmentSize;
-                Debug.WriteLine("c:" + c);
+                if(i==pos){c += memoryBlocks[i, 1] * relativeFragmentSize + (memoryBlocks[i, 0] * relativeFragmentSize)/2; }
+                else{c += memoryBlocks[i, 1] * relativeFragmentSize + memoryBlocks[i, 0] * relativeFragmentSize; }
                 if (i > 0) { c += relativeFragmentSize; } //don't forget the parting lines with width 1
             }
 
@@ -171,6 +173,16 @@ namespace WertheApp.BS
 			layer.AddChild(cc_arrow1b);
         }
 
+        public static void ClearRedArrow()
+        {
+			if (cc_arrow1 != null && cc_arrow1a != null && cc_arrow1b != null)
+			{
+				cc_arrow1.Clear();
+				cc_arrow1b.Clear();
+				cc_arrow1a.Clear();
+			}
+        }
+
         public static void DrawGrayArrow()
         {
 			//gray arrow
@@ -200,32 +212,102 @@ namespace WertheApp.BS
 			layer.AddChild(cc_arrow2b);
         }
 
+        public static void ClearGrayArrow()
+        {
+			if (cc_arrow2 != null && cc_arrow2a != null && cc_arrow2b != null)
+			{
+				cc_arrow2.Clear();
+				cc_arrow2b.Clear();
+				cc_arrow2a.Clear();
+			}
+        }
 
-		public static void FirstFit(int memoryRequest) 
+        public static void DrawFill()
+        {
+            int request = AllocationStrategies.memoryRequest; 
+			float start = 0;
+			for (int i = 0; i <= pos; i++)
+			{
+				if (i == pos) 
+                { 
+                    start += memoryBlocks[i, 1] * relativeFragmentSize; 
+                    Debug.WriteLine("request:" + request);
+                    Debug.WriteLine("pos:"+pos);
+                    Debug.WriteLine("memoryBlocksize:"+ memoryBlocks[i,0]);
+
+                    memoryBlocks[i, 0] -= request;
+                    memoryBlocks[i, 1] += request;
+                }
+				else 
+                { 
+                    start += memoryBlocks[i, 1] * relativeFragmentSize + memoryBlocks[i, 0] * relativeFragmentSize;
+                }
+				if (i > 0) 
+                { 
+                    start += relativeFragmentSize;
+                } //don't forget the parting lines with width 1
+			}
+
+            //Memory Box starts at 15 +1 linewidth -> we have to start at 16
+            float partingLineWidth = relativeFragmentSize / 2;
+            float posXstart = 16f + start + +partingLineWidth;
+
+
+            //var fill = new CCRect(posXstart, 22, posXend, 48);//CCRect(x,y,legth,width)
+			cc_fill = new CCDrawNode();
+
+            for (int i = 0; i < request; i++)
+            {
+                cc_fill.DrawLine(
+                    from: new CCPoint(posXstart, 22),
+                    to: new CCPoint(posXstart, 70),
+                    lineWidth: partingLineWidth,
+                    color: CCColor4B.Blue);
+                posXstart += relativeFragmentSize;
+            }
+			layer.AddChild(cc_fill);
+
+		}
+
+        public static bool CheckIfFull()
+        {
+            bool check = true;
+            for (int i = 0; i < memoryBlocks.GetLength(0); i++)
+            {
+                if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+            }
+            return check;
+        }
+
+        public static void FirstFit(int memoryRequest)
         {
             //don't show previously drawn arrows
-            if(cc_arrow1 != null && cc_arrow1a != null && cc_arrow1b != null )
-            {
-                cc_arrow1.Clear();
-                cc_arrow1b.Clear();
-                cc_arrow1a.Clear();
-            }
-            DrawRedArrow();
+            ClearRedArrow();
 
-            //if end is reached and nothing did fit in -> unsuccessfull
-            if (pos == memoryBlocks.GetLength(0)-1 && memoryRequest > memoryBlocks[pos,0])
+
+            if (memoryBlocks[pos, 0] == 0)
+            {
+                    pos++;
+                    FirstFit(memoryRequest);
+            }
+            else
             { 
-                Debug.WriteLine("End is reached");
-                AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)3;
+                DrawRedArrow();
+                AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
+                AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
+				if (pos == memoryBlocks.GetLength(0) - 1 && memoryRequest > memoryBlocks[pos, 0])
+				{
+					Debug.WriteLine("End is reached");
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
 
-			}
-            else if(memoryRequest <= memoryBlocks[pos,0]) //if it fits ->successfull
-            {
-                Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos,0]);
-                AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)2;
+				}
+				else if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
+				{
+					Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+				}
             }
 
-            //if end is reached and it did fit in -> successfull -> bei nächstem button click draw methode aufrufen
         }
 
 		public static void NextFit(int memoryRequest) 
@@ -251,23 +333,24 @@ namespace WertheApp.BS
 		public static void RequestNew(int memoryRequest)
 		{
             pos = 0;
-			switch (strategy)
-			{
-				case "First Fit":
-					FirstFit(memoryRequest);
-					break;
-				case "Next Fit":
-					NextFit(memoryRequest);
-					break;
-				case "Best Fit":
-					BestFit(memoryRequest);
-					break;
-				case "Worst Fit":
-					WorstFit(memoryRequest);
-					break;
-				case "Tailoring Best Fit":
-					TailoringBestFit(memoryRequest);
-					break;
+
+				switch (strategy)
+				{
+					case "First Fit":
+						FirstFit(memoryRequest);
+						break;
+					case "Next Fit":
+						NextFit(memoryRequest);
+						break;
+					case "Best Fit":
+						BestFit(memoryRequest);
+						break;
+					case "Worst Fit":
+						WorstFit(memoryRequest);
+						break;
+					case "Tailoring Best Fit":
+						TailoringBestFit(memoryRequest);
+						break;  
 			}
             /*
             Debug.WriteLine("total memorysize = "+totalMemorySize);

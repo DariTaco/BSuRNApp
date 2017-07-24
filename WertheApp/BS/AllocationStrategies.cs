@@ -33,10 +33,16 @@ namespace WertheApp.BS
             searchingForBlock = 1, // currently searching for a memory block which is big enough 
             successfull = 2, //free memory found 
             unsuccessfull = 3, //no memory block found which is big enough to fit in the request
-            noRequestYet = 4   //the application just started an no memory has been requested yet
-		}
+            noRequestYet = 4,   //the application just started an no memory has been requested yet
+            memoryFull = 5 //no free space at all. Every block is full
+        }
         public static myEnum memoryRequestState;
 
+        //Labels. Values change
+        public static Label l_Size;
+        public static Label l_Free;
+        public static Label l_Diff;
+        public static Label l_Best;
 
         //values for labels
         String size = "-";
@@ -73,8 +79,23 @@ namespace WertheApp.BS
             //EVENT LISTENER
 			//subscribe to Message in order to know if a new memory request was made
             MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{ 
-                memoryRequestState = myEnum.searchingForBlock;
-                AllocationStrategiesScene.RequestNew(memoryRequest); 
+                
+                l_Size.Text = memoryRequest.ToString();
+                l_Diff.Text = diff;
+                l_Best.Text = best;
+                l_Free.Text = free;
+				if (AllocationStrategiesScene.CheckIfFull())
+				{
+					Debug.WriteLine("MEMORY IS FULL!");
+					memoryRequestState = myEnum.memoryFull;
+                }
+                else
+                {
+                    memoryRequestState = myEnum.newRequest;
+                    Debug.WriteLine("Message is received: NEW REQUEST");
+                }
+
+
             });
         }
 
@@ -152,28 +173,28 @@ namespace WertheApp.BS
 
             var l_1 = new Label { Text = "Size:", WidthRequest = StackChildSize, 
                 VerticalOptions= LayoutOptions.Center};
-			var l_Size = new Label { Text = size, WidthRequest = StackChildSize, 
+			l_Size = new Label { Text = size, WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center };
 			stackLayout.Children.Add(l_1);
             stackLayout.Children.Add(l_Size);
 
             var l_2 = new Label { Text = "Free:", WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center };
-            var l_Free = new Label { Text = free, WidthRequest = StackChildSize, 
+            l_Free = new Label { Text = free, WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center };
 			stackLayout.Children.Add(l_2);
             stackLayout.Children.Add(l_Free);
 
             var l_3 = new Label { Text = "Diff.:", WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center };
-            var l_Diff = new Label { Text = diff, WidthRequest = StackChildSize, 
+            l_Diff = new Label { Text = diff, WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center };
             stackLayout.Children.Add(l_3);
             stackLayout.Children.Add(l_Diff);
 
             var l_4 = new Label { Text = "Best:", WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center };
-            var l_Best = new Label { Text = best, WidthRequest = StackChildSize, 
+            l_Best = new Label { Text = best, WidthRequest = StackChildSize, 
                 VerticalOptions = LayoutOptions.Center};
 			stackLayout.Children.Add(l_4);
             stackLayout.Children.Add(l_Best);
@@ -188,7 +209,68 @@ namespace WertheApp.BS
 
         async void B_Next_Clicked(object sender, EventArgs e)
         {
-            if (memoryRequestState == myEnum.searchingForBlock)
+            switch (memoryRequestState)
+			{
+                case myEnum.newRequest: //new request
+                    memoryRequestState = myEnum.searchingForBlock;
+                    AllocationStrategiesScene.RequestNew(memoryRequest);
+                    Debug.WriteLine("NEW REQUEST");
+					break;
+                case myEnum.searchingForBlock: //searching for block
+                    Debug.WriteLine("SEARCHING FOR BLOCK");
+					switch (strategy)
+					{
+						case "First Fit":
+							AllocationStrategiesScene.pos++;
+							AllocationStrategiesScene.FirstFit(memoryRequest);
+							break;
+						case "Next Fit":
+
+							break;
+						case "Best Fit":
+
+							break;
+						case "Worst Fit":
+
+							break;
+						case "Tailoring Best Fit":
+
+							break;
+					}
+					break;
+                case myEnum.successfull: //successfull
+                    Debug.WriteLine("SUCCESSFULL");
+					AllocationStrategiesScene.ClearRedArrow();
+					AllocationStrategiesScene.ClearGrayArrow();
+                    AllocationStrategiesScene.DrawFill();
+					memoryRequestState = myEnum.noRequestYet;
+					break;
+                case myEnum.unsuccessfull: //unsucessfull
+                    Debug.WriteLine("UNSUCCESSFULL");
+					AllocationStrategiesScene.ClearGrayArrow();
+					AllocationStrategiesScene.ClearRedArrow();
+					await DisplayAlert("Alert", "No free space has been found", "OK");
+					memoryRequestState = myEnum.noRequestYet; //ready for a new request
+					break;
+                case myEnum.noRequestYet: //no requst yet
+                    Debug.WriteLine("NO REQUEST YET");
+                    await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
+                    break;
+                case myEnum.memoryFull: //memory is full
+                    Debug.WriteLine("MEMORY IS FULL");
+                    await DisplayAlert("Alert", "Memory is full! The app will close now", "OK");
+                    await Navigation.PopAsync();
+                    break;
+			}
+
+            /*
+            //if new request
+            if(memoryRequestState == myEnum.newRequest)
+            {
+                AllocationStrategiesScene.RequestNew(memoryRequest);
+			}
+            //if searching for block
+            else if (memoryRequestState == myEnum.searchingForBlock)
             {
                 switch (strategy)
                 {
@@ -211,15 +293,29 @@ namespace WertheApp.BS
                 }
             }
 
+            //if unsuccessfull
             else if(memoryRequestState == myEnum.unsuccessfull)
             {
+                AllocationStrategiesScene.ClearGrayArrow();
+                AllocationStrategiesScene.ClearRedArrow();
                 await DisplayAlert("Alert", "No free space has been found", "OK");
-                memoryRequestState = myEnum.newRequest; //ready for a new request
-            }         
-            else //new request or successfull or no request yet
+                memoryRequestState = myEnum.noRequestYet; //ready for a new request
+            }
+
+            //if successfull
+            else if(memoryRequestState == myEnum.successfull) 
+            {
+                AllocationStrategiesScene.ClearRedArrow();
+                AllocationStrategiesScene.ClearGrayArrow();
+                memoryRequestState = myEnum.noRequestYet; 
+            }
+            //if noRequestYet
+            else if(memoryRequestState == myEnum.noRequestYet) 
 			{
 				await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
 			}
+            */
+
         }
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)

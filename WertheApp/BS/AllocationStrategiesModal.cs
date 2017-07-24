@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions; //Regex.IsMatch
-
+using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms; //Messaging Center
 
 namespace WertheApp.BS
@@ -67,8 +67,10 @@ namespace WertheApp.BS
         {
             if (e_MemoryRequest.Text != null && ValidateMemoryRequestInput())
             {
+				Debug.WriteLine("Message is sent"); 
                 AllocationStrategies.memoryRequest = Int32.Parse(e_MemoryRequest.Text);
 				MessagingCenter.Send<AllocationStrategiesModal>(this, "new memory request");// inform all subscribers
+              
 				await Navigation.PopModalAsync(); // close Modal
             }
             else if (e_MemoryRequest.Text == null) { await DisplayAlert("Alert", "Please enter size of memory request", "OK"); }
