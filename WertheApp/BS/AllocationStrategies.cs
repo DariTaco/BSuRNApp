@@ -229,12 +229,15 @@ namespace WertheApp.BS
                             AllocationStrategiesScene.NextFit(memoryRequest);
 							break;
 						case "Best Fit":
+                            AllocationStrategiesScene.pos++;
                             AllocationStrategiesScene.BestFit(memoryRequest);
 							break;
 						case "Worst Fit":
+                            AllocationStrategiesScene.pos++;
                             AllocationStrategiesScene.WorstFit(memoryRequest);
 							break;
 						case "Tailoring Best Fit":
+                            AllocationStrategiesScene.pos++;
                             AllocationStrategiesScene.TailoringBestFit(memoryRequest);
 							break;
 					}

@@ -24,7 +24,9 @@ namespace WertheApp.BS
 		static String strategy; 
         public static int[,] memoryBlocks; //used to work with the memory and is constantly updated
         public static int pos; //memoryBlocks[pos]
-        public static int suc; //the latest successfull block that was filled
+        public static int suc; //the latest successfull block that was filled //NEXTFIT
+        public static int besValue;
+        public static int besPos;
         //+relativeFragmentsize
         //number of Blocks = memoryBlock.length();
 
@@ -54,6 +56,8 @@ namespace WertheApp.BS
 
             pos = 0;
             suc = 0;
+            besValue = 0;
+            besPos = -1;
 
             Debug.WriteLine("CONSTRUCTOR WAS CALLED");
             fragmentList = AllocationStrategies.fragmentList;
@@ -191,7 +195,17 @@ namespace WertheApp.BS
         public static void DrawGrayArrow()
         {
 			//gray arrow
-			posArrow2 = 16;
+			float c = 0;
+			for (int i = 0; i <= besPos; i++)
+			{
+				if (i == besPos) { c += memoryBlocks[i, 1] * relativeFragmentSize + (memoryBlocks[i, 0] * relativeFragmentSize) / 2; }
+				else { c += memoryBlocks[i, 1] * relativeFragmentSize + memoryBlocks[i, 0] * relativeFragmentSize; }
+				if (i > 0) { c += relativeFragmentSize; } //don't forget the parting lines with width 1
+			}
+
+			//Memory Box starts at 15 +1 linewidth ->15.5
+			posArrow2 = 15.5f + c;
+
 			cc_arrow2 = new CCDrawNode();
 			cc_arrow2a = new CCDrawNode();
 			cc_arrow2b = new CCDrawNode();
@@ -359,13 +373,117 @@ namespace WertheApp.BS
         }
 
         public static void BestFit(int memoryRequest) 
-        { 
-        
+        {
+			//don't show previously drawn arrows
+			ClearRedArrow();
+
+            //if the memory block is already full
+            if (memoryBlocks[pos, 0] == 0)
+            {
+                pos++;
+                FirstFit(memoryRequest);
+            }
+
+            else //if there is still space left in the memory block
+            {
+                DrawRedArrow();
+                AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
+                AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
+                AllocationStrategies.l_Best.Text = (besValue-memoryRequest).ToString();
+
+                //if it fits perfectly -> search was successfull
+                if (memoryRequest == memoryBlocks[pos, 0])
+                {
+                    Debug.WriteLine("It fits PERFECTLY in memory block: " + memoryBlocks[pos, 0]);
+                    AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+                }
+                else
+                {
+                    //if free space was found and it's bigger than the last free space that has been found 
+                    if (memoryRequest <= memoryBlocks[pos, 0] && memoryBlocks[pos, 0] < besValue )
+                    {
+                        ClearGrayArrow();
+                        besPos = pos;
+                        besValue = memoryBlocks[pos, 0];
+                        DrawGrayArrow();
+						AllocationStrategies.l_Best.Text = (besValue - memoryRequest).ToString();
+
+                    }
+                }
+				//if also the end is reached
+				if (pos == memoryBlocks.GetLength(0) - 1)
+				{
+                    if(besValue == 0)
+                    {
+						Debug.WriteLine("END IS REACHED UNSUCCESSFULL");
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+                    }
+                    else
+                    {
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+						pos = besPos;
+						Debug.WriteLine("END IS REACHED SUCCESSFULL");
+                    }
+
+				}
+            }
         }
 
 		public static void WorstFit(int memoryRequest) 
-        { 
-        
+        {
+			//don't show previously drawn arrows
+			ClearRedArrow();
+
+			//if the memory block is already full
+			if (memoryBlocks[pos, 0] == 0)
+			{
+				pos++;
+				FirstFit(memoryRequest);
+			}
+
+			else //if there is still space left in the memory block
+			{
+				DrawRedArrow();
+				AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
+				AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
+				AllocationStrategies.l_Best.Text = (besValue - memoryRequest).ToString();
+
+				//if it fits perfectly -> search was successfull
+				if (memoryRequest == memoryBlocks[pos, 0])
+				{
+					Debug.WriteLine("It fits PERFECTLY in memory block: " + memoryBlocks[pos, 0]);
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+				}
+				else
+				{
+					//if free space was found and it's bigger than the last free space that has been found 
+					if (memoryRequest <= memoryBlocks[pos, 0] && memoryBlocks[pos, 0] > besValue)
+					{
+						ClearGrayArrow();
+						besPos = pos;
+						besValue = memoryBlocks[pos, 0];
+						DrawGrayArrow();
+						AllocationStrategies.l_Best.Text = (besValue - memoryRequest).ToString();
+
+					}
+				}
+				//if also the end is reached
+				if (pos == memoryBlocks.GetLength(0) - 1)
+				{
+					if (besValue == 0)
+					{
+						Debug.WriteLine("END IS REACHED UNSUCCESSFULL");
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+					}
+					else
+					{
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+						pos = besPos;
+						Debug.WriteLine("END IS REACHED SUCCESSFULL");
+					}
+
+				}
+			}
         }
 
 		public static void TailoringBestFit(int memoryRequest) 
@@ -387,10 +505,14 @@ namespace WertheApp.BS
 						NextFit(memoryRequest);
 						break;
 					case "Best Fit":
-						BestFit(memoryRequest);
+                        pos = 0; //every new request begins at the very start
+                        besValue = 0;
+                        besPos = -1;
+					    BestFit(memoryRequest);
 						break;
 					case "Worst Fit":
-						WorstFit(memoryRequest);
+                        pos = 0; //every new request begins at the very start
+					    WorstFit(memoryRequest);
 						break;
 					case "Tailoring Best Fit":
 						TailoringBestFit(memoryRequest);
