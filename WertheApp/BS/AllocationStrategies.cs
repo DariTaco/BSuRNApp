@@ -225,16 +225,17 @@ namespace WertheApp.BS
 							AllocationStrategiesScene.FirstFit(memoryRequest);
 							break;
 						case "Next Fit":
-
+                            AllocationStrategiesScene.pos++;
+                            AllocationStrategiesScene.NextFit(memoryRequest);
 							break;
 						case "Best Fit":
-
+                            AllocationStrategiesScene.BestFit(memoryRequest);
 							break;
 						case "Worst Fit":
-
+                            AllocationStrategiesScene.WorstFit(memoryRequest);
 							break;
 						case "Tailoring Best Fit":
-
+                            AllocationStrategiesScene.TailoringBestFit(memoryRequest);
 							break;
 					}
 					break;
@@ -262,6 +263,7 @@ namespace WertheApp.BS
                     await Navigation.PopAsync();
                     break;
 			}
+
 
             /*
             //if new request

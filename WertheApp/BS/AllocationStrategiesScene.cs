@@ -24,6 +24,7 @@ namespace WertheApp.BS
 		static String strategy; 
         public static int[,] memoryBlocks; //used to work with the memory and is constantly updated
         public static int pos; //memoryBlocks[pos]
+        public static int suc; //the latest successfull block that was filled
         //+relativeFragmentsize
         //number of Blocks = memoryBlock.length();
 
@@ -49,8 +50,12 @@ namespace WertheApp.BS
         {
 			//add a layer to draw on
 			layer = new CCLayer();
-			this.AddLayer(layer); 
+			this.AddLayer(layer);
 
+            pos = 0;
+            suc = 0;
+
+            Debug.WriteLine("CONSTRUCTOR WAS CALLED");
             fragmentList = AllocationStrategies.fragmentList;
             strategy = AllocationStrategies.strategy;
 
@@ -284,23 +289,26 @@ namespace WertheApp.BS
             //don't show previously drawn arrows
             ClearRedArrow();
 
-
+            //if the memory block is already full
             if (memoryBlocks[pos, 0] == 0)
             {
                     pos++;
                     FirstFit(memoryRequest);
             }
-            else
-            { 
+            else //if there is still space left in the memory block
+			{ 
                 DrawRedArrow();
                 AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
                 AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
+
+                //if the search was unsuccessfull
 				if (pos == memoryBlocks.GetLength(0) - 1 && memoryRequest > memoryBlocks[pos, 0])
 				{
 					Debug.WriteLine("End is reached");
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
 
 				}
+                //if the search was successfull
 				else if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
 				{
 					Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
@@ -311,8 +319,43 @@ namespace WertheApp.BS
         }
 
 		public static void NextFit(int memoryRequest) 
-        { 
-        
+        {
+			//don't show previously drawn arrows
+			ClearRedArrow();
+
+			//if the memory block is already full
+			if (memoryBlocks[pos, 0] == 0)
+			{
+				pos++;
+				FirstFit(memoryRequest);
+			}
+			else //if there is still space left in the memory block
+			{
+				DrawRedArrow();
+				AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
+				AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
+
+				//if the search was unsuccessfull //||for the special case that the very first request is too big to fit in any block
+                if ((pos == suc-1 && memoryRequest > memoryBlocks[pos, 0]) || (suc == 0 && pos == memoryBlocks.GetLength(0)-1 && memoryRequest > memoryBlocks[pos, 0]))
+				{
+					Debug.WriteLine("End is reached");
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+
+				}
+                //if the search was successfull
+				else if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
+				{
+                    suc = pos; //the latest successfull block, that was filled
+					Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+				}
+                //if the end is reached and wasn't successfull
+				else if(pos == memoryBlocks.GetLength(0) - 1)
+					{
+						pos = -1; //-1 becuase pos++ in button click method in allocationstrategies
+                        Debug.WriteLine("Start from the beginning");
+					}
+			}
         }
 
         public static void BestFit(int memoryRequest) 
@@ -332,14 +375,15 @@ namespace WertheApp.BS
 
 		public static void RequestNew(int memoryRequest)
 		{
-            pos = 0;
 
 				switch (strategy)
 				{
 					case "First Fit":
+                        pos = 0; //every new request begins at the very start
 						FirstFit(memoryRequest);
 						break;
 					case "Next Fit":
+                        pos = suc;
 						NextFit(memoryRequest);
 						break;
 					case "Best Fit":
