@@ -82,7 +82,6 @@ namespace WertheApp.BS
                 
                 l_Size.Text = memoryRequest.ToString();
                 l_Diff.Text = diff;
-                l_Best.Text = best;
                 l_Free.Text = free;
 				if (AllocationStrategiesScene.CheckIfFull())
 				{
@@ -214,10 +213,10 @@ namespace WertheApp.BS
                 case myEnum.newRequest: //new request
                     memoryRequestState = myEnum.searchingForBlock;
                     AllocationStrategiesScene.RequestNew(memoryRequest);
-                    Debug.WriteLine("NEW REQUEST");
+                    //Debug.WriteLine("NEW REQUEST");
 					break;
                 case myEnum.searchingForBlock: //searching for block
-                    Debug.WriteLine("SEARCHING FOR BLOCK");
+                    //Debug.WriteLine("SEARCHING FOR BLOCK");
 					switch (strategy)
 					{
 						case "First Fit":
@@ -243,25 +242,37 @@ namespace WertheApp.BS
 					}
 					break;
                 case myEnum.successfull: //successfull
-                    Debug.WriteLine("SUCCESSFULL");
+                    //Debug.WriteLine("SUCCESSFULL");
 					AllocationStrategiesScene.ClearRedArrow();
 					AllocationStrategiesScene.ClearGrayArrow();
                     AllocationStrategiesScene.DrawFill();
 					memoryRequestState = myEnum.noRequestYet;
+
+					//clear information bar
+					l_Size.Text = size;
+					l_Diff.Text = diff;
+					l_Best.Text = best;
+					l_Free.Text = free;
 					break;
                 case myEnum.unsuccessfull: //unsucessfull
-                    Debug.WriteLine("UNSUCCESSFULL");
+                    //Debug.WriteLine("UNSUCCESSFULL");
 					AllocationStrategiesScene.ClearGrayArrow();
 					AllocationStrategiesScene.ClearRedArrow();
 					await DisplayAlert("Alert", "No free space has been found", "OK");
 					memoryRequestState = myEnum.noRequestYet; //ready for a new request
+															  
+                    //clear information bar
+					l_Size.Text = size;
+					l_Diff.Text = diff;
+					l_Best.Text = best;
+					l_Free.Text = free;
 					break;
                 case myEnum.noRequestYet: //no requst yet
-                    Debug.WriteLine("NO REQUEST YET");
+                    //Debug.WriteLine("NO REQUEST YET");
                     await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
                     break;
                 case myEnum.memoryFull: //memory is full
-                    Debug.WriteLine("MEMORY IS FULL");
+                    //Debug.WriteLine("MEMORY IS FULL");
                     await DisplayAlert("Alert", "Memory is full! The app will close now", "OK");
                     await Navigation.PopAsync();
                     break;

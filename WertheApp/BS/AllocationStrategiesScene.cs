@@ -5,6 +5,7 @@ using System.Linq; //fragmentList.ElementAt(i);
 using System.Diagnostics;
 using Xamarin.Forms; //Messaging Center
 
+//just gonna say: whoever has to read or even work with this code. I'm genuinly sorry. I'm sure there is a way better solution for everything...
 namespace WertheApp.BS
 {
     public class AllocationStrategiesScene : CCScene
@@ -55,7 +56,7 @@ namespace WertheApp.BS
 			this.AddLayer(layer);
 
             pos = 0;
-            suc = 0;
+            suc = -1;
             besValue = 0;
             besPos = -1;
 
@@ -298,6 +299,45 @@ namespace WertheApp.BS
             return check;
         }
 
+        public static bool FollowingFull()
+        {
+			bool check = true;
+			for (int i = pos+1; i < memoryBlocks.GetLength(0); i++)
+			{
+				if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+			}
+			return check;
+        }
+
+        public static bool FollowingFullNextFit()
+        {
+			bool check = true;
+            //if pos at end of array
+            if(pos == memoryBlocks.GetLength(0)-1)
+            {
+				for (int i = 0; i <= suc; i++)
+				{
+					if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+				}
+				
+            }
+            //pos not at end but after suc
+            else if (pos > suc)
+            {
+				for (int i = pos + 1; i < memoryBlocks.GetLength(0); i++)
+				{
+					if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+				}
+				for (int i = 0; i <= suc; i++)
+				{
+					if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+				}
+			
+            }
+            return check;
+
+        }
+
         public static void FirstFit(int memoryRequest)
         {
             //don't show previously drawn arrows
@@ -316,7 +356,7 @@ namespace WertheApp.BS
                 AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
 
                 //if the search was unsuccessfull
-				if (pos == memoryBlocks.GetLength(0) - 1 && memoryRequest > memoryBlocks[pos, 0])
+                if ((pos == memoryBlocks.GetLength(0) - 1 || FollowingFull()) && memoryRequest > memoryBlocks[pos, 0])
 				{
 					Debug.WriteLine("End is reached");
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
@@ -334,14 +374,15 @@ namespace WertheApp.BS
 
 		public static void NextFit(int memoryRequest) 
         {
+			
 			//don't show previously drawn arrows
 			ClearRedArrow();
 
 			//if the memory block is already full
 			if (memoryBlocks[pos, 0] == 0)
 			{
-				pos++;
-				FirstFit(memoryRequest);
+                pos++;
+				NextFit(memoryRequest);
 			}
 			else //if there is still space left in the memory block
 			{
@@ -359,11 +400,18 @@ namespace WertheApp.BS
                 //if the search was successfull
 				else if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
 				{
-                    suc = pos; //the latest successfull block, that was filled
+                    //if also the end is reached and memory request fits perfectly
+                    if ((pos == memoryBlocks.GetLength(0) - 1 || FollowingFullNextFit()) && memoryRequest == memoryBlocks[pos, 0])
+					{
+                        //suc = erstes freies Stück
+                        Debug.WriteLine("Next suc:");
+					}
+                    else { suc = pos; } //the latest successfull block, that was filled
 					Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+
 				}
-                //if the end is reached and wasn't successfull
+                //if the end is reached and wasn't successfull start from the beginning
 				else if(pos == memoryBlocks.GetLength(0) - 1)
 					{
 						pos = -1; //-1 becuase pos++ in button click method in allocationstrategies
@@ -377,23 +425,28 @@ namespace WertheApp.BS
 			//don't show previously drawn arrows
 			ClearRedArrow();
 
-            //if the memory block is already full
+
+            //if the memory block is already full 
             if (memoryBlocks[pos, 0] == 0)
             {
-                pos++;
-                FirstFit(memoryRequest);
-            }
+				pos++;
+				BestFit(memoryRequest);
+				Debug.WriteLine("Memory block is full");
 
+            }
             else //if there is still space left in the memory block
             {
                 DrawRedArrow();
                 AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
                 AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
-                AllocationStrategies.l_Best.Text = (besValue-memoryRequest).ToString();
 
                 //if it fits perfectly -> search was successfull
                 if (memoryRequest == memoryBlocks[pos, 0])
                 {
+					ClearGrayArrow();
+					besPos = pos;
+					besValue = memoryBlocks[pos, 0];
+					DrawGrayArrow();
                     Debug.WriteLine("It fits PERFECTLY in memory block: " + memoryBlocks[pos, 0]);
                     AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
                 }
@@ -410,16 +463,17 @@ namespace WertheApp.BS
 
                     }
                 }
-				//if also the end is reached
-				if (pos == memoryBlocks.GetLength(0) - 1)
+                //if also the end is reached or every follwoing block is already full 
+                if (pos == memoryBlocks.GetLength(0) - 1 || FollowingFull())
 				{
-                    if(besValue == 0)
+                    if(besValue == Int32.MaxValue)
                     {
 						Debug.WriteLine("END IS REACHED UNSUCCESSFULL");
 						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
                     }
                     else
                     {
+                        Debug.WriteLine("bestvalue = "+besValue+ " ,MaxValue = "+Int32.MaxValue);
 						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 						pos = besPos;
 						Debug.WriteLine("END IS REACHED SUCCESSFULL");
@@ -431,26 +485,81 @@ namespace WertheApp.BS
 
 		public static void WorstFit(int memoryRequest) 
         {
-			//don't show previously drawn arrows
+			// don't show previously drawn arrows
+
 			ClearRedArrow();
 
-			//if the memory block is already full
+
+			//if the memory block is already full 
 			if (memoryBlocks[pos, 0] == 0)
 			{
 				pos++;
-				FirstFit(memoryRequest);
-			}
+				WorstFit(memoryRequest);
+				Debug.WriteLine("Memory block is full");
 
+			}
 			else //if there is still space left in the memory block
 			{
 				DrawRedArrow();
 				AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
 				AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
-				AllocationStrategies.l_Best.Text = (besValue - memoryRequest).ToString();
+
+			    //if free space was found and it's bigger than the last free space that has been found 
+				if (memoryRequest <= memoryBlocks[pos, 0] && memoryBlocks[pos, 0] > besValue)
+				{
+					ClearGrayArrow();
+					besPos = pos;
+					besValue = memoryBlocks[pos, 0];
+					DrawGrayArrow();
+					AllocationStrategies.l_Best.Text = (besValue - memoryRequest).ToString();
+
+				}
+			}
+			//if also the end is reached or every follwoing block is already full 
+			if (pos == memoryBlocks.GetLength(0) - 1 || FollowingFull())
+			{
+				if (besValue == 0)
+				{
+					Debug.WriteLine("END IS REACHED UNSUCCESSFULL");
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+				}
+				else
+				{
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+					pos = besPos;
+					Debug.WriteLine("END IS REACHED SUCCESSFULL");
+				}
+
+			}
+		}
+
+		public static void TailoringBestFit(int memoryRequest) 
+        {
+			//don't show previously drawn arrows
+			ClearRedArrow();
+
+
+			//if the memory block is already full 
+			if (memoryBlocks[pos, 0] == 0)
+			{
+				pos++;
+				BestFit(memoryRequest);
+				Debug.WriteLine("Memory block is full");
+
+			}
+			else //if there is still space left in the memory block
+			{
+				DrawRedArrow();
+				AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
+				AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
 
 				//if it fits perfectly -> search was successfull
 				if (memoryRequest == memoryBlocks[pos, 0])
 				{
+					ClearGrayArrow();
+					besPos = pos;
+					besValue = memoryBlocks[pos, 0];
+					DrawGrayArrow();
 					Debug.WriteLine("It fits PERFECTLY in memory block: " + memoryBlocks[pos, 0]);
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 				}
@@ -467,8 +576,8 @@ namespace WertheApp.BS
 
 					}
 				}
-				//if also the end is reached
-				if (pos == memoryBlocks.GetLength(0) - 1)
+				//if also the end is reached or every follwoing block is already full 
+				if (pos == memoryBlocks.GetLength(0) - 1 || FollowingFull())
 				{
 					if (besValue == 0)
 					{
@@ -486,11 +595,6 @@ namespace WertheApp.BS
 			}
         }
 
-		public static void TailoringBestFit(int memoryRequest) 
-        { 
-        
-        }
-
 		public static void RequestNew(int memoryRequest)
 		{
 
@@ -501,21 +605,50 @@ namespace WertheApp.BS
 						FirstFit(memoryRequest);
 						break;
 					case "Next Fit":
-                        pos = suc;
+                        pos = suc; // every new request starts where the previous successfull search ended
 						NextFit(memoryRequest);
 						break;
 					case "Best Fit":
                         pos = 0; //every new request begins at the very start
-                        besValue = 0;
-                        besPos = -1;
+                        if (memoryBlocks[0, 0] - memoryRequest >= 0) 
+                        { 
+                            besPos = 0; 
+                            besValue = memoryBlocks[0, 0]; 
+                            AllocationStrategies.l_Best.Text = (memoryBlocks[0, 0] -memoryRequest).ToString(); 
+                            ClearGrayArrow();
+                            DrawGrayArrow();
+                        }
+                        //Int32.MaxValue since in BestFit(): if(memoryRequest <= memoryBlocks[pos, 0] && memoryBlocks[pos, 0] < besValue)
+					    else { besPos = -1; besValue = Int32.MaxValue; AllocationStrategies.l_Best.Text = "-"; } //reset variables
 					    BestFit(memoryRequest);
 						break;
 					case "Worst Fit":
-                        pos = 0; //every new request begins at the very start
+					    pos = 0; //every new request begins at the very start
+					    if (memoryBlocks[0, 0] - memoryRequest >= 0)
+					    {
+						    besPos = 0;
+						    besValue = memoryBlocks[0, 0];
+						    AllocationStrategies.l_Best.Text = (memoryBlocks[0, 0] - memoryRequest).ToString();
+						    ClearGrayArrow();
+						    DrawGrayArrow();
+					    }
+					    //Int32.MaxValue since in BestFit(): if(memoryRequest <= memoryBlocks[pos, 0] && memoryBlocks[pos, 0] < besValue)
+					    else { besPos = -1; besValue = 0; AllocationStrategies.l_Best.Text = "-"; } //reset variables
 					    WorstFit(memoryRequest);
 						break;
 					case "Tailoring Best Fit":
-						TailoringBestFit(memoryRequest);
+					    pos = 0; //every new request begins at the very start
+					    if (memoryBlocks[0, 0] - memoryRequest >= 0)
+					    {
+						    besPos = 0;
+						    besValue = memoryBlocks[0, 0];
+						    AllocationStrategies.l_Best.Text = (memoryBlocks[0, 0] - memoryRequest).ToString();
+						    ClearGrayArrow();
+						    DrawGrayArrow();
+					    }
+					    //Int32.MaxValue since in BestFit(): if(memoryRequest <= memoryBlocks[pos, 0] && memoryBlocks[pos, 0] < besValue)
+					    else { besPos = -1; besValue = 0; AllocationStrategies.l_Best.Text = "-"; } //reset variables
+					    TailoringBestFit(memoryRequest);
 						break;  
 			}
             /*
