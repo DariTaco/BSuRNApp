@@ -70,6 +70,7 @@ namespace WertheApp.BS
 		}
 
         void CreateTopHalf(Grid grid){
+            var scrollview = new ScrollView();
 			var gameView = new CocosSharpView()
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -78,7 +79,8 @@ namespace WertheApp.BS
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
-			grid.Children.Add(gameView, 0, 0);
+            scrollview.Content = gameView;
+            grid.Children.Add(scrollview, 0, 0);
         }
 
         void CreateBottomHalf(Grid grid){
