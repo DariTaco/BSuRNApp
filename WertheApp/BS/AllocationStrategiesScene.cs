@@ -56,8 +56,8 @@ namespace WertheApp.BS
 			this.AddLayer(layer);
 
             pos = 0;
-            suc = -1;
-            besValue = 0;
+            suc = 0;  //the very first request...
+			besValue = 0;
             besPos = -1;
 
             Debug.WriteLine("CONSTRUCTOR WAS CALLED");
@@ -251,10 +251,6 @@ namespace WertheApp.BS
 				if (i == pos) 
                 { 
                     start += memoryBlocks[i, 1] * relativeFragmentSize; 
-                    Debug.WriteLine("request:" + request);
-                    Debug.WriteLine("pos:"+pos);
-                    Debug.WriteLine("memoryBlocksize:"+ memoryBlocks[i,0]);
-
                     memoryBlocks[i, 0] -= request;
                     memoryBlocks[i, 1] += request;
                 }
@@ -301,42 +297,48 @@ namespace WertheApp.BS
 
         public static bool FollowingFull()
         {
-			bool check = true;
-			for (int i = pos+1; i < memoryBlocks.GetLength(0); i++)
-			{
-				if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
-			}
-			return check;
-        }
+            bool check = true;
+            Debug.WriteLine("strategy: " + strategy);
+            //works different for strategy next fit
+            if (strategy == "Next Fit")
+            {
+                Debug.WriteLine("FOLLOWING FULL NEXT FIT");
+                if(pos < suc)
+                {
+                    Debug.WriteLine("pos < suc");
+					for (int i = pos +1; i < suc; i++)
+					{
+						if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+					}
+                }
+                else
+                {
+                    Debug.WriteLine("pos"+pos);
+                    Debug.WriteLine("suc" + suc);
+					for (int i = pos + 1; i < memoryBlocks.GetLength(0); i++)
+					{
+						if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+					}
+					for (int i = 0; i < suc; i++)
+					{
+						if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
+					}
 
-        public static bool FollowingFullNextFit()
-        {
-			bool check = true;
-            //if pos at end of array
-            if(pos == memoryBlocks.GetLength(0)-1)
-            {
-				for (int i = 0; i <= suc; i++)
-				{
-					if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
-				}
-				
+                }
+
             }
-            //pos not at end but after suc
-            else if (pos > suc)
+            else
             {
+                Debug.WriteLine("FOLLOWING FULL WAS ANDERES");
 				for (int i = pos + 1; i < memoryBlocks.GetLength(0); i++)
 				{
 					if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
 				}
-				for (int i = 0; i <= suc; i++)
-				{
-					if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
-				}
-			
             }
-            return check;
-
+            Debug.WriteLine("Return Following Full = "+check);
+			return check;
         }
+
 
         public static void FirstFit(int memoryRequest)
         {
@@ -378,10 +380,21 @@ namespace WertheApp.BS
 			//don't show previously drawn arrows
 			ClearRedArrow();
 
-			//if the memory block is already full
-			if (memoryBlocks[pos, 0] == 0)
+            //&&for the special case suc was not set to the former successfull but instead pos+1 position because it fit in perfectly
+            if(FollowingFull() && memoryRequest > memoryBlocks[pos,0])
+            {
+                DrawRedArrow();
+				Debug.WriteLine("End is reached");
+				AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+			}
+            else if (memoryBlocks[pos, 0] == 0)
 			{
-                pos++;
+                if(pos == memoryBlocks.GetLength(0)-1)
+                {
+                    pos = 0;
+                }
+                else{ pos++; }
+               
 				NextFit(memoryRequest);
 			}
 			else //if there is still space left in the memory block
@@ -390,7 +403,8 @@ namespace WertheApp.BS
 				AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
 				AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
 
-				//if the search was unsuccessfull //||for the special case that the very first request is too big to fit in any block
+                Debug.WriteLine("MEMORY REQ:" + memoryRequest + ", SUC:"+suc +", POS:" + pos + ", VALUE:" + memoryBlocks[pos, 0].ToString());
+				/*//if the search was unsuccessfull //||for the special case that the very first request is too big to fit in any block
                 if ((pos == suc-1 && memoryRequest > memoryBlocks[pos, 0]) || (suc == 0 && pos == memoryBlocks.GetLength(0)-1 && memoryRequest > memoryBlocks[pos, 0]))
 				{
 					Debug.WriteLine("End is reached");
@@ -398,16 +412,37 @@ namespace WertheApp.BS
 
 				}
                 //if the search was successfull
-				else if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
+				else*/ if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
 				{
                     //if also the end is reached and memory request fits perfectly
-                    if ((pos == memoryBlocks.GetLength(0) - 1 || FollowingFullNextFit()) && memoryRequest == memoryBlocks[pos, 0])
+                    Debug.WriteLine("Following Full: " + FollowingFull());
+                    if ((pos == memoryBlocks.GetLength(0) - 1 && memoryRequest == memoryBlocks[pos,0]|| (FollowingFull()) && memoryRequest == memoryBlocks[pos, 0]))
 					{
+                        int j = 0;
+                            for (int i = 0; i < memoryBlocks.GetLength(0); i++)
+                            {
+                                if (memoryBlocks[i, 0] != 0)
+                                {
+                                    Debug.WriteLine("Next suc:" + j);
+                                    j = i;
+                                    i = memoryBlocks.GetLength(0);
+                                }
+                            }
                         //suc = erstes freies Stück
-                        Debug.WriteLine("Next suc:");
+                        suc = j;
+                        Debug.WriteLine("Next suc:"+ j);
 					}
-                    else { suc = pos; } //the latest successfull block, that was filled
-					Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
+                    //if it fits perfectly and the following block has space left
+                    else if(memoryRequest == memoryBlocks[pos,0])
+                    { 
+                        Debug.WriteLine("It fits perfectly and the following block has space left");
+                        suc = pos + 1;
+                    }
+                    else 
+                    { 
+                        Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
+                        suc = pos; 
+                    } //the latest successfull block, that was filled
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 
 				}
@@ -605,7 +640,9 @@ namespace WertheApp.BS
 						FirstFit(memoryRequest);
 						break;
 					case "Next Fit":
+                    Debug.WriteLine("SUC: " + suc);
                         pos = suc; // every new request starts where the previous successfull search ended
+					Debug.WriteLine("POS: " + pos);
 						NextFit(memoryRequest);
 						break;
 					case "Best Fit":
