@@ -9,7 +9,8 @@ namespace WertheApp.BS
     public class BuddySystem : ContentPage
     {
 		//VARIABLES
-        public static int absoluteMemorySize;
+        public static double absoluteMemorySize;
+        public static int powerOfTwo;
 		public static int startedProcessSize; //gets its value from the modal page
         public static string startedProcessName; //gets its value from the modal page
         public static string endedProcessName; //gets its value from modal page
@@ -23,10 +24,10 @@ namespace WertheApp.BS
         //CONSTRUCTOR
 		public BuddySystem(int a)
         {
-            activeProcesses = new List<int>();
+            powerOfTwo = a;
+            absoluteMemorySize = Math.Pow(2, Double.Parse(powerOfTwo.ToString())); //2ExponentX
+			activeProcesses = new List<int>();
 
-            absoluteMemorySize = a;
-         
 			Title = "Buddy System";
 
             //do only create content if device is rotated in landscape
@@ -85,7 +86,6 @@ namespace WertheApp.BS
             ////#######################################################
             gameView.HeightRequest = 900; // SCROLLING!!!!!!!!!!!!!!!!
             //#########################################################
-            Debug.WriteLine("BOUNDS HEIGTH" + gameView.Bounds.Height);
             scrollview.Content = gameView;
             grid.Children.Add(scrollview, 0, 0);
         }

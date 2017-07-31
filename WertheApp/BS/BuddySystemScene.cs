@@ -4,6 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using CocosDenshion;
+using BinaryTree; //Documentation see: https://github.com/Marusyk/BinaryTree
+				  /*Available operations:
+
+				  void Add(T value) - adds a new element to the tree
+				  int Count - returns count of elements in tree
+				  bool IsReadOnly - always return false
+				  bool Contains(T value) - checks if the tree contains the element
+				  bool Remove(T value) - remove element from the tree. Returns true if element was removed.
+				  void Clear() - clears tree
+				  void CopyTo(T[] array, int arrayIndex) - copies all the elements of the tree to the specified one-dimensional array starting at the specified destination array index.
+				  void SetTraversalStrategy(TraversalStrategy traversalStrategy) - sets type of traversal(Pre-order, In-order, Post-order)
+				  IEnumerator<T> GetEnumerator() - returns numerator of tree
+				  To display all elements of tree, use:
+
+				  foreach (var item in binaryTree)
+				  {
+					 Console.Write(item + " ");
+				  }*/
 
 using Xamarin.Forms;
 
@@ -13,21 +31,39 @@ namespace WertheApp.BS
     {
 		//VARIABLES
 		static CCLayer layer;
-        int absoluteMemorySize;
+
         static CCDrawNode cc_box;
 
+		int absoluteMemorySize;
+        int powerOfTwo;
+
         public static List<int> freeBlocksList; //Process names
+        public static BinaryTree<int> binaryTree;
 
 		//CONSTRUCTOR
 		public BuddySystemScene(CCGameView gameView): base(gameView)
         {
-            
+
+            absoluteMemorySize = Int32.Parse(BuddySystem.absoluteMemorySize.ToString());
+            powerOfTwo = BuddySystem.powerOfTwo;
+
+            //set up the binary tree
+            binaryTree = new BinaryTree<int>();
+            var postOrder = new PostOrderTraversal(); // we probably use this one
+			var inOrder = new InOrderTraversal();
+			var preOrder = new PreOrderTraversal();
+            binaryTree.SetTraversalStrategy(postOrder); //set the strategy to postOrder
+            binaryTree.Add(absoluteMemorySize);
+
+			foreach (var item in binaryTree)
+			{
+                Debug.WriteLine(item + " ");
+			}
+
 			//add a layer to draw on
 			layer = new CCLayer();
 			this.AddLayer(layer);
 
-
-            absoluteMemorySize = BuddySystem.absoluteMemorySize;
 
             DrawTest();
 		}

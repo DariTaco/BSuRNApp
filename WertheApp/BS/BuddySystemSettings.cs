@@ -71,7 +71,7 @@ namespace WertheApp.BS
         //If Button Start is clicked
         async void B_Start_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new BuddySystem(Int32.Parse(absoluteMemorySize.ToString())));
+            await Navigation.PushAsync(new BuddySystem(Int32.Parse(p_Exponent.SelectedItem.ToString())));
         }
 
         //If an exponent was picked
