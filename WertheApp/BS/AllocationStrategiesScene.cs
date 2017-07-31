@@ -23,7 +23,7 @@ namespace WertheApp.BS
 
 		//variables for adding function
 		static String strategy; 
-        public static int[,] memoryBlocks; //used to work with the memory and is constantly updated
+        public static int[,] memoryBlocks; //2D array used to work with the memory and is constantly updated
         public static int pos; //memoryBlocks[pos]
         public static int suc; //the latest successfull block that was filled //NEXTFIT
         public static int besValue;

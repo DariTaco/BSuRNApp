@@ -13,6 +13,7 @@ namespace WertheApp.BS
 		public static int startedProcessSize; //gets its value from the modal page
         public static string startedProcessName; //gets its value from the modal page
         public static string endedProcessName; //gets its value from modal page
+        public static List<int> activeProcesses; //Process names
 
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
@@ -22,6 +23,8 @@ namespace WertheApp.BS
         //CONSTRUCTOR
 		public BuddySystem(int a)
         {
+            activeProcesses = new List<int>();
+
             absoluteMemorySize = a;
          
 			Title = "Buddy System";
@@ -72,13 +75,17 @@ namespace WertheApp.BS
         void CreateTopHalf(Grid grid){
             var scrollview = new ScrollView();
 			var gameView = new CocosSharpView()
-			{
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				BackgroundColor = Color.White,
+            {
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                BackgroundColor = Color.White,
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
+            ////#######################################################
+            gameView.HeightRequest = 900; // SCROLLING!!!!!!!!!!!!!!!!
+            //#########################################################
+            Debug.WriteLine("BOUNDS HEIGTH" + gameView.Bounds.Height);
             scrollview.Content = gameView;
             grid.Children.Add(scrollview, 0, 0);
         }
@@ -149,7 +156,7 @@ namespace WertheApp.BS
 			{
 				// This sets the game "world" resolution to 330x100:
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-				gameView.DesignResolution = new CCSizeI(330, 100);
+				gameView.DesignResolution = new CCSizeI(330, 900);
 				// GameScene is the root of the CocosSharp rendering hierarchy:
 				gameScene = new BuddySystemScene(gameView);
 				// Starts CocosSharp:
