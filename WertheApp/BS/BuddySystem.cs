@@ -16,6 +16,11 @@ namespace WertheApp.BS
         public static string endedProcessName; //gets its value from modal page
         public static List<int> activeProcesses; //Process names
 
+        StackLayout stackLayout2;
+        CocosSharpView gameView;
+		BuddySystemScene gameScene;
+		CCGameView cc_gameView;
+
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
@@ -75,18 +80,9 @@ namespace WertheApp.BS
 
         void CreateTopHalf(Grid grid){
             var scrollview = new ScrollView();
-			var gameView = new CocosSharpView()
-            {
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = Color.White,
-				// This gets called after CocosSharp starts up:
-				ViewCreated = HandleViewCreated
-			};
-            ////#######################################################
-            gameView.HeightRequest = 900; // SCROLLING!!!!!!!!!!!!!!!!
-            //#########################################################
-            scrollview.Content = gameView;
+            stackLayout2 = new StackLayout();
+            AddScene();
+            scrollview.Content = stackLayout2;
             grid.Children.Add(scrollview, 0, 0);
         }
 
@@ -128,14 +124,23 @@ namespace WertheApp.BS
 			grid.Children.Add(stackLayout, 0, 1);
         }
 
+
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushModalAsync(new BuddySystemModal(), true);
+
+
+
 		}
 
 		async void B_End_Clicked(object sender, EventArgs e)
 		{
             await Navigation.PushModalAsync(new BuddySystemModal2(), true); //await pop up drop down menu wegen Konsistenz nicht verwendet
+       
+            gameView.HeightRequest = 900; // SCROLLING!!!!!!!!!!!!!!!!
+            cc_gameView.DesignResolution = new CCSizeI(330, 900); //CLIPPING
+			gameScene = new BuddySystemScene(cc_gameView);
+			cc_gameView.RunWithScene(gameScene);
 		}
 
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
@@ -146,21 +151,40 @@ namespace WertheApp.BS
 			isContentCreated = false;
 		}
 
+		void AddScene()
+		{
+
+			gameView = new CocosSharpView()
+			{
+				HorizontalOptions = LayoutOptions.FillAndExpand,
+				VerticalOptions = LayoutOptions.FillAndExpand,
+				BackgroundColor = Color.White,
+				// This gets called after CocosSharp starts up:
+				ViewCreated = HandleViewCreated
+			};
+			////#######################################################
+			gameView.HeightRequest = 100; // SCROLLING!!!!!!!!!!!!!!!!
+										  //#########################################################
+
+			stackLayout2.Children.Add(gameView);
+		}
+
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
-			BuddySystemScene gameScene;
-
-			var gameView = sender as CCGameView;
-			if (gameView != null)
+			
+			cc_gameView = sender as CCGameView;
+			if (cc_gameView != null)
 			{
-				// This sets the game "world" resolution to 330x100:
-				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-				gameView.DesignResolution = new CCSizeI(330, 900);
+                // This sets the game "world" resolution to 330x100:
+                //Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
+                //####################################################
+                cc_gameView.DesignResolution = new CCSizeI(330, 100); //CLIPPING
+                //########################################################
 				// GameScene is the root of the CocosSharp rendering hierarchy:
-				gameScene = new BuddySystemScene(gameView);
+				gameScene = new BuddySystemScene(cc_gameView);
 				// Starts CocosSharp:
-				gameView.RunWithScene(gameScene);
+				cc_gameView.RunWithScene(gameScene);
 			}
 		}
 

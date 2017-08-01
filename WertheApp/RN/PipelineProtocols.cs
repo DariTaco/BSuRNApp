@@ -60,6 +60,7 @@ namespace WertheApp.RN
 
 		void CreateTopHalf(Grid grid)
 		{
+            var scrollview = new ScrollView();
 			var gameView = new CocosSharpView()
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -68,7 +69,9 @@ namespace WertheApp.RN
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
-			grid.Children.Add(gameView, 0, 0);
+            gameView.HeightRequest = 900; // SCROLLING!!!!!!!!!!!!!!!!
+            scrollview.Content = gameView;
+			grid.Children.Add(scrollview, 0, 0);
 		}
 
 		void CreateBottomHalf(Grid grid)
@@ -132,16 +135,18 @@ namespace WertheApp.RN
 		{
 			PipelineProtocolsScene gameScene;
 
-			var gameView = sender as CCGameView;
-			if (gameView != null)
+			var cc_gameView = sender as CCGameView;
+			if (cc_gameView != null)
 			{
 				// This sets the game "world" resolution to 330x100:
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-				gameView.DesignResolution = new CCSizeI(330, 100);
-				// GameScene is the root of the CocosSharp rendering hierarchy:
-				gameScene = new PipelineProtocolsScene(gameView);
+				//###############################################################
+                cc_gameView.DesignResolution = new CCSizeI(330, 900); //CLIPPING
+                //###############################################################
+																	  // GameScene is the root of the CocosSharp rendering hierarchy:
+				gameScene = new PipelineProtocolsScene(cc_gameView);
 				// Starts CocosSharp:
-				gameView.RunWithScene(gameScene);
+				cc_gameView.RunWithScene(gameScene);
 			}
 		}
 
