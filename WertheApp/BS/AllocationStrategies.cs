@@ -273,7 +273,7 @@ namespace WertheApp.BS
                     break;
                 case myEnum.memoryFull: //memory is full
                     //Debug.WriteLine("MEMORY IS FULL");
-                    await DisplayAlert("Alert", "Memory is full! The app will close now", "OK");
+                    await DisplayAlert("Alert", "Out of memory! The app will close now", "OK");
                     await Navigation.PopAsync();
                     break;
 			}

@@ -14,6 +14,7 @@ namespace WertheApp.BS
 		//CONSTRUCTOR
 		public AllocationStrategiesModal()
 		{
+
             //put all memory blocks from previous page into a String
             for (int i = 0; i < AllocationStrategiesScene.memoryBlocks.GetLength(0); i++){
                 if(i == AllocationStrategiesScene.memoryBlocks.GetLength(0)-1){
@@ -22,6 +23,7 @@ namespace WertheApp.BS
                     availableMemory += AllocationStrategiesScene.memoryBlocks[i,0] + ", ";
                 }
             }
+
 			//Title = "";
 			CreateContent();
            
@@ -44,6 +46,7 @@ namespace WertheApp.BS
             b_OK.Clicked += B_OK_Clicked;
 			var l_AvailableMemory = new Label { FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
                 Text = availableMemory };
+
 
             stackLayout.Children.Add(l_Instructions);
             stackLayout.Children.Add(e_MemoryRequest);

@@ -114,7 +114,7 @@ namespace WertheApp.BS
                 box,
                 fillColor: CCColor4B.White,
                 borderWidth: 1,
-                borderColor: CCColor4B.Gray);
+                borderColor: CCColor4B.Red);
             //add box to layer
             layer.AddChild(cc_box);
 

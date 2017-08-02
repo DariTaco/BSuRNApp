@@ -38,17 +38,16 @@ namespace WertheApp.RN
         }
 
 
-        //draw everything. Begginging from the Top
+        //draw everything. Begginging from the Bottom
 		void DrawTest()
 		{
-            //draw first line without boxes
 
-            //draw 31 lines of boxes
-            float yPos =800;
-            for (int i = 0; i < 31; i++)
+            //draw 29 lines of boxes
+            float yPos = 15;
+            for (int i = 0; i < 29; i++)
             {
                 //draw the box on the left side
-                var leftBox = new CCRect(15, yPos,20,20);
+                var leftBox = new CCRect(0, yPos,40,50);
                 CCDrawNode cc_leftBox = new CCDrawNode();
 				cc_leftBox.DrawRect(
                 leftBox,
@@ -58,7 +57,7 @@ namespace WertheApp.RN
                 layer.AddChild(cc_leftBox);
 
                 //draw the box on the right side
-                var rightBox = new CCRect(302, yPos,20,20);
+                var rightBox = new CCRect(360, yPos,40,50);
 				CCDrawNode cc_rightBox = new CCDrawNode();
 				cc_rightBox.DrawRect(
 				rightBox,
@@ -67,10 +66,32 @@ namespace WertheApp.RN
 				borderColor: CCColor4B.Gray);
 				layer.AddChild(cc_rightBox);
                 //set yPos 
-                yPos -= 40;
+                yPos += 65; //50 heigth + 15 distance
 
-            }
+			}
 
+			//draw red boxes
+			//draw the box on the left side
+			var lBox = new CCRect(0, yPos, 40, 50);
+			CCDrawNode cc_lBox = new CCDrawNode();
+			cc_lBox.DrawRect(
+			lBox,
+                fillColor: CCColor4B.Gray,
+			borderWidth: 1,
+			borderColor: CCColor4B.Gray);
+			layer.AddChild(cc_lBox);
+
+			//draw the box on the right side
+			var rBox = new CCRect(360, yPos, 40, 50);
+			CCDrawNode cc_rBox = new CCDrawNode();
+			cc_rBox.DrawRect(
+			rBox,
+                fillColor: CCColor4B.Gray,
+			borderWidth: 1,
+			borderColor: CCColor4B.Gray);
+			layer.AddChild(cc_rBox);
+			//set yPos 
+			//yPos += 65; //50 heigth + 15 distance
 
 			// CCLabel Bitmap Font - No need to pass a CCLabelFormat because the default for this constructor is BitmapFont
 			var label2 = new CCLabel("Hello Bitmap Font", "Arial",44);

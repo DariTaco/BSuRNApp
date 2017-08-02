@@ -69,7 +69,7 @@ namespace WertheApp.RN
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
-            gameView.HeightRequest = 900; // SCROLLING!!!!!!!!!!!!!!!!
+            gameView.HeightRequest = 2000; // SCROLLING!!!!!!!!!!!!!!!!
             scrollview.Content = gameView;
 			grid.Children.Add(scrollview, 0, 0);
 		}
@@ -141,7 +141,7 @@ namespace WertheApp.RN
 				// This sets the game "world" resolution to 330x100:
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
 				//###############################################################
-                cc_gameView.DesignResolution = new CCSizeI(330, 900); //CLIPPING
+                cc_gameView.DesignResolution = new CCSizeI(400, 2000); //CLIPPING
                 //###############################################################
 																	  // GameScene is the root of the CocosSharp rendering hierarchy:
 				gameScene = new PipelineProtocolsScene(cc_gameView);
