@@ -114,7 +114,7 @@ namespace WertheApp.RN
 
         void B_Send_Clicked(object sender, EventArgs e)
         {
-
+            PipelineProtocolsScene.SendPackageAt(0);
         }
 
         void B_Stop_Clicked(object sender, EventArgs e)
