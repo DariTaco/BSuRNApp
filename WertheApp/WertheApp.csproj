@@ -37,6 +37,7 @@
     <EmbeddedResource Include="Shared Resources\hsLogo2.png">
       <LogicalName>hsLogo2.png</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Shared Resources\square.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">

@@ -13,6 +13,10 @@ namespace WertheApp.RN
         public static int windowSize;
         public static String strategy;
 
+        public static bool paused = false;
+        public static CocosSharpView gameView;
+        Button b_Stop;
+
         bool isContentCreated = false; //indicates weather the Content of the page was already created
 
 		private double width = 0;
@@ -61,7 +65,7 @@ namespace WertheApp.RN
 		void CreateTopHalf(Grid grid)
 		{
             var scrollview = new ScrollView();
-			var gameView = new CocosSharpView()
+			gameView = new CocosSharpView()
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 				VerticalOptions = LayoutOptions.FillAndExpand,
@@ -100,7 +104,7 @@ namespace WertheApp.RN
             b_Send.Clicked += B_Send_Clicked;
             stackLayout.Children.Add(b_Send);
 
-            Button b_Stop = new Button
+            b_Stop = new Button
             {
                 Text = "Stop",
                 WidthRequest = StackChildSize,
@@ -119,7 +123,19 @@ namespace WertheApp.RN
 
         void B_Stop_Clicked(object sender, EventArgs e)
         {
-
+			switch (paused)
+			{
+				case true:
+                    gameView.Paused = false;
+                    paused = false;
+                    b_Stop.Text = "Stop";
+					break;
+                case false:
+                    gameView.Paused = true;
+                    paused = true;
+                    b_Stop.Text = "Start";
+					break;
+			}
         }
 
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
