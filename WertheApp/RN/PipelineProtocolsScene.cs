@@ -70,13 +70,13 @@ namespace WertheApp.RN
 			//define object
 			float yPos = 15 + (65 * (28 - a)); //where the box !starts!
 			var pp = new PPackage();
-            pp.Position = new CCPoint(82,yPos);
+            pp.Position = new CCPoint(80,yPos);
             layer.AddChild(pp);
 
 			//define action
             float timeToTake = 5f;
             var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
-            var distance2 = new CCPoint(82, yPos);
+            var distance2 = new CCPoint(80, yPos);
 			var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
 			var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
 			var removeAction = new CCRemoveSelf(); //this action removes the object*/
@@ -188,22 +188,29 @@ namespace WertheApp.RN
 //CLASS FOR SPRITE OBJECT
 public class PPackage : CCNode
 {
+    CCSpriteFrame greenFrame;
+    CCSpriteFrame redFrame;
+
 	CCSprite sprite;
     int id;
     static int count = 0;
+    bool corrupt = false;
 
     CCEventListenerTouchOneByOne touchListener;
 
 	public PPackage() : base()
 	{
         
-		sprite = new CCSprite("square");
-        id = count;
+		this.sprite = new CCSprite("myGreen.png");
+        this.id = count;
         count++;
 		// Center the Sprite in this entity to simplify
 		// centering the Ship on screen
-		sprite.AnchorPoint = AnchorPoint = new CCPoint(0, 0);
-        sprite.SpriteFrame = new CCSpriteFrame(new CCTexture2D("square"), new CCRect(50, 50, 40, 50));//x and y pos in the sprite image and size and heigth of the sprite
+		this.sprite.AnchorPoint = AnchorPoint = new CCPoint(0, 0);
+        greenFrame = new CCSpriteFrame(new CCTexture2D("myGreen"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and size and heigth of the sprite
+		redFrame = new CCSpriteFrame(new CCTexture2D("myRed.png"), new CCRect(0, 0, 40, 50));
+        this.sprite.SpriteFrame = greenFrame;
+
 		this.AddChild(sprite);
 
         touchListener = new CCEventListenerTouchOneByOne();
@@ -212,9 +219,9 @@ public class PPackage : CCNode
 
 	}
 
-    public void UpdateColor()
+    public void UpdateMyColor()
     {
-        this.sprite.SpriteFrame = new CCSpriteFrame(new CCTexture2D("redX"), new CCRect(50, 50, 40, 50));
+        this.sprite.SpriteFrame = redFrame;
     }
     public CCSprite GetSpriteByID(int id)
     {
@@ -236,10 +243,12 @@ public class PPackage : CCNode
             return true;
         }
         else {
-            UpdateColor();
-            GetSpriteByID(1).SpriteFrame.Texture = new CCTexture2D("redX");
-            CCTexture2D redX = new CCTexture2D("redX");
-            sprite.SpriteFrame.Texture = new CCTexture2D("redX"); Debug.WriteLine("ID:"+ GetID() + " x:" + touchEvent.CurrentTarget.PositionX + " y:"+touchEvent.CurrentTarget.PositionY); return false; 
+            UpdateMyColor();
+            //GetSpriteByID(1).SpriteFrame.Texture = new CCTexture2D("red");
+            //CCTexture2D redX = new CCTexture2D("red");
+            //sprite.SpriteFrame.Texture = new CCTexture2D("red"); 
+            Debug.WriteLine("ID:"+ GetID() + " x:" + touchEvent.CurrentTarget.PositionX + " y:"+touchEvent.CurrentTarget.PositionY); 
+            return false; 
 
             }
 	}
