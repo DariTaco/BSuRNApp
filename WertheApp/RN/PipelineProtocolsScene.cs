@@ -66,13 +66,16 @@ namespace WertheApp.RN
 			/*//apply action to object
 			cc_startBox.AddAction(sendingAction);*/
 
-
+            Debug.WriteLine("DEFINE OBJECT");
 			//define object
 			float yPos = 15 + (65 * (28 - a)); //where the box !starts!
-			var pp = new PPackage();
+            Debug.WriteLine("new PPackage");
+            var pp = new PipelineProtocolsPackage();
+            Debug.WriteLine("pp.Position");
             pp.Position = new CCPoint(80,yPos);
             layer.AddChild(pp);
 
+            Debug.WriteLine("DEFINE ACTION");
 			//define action
             float timeToTake = 5f;
             var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
@@ -81,9 +84,11 @@ namespace WertheApp.RN
 			var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
 			var removeAction = new CCRemoveSelf(); //this action removes the object*/
 
+            Debug.WriteLine("DEFINE SEQUENCE OF ACTIONS");
 			//define sequence of actions 
 			var cc_seq1 = new CCSequence(sendPackageAction, sendAckAction, removeAction);
 
+            Debug.WriteLine("RUN ACTION");
             //apply sequence of actions to object
             //cc_startBox.RunAction(cc_seq1);
             pp.RunAction(cc_seq1);
@@ -183,106 +188,3 @@ namespace WertheApp.RN
 		}
     }
 }
-
-
-//CLASS FOR SPRITE OBJECT
-public class PPackage : CCNode
-{
-    CCSpriteFrame greenFrame;
-    CCSpriteFrame redFrame;
-
-	CCSprite sprite;
-    int id;
-    static int count = 0;
-    bool corrupt = false;
-
-    CCEventListenerTouchOneByOne touchListener;
-
-	public PPackage() : base()
-	{
-        
-		this.sprite = new CCSprite("myGreen.png");
-        this.id = count;
-        count++;
-		// Center the Sprite in this entity to simplify
-		// centering the Ship on screen
-		this.sprite.AnchorPoint = AnchorPoint = new CCPoint(0, 0);
-        greenFrame = new CCSpriteFrame(new CCTexture2D("myGreen"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and size and heigth of the sprite
-		redFrame = new CCSpriteFrame(new CCTexture2D("myRed.png"), new CCRect(0, 0, 40, 50));
-        this.sprite.SpriteFrame = greenFrame;
-
-		this.AddChild(sprite);
-
-        touchListener = new CCEventListenerTouchOneByOne();
-        touchListener.OnTouchBegan = OnTouchBegan;
-		AddEventListener(touchListener, this);
-
-	}
-
-    public void UpdateMyColor()
-    {
-        this.sprite.SpriteFrame = redFrame;
-    }
-    public CCSprite GetSpriteByID(int id)
-    {
-        return this.sprite;
-    }
-
-    public int GetID()
-    {
-        return this.id;
-    }
-
-    private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
-	{
-        if (BoundingBoxTransformedToParent.ContainsPoint(touch.Location))
-        {
-            var location = touch.Location;
-            this.Color = CCColor3B.Magenta;
-            Debug.WriteLine("#############CLICKED: " + location + "#############");
-            return true;
-        }
-        else {
-            UpdateMyColor();
-            //GetSpriteByID(1).SpriteFrame.Texture = new CCTexture2D("red");
-            //CCTexture2D redX = new CCTexture2D("red");
-            //sprite.SpriteFrame.Texture = new CCTexture2D("red"); 
-            Debug.WriteLine("ID:"+ GetID() + " x:" + touchEvent.CurrentTarget.PositionX + " y:"+touchEvent.CurrentTarget.PositionY); 
-            return false; 
-
-            }
-	}
-}
-
-
-/*CCSprite sprite;
-
-    CCEventListenerTouchOneByOne touchListener;
-
-    public PPackage() : base()
-    {
-        sprite = new CCSprite("ship.png");
-        // Center the Sprite in this entity to simplify
-        // centering the Ship on screen
-        //sprite.AnchorPoint = CCPoint.AnchorMiddle;
-        this.AddChild(sprite);
-
-        touchListener = new CCEventListenerTouchOneByOne();
-        touchListener.OnTouchBegan = OnTouchBegan;
-        AddEventListener(touchListener, this);
-
-    }
-
-    private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
-    {
-        if (touchEvent.CurrentTarget.BoundingBoxTransformedToParent.ContainsPoint(touch.Location))
-        {
-            var location = touch.Location;
-            this.Color = CCColor3B.Magenta;
-            Debug.WriteLine("#############CLICKED: " + location + "#############");
-            return true;
-        }
-        else { Debug.WriteLine("##" + sprite.BoundingBox.UpperRight); return false; 
-        
-            }
-    }*/
