@@ -20,10 +20,11 @@ namespace WertheApp.RN
 		int windowSize;
 		String strategy;
 
+        static CCRect window;
+        static CCDrawNode cc_window;
 
-
-        //CONSTRUCTOR
-        public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
+		//CONSTRUCTOR
+		public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
         {
 			//add a layer to draw on
 			layer = new CCLayer();
@@ -33,6 +34,7 @@ namespace WertheApp.RN
             strategy = PipelineProtocols.strategy;
 
             DrawLabelsAndBoxes();
+            DrawWindow(0);
         }
 
 		//METHODS
@@ -66,16 +68,16 @@ namespace WertheApp.RN
 			/*//apply action to object
 			cc_startBox.AddAction(sendingAction);*/
 
-            Debug.WriteLine("DEFINE OBJECT");
+            //Debug.WriteLine("DEFINE OBJECT");
 			//define object
 			float yPos = 15 + (65 * (28 - a)); //where the box !starts!
-            Debug.WriteLine("new PPackage");
+            //Debug.WriteLine("new PPackage");
             var pp = new PipelineProtocolsPackage();
-            Debug.WriteLine("pp.Position");
+            //Debug.WriteLine("pp.Position");
             pp.Position = new CCPoint(80,yPos);
             layer.AddChild(pp);
 
-            Debug.WriteLine("DEFINE ACTION");
+            //Debug.WriteLine("DEFINE ACTION");
 			//define action
             float timeToTake = 5f;
             var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
@@ -84,11 +86,11 @@ namespace WertheApp.RN
 			var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
 			var removeAction = new CCRemoveSelf(); //this action removes the object*/
 
-            Debug.WriteLine("DEFINE SEQUENCE OF ACTIONS");
+            //Debug.WriteLine("DEFINE SEQUENCE OF ACTIONS");
 			//define sequence of actions 
 			var cc_seq1 = new CCSequence(sendPackageAction, sendAckAction, removeAction);
 
-            Debug.WriteLine("RUN ACTION");
+            //Debug.WriteLine("RUN ACTION");
             //apply sequence of actions to object
             //cc_startBox.RunAction(cc_seq1);
             pp.RunAction(cc_seq1);
@@ -116,6 +118,27 @@ namespace WertheApp.RN
 
             //col1 = CCColor4B.Magenta;
 		}
+
+       void DrawWindow(float pos)
+        {
+            //delete existing window
+            if(cc_window != null)
+            {
+                cc_window.Clear();
+            }
+            float a = 29 - pos;
+            float yMin = 7 + (a - windowSize)*65; // start of the coordinate system is at the lower left. But We start at the upper left
+            float height = windowSize * 65;
+            window = new CCRect(35, yMin, 50, height);//CCRect(x,y,legth,heigth)
+			cc_window = new CCDrawNode();
+			cc_window.DrawRect(
+				window,
+                fillColor: CCColor4B.Transparent,
+				borderWidth: 1,
+                borderColor: CCColor4B.LightGray);
+			//add box to layer
+			layer.AddChild(cc_window);
+        }
 
         //draw everything. Begginging from the Bottom
 		void DrawLabelsAndBoxes()

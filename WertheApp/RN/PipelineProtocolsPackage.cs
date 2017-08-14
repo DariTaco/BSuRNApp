@@ -16,26 +16,28 @@ namespace WertheApp.RN
 		CCSprite sprite;
 		int id;
 		static int count = 0;
+        int touchCount;
 		bool corrupt = false;
 
 		CCEventListenerTouchOneByOne touchListener;
 
 		public PipelineProtocolsPackage() : base()
 		{
-            Debug.WriteLine("create ccSprite");
+            //Debug.WriteLine("create ccSprite");
 			this.sprite = new CCSprite();
-            Debug.WriteLine("add count");
+            //Debug.WriteLine("add count");
 			this.id = count;
-            Debug.WriteLine("increase count");
+            //Debug.WriteLine("increase count");
 			count++;
+            touchCount = 0;
 			// Center the Sprite in this entity to simplify
 			// centering the Ship on screen
-            Debug.WriteLine("set AnchorPoint");
+            //Debug.WriteLine("set AnchorPoint");
 			this.sprite.AnchorPoint = AnchorPoint = new CCPoint(0, 0);
-            Debug.WriteLine("access myGreen");
-			CCSpriteFrame greenFrame = new CCSpriteFrame(new CCTexture2D("myGreen.png"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and size and heigth of the sprite
+            //Debug.WriteLine("access myGreen");
+			CCSpriteFrame greenFrame = new CCSpriteFrame(new CCTexture2D("myGreen.png"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and width and heigth of the sprite
             sprite.Color = CCColor3B.Green; //EXtra line of code for Android.....since I didn't find out how to access the png in Android. It crashed every single time
-            Debug.WriteLine("add spriteframe");
+            //Debug.WriteLine("add spriteframe");
 			this.sprite.SpriteFrame = greenFrame;
 
 			this.AddChild(sprite);
@@ -64,23 +66,30 @@ namespace WertheApp.RN
 
 		private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
 		{
-			if (BoundingBoxTransformedToParent.ContainsPoint(touch.Location))
-			{
-				var location = touch.Location;
-				this.Color = CCColor3B.Magenta;
-				Debug.WriteLine("#############CLICKED: " + location + "#############");
-				return true;
-			}
-			else
-			{
-				UpdateMyColor();
-				//GetSpriteByID(1).SpriteFrame.Texture = new CCTexture2D("red");
-				//CCTexture2D redX = new CCTexture2D("red");
-				//sprite.SpriteFrame.Texture = new CCTexture2D("red"); 
-				Debug.WriteLine("ID:" + GetID() + " x:" + touchEvent.CurrentTarget.PositionX + " y:" + touchEvent.CurrentTarget.PositionY);
-				return false;
+            Debug.WriteLine("touch.Location.X = "+touch.Location.X);
+            Debug.WriteLine("touchEvent.CurrentTarget.PositionX = " + touchEvent.CurrentTarget.PositionX);
+            Debug.WriteLine("touchEvent.CurrentTarget.PositionX+40 = " + (touchEvent.CurrentTarget.Position.X + 40.0f));
+            //if package was clicked the first time
+            if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
+                && touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
+                && touchCount == 0) //50 because it's the height of the packages spriteframe
+            {
+                UpdateMyColor();
+                this.touchCount++;
+                return true;
+            }
+            //if package was clicked a second time
+			else if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
+				&& touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
+				&& touchCount > 0)
+            {
+                Debug.WriteLine("###########");
+                this.touchCount++;
+                this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
+                return false;
 
-			}
+            }
+            else { return false; }
 		}
 	}
 
