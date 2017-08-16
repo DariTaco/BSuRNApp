@@ -15,30 +15,36 @@ namespace WertheApp.RN
 
 		CCSprite sprite;
 		int id;
+        public int seqnum;
 		static int count = 0;
         int touchCount;
-		bool corrupt = false;
+		public bool corrupt = false;
+        public bool lost = false;
 
 		CCEventListenerTouchOneByOne touchListener;
 
-		public PipelineProtocolsPackage() : base()
+		public PipelineProtocolsPackage(int seqnum, bool ack) : base()
 		{
-            //Debug.WriteLine("create ccSprite");
 			this.sprite = new CCSprite();
-            //Debug.WriteLine("add count");
 			this.id = count;
-            //Debug.WriteLine("increase count");
+            this.seqnum = seqnum;
 			count++;
             touchCount = 0;
-			// Center the Sprite in this entity to simplify
-			// centering the Ship on screen
-            //Debug.WriteLine("set AnchorPoint");
 			this.sprite.AnchorPoint = AnchorPoint = new CCPoint(0, 0);
-            //Debug.WriteLine("access myGreen");
 			CCSpriteFrame greenFrame = new CCSpriteFrame(new CCTexture2D("myGreen.png"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and width and heigth of the sprite
-            sprite.Color = CCColor3B.Green; //EXtra line of code for Android.....since I didn't find out how to access the png in Android. It crashed every single time
-            //Debug.WriteLine("add spriteframe");
-			this.sprite.SpriteFrame = greenFrame;
+            CCSpriteFrame grayFrame = new CCSpriteFrame(new CCTexture2D("myGray.png"), new CCRect(0, 0, 40, 50));
+            //if its an ACK from the receiver
+            if (ack)
+            {
+                sprite.Color = CCColor3B.Green; //EXtra line of code for Android.....since I didn't find out how to access the png in Android. It crashed every single time
+                this.sprite.SpriteFrame = greenFrame;
+            }//if its a packet
+            else
+            {
+                sprite.Color = CCColor3B.Gray;
+                this.sprite.SpriteFrame = grayFrame;
+            }
+
 
 			this.AddChild(sprite);
 
@@ -76,6 +82,7 @@ namespace WertheApp.RN
             {
                 UpdateMyColor();
                 this.touchCount++;
+                this.corrupt = true;
                 return true;
             }
             //if package was clicked a second time
@@ -83,7 +90,7 @@ namespace WertheApp.RN
 				&& touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
 				&& touchCount > 0)
             {
-                Debug.WriteLine("###########");
+                this.lost = true;
                 this.touchCount++;
                 this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
                 return false;

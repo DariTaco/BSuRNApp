@@ -119,7 +119,8 @@ namespace WertheApp.RN
         void B_Send_Clicked(object sender, EventArgs e)
         {
             Debug.WriteLine("BUTTON PRESSED");
-            PipelineProtocolsScene.SendPackageAt(0);
+            //PipelineProtocolsScene.SendPackageAt(0);
+            PipelineProtocolsScene.InvokeSender();
         }
 
         void B_Stop_Clicked(object sender, EventArgs e)
