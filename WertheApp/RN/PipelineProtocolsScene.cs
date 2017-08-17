@@ -45,25 +45,26 @@ namespace WertheApp.RN
             strategy = PipelineProtocols.strategy;
 
             DrawLabelsAndBoxes();
-            DrawWindow(0);
 
             baseOfWindow = 0;
             nextSeqnum = 0;
             expectedSeqnum = 0;
             lastRecentInOrderSeqnum = -1;
 
+            DrawWindow(baseOfWindow);
             DrawExpectedSeqnum();
 
         }
 
 		//METHODS
+
         public static void InvokeSender()
         {
             //if window is not full, that means if there are still packets left inside the window which are not semt yet
             if(nextSeqnum < (baseOfWindow+windowSize))
             {
                 SendPackageAt(nextSeqnum);
-                if(baseOfWindow == nextSeqnum)
+/*TODO*/                if(baseOfWindow == nextSeqnum)
                 {
                     //start timer
                 }
@@ -75,16 +76,8 @@ namespace WertheApp.RN
             }
         }
 
-        //Receiver receives Packet
-        public static void ReceivePacket()
-        {
-            //if is correct & in-order(expected seqnum)
-            //-> send ACK of expected seqnum
-            //else
-            //-> send ACK of last recently in order seqnum
-        }
         //Receiver sends ACK
-        public static void SendACKFor(int seqnum)
+        public static async void SendACKFor(int seqnum)
         {
 			//seqnum
 			//define object
@@ -103,14 +96,49 @@ namespace WertheApp.RN
 			var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
 
 			//apply sequence of actions to object
-			pp.RunAction(cc_seq1);
+			await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
+			Debug.WriteLine("ASYnc Action done");
+
+			//Code for sending ACK
+			//if ACK was lost
+			if (pp.lost)
+			{
+				Debug.WriteLine("ACK WAS LOST");
+				pp.Dispose();
+				//do nothing
+			}
+			//if ACK was not lost or corrupted //in order is not necessary
+			else if (!pp.corrupt)
+			{
+				Debug.WriteLine(" ACK NOT CORRUPT, NOT LOST");
+                DrawFillLeft2(pp.seqnum);
+                baseOfWindow = pp.seqnum + 1;
+                DrawWindow(baseOfWindow);
+				pp.Dispose();
+
+/*TODO*/                if(baseOfWindow == nextSeqnum)
+                {
+                    //stop timer
+                }
+                else
+                {
+                    //start_timer
+                }
+			}//send ACK for last recently received in order sequence number
+			else
+			{
+                //do nothing
+				Debug.WriteLine("ACK CORRUPT");
+				pp.Dispose();
+			}
         }
-        //boxes range from 0 to 28
+
+        //this method imitates both sender and receiver of a packet. It is called by the method invoke 
         public static async  void SendPackageAt(int seqnum)
         {
 
-			/*//define object
+            /*//define object
             float yPos = 15 + (65 * (28-a)); //where the box !starts!
 			var startBox = new CCRect(82, yPos, 40, 50); //x,y,length, width 82
 			var cc_startBox = new CCDrawNode();
@@ -121,11 +149,11 @@ namespace WertheApp.RN
 				borderColor: CCColor4B.Red);
 			//layer.AddChild(cc_startBox); */
 
-			/*//add touch listener
+            /*//add touch listener
 			var touchListener = new CCEventListenerTouchAllAtOnce();
 			touchListener.OnTouchesBegan = HandleInput; */
 
-			/*//define action for DrawRect
+            /*//define action for DrawRect
 			var distance = new CCPoint(196, 0); //82 to 278 = 278-82 = 196
 			var distance2 = new CCPoint(0, 0); //0 as an x-value migth seem strange, but the reference value is the x-value of the object when it was first defined!
 			float timeToTake = 5f;
@@ -133,11 +161,13 @@ namespace WertheApp.RN
 			var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
 			var removeAction = new CCRemoveSelf(); //this action removes the object*/
 
-			/*//apply action to object
+            /*//apply action to object
 			cc_startBox.AddAction(sendingAction);*/
 
-			//apply sequence of actions to object
-			//cc_startBox.RunAction(cc_seq1);
+            //apply sequence of actions to object
+            //cc_startBox.RunAction(cc_seq1);
+
+            DrawFillLeft(seqnum);
 
 			//define object
 			float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
@@ -158,7 +188,7 @@ namespace WertheApp.RN
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
             Debug.WriteLine("ASYnc Action done");
 
-            //Code for sending ACK
+            //Code for receiving packte and maybe sending ACK
             //if packet was lost
             if(pp.lost)
             {
@@ -169,11 +199,11 @@ namespace WertheApp.RN
 			//if packet was not lost or corrupted and packet was received in order(expected sequence number) 
             else if(!pp.corrupt && pp.seqnum == expectedSeqnum)
 			{ 
-                Debug.WriteLine("RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
-                expectedSeqnum++;
+                Debug.WriteLine("PACKAGE RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
+                expectedSeqnum++; //increase expectedSeqnum
                 DrawExpectedSeqnum();
                 DrawFillRight(pp.seqnum);
-                SendACKFor(pp.seqnum);
+                SendACKFor(pp.seqnum); //send ACK 
                 pp.Dispose();
             }//send ACK for last recently received in order sequence number
             else
@@ -216,7 +246,7 @@ namespace WertheApp.RN
 			CCDrawNode cc_rightBox = new CCDrawNode();
 			cc_rightBox.DrawRect(
 			rightBox,
-                fillColor: CCColor4B.Gray,
+                fillColor: CCColor4B.LightGray,
 			borderWidth: 1,
 			borderColor: CCColor4B.Gray);
 			layer.AddChild(cc_rightBox);
@@ -224,19 +254,37 @@ namespace WertheApp.RN
 
         static void DrawFillLeft(int seqnum)
         {
+            
             float a = 28 - seqnum;
-            float yPos = 15 + (a* 65); 
+            float yPos = 15 + (a* 65);
 
 			//draw the box on the left side
 			var leftBox = new CCRect(40, yPos, 40, 50); //x,y,length, width
 			CCDrawNode cc_leftBox = new CCDrawNode();
 			cc_leftBox.DrawRect(
 			leftBox,
-                fillColor: CCColor4B.Gray,
+                fillColor: CCColor4B.LightGray,
 			borderWidth: 1,
 			borderColor: CCColor4B.Gray);
 			layer.AddChild(cc_leftBox);
         }
+
+		static void DrawFillLeft2(int seqnum)
+		{
+
+			float a = 28 - seqnum;
+			float yPos = 15 + (a * 65);
+
+			//draw the box on the left side
+			var leftBox = new CCRect(40, yPos, 40, 50); //x,y,length, width
+			CCDrawNode cc_leftBox = new CCDrawNode();
+			cc_leftBox.DrawRect(
+			leftBox,
+                fillColor: CCColor4B.Green,
+			borderWidth: 1,
+			borderColor: CCColor4B.Gray);
+			layer.AddChild(cc_leftBox);
+		}
 
         static void DrawExpectedSeqnum()
         {
@@ -257,7 +305,7 @@ namespace WertheApp.RN
             layer.AddChild(cc_expSeqnum);
         }
 
-       void DrawWindow(float pos)
+       static void DrawWindow(float pos)
         {
             //delete existing window
             if(cc_window != null)
