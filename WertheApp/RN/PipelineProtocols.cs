@@ -2,7 +2,6 @@
 using CocosSharp;
 using Xamarin.Forms;
 using System.Collections.Generic;
-
 using System.Diagnostics;
 
 namespace WertheApp.RN
@@ -21,6 +20,9 @@ namespace WertheApp.RN
 
 		private double width = 0;
 		private double height = 0;
+
+        public static Label l_LastRecentInOrderAtReceiver;
+        public static Label l_LastRecentAcknowlegement;
 
 		//CONSTRUCTOR
 		public PipelineProtocols(int a, String s)
@@ -53,14 +55,41 @@ namespace WertheApp.RN
 			this.Content = grid;
 			grid.RowDefinitions = new RowDefinitionCollection {
                     // Each half will be the same size:
-                    new RowDefinition{ Height = new GridLength(8, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
 					new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
 				};
+            CreateTopTopHalf(grid);
 			CreateTopHalf(grid);
 			CreateBottomHalf(grid);
 
             isContentCreated = true;
 		}
+
+        void CreateTopTopHalf(Grid grid)
+        {
+			//set the size of the elements in such a way, that they all fit on the screen
+			//Screen Width is divided by the amount of elements (9)
+			//Screen Width -20 because Margin is 10
+			double StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+
+			//Using a Stacklayout to organize elements
+			//with corresponding labels and String variables. 
+			//For example l_Size, size
+			var stackLayout = new StackLayout
+			{
+                Orientation = StackOrientation.Vertical,
+				Margin = new Thickness(10),
+
+			};
+
+            l_LastRecentInOrderAtReceiver = new Label{ Text = "Last recent in-order received packet: --"};
+            l_LastRecentAcknowlegement = new Label { Text = "Last recent acknowlegment: --" };
+            stackLayout.Children.Add(l_LastRecentInOrderAtReceiver);
+            stackLayout.Children.Add(l_LastRecentAcknowlegement);
+
+			grid.Children.Add(stackLayout, 0, 0);
+        }
 
 		void CreateTopHalf(Grid grid)
 		{
@@ -75,7 +104,7 @@ namespace WertheApp.RN
 			};
             gameView.HeightRequest = 2000; // SCROLLING!!!!!!!!!!!!!!!!
             scrollview.Content = gameView;
-			grid.Children.Add(scrollview, 0, 0);
+			grid.Children.Add(scrollview, 0, 1);
 		}
 
 		void CreateBottomHalf(Grid grid)
@@ -97,7 +126,7 @@ namespace WertheApp.RN
 
             Button b_Send = new Button
             {
-                Text = "Send Package",
+                Text = "Send Packet",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
@@ -113,18 +142,26 @@ namespace WertheApp.RN
             b_Stop.Clicked += B_Stop_Clicked;
             stackLayout.Children.Add(b_Stop);
 
-			grid.Children.Add(stackLayout, 0, 1);
+			grid.Children.Add(stackLayout, 0, 2);
 		}
 
-        void B_Send_Clicked(object sender, EventArgs e)
+        async void B_Send_Clicked(object sender, EventArgs e)
         {
-            Debug.WriteLine("BUTTON PRESSED");
-            //PipelineProtocolsScene.SendPackageAt(0);
-            PipelineProtocolsScene.InvokeSender();
+            int a1 = PipelineProtocolsScene.nextSeqnum;
+			if (a1 == 29)
+			{
+				await DisplayAlert("Alert", "You are done!", "OK");
+			}
+			else
+			{//PipelineProtocolsScene.SendPackageAt(0);
+				PipelineProtocolsScene.InvokeSender();
+			}
+
         }
 
         void B_Stop_Clicked(object sender, EventArgs e)
         {
+
 			switch (paused)
 			{
 				case true:

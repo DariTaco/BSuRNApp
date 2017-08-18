@@ -28,10 +28,13 @@ namespace WertheApp.RN
 
         static int windowSize;
         static int baseOfWindow; //first sent but not yet acknowledged sequence number
-        static int nextSeqnum; //first not sent yet sequence number
+        public static int nextSeqnum; //first not sent yet sequence number
         static int expectedSeqnum; //expected sequence number of packet at receiver
-        static int lastRecentInOrderSeqnum; // last recenty received in ordner sequence number at receiver
+        static int lastRecentInOrderSeqnum; // last recently received in ordner sequence number at receiver
 
+        static int activeTimers;
+        static int timerKey;
+        static int timerKey2;
 
 
 		//CONSTRUCTOR
@@ -50,6 +53,9 @@ namespace WertheApp.RN
             nextSeqnum = 0;
             expectedSeqnum = 0;
             lastRecentInOrderSeqnum = -1;
+            activeTimers = 0;
+            timerKey = 0;
+            timerKey2 = 0;
 
             DrawWindow(baseOfWindow);
             DrawExpectedSeqnum();
@@ -58,16 +64,50 @@ namespace WertheApp.RN
 
 		//METHODS
 
+
+        private static bool TimerElapsed()
+		{
+			Device.BeginInvokeOnMainThread(() =>
+			{
+                //resend all packets that have been previously send but not yet ack
+
+                if (activeTimers == 1 && timerKey == timerKey2)
+                {
+                    for (int i = baseOfWindow; i < nextSeqnum; i++)
+                    {
+                        Debug.WriteLine("Packet resent with seqnum: " + i);
+                        SendPackageAt(i);
+                    }
+                    //start timer // time = roundtrip time
+                    timerKey2 = timerKey;
+                    Device.StartTimer(new TimeSpan(0, 0, 0, 10, 0), TimerElapsed); //days, hours , minutes, seconds, milioseconds
+                }
+                else { activeTimers--; }
+
+               
+			});
+            //return true to keep timer reccuring
+            //return false to stop timer
+            return false;
+		}
+
+
         public static void InvokeSender()
         {
-            //if window is not full, that means if there are still packets left inside the window which are not semt yet
+            //if window is not full, that means if there are still packets left inside the window which are not sent yet
             if(nextSeqnum < (baseOfWindow+windowSize))
             {
                 SendPackageAt(nextSeqnum);
-/*TODO*/                if(baseOfWindow == nextSeqnum)
+
+/*TODO*/                
+                if(baseOfWindow == nextSeqnum)
                 {
-                    //start timer
-                }
+                    //start timer // time = roundtrip time
+                    timerKey2 = timerKey;
+                    Device.StartTimer(new TimeSpan( 0, 0, 0, 10, 0 ), TimerElapsed); //days, hours , minutes, seconds, milioseconds
+                    activeTimers++;
+
+				}
                 nextSeqnum++;
             }
             else
@@ -94,11 +134,12 @@ namespace WertheApp.RN
 
 			//define sequence of actions 
 			var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
+            Debug.WriteLine("ACK sent for seqnum: " + pp.seqnum);
 
 			//apply sequence of actions to object
 			await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
-			Debug.WriteLine("ASYnc Action done");
+			//Debug.WriteLine("ASYnc Action done");
 
 			//Code for sending ACK
 			//if ACK was lost
@@ -111,8 +152,9 @@ namespace WertheApp.RN
 			//if ACK was not lost or corrupted //in order is not necessary
 			else if (!pp.corrupt)
 			{
-				Debug.WriteLine(" ACK NOT CORRUPT, NOT LOST");
                 DrawFillLeft2(pp.seqnum);
+                if(pp.seqnum != -1){PipelineProtocols.l_LastRecentAcknowlegement.Text = "Last recent acknowlegment: " + pp.seqnum; }
+                Debug.WriteLine("Ack for seqn"+pp.seqnum);
                 baseOfWindow = pp.seqnum + 1;
                 DrawWindow(baseOfWindow);
 				pp.Dispose();
@@ -120,11 +162,17 @@ namespace WertheApp.RN
 /*TODO*/                if(baseOfWindow == nextSeqnum)
                 {
                     //stop timer
+                    timerKey++;
+
                 }
                 else
                 {
                     //start_timer
-                }
+                    //start timer // time = roundtrip time
+                    timerKey2 = timerKey;
+					Device.StartTimer(new TimeSpan(0, 0, 0, 10, 0), TimerElapsed); //days, hours , minutes, seconds, milioseconds
+                    activeTimers++;
+				}
 			}//send ACK for last recently received in order sequence number
 			else
 			{
@@ -186,7 +234,7 @@ namespace WertheApp.RN
 
             //apply sequence of actions to object
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
-            Debug.WriteLine("ASYnc Action done");
+            //Debug.WriteLine("ASYnc Action done");
 
             //Code for receiving packte and maybe sending ACK
             //if packet was lost
@@ -199,10 +247,12 @@ namespace WertheApp.RN
 			//if packet was not lost or corrupted and packet was received in order(expected sequence number) 
             else if(!pp.corrupt && pp.seqnum == expectedSeqnum)
 			{ 
-                Debug.WriteLine("PACKAGE RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
+                Debug.WriteLine("PACKAGE"+ pp.seqnum+" RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
                 expectedSeqnum++; //increase expectedSeqnum
                 DrawExpectedSeqnum();
                 DrawFillRight(pp.seqnum);
+                lastRecentInOrderSeqnum = pp.seqnum;
+                PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
                 SendACKFor(pp.seqnum); //send ACK 
                 pp.Dispose();
             }//send ACK for last recently received in order sequence number
@@ -273,17 +323,21 @@ namespace WertheApp.RN
 		{
 
 			float a = 28 - seqnum;
-			float yPos = 15 + (a * 65);
+            if(a != 29) // 29 would be th very firs line which is marked by "--"
+            {
+				float yPos = 15 + (a * 65);
 
-			//draw the box on the left side
-			var leftBox = new CCRect(40, yPos, 40, 50); //x,y,length, width
-			CCDrawNode cc_leftBox = new CCDrawNode();
-			cc_leftBox.DrawRect(
-			leftBox,
-                fillColor: CCColor4B.Green,
-			borderWidth: 1,
-			borderColor: CCColor4B.Gray);
-			layer.AddChild(cc_leftBox);
+				//draw the box on the left side
+				var leftBox = new CCRect(40, yPos, 40, 50); //x,y,length, width
+				CCDrawNode cc_leftBox = new CCDrawNode();
+				cc_leftBox.DrawRect(
+				leftBox,
+					fillColor: CCColor4B.Green,
+				borderWidth: 1,
+				borderColor: CCColor4B.Gray);
+				layer.AddChild(cc_leftBox);
+            }
+	
 		}
 
         static void DrawExpectedSeqnum()
@@ -301,7 +355,7 @@ namespace WertheApp.RN
                 expSeqnum,
 				fillColor: CCColor4B.Transparent,
 				borderWidth: 1,
-				borderColor: CCColor4B.LightGray);
+                borderColor: CCColor4B.Blue);
             layer.AddChild(cc_expSeqnum);
         }
 
@@ -321,7 +375,7 @@ namespace WertheApp.RN
 				window,
                 fillColor: CCColor4B.Transparent,
 				borderWidth: 1,
-                borderColor: CCColor4B.LightGray);
+                borderColor: CCColor4B.Blue);
 			//add box to layer
 			layer.AddChild(cc_window);
         }
