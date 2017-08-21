@@ -5,6 +5,7 @@ using System.Linq;
 using System.Diagnostics;
 
 using Xamarin.Forms;
+using System.Threading.Tasks;
 
 //TAKE NOTE: the reference value of an action is always the same!! 
 //It always refers to the values that were set when the original object was first definded.
@@ -32,10 +33,8 @@ namespace WertheApp.RN
         static int expectedSeqnum; //expected sequence number of packet at receiver
         static int lastRecentInOrderSeqnum; // last recently received in ordner sequence number at receiver
 
-        static int activeTimers;
-        static int timerKey;
-        static int timerKey2;
-
+        static int tmr;
+        static bool stopTmr;
 
 		//CONSTRUCTOR
 		public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
@@ -53,9 +52,9 @@ namespace WertheApp.RN
             nextSeqnum = 0;
             expectedSeqnum = 0;
             lastRecentInOrderSeqnum = -1;
-            activeTimers = 0;
-            timerKey = 0;
-            timerKey2 = 0;
+
+            tmr = 0;
+            stopTmr = true;
 
             DrawWindow(baseOfWindow);
             DrawExpectedSeqnum();
@@ -63,9 +62,64 @@ namespace WertheApp.RN
         }
 
 		//METHODS
+        public static async void MyTimer()
+        {
 
+			if(stopTmr)
+            {
+                //stop timer
+                Debug.WriteLine("stop");
+            }
+            else if(tmr<10)
+            {
+				//did this to simulate a timer. Didn't know how to do it. since the built in timer of Xamarin can't be stopped, I had to programm my own.
+				var pointlessPoint = new CCRect(10, 10, 10, 10);//arbitrary
+				var cc_pointlessPoint = new CCDrawNode();
+				cc_pointlessPoint.DrawRect(
+				pointlessPoint,
+				fillColor: CCColor4B.Transparent,
+				borderWidth: 1,
+				borderColor: CCColor4B.Transparent);
+				layer.AddChild(cc_pointlessPoint); //DO NOT ADD the defined object to the layer. We only need it for simulating the timer
 
-        private static bool TimerElapsed()
+				//define action
+				float timeToTake = 1f; //1 second!!
+				var distance = new CCPoint(100, 100); //arbitrary
+				var wasteASecondAction = new CCMoveTo(timeToTake, distance);
+                var removeAction = new CCRemoveSelf(); //this action removes the object*/
+
+				//define sequence of actions 
+				var cc_seq1 = new CCSequence(wasteASecondAction, removeAction);
+
+				//apply sequence of actions to object
+				await cc_pointlessPoint.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!
+
+                Debug.WriteLine("did run");
+				tmr++;
+				MyTimer();
+            }
+            else if(tmr == 10)
+            {
+                stopTmr = true;
+                int i = baseOfWindow;
+                int b = nextSeqnum;
+				//timer elapsed -> resend packets
+                while(i<b)
+                {
+					Debug.WriteLine("Packet resent with seqnum: " + i);
+                    await InvokeSender2(i);
+                    i++;
+                }
+
+                //restart timer
+                tmr = 0;
+                stopTmr = false;
+                MyTimer();
+            }
+            
+        }
+
+        /*private static bool TimerElapsed()
 		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
@@ -89,7 +143,7 @@ namespace WertheApp.RN
             //return true to keep timer reccuring
             //return false to stop timer
             return false;
-		}
+		}*/
 
 
         public static void InvokeSender()
@@ -102,10 +156,15 @@ namespace WertheApp.RN
 /*TODO*/                
                 if(baseOfWindow == nextSeqnum)
                 {
-                    //start timer // time = roundtrip time
-                    timerKey2 = timerKey;
-                    Device.StartTimer(new TimeSpan( 0, 0, 0, 10, 0 ), TimerElapsed); //days, hours , minutes, seconds, milioseconds
-                    activeTimers++;
+                    //start timer 
+                    if (stopTmr)
+                    {
+                        stopTmr = false;
+                        Debug.WriteLine("start");
+                        tmr = 0;
+                        MyTimer();
+                    }//reset timer
+                    else { tmr = 0; }
 
 				}
                 nextSeqnum++;
@@ -114,6 +173,14 @@ namespace WertheApp.RN
             {
                 //refuse //either disable button before or pop up window: try again later
             }
+        }
+
+        //is needed because turning sendPAckageAt into async is unpractical. The return had to be before actually sending, which is not possible
+        public static async Task<int> InvokeSender2(int a)
+        {
+            SendPackageAt(a);
+            await Task.Delay(1); //this delay (1millisecond) makes sure one package arrives after another
+            return 0;
         }
 
         //Receiver sends ACK
@@ -162,16 +229,20 @@ namespace WertheApp.RN
 /*TODO*/                if(baseOfWindow == nextSeqnum)
                 {
                     //stop timer
-                    timerKey++;
+                    stopTmr = true;
 
                 }
                 else
                 {
-                    //start_timer
-                    //start timer // time = roundtrip time
-                    timerKey2 = timerKey;
-					Device.StartTimer(new TimeSpan(0, 0, 0, 10, 0), TimerElapsed); //days, hours , minutes, seconds, milioseconds
-                    activeTimers++;
+					//start timer 
+					if (stopTmr)
+					{
+						stopTmr = false;
+						Debug.WriteLine("start");
+						tmr = 0;
+						MyTimer();
+					}//reset timer
+					else { tmr = 0; }
 				}
 			}//send ACK for last recently received in order sequence number
 			else
@@ -183,7 +254,7 @@ namespace WertheApp.RN
         }
 
         //this method imitates both sender and receiver of a packet. It is called by the method invoke 
-        public static async  void SendPackageAt(int seqnum)
+        public static async void SendPackageAt(int seqnum)
         {
 
             /*//define object
@@ -262,6 +333,7 @@ namespace WertheApp.RN
                 SendACKFor(lastRecentInOrderSeqnum);
                 pp.Dispose();
             }
+
         }
 
         private static void HandleInput(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
