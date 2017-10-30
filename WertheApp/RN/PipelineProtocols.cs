@@ -23,6 +23,7 @@ namespace WertheApp.RN
 
         public static Label l_LastRecentInOrderAtReceiver;
         public static Label l_LastRecentAcknowlegement;
+        public static Label l_Timeout;
 
 		//CONSTRUCTOR
 		public PipelineProtocols(int a, String s)
@@ -34,7 +35,7 @@ namespace WertheApp.RN
             Debug.WriteLine("window Size: " + windowSize);
             Debug.WriteLine("strategy: "+strategy);*/
 
-			Title = "Pipeline Protocols";
+            Title = "Pipeline Protocols" + strategy;
 
             //do only create content if device is not roated
 			if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)
@@ -56,8 +57,8 @@ namespace WertheApp.RN
 			grid.RowDefinitions = new RowDefinitionCollection {
                     // Each half will be the same size:
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)},
-                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
-					new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
+                    new RowDefinition{ Height = new GridLength(14, GridUnitType.Star)},
+					new RowDefinition{ Height = new GridLength(2, GridUnitType.Star)}
 				};
             CreateTopTopHalf(grid);
 			CreateTopHalf(grid);
@@ -69,9 +70,9 @@ namespace WertheApp.RN
         void CreateTopTopHalf(Grid grid)
         {
 			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (9)
+			//Screen Width is divided by the amount of elements (2)
 			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+			double StackChildSize = (Application.Current.MainPage.Width - 20) / 1;
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -83,10 +84,12 @@ namespace WertheApp.RN
 
 			};
 
-            l_LastRecentInOrderAtReceiver = new Label{ Text = "Last recent in-order received packet: --"};
-            l_LastRecentAcknowlegement = new Label { Text = "Last recent acknowlegment: --" };
-            stackLayout.Children.Add(l_LastRecentInOrderAtReceiver);
-            stackLayout.Children.Add(l_LastRecentAcknowlegement);
+            l_Timeout = new Label { Text = "Timeout: --" };
+            //l_LastRecentInOrderAtReceiver = new Label{ Text = "Last recent in-order received packet: --"};
+            //l_LastRecentAcknowlegement = new Label { Text = "Last recent acknowlegment: --" };
+            stackLayout.Children.Add(l_Timeout);
+            //stackLayout.Children.Add(l_LastRecentInOrderAtReceiver);
+            //stackLayout.Children.Add(l_LastRecentAcknowlegement);
 
 			grid.Children.Add(stackLayout, 0, 0);
         }
@@ -110,7 +113,7 @@ namespace WertheApp.RN
 		void CreateBottomHalf(Grid grid)
 		{
 			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (9)
+			//Screen Width is divided by the amount of elements (2)
 			//Screen Width -20 because Margin is 10
 			double StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
 

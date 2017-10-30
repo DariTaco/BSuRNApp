@@ -62,43 +62,21 @@ namespace WertheApp.RN
         }
 
 		//METHODS
+
+        //!!!!if you a better solution for a timer. please rewrite this section of code. Or maybe Xamarin will have an implementation of a useful time at some point
+        //I did this to simulate a timer. Didn't know how to do it. Since the built in timer of Xamarin can't be stopped, I had to programm my own.
+        //created an invisible object and applied an action of 1 second to it.
+        //As long as the tmr variable is <10 the action is repeated.
+        //as soon as the tmr variable equals 10, the timer is stopped and packages will be resent and the timer restarted
         public static async void MyTimer()
         {
-
 			if(stopTmr)
             {
                 //stop timer
+                PipelineProtocols.l_Timeout.Text = "Timeout: --";
                 Debug.WriteLine("stop");
             }
-            else if(tmr<10)
-            {
-				//did this to simulate a timer. Didn't know how to do it. since the built in timer of Xamarin can't be stopped, I had to programm my own.
-				var pointlessPoint = new CCRect(10, 10, 10, 10);//arbitrary
-				var cc_pointlessPoint = new CCDrawNode();
-				cc_pointlessPoint.DrawRect(
-				pointlessPoint,
-				fillColor: CCColor4B.Transparent,
-				borderWidth: 1,
-				borderColor: CCColor4B.Transparent);
-				layer.AddChild(cc_pointlessPoint); //DO NOT ADD the defined object to the layer. We only need it for simulating the timer
-
-				//define action
-				float timeToTake = 1f; //1 second!!
-				var distance = new CCPoint(100, 100); //arbitrary
-				var wasteASecondAction = new CCMoveTo(timeToTake, distance);
-                var removeAction = new CCRemoveSelf(); //this action removes the object*/
-
-				//define sequence of actions 
-				var cc_seq1 = new CCSequence(wasteASecondAction, removeAction);
-
-				//apply sequence of actions to object
-				await cc_pointlessPoint.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!
-
-                Debug.WriteLine("did run");
-				tmr++;
-				MyTimer();
-            }
-            else if(tmr == 10)
+            else if(tmr == 11) 
             {
                 stopTmr = true;
                 int i = baseOfWindow;
@@ -114,6 +92,35 @@ namespace WertheApp.RN
                 //restart timer
                 tmr = 0;
                 stopTmr = false;
+                MyTimer();
+            }
+            else if (tmr < 11)
+            {
+                PipelineProtocols.l_Timeout.Text = "Timeout: " + tmr;
+
+                var pointlessPoint = new CCRect(10, 10, 10, 10);//arbitrary
+                var cc_pointlessPoint = new CCDrawNode();
+                cc_pointlessPoint.DrawRect(
+                pointlessPoint,
+                fillColor: CCColor4B.Transparent,
+                borderWidth: 1,
+                borderColor: CCColor4B.Transparent);
+                layer.AddChild(cc_pointlessPoint); //DO NOT ADD the defined object to the layer. We only need it for simulating the timer
+
+                //define action
+                float timeToTake = 1f; //1 second!!
+                var distance = new CCPoint(100, 100); //arbitrary
+                var wasteASecondAction = new CCMoveTo(timeToTake, distance);
+                var removeAction = new CCRemoveSelf(); //this action removes the object*/
+
+                //define sequence of actions 
+                var cc_seq1 = new CCSequence(wasteASecondAction, removeAction);
+
+                //apply sequence of actions to object
+                await cc_pointlessPoint.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!
+
+                Debug.WriteLine("did run" + tmr);
+                tmr++;
                 MyTimer();
             }
             
@@ -152,7 +159,7 @@ namespace WertheApp.RN
             if(nextSeqnum < (baseOfWindow+windowSize))
             {
                 SendPackageAt(nextSeqnum);
-
+                //await InvokeSender2(nextSeqnum);
 /*TODO*/                
                 if(baseOfWindow == nextSeqnum)
                 {
@@ -165,7 +172,6 @@ namespace WertheApp.RN
                         MyTimer();
                     }//reset timer
                     else { tmr = 0; }
-
 				}
                 nextSeqnum++;
             }
@@ -178,8 +184,8 @@ namespace WertheApp.RN
         //is needed because turning sendPAckageAt into async is unpractical. The return had to be before actually sending, which is not possible
         public static async Task<int> InvokeSender2(int a)
         {
+            await Task.Delay(10); //this delay (10 milliseconds) makes sure one package arrives after another
             SendPackageAt(a);
-            await Task.Delay(1); //this delay (1millisecond) makes sure one package arrives after another
             return 0;
         }
 
@@ -219,14 +225,17 @@ namespace WertheApp.RN
 			//if ACK was not lost or corrupted //in order is not necessary
 			else if (!pp.corrupt)
 			{
-                DrawFillLeft2(pp.seqnum);
-                if(pp.seqnum != -1){PipelineProtocols.l_LastRecentAcknowlegement.Text = "Last recent acknowlegment: " + pp.seqnum; }
-                Debug.WriteLine("Ack for seqn"+pp.seqnum);
+                for (int i = baseOfWindow;i <= pp.seqnum; i++){
+                    DrawFillLeft2(i);  
+                }
+
+                //if(pp.seqnum != -1){PipelineProtocols.l_LastRecentAcknowlegement.Text = "Last recent acknowlegment: " + pp.seqnum; }
+                Debug.WriteLine("Ack SENT FOR SEQNR"+pp.seqnum);
                 baseOfWindow = pp.seqnum + 1;
                 DrawWindow(baseOfWindow);
 				pp.Dispose();
 
-/*TODO*/                if(baseOfWindow == nextSeqnum)
+                if(baseOfWindow == nextSeqnum)
                 {
                     //stop timer
                     stopTmr = true;
@@ -241,7 +250,7 @@ namespace WertheApp.RN
 						Debug.WriteLine("start");
 						tmr = 0;
 						MyTimer();
-					}//reset timer
+/*TODO hier timer resetten oder nicht?*/			}//reset timer
 					else { tmr = 0; }
 				}
 			}//send ACK for last recently received in order sequence number
@@ -304,10 +313,12 @@ namespace WertheApp.RN
 			var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
 
             //apply sequence of actions to object
+            tmr = 0;
+            PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
-            //Debug.WriteLine("ASYnc Action done");
-
-            //Code for receiving packte and maybe sending ACK
+            Debug.WriteLine("#####done" +pp.seqnum);
+            /*TODO maybe I have to put this code in a method wich will be executed for every single package that arrived...*/
+            //Code for receiving packet and maybe sending ACK
             //if packet was lost
             if(pp.lost)
             {
@@ -317,13 +328,13 @@ namespace WertheApp.RN
             }
 			//if packet was not lost or corrupted and packet was received in order(expected sequence number) 
             else if(!pp.corrupt && pp.seqnum == expectedSeqnum)
-			{ 
-                Debug.WriteLine("PACKAGE"+ pp.seqnum+" RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
+            { 
                 expectedSeqnum++; //increase expectedSeqnum
+                Debug.WriteLine("PACKAGE"+ pp.seqnum+" RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
                 DrawExpectedSeqnum();
                 DrawFillRight(pp.seqnum);
                 lastRecentInOrderSeqnum = pp.seqnum;
-                PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
+                //PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
                 SendACKFor(pp.seqnum); //send ACK 
                 pp.Dispose();
             }//send ACK for last recently received in order sequence number
@@ -336,6 +347,7 @@ namespace WertheApp.RN
 
         }
 
+        //what happens when a package is clicked ? first touch -> corrupt, second touch -> lost
         private static void HandleInput(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
 		{
             touchEvent.CurrentTarget.Color = CCColor3B.Blue;
@@ -395,7 +407,7 @@ namespace WertheApp.RN
 		{
 
 			float a = 28 - seqnum;
-            if(a != 29) // 29 would be th very firs line which is marked by "--"
+            if (a != 29) // 29 would be th very firs line which is marked by "--"
             {
 				float yPos = 15 + (a * 65);
 
