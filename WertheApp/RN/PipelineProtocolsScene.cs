@@ -30,8 +30,10 @@ namespace WertheApp.RN
         static int windowSize;
         static int baseOfWindow; //first sent but not yet acknowledged sequence number
         public static int nextSeqnum; //first not sent yet sequence number
-        static int expectedSeqnum; //expected sequence number of packet at receiver
+        static int firstCorruptOrLostPackage; //FIRST corrupt or lost package
         static int lastRecentInOrderSeqnum; // last recently received in ordner sequence number at receiver
+        static List<int> pufferSeqnum; // list of packages that where received accurate
+        static List<int> lostOrCorruptSeqnum; //list of currently lost or corrupt seqnum 
 
         static int tmr;
         static bool stopTmr;
@@ -39,6 +41,7 @@ namespace WertheApp.RN
 		//CONSTRUCTOR
 		public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
         {
+            Debug.WriteLine("SELECTIVE REPEAT");
 			//add a layer to draw on
 			layer = new CCLayer();
 			this.AddLayer(layer);
@@ -50,14 +53,17 @@ namespace WertheApp.RN
 
             baseOfWindow = 0;
             nextSeqnum = 0;
-            expectedSeqnum = 0;
-            lastRecentInOrderSeqnum = -1;
+            firstCorruptOrLostPackage = -1;
+            lastRecentInOrderSeqnum = 0;
 
             tmr = 0;
             stopTmr = true;
 
+            pufferSeqnum = new List<int>();
+            lostOrCorruptSeqnum = new List<int>();
+
             DrawWindow(baseOfWindow);
-            DrawExpectedSeqnum();
+            DrawWindow2(0);
 
         }
 
@@ -79,16 +85,11 @@ namespace WertheApp.RN
             else if(tmr == 11) 
             {
                 stopTmr = true;
-                int i = baseOfWindow;
-                int b = nextSeqnum;
-				//timer elapsed -> resend packets
-                while(i<b)
-                {
-					Debug.WriteLine("Packet resent with seqnum: " + i);
-                    await InvokeSender2(i);
-                    i++;
-                }
-
+                int i = baseOfWindow; //packet to resend TODO
+				//timer elapsed -> resend only the packet itself
+                Debug.WriteLine("Packet resent with seqnum: " + i);
+                await InvokeSender2(i);
+     
                 //restart timer
                 tmr = 0;
                 stopTmr = false;
@@ -126,33 +127,6 @@ namespace WertheApp.RN
             
         }
 
-        /*private static bool TimerElapsed()
-		{
-			Device.BeginInvokeOnMainThread(() =>
-			{
-                //resend all packets that have been previously send but not yet ack
-
-                if (activeTimers == 1 && timerKey == timerKey2)
-                {
-                    for (int i = baseOfWindow; i < nextSeqnum; i++)
-                    {
-                        Debug.WriteLine("Packet resent with seqnum: " + i);
-                        SendPackageAt(i);
-                    }
-                    //start timer // time = roundtrip time
-                    timerKey2 = timerKey;
-                    Device.StartTimer(new TimeSpan(0, 0, 0, 10, 0), TimerElapsed); //days, hours , minutes, seconds, milioseconds
-                }
-                else { activeTimers--; }
-
-               
-			});
-            //return true to keep timer reccuring
-            //return false to stop timer
-            return false;
-		}*/
-
-
         public static void InvokeSender()
         {
             //if window is not full, that means if there are still packets left inside the window which are not sent yet
@@ -160,7 +134,7 @@ namespace WertheApp.RN
             {
                 SendPackageAt(nextSeqnum);
                 //await InvokeSender2(nextSeqnum);
-/*TODO*/                
+
                 if(baseOfWindow == nextSeqnum)
                 {
                     //start timer 
@@ -177,7 +151,7 @@ namespace WertheApp.RN
             }
             else
             {
-                //refuse //either disable button before or pop up window: try again later
+                //refuse //do nothing or either disable button before or pop up window: try again later
             }
         }
 
@@ -218,19 +192,38 @@ namespace WertheApp.RN
 			//if ACK was lost
 			if (pp.lost)
 			{
-				Debug.WriteLine("ACK WAS LOST");
+                //if seqnum not already in list
+                if (!lostOrCorruptSeqnum.Contains(pp.seqnum))
+                {
+                    lostOrCorruptSeqnum.Add(pp.seqnum); //add to list 
+                    Debug.WriteLine("ACK WAS LOST: " + lostOrCorruptSeqnum.Last());
+                }
+                else { Debug.WriteLine("ACK was lost but already in list"); }
+
 				pp.Dispose();
 				//do nothing
 			}
-			//if ACK was not lost or corrupted //in order is not necessary
+            //if ACK was not lost or corrupted //in order is not necessary (but no cummulaive ackn)
 			else if (!pp.corrupt)
 			{
-                for (int i = baseOfWindow;i <= pp.seqnum; i++){
-                    DrawFillLeft2(i);  
+                //if there have been packages lost or corrupt
+                if (lostOrCorruptSeqnum.Any())
+                {
+                    //if received seqnum is bigger than the longest lost or corrupt seqnum
+                    if (pp.seqnum > lostOrCorruptSeqnum.First())
+                    {
+                        //save in puffer
+                        pufferSeqnum.Add(pp.seqnum);
+                        Debug.WriteLine("ACK: " + pufferSeqnum.Last() + " SAVED IN PUFFER");
+                    }
                 }
+                else { Debug.WriteLine("ACK" + pp.seqnum + " RECEIVED IN ORDER, NOT CORRUPT, NOT LOST"); }
 
+
+                DrawFillLeft2(pp.seqnum);  //only draw current fill
+             
                 //if(pp.seqnum != -1){PipelineProtocols.l_LastRecentAcknowlegement.Text = "Last recent acknowlegment: " + pp.seqnum; }
-                Debug.WriteLine("Ack SENT FOR SEQNR"+pp.seqnum);
+                Debug.WriteLine("Ack ARRIVED FOR SEQNR"+pp.seqnum);
                 baseOfWindow = pp.seqnum + 1;
                 DrawWindow(baseOfWindow);
 				pp.Dispose();
@@ -250,14 +243,20 @@ namespace WertheApp.RN
 						Debug.WriteLine("start");
 						tmr = 0;
 						MyTimer();
-/*TODO hier timer resetten oder nicht?*/			}//reset timer
+			}//reset timer
 					else { tmr = 0; }
 				}
-			}//send ACK for last recently received in order sequence number
+			}
 			else
 			{
                 //do nothing
-				Debug.WriteLine("ACK CORRUPT");
+                //if seqnum not already in list
+                if (!lostOrCorruptSeqnum.Contains(pp.seqnum))
+                {
+                    lostOrCorruptSeqnum.Add(pp.seqnum); //add to list 
+                    Debug.WriteLine("ACK CORRUPT: " + lostOrCorruptSeqnum.Last());
+                }
+                else { Debug.WriteLine("ACK was lost but already in list"); }
 				pp.Dispose();
 			}
         }
@@ -265,36 +264,6 @@ namespace WertheApp.RN
         //this method imitates both sender and receiver of a packet. It is called by the method invoke 
         public static async void SendPackageAt(int seqnum)
         {
-
-            /*//define object
-            float yPos = 15 + (65 * (28-a)); //where the box !starts!
-			var startBox = new CCRect(82, yPos, 40, 50); //x,y,length, width 82
-			var cc_startBox = new CCDrawNode();
-			cc_startBox.DrawRect(
-			startBox,
-              fillColor: CCColor4B.White,
-			borderWidth: 1,
-				borderColor: CCColor4B.Red);
-			//layer.AddChild(cc_startBox); */
-
-            /*//add touch listener
-			var touchListener = new CCEventListenerTouchAllAtOnce();
-			touchListener.OnTouchesBegan = HandleInput; */
-
-            /*//define action for DrawRect
-			var distance = new CCPoint(196, 0); //82 to 278 = 278-82 = 196
-			var distance2 = new CCPoint(0, 0); //0 as an x-value migth seem strange, but the reference value is the x-value of the object when it was first defined!
-			float timeToTake = 5f;
-			var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
-			var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
-			var removeAction = new CCRemoveSelf(); //this action removes the object*/
-
-            /*//apply action to object
-			cc_startBox.AddAction(sendingAction);*/
-
-            //apply sequence of actions to object
-            //cc_startBox.RunAction(cc_seq1);
-
             DrawFillLeft(seqnum);
 
 			//define object
@@ -317,21 +286,49 @@ namespace WertheApp.RN
             PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
             Debug.WriteLine("#####done" +pp.seqnum);
-            /*TODO maybe I have to put this code in a method wich will be executed for every single package that arrived...*/
+
+
+
             //Code for receiving packet and maybe sending ACK
             //if packet was lost
             if(pp.lost)
             {
-                Debug.WriteLine("PACKAGE WAS LOST");
+                //if seqnum not already in list
+                if (!lostOrCorruptSeqnum.Contains(pp.seqnum))
+                {
+                    
+                    lostOrCorruptSeqnum.Add(pp.seqnum); //add to list 
+                    Debug.WriteLine("PACKAGE WAS LOST: " + lostOrCorruptSeqnum.Last());
+                }
+                else { Debug.WriteLine("Package was lost but already in list"); }
+
+                if (firstCorruptOrLostPackage == -1){ 
+                    firstCorruptOrLostPackage = pp.seqnum; 
+                } 
+
                 pp.Dispose();
                 //do nothing
             }
-			//if packet was not lost or corrupted and packet was received in order(expected sequence number) 
-            else if(!pp.corrupt && pp.seqnum == expectedSeqnum)
-            { 
-                expectedSeqnum++; //increase expectedSeqnum
-                Debug.WriteLine("PACKAGE"+ pp.seqnum+" RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
-                DrawExpectedSeqnum();
+			//if packet was not lost or corrupted 
+            else if(!pp.corrupt)
+            {
+                //shift window2 if firstexpected seqnum was received
+                if (pp.seqnum == firstCorruptOrLostPackage)
+                {
+                    DrawWindow2(firstCorruptOrLostPackage);
+                    lostOrCorruptSeqnum.Remove(lostOrCorruptSeqnum.First()); //remove seqnum from list
+                    if (lostOrCorruptSeqnum.Any())
+                    {
+                        firstCorruptOrLostPackage = lostOrCorruptSeqnum.First(); //define the new first corrupt or los package
+                    }else
+                    {
+                        firstCorruptOrLostPackage = -1;
+                    }
+
+                }
+
+                Debug.WriteLine("PACKAGE" + pp.seqnum + " RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
+
                 DrawFillRight(pp.seqnum);
                 lastRecentInOrderSeqnum = pp.seqnum;
                 //PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
@@ -340,8 +337,18 @@ namespace WertheApp.RN
             }//send ACK for last recently received in order sequence number
             else
             {
-                Debug.WriteLine("PACKAGE CORRUPT");
-                SendACKFor(lastRecentInOrderSeqnum);
+                //if seqnum not already in list
+                if(!lostOrCorruptSeqnum.Contains(pp.seqnum)){
+                    lostOrCorruptSeqnum.Add(pp.seqnum); //add to list 
+                    Debug.WriteLine("PACKAGE CORRUPT: " + lostOrCorruptSeqnum.Last());
+                }
+                else { Debug.WriteLine("Package was lost but already in list"); }
+
+                if (firstCorruptOrLostPackage == -1){ 
+                    firstCorruptOrLostPackage = pp.seqnum; 
+                } 
+
+                //SendACKFor(lastRecentInOrderSeqnum); DON'T SEND
                 pp.Dispose();
             }
 
@@ -424,16 +431,18 @@ namespace WertheApp.RN
 	
 		}
 
-        static void DrawExpectedSeqnum()
+        static void DrawWindow2(float pos)
         {
             if(cc_expSeqnum != null)
             {
                 cc_expSeqnum.Clear();
             }
 
-            float a = 29 - expectedSeqnum;
-            float yMin = 7 + (a - 1) * 65;
-            expSeqnum = new CCRect(315, yMin, 50, 65);
+       
+            float a = 29 - pos ;
+            float yMin = 7 + (a - windowSize) * 65;
+            float height = windowSize * 65;
+            expSeqnum = new CCRect(315, yMin, 50, height);
             cc_expSeqnum = new CCDrawNode();
             cc_expSeqnum.DrawRect(
                 expSeqnum,
@@ -451,7 +460,7 @@ namespace WertheApp.RN
                 cc_window.Clear();
             }
             float a = 29 - pos;
-            float yMin = 7 + (a - windowSize)*65; // start of the coordinate system is at the lower left. But We start at the upper left
+            float yMin = 7 + (a - windowSize) * 65; // start of the coordinate system is at the lower left. But We start at the upper left
             float height = windowSize * 65;
             window = new CCRect(35, yMin, 50, height);//CCRect(x,y,legth,heigth)
 			cc_window = new CCDrawNode();
@@ -493,17 +502,6 @@ namespace WertheApp.RN
 				ccl_RightNumber.Position = new CCPoint(380, yPos + 25);
                 ccl_RightNumber.Color = CCColor3B.Gray;
 				layer.AddChild(ccl_RightNumber);
-
-                /*var label4 = new CCLabel(i.ToString(), "Arial", 20)
-				{
-					Position = new CCPoint(360, yPos),//layer.VisibleBoundsWorldspace.Center,
-					Color = CCColor3B.Black,
-					IsAntialiased = true,
-					HorizontalAlignment = CCTextAlignment.Center,
-					VerticalAlignment = CCVerticalTextAlignment.Center,
-					IgnoreAnchorPointForPosition = true
-				};
-				layer.AddChild(label4);*/
 
                 //draw the box on the right side
                 var rightBox = new CCRect(320, yPos,40,50);

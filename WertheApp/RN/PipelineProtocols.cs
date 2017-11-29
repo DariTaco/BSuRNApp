@@ -31,10 +31,6 @@ namespace WertheApp.RN
             windowSize = a;
             strategy = s;
 
-            /*Debug.WriteLine("########");
-            Debug.WriteLine("window Size: " + windowSize);
-            Debug.WriteLine("strategy: "+strategy);*/
-
             Title = "Pipeline Protocols" + strategy;
 
             //do only create content if device is not roated
@@ -150,21 +146,35 @@ namespace WertheApp.RN
 
         async void B_Send_Clicked(object sender, EventArgs e)
         {
-            int a1 = PipelineProtocolsScene.nextSeqnum;
-			if (a1 == 29)
-			{
-				await DisplayAlert("Alert", "You are done!", "OK");
-			}
-			else
-			{//PipelineProtocolsScene.SendPackageAt(0);
-				PipelineProtocolsScene.InvokeSender();
-			}
+            if (strategy == "Selective Repeat")
+            {
+                int a1 = PipelineProtocolsScene.nextSeqnum;
+                if (a1 == 29)
+                {
+                    await DisplayAlert("Alert", "You are done!", "OK");
+                }
+                else
+                {//PipelineProtocolsScene.SendPackageAt(0);
+                    PipelineProtocolsScene.InvokeSender();
+                }
+            }
+            else
+            {
+                int a1 = PipelineProtocolsScene2.nextSeqnum;
+                if (a1 == 29)
+                {
+                    await DisplayAlert("Alert", "You are done!", "OK");
+                }
+                else
+                {//PipelineProtocolsScene.SendPackageAt(0);
+                    PipelineProtocolsScene2.InvokeSender();
+                }
+            }
 
         }
 
         void B_Stop_Clicked(object sender, EventArgs e)
         {
-
 			switch (paused)
 			{
 				case true:
@@ -192,7 +202,7 @@ namespace WertheApp.RN
 		void HandleViewCreated(object sender, EventArgs e)
 		{
 			PipelineProtocolsScene gameScene;
-
+            PipelineProtocolsScene2 gameScene2;
 			var cc_gameView = sender as CCGameView;
 			if (cc_gameView != null)
 			{
@@ -200,11 +210,20 @@ namespace WertheApp.RN
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
 				//###############################################################
                 cc_gameView.DesignResolution = new CCSizeI(400, 2000); //CLIPPING
-                //###############################################################
-																	  // GameScene is the root of the CocosSharp rendering hierarchy:
-				gameScene = new PipelineProtocolsScene(cc_gameView);
-				// Starts CocosSharp:
-				cc_gameView.RunWithScene(gameScene);
+                                                                       //###############################################################
+
+                //choose gamescene for GoBackN or Selective Repeat
+                if(strategy == "Selective Repeat"){
+                    gameScene = new PipelineProtocolsScene(cc_gameView); 
+                    // Starts CocosSharp:
+                    cc_gameView.RunWithScene(gameScene);
+                }else{
+                    gameScene2 = new PipelineProtocolsScene2(cc_gameView); 
+                    // Starts CocosSharp:
+                    cc_gameView.RunWithScene(gameScene2);
+                }
+				
+			
 			}
 		}
 
