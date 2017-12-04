@@ -1,9 +1,9 @@
-﻿using System;
+﻿/**************************CLASS FOR GO BACK N*********************************/
+using System;
 using CocosSharp;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-
 using Xamarin.Forms;
 using System.Threading.Tasks;
 
@@ -64,6 +64,8 @@ namespace WertheApp.RN
 
         //METHODS
 
+        /**********************************************************************
+        *********************************************************************/
         //!!!!if you a better solution for a timer. please rewrite this section of code. Or maybe Xamarin will have an implementation of a useful time at some point
         //I did this to simulate a timer. Didn't know how to do it. Since the built in timer of Xamarin can't be stopped, I had to programm my own.
         //created an invisible object and applied an action of 1 second to it.
@@ -153,7 +155,8 @@ namespace WertheApp.RN
             return false;
         }*/
 
-
+        /**********************************************************************
+        *********************************************************************/
         public static void InvokeSender()
         {
             //if window is not full, that means if there are still packets left inside the window which are not sent yet
@@ -182,6 +185,8 @@ namespace WertheApp.RN
             }
         }
 
+        /**********************************************************************
+        *********************************************************************/
         //is needed because turning sendPAckageAt into async is unpractical. The return had to be before actually sending, which is not possible
         public static async Task<int> InvokeSender2(int a)
         {
@@ -190,6 +195,8 @@ namespace WertheApp.RN
             return 0;
         }
 
+        /**********************************************************************
+        *********************************************************************/
         //Receiver sends ACK
         public static async void SendACKFor(int seqnum)
         {
@@ -265,6 +272,8 @@ namespace WertheApp.RN
             }
         }
 
+        /**********************************************************************
+        *********************************************************************/
         //this method imitates both sender and receiver of a packet. It is called by the method invoke 
         public static async void SendPackageAt(int seqnum)
         {
@@ -351,6 +360,8 @@ namespace WertheApp.RN
 
         }
 
+        /**********************************************************************
+        *********************************************************************/
         //what happens when a package is clicked ? first touch -> corrupt, second touch -> lost
         private static void HandleInput(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
         {
@@ -374,6 +385,8 @@ namespace WertheApp.RN
             //col1 = CCColor4B.Magenta;
         }
 
+        /**********************************************************************
+        *********************************************************************/
         static void DrawFillRight(int seqnum)
         {
             float a = 28 - seqnum;
@@ -390,6 +403,8 @@ namespace WertheApp.RN
             layer.AddChild(cc_rightBox);
         }
 
+        /**********************************************************************
+        *********************************************************************/
         static void DrawFillLeft(int seqnum)
         {
 
@@ -407,6 +422,8 @@ namespace WertheApp.RN
             layer.AddChild(cc_leftBox);
         }
 
+        /**********************************************************************
+        *********************************************************************/
         static void DrawFillLeft2(int seqnum)
         {
 
@@ -428,6 +445,8 @@ namespace WertheApp.RN
 
         }
 
+        /**********************************************************************
+        *********************************************************************/
         static void DrawExpectedSeqnum()
         {
             if (cc_expSeqnum != null)
@@ -447,6 +466,8 @@ namespace WertheApp.RN
             layer.AddChild(cc_expSeqnum);
         }
 
+        /**********************************************************************
+        *********************************************************************/
         static void DrawWindow(float pos)
         {
             //delete existing window
@@ -468,6 +489,8 @@ namespace WertheApp.RN
             layer.AddChild(cc_window);
         }
 
+        /**********************************************************************
+        *********************************************************************/
         //draw everything. Begginging from the Bottom
         void DrawLabelsAndBoxes()
         {

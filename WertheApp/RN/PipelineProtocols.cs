@@ -125,7 +125,7 @@ namespace WertheApp.RN
 
             Button b_Send = new Button
             {
-                Text = "Send Packet",
+                Text = "Send Package",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
