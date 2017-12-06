@@ -129,32 +129,6 @@ namespace WertheApp.RN
 
         }
 
-        /*private static bool TimerElapsed()
-        {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                //resend all packets that have been previously send but not yet ack
-
-                if (activeTimers == 1 && timerKey == timerKey2)
-                {
-                    for (int i = baseOfWindow; i < nextSeqnum; i++)
-                    {
-                        Debug.WriteLine("Packet resent with seqnum: " + i);
-                        SendPackageAt(i);
-                    }
-                    //start timer // time = roundtrip time
-                    timerKey2 = timerKey;
-                    Device.StartTimer(new TimeSpan(0, 0, 0, 10, 0), TimerElapsed); //days, hours , minutes, seconds, milioseconds
-                }
-                else { activeTimers--; }
-
-               
-            });
-            //return true to keep timer reccuring
-            //return false to stop timer
-            return false;
-        }*/
-
         /**********************************************************************
         *********************************************************************/
         public static void InvokeSender()
@@ -197,6 +171,64 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        //this method imitates both sender and receiver of a packet. It is called by the method invoke 
+        public static async void SendPackageAt(int seqnum)
+        {
+            DrawFillLeft(seqnum);
+
+            //define object
+            float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
+            var pp = new PipelineProtocolsPackage(seqnum, false);
+            pp.Position = new CCPoint(80, yPos);
+            layer.AddChild(pp);
+
+            //define action
+            float timeToTake = 5f;
+            var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
+            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
+            var removeAction = new CCRemoveSelf(); //this action removes the object*/
+
+            //define sequence of actions 
+            var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
+
+            //apply sequence of actions to object
+            tmr = 0;
+            PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
+            await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
+            Debug.WriteLine("#####done" + pp.seqnum);
+            /*TODO maybe I have to put this code in a method wich will be executed for every single package that arrived...*/
+
+            //Code for receiving packet and maybe sending ACK
+            //if packet was lost
+            if (pp.lost)
+            {
+                Debug.WriteLine("PACKAGE WAS LOST");
+                pp.Dispose();
+                //do nothing
+            }
+            //if packet was not lost or corrupted and packet was received in order(expected sequence number) 
+            else if (!pp.corrupt && pp.seqnum == expectedSeqnum)
+            {
+                expectedSeqnum++; //increase expectedSeqnum
+                Debug.WriteLine("PACKAGE" + pp.seqnum + " RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
+                DrawExpectedSeqnum();
+                DrawFillRight(pp.seqnum);
+                lastRecentInOrderSeqnum = pp.seqnum;
+                //PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
+                SendACKFor(pp.seqnum); //send ACK 
+                pp.Dispose();
+            }//send ACK for last recently received in order sequence number
+            else
+            {
+                Debug.WriteLine("PACKAGE CORRUPT");
+                SendACKFor(lastRecentInOrderSeqnum);
+                pp.Dispose();
+            }
+
+        }
+
+        /**********************************************************************
+      *********************************************************************/
         //Receiver sends ACK
         public static async void SendACKFor(int seqnum)
         {
@@ -266,98 +298,9 @@ namespace WertheApp.RN
             }
             else
             {
-                //do nothing
                 Debug.WriteLine("ACK CORRUPT");
                 pp.Dispose();
             }
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        //this method imitates both sender and receiver of a packet. It is called by the method invoke 
-        public static async void SendPackageAt(int seqnum)
-        {
-
-            /*//define object
-            float yPos = 15 + (65 * (28-a)); //where the box !starts!
-            var startBox = new CCRect(82, yPos, 40, 50); //x,y,length, width 82
-            var cc_startBox = new CCDrawNode();
-            cc_startBox.DrawRect(
-            startBox,
-              fillColor: CCColor4B.White,
-            borderWidth: 1,
-                borderColor: CCColor4B.Red);
-            //layer.AddChild(cc_startBox); */
-
-            /*//add touch listener
-            var touchListener = new CCEventListenerTouchAllAtOnce();
-            touchListener.OnTouchesBegan = HandleInput; */
-
-            /*//define action for DrawRect
-            var distance = new CCPoint(196, 0); //82 to 278 = 278-82 = 196
-            var distance2 = new CCPoint(0, 0); //0 as an x-value migth seem strange, but the reference value is the x-value of the object when it was first defined!
-            float timeToTake = 5f;
-            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
-            var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
-            var removeAction = new CCRemoveSelf(); //this action removes the object*/
-
-            /*//apply action to object
-            cc_startBox.AddAction(sendingAction);*/
-
-            //apply sequence of actions to object
-            //cc_startBox.RunAction(cc_seq1);
-
-            DrawFillLeft(seqnum);
-
-            //define object
-            float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
-            var pp = new PipelineProtocolsPackage(seqnum, false);
-            pp.Position = new CCPoint(80, yPos);
-            layer.AddChild(pp);
-
-            //define action
-            float timeToTake = 5f;
-            var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
-            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
-            var removeAction = new CCRemoveSelf(); //this action removes the object*/
-
-            //define sequence of actions 
-            var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
-
-            //apply sequence of actions to object
-            tmr = 0;
-            PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
-            await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
-            Debug.WriteLine("#####done" + pp.seqnum);
-            /*TODO maybe I have to put this code in a method wich will be executed for every single package that arrived...*/
-
-            //Code for receiving packet and maybe sending ACK
-            //if packet was lost
-            if (pp.lost)
-            {
-                Debug.WriteLine("PACKAGE WAS LOST");
-                pp.Dispose();
-                //do nothing
-            }
-            //if packet was not lost or corrupted and packet was received in order(expected sequence number) 
-            else if (!pp.corrupt && pp.seqnum == expectedSeqnum)
-            {
-                expectedSeqnum++; //increase expectedSeqnum
-                Debug.WriteLine("PACKAGE" + pp.seqnum + " RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
-                DrawExpectedSeqnum();
-                DrawFillRight(pp.seqnum);
-                lastRecentInOrderSeqnum = pp.seqnum;
-                //PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
-                SendACKFor(pp.seqnum); //send ACK 
-                pp.Dispose();
-            }//send ACK for last recently received in order sequence number
-            else
-            {
-                Debug.WriteLine("PACKAGE CORRUPT");
-                SendACKFor(lastRecentInOrderSeqnum);
-                pp.Dispose();
-            }
-
         }
 
         /**********************************************************************
@@ -381,7 +324,6 @@ namespace WertheApp.RN
             else { Debug.WriteLine("clicked " + touches.Count()); }
 
             //cc_startBox.Color = CCColor3B.Magenta;
-
             //col1 = CCColor4B.Magenta;
         }
 
@@ -521,17 +463,6 @@ namespace WertheApp.RN
                 ccl_RightNumber.Color = CCColor3B.Gray;
                 layer.AddChild(ccl_RightNumber);
 
-                /*var label4 = new CCLabel(i.ToString(), "Arial", 20)
-                {
-                    Position = new CCPoint(360, yPos),//layer.VisibleBoundsWorldspace.Center,
-                    Color = CCColor3B.Black,
-                    IsAntialiased = true,
-                    HorizontalAlignment = CCTextAlignment.Center,
-                    VerticalAlignment = CCVerticalTextAlignment.Center,
-                    IgnoreAnchorPointForPosition = true
-                };
-                layer.AddChild(label4);*/
-
                 //draw the box on the right side
                 var rightBox = new CCRect(320, yPos, 40, 50);
                 CCDrawNode cc_rightBox = new CCDrawNode();
@@ -562,3 +493,69 @@ namespace WertheApp.RN
         }
     }
 }
+
+/*private static bool TimerElapsed()
+      {
+          Device.BeginInvokeOnMainThread(() =>
+          {
+              //resend all packets that have been previously send but not yet ack
+
+              if (activeTimers == 1 && timerKey == timerKey2)
+              {
+                  for (int i = baseOfWindow; i < nextSeqnum; i++)
+                  {
+                      Debug.WriteLine("Packet resent with seqnum: " + i);
+                      SendPackageAt(i);
+                  }
+                  //start timer // time = roundtrip time
+                  timerKey2 = timerKey;
+                  Device.StartTimer(new TimeSpan(0, 0, 0, 10, 0), TimerElapsed); //days, hours , minutes, seconds, milioseconds
+              }
+              else { activeTimers--; }
+
+
+          });
+          //return true to keep timer reccuring
+          //return false to stop timer
+          return false;
+      }*/
+
+/*//define object
+            float yPos = 15 + (65 * (28-a)); //where the box !starts!
+            var startBox = new CCRect(82, yPos, 40, 50); //x,y,length, width 82
+            var cc_startBox = new CCDrawNode();
+            cc_startBox.DrawRect(
+            startBox,
+              fillColor: CCColor4B.White,
+            borderWidth: 1,
+                borderColor: CCColor4B.Red);
+            //layer.AddChild(cc_startBox); */
+
+            /*//add touch listener
+            var touchListener = new CCEventListenerTouchAllAtOnce();
+            touchListener.OnTouchesBegan = HandleInput; */
+
+            /*//define action for DrawRect
+            var distance = new CCPoint(196, 0); //82 to 278 = 278-82 = 196
+            var distance2 = new CCPoint(0, 0); //0 as an x-value migth seem strange, but the reference value is the x-value of the object when it was first defined!
+            float timeToTake = 5f;
+            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
+            var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
+            var removeAction = new CCRemoveSelf(); //this action removes the object*/
+
+            /*//apply action to object
+            cc_startBox.AddAction(sendingAction);*/
+
+            //apply sequence of actions to object
+            //cc_startBox.RunAction(cc_seq1);
+
+/*var label4 = new CCLabel(i.ToString(), "Arial", 20)
+{
+    Position = new CCPoint(360, yPos),//layer.VisibleBoundsWorldspace.Center,
+    Color = CCColor3B.Black,
+    IsAntialiased = true,
+    HorizontalAlignment = CCTextAlignment.Center,
+    VerticalAlignment = CCVerticalTextAlignment.Center,
+    IgnoreAnchorPointForPosition = true
+};
+layer.AddChild(label4);*/

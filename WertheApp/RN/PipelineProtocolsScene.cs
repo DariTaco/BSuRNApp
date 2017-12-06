@@ -25,8 +25,8 @@ namespace WertheApp.RN
         static int baseOfWindow2;
         public static int nextSeqnum; //first not sent yet sequence number
 
-        static int otmr;
-        static bool ostopTmr;
+        static int tmr;
+        static bool stopTmr;
 
         static List<int> pufferP; // list of packages that where received accurate after as lost or corrupt one
         static List<int> pufferACK; // list of ACK that where received accurate after a lost or corrupt one
@@ -87,7 +87,7 @@ namespace WertheApp.RN
             else if(tmr == 11) 
             {
                 stopTmr = true;
-                int i = baseOfWindow; //packet to resend TODO
+                int i = baseOfWindow; //packet to resend TODO RESEND
 				//timer elapsed -> resend only the packet itself
                 Debug.WriteLine("RESENT P: " + i);
                 await InvokeSender2(i);
@@ -140,6 +140,7 @@ namespace WertheApp.RN
 
                 if(baseOfWindow == nextSeqnum)
                 {
+                    /*TODO TIMER*/
                     //start timer 
                     if (stopTmr)
                     {
