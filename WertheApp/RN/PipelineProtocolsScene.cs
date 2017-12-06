@@ -25,11 +25,9 @@ namespace WertheApp.RN
         static int baseOfWindow2;
         public static int nextSeqnum; //first not sent yet sequence number
 
-        static int tmr;
-        static bool stopTmr;
+        static int otmr;
+        static bool ostopTmr;
 
-        static int firstCorruptOrLostPackage; //FIRST corrupt or lost package // -1 means theres currently no package lost or corrupt
-        static int firstCorruptOrLostACK;
         static List<int> pufferP; // list of packages that where received accurate after as lost or corrupt one
         static List<int> pufferACK; // list of ACK that where received accurate after a lost or corrupt one
         static List<int> lostOrCorruptP; //list of currently lost or corrupt seqnum of a package
@@ -56,8 +54,6 @@ namespace WertheApp.RN
             baseOfWindow = 0;
             baseOfWindow2 = 0;
             nextSeqnum = 0;
-            firstCorruptOrLostPackage = -1;
-            firstCorruptOrLostACK = -1;
 
             tmr = 0;
             stopTmr = true;
@@ -202,7 +198,7 @@ namespace WertheApp.RN
 
             /******************************************************************/
 
-            //if packet was lost
+            //packet was lost
             if (pp.lost)
             {
                 //if seqnum not already in list
@@ -213,88 +209,69 @@ namespace WertheApp.RN
                     lostOrCorruptACK.Add(pp.seqnum); //the ACK will also never arrive 
                     Debug.WriteLine("package lost: " + lostOrCorruptP.Last());
                 }
-                else { Debug.WriteLine("Package lost (but already in list)"); }
-
-                if (firstCorruptOrLostPackage == -1)
-                {
-                    firstCorruptOrLostPackage = pp.seqnum;
-                }
 
                 pp.Dispose();
-                //do nothing
             }
-            //if package was not lost or corrupted 
-            else if (!pp.corrupt)
-            {
-                //if a package arrives that has been lost/corrupt and is therfore in the list
-                if (lostOrCorruptP.Contains(pp.seqnum)){
-                    //if it's the last package in the lost/corrupt list and therfore there are no further lost/corrupt packages after this one
-                    if(lostOrCorruptP.Find(item => item.ToString() == pp.seqnum.ToString()) == lostOrCorruptP.Last()){
-                        Debug.WriteLine("there are no futher lost or corrupt packages");
-                        /*TODO and same for ack*/
-                    }
-                    //if it's not the last one in the list
-                    else{
-                        /*TODO and same for ack*/
-                        //schau Algo auf Blatt
-                        Debug.WriteLine("there are further lost or corrupt packages");
-                    }
-                }
-
-                //if there have been packages lost or corrupt
-                if (lostOrCorruptP.Any())
-                {
-                    Debug.WriteLine("there are lost packages before " + pp.seqnum);
-                    //if received Package seqnum is bigger than the longest lost or corrupt seqnum
-                    if (pp.seqnum > lostOrCorruptP.First())
-                    {
-                        //save in puffer
-                        pufferP.Add(pp.seqnum);
-                        Debug.WriteLine("package: " + pufferP.Last() + " saved in puffer");
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine("there are no lost packages before " + pp.seqnum);
-                    baseOfWindow2 = pp.seqnum + 1;
-                }
-
-                /*if (pp.seqnum == firstCorruptOrLostPackage)
-                {
-                    DrawWindow2(firstCorruptOrLostPackage);
-                    lostOrCorruptP.Remove(lostOrCorruptP.First()); //remove seqnum from list
-                    if (lostOrCorruptP.Any())
-                    {
-                        firstCorruptOrLostPackage = lostOrCorruptP.First(); //define the new first corrupt or lost package
-                    }else
-                    {
-                        firstCorruptOrLostPackage = -1;
-                    }
-
-                }*/
-               
-
-                DrawWindow2(baseOfWindow2);
-                DrawFillRight(pp.seqnum);
-         
-                SendACKFor(pp.seqnum); //send ACK 
-                pp.Dispose();
-            }//send ACK for last recently received in order sequence number
-            else
+            //package corrupt
+            else if (pp.corrupt)
             {
                 //if seqnum not already in list
-                if(!lostOrCorruptP.Contains(pp.seqnum)){
+                if (!lostOrCorruptP.Contains(pp.seqnum))
+                {
                     lostOrCorruptP.Add(pp.seqnum); //add to list 
                     lostOrCorruptACK.Add(pp.seqnum); //the ACK will also never arrive 
                     Debug.WriteLine("package corrupt: " + lostOrCorruptP.Last());
                 }
-                else { Debug.WriteLine("package lost (but already in list)"); }
 
-                if (firstCorruptOrLostPackage == -1){ 
-                    firstCorruptOrLostPackage = pp.seqnum; 
-                } 
+                pp.Dispose();
+            }
+            //package arrived
+            else
+            {
+                //has been lost/corrupt and is therfore in the list
+                if (lostOrCorruptP.Contains(pp.seqnum))
+                {
 
-                //SendACKFor(lastRecentInOrderSeqnum); DON'T SEND
+                    lostOrCorruptP.Remove(pp.seqnum); //remove from list
+
+                    //still other ack lost/corrupt
+                    if (lostOrCorruptP.Any())
+                    {
+                        //seqnum is bigger than the first item in list. note the item itself was removed
+                        if (pp.seqnum > lostOrCorruptP.First())
+                        {
+                            pufferP.Add(pp.seqnum);
+                            baseOfWindow2 = baseOfWindow2; //just to make it clear
+                        }
+                        else
+                        {
+                            baseOfWindow2 = lostOrCorruptP.First();
+                        }
+                    }
+                    else
+                    {
+                        baseOfWindow2 = pufferP.Last() + 1;
+                    }
+                }
+                //has never been lost/corrupt before . this implies that there are no lost/corrupt packages after this one and also no other packages have arrived after this one
+                else
+                {
+                    //lost/corrupt packages before this one. since the implication above it is sufficient to only ask if there are any lost/corrupt packages existant
+                    if (lostOrCorruptP.Any())
+                    {
+                        pufferP.Add(pp.seqnum);
+                        baseOfWindow2 = baseOfWindow2; // just to make it clear
+                    }
+                    else
+                    {
+                        baseOfWindow2 = pp.seqnum + 1;
+                    }
+
+                }
+
+                DrawWindow2(baseOfWindow2);
+                DrawFillRight(pp.seqnum);
+                SendACKFor(pp.seqnum); //send ACK 
                 pp.Dispose();
             }
 
@@ -326,8 +303,7 @@ namespace WertheApp.RN
 
             /******************************************************************/
 
-            //if ACK was lost
-            /**/
+            //ack was lost
             if (pp.lost)
             {
                 //if seqnum not already in list
@@ -336,41 +312,71 @@ namespace WertheApp.RN
                     lostOrCorruptACK.Add(pp.seqnum); //add to list 
                     Debug.WriteLine("ack lost: " + lostOrCorruptACK.Last());
                 }
-                else { Debug.WriteLine("ack lost (but already in list): "); }
 
-                if (firstCorruptOrLostACK == -1)
+                pp.Dispose();
+            }
+            //ack corrupt
+            else if (pp.corrupt)
+            {
+                //do nothing
+                //if seqnum not already in list
+                if (!lostOrCorruptACK.Contains(pp.seqnum))
                 {
-                    firstCorruptOrLostACK = pp.seqnum;
+                    lostOrCorruptACK.Add(pp.seqnum); //add to list 
+                    Debug.WriteLine("ack corrupt: " + lostOrCorruptACK.Last());
                 }
 
                 pp.Dispose();
             }
-            //if ACK was not lost or corrupted //in order is not necessary (but no cummulaive ackn)
-            /**/
-            else if (!pp.corrupt)
+            //ack arrived. in order is not necessary (but no cummulaive ackn)
+            else
             {
-                 
-                //if there have been ACK lost or corrupt
-                if (lostOrCorruptACK.Any())
+                //has been lost/corrupt and is therfore in the list
+                if (lostOrCorruptACK.Contains(pp.seqnum))
                 {
-                    Debug.WriteLine("there are lost ack before " + pp.seqnum);
-                    //if received ACK seqnum is bigger than the longest lost or corrupt seqnum
-                    if (pp.seqnum > lostOrCorruptACK.First())
+
+                    lostOrCorruptACK.Remove(pp.seqnum); //remove from list
+
+                    //still other ack lost/corrupt
+                    if (lostOrCorruptACK.Any())
                     {
-                        //save in puffer
-                        pufferACK.Add(pp.seqnum);
-                        Debug.WriteLine("ack: " + pufferACK.Last() + " saved in puffer");
+                        //seqnum is bigger than the first item in list. note the item itself was removed
+                        if (pp.seqnum > lostOrCorruptACK.First())
+                        {
+                            pufferACK.Add(pp.seqnum);
+                            baseOfWindow = baseOfWindow; //just to make it clear
+                        }
+                        else
+                        {
+                            baseOfWindow = lostOrCorruptACK.First();
+                        }
+                    }
+                    else
+                    {
+                        baseOfWindow = pufferACK.Last() + 1;
                     }
                 }
-                else { 
-                    baseOfWindow = pp.seqnum + 1;
-                    Debug.WriteLine("there are no lost ack before " + pp.seqnum);; 
-                }
+                //has never been lost/corrupt before . this implies that there are no lost/corrupt ack after this one and also no other ack have arrived after this one
+                else
+                {
+                    //lost/corrupt ack before this one. since the implication above it is sufficient to only ask if there are any lost/corrupt ack existant
+                    if (lostOrCorruptACK.Any())
+                    {
+                        pufferACK.Add(pp.seqnum);
+                        baseOfWindow = baseOfWindow; // just to make it clear
+                    }
+                    else
+                    {
+                        baseOfWindow = pp.seqnum + 1;
+                    }
 
+                }
                 DrawWindow(baseOfWindow);
                 DrawFillLeft2(pp.seqnum);  //only draw current fill
                 pp.Dispose();
 
+                /**************************************************************/
+                //*TODO TIMER*/
                 if (baseOfWindow == nextSeqnum)
                 {
                     //stop timer
@@ -388,25 +394,6 @@ namespace WertheApp.RN
                     }//reset timer
                     else { tmr = 0; }
                 }
-            }
-            /**/
-            else
-            {
-                //do nothing
-                //if seqnum not already in list
-                if (!lostOrCorruptACK.Contains(pp.seqnum))
-                {
-                    lostOrCorruptACK.Add(pp.seqnum); //add to list 
-                    Debug.WriteLine("ack corrupt: " + lostOrCorruptACK.Last());
-                }
-                else { Debug.WriteLine("ack lost (but already in list)"); }
-
-
-                if (firstCorruptOrLostACK == -1)
-                {
-                    firstCorruptOrLostACK = pp.seqnum;
-                }
-                pp.Dispose();
             }
         }
 
@@ -603,3 +590,19 @@ namespace WertheApp.RN
 		}
     }
 }
+
+/*//if it's the last ack in the lost/corrupt list and therfore there are no further lost/corrupt ack after this one
+if(lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString()) == lostOrCorruptACK.Last()){
+    Debug.WriteLine("there are NO futher lost or corrupt ack after: " + lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString()));
+    pufferACK.Add(                                                                                                                                                                                                            );
+    baseOfWindow = pufferACK.Last()+1;
+    pufferACK.Remove(pufferACK.Last()); //remove the arrived package from list
+
+}
+//if it's not the last one in the list
+else{
+    Debug.WriteLine("there ARE further lost or corrupt ack after: " + lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString()));
+    lostOrCorruptACK.Remove(lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString())); // remove the arrived package from list
+    baseOfWindow = lostOrCorruptACK.First();
+
+}*/
