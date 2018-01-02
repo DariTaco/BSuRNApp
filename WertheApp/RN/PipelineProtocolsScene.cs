@@ -25,13 +25,10 @@ namespace WertheApp.RN
         static int baseOfWindow2;
         public static int nextSeqnum; //first not sent yet sequence number
 
-        static int tmr;
-        static bool stopTmr;
-
         static List<int> pufferP; // list of packages that where received accurate after as lost or corrupt one
         static List<int> pufferACK; // list of ACK that where received accurate after a lost or corrupt one
-        static List<int> lostOrCorruptP; //list of currently lost or corrupt seqnum of a package
-        static List<int> lostOrCorruptACK; // list of currently lost or corrupt seqnum of an ACK
+        public static List<int> lostOrCorruptP; //list of currently lost or corrupt seqnum of a package
+        public static List<int> lostOrCorruptACK; // list of currently lost or corrupt seqnum of an ACK
 
         static CCRect window;
         static CCRect window2;
@@ -41,7 +38,6 @@ namespace WertheApp.RN
         //CONSTRUCTOR
         public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
         {
-            Debug.WriteLine("SELECTIVE REPEAT");
             //add a layer to draw on
             layer = new CCLayer();
             this.AddLayer(layer);
@@ -55,9 +51,6 @@ namespace WertheApp.RN
             baseOfWindow2 = 0;
             nextSeqnum = 0;
 
-            tmr = 0;
-            stopTmr = true;
-
             pufferP = new List<int>();
             pufferACK = new List<int>();
             lostOrCorruptP = new List<int>();
@@ -65,67 +58,24 @@ namespace WertheApp.RN
 
             DrawWindow(baseOfWindow);
             DrawWindow2(0);
-
         }
 
-		//METHODS
-
-        /**********************************************************************
-         *********************************************************************/
-        //!!!!if you a better solution for a timer. please rewrite this section of code. Or maybe Xamarin will have an implementation of a useful time at some point
-        //I did this to simulate a timer. Didn't know how to do it. Since the built in timer of Xamarin can't be stopped, I had to programm my own.
-        //created an invisible object and applied an action of 1 second to it.
-        //As long as the tmr variable is <10 the action is repeated.
-        //as soon as the tmr variable equals 10, the timer is stopped and packages will be resent and the timer restarted
-        public static async void MyTimer()
+        //METHODS
+        public static async void MyTimer(int seqnum, int c)
         {
-			if(stopTmr)
-            {
-                //stop timer
-                PipelineProtocols.l_Timeout.Text = "Timeout: --";
+            int counter = c;
+            await Task.Delay(1000); //wait a second
+			counter++;
+            if(counter == 11){ //11seconds. otherwise resending the package looks unnatural
+                if (lostOrCorruptP.Contains(seqnum) || lostOrCorruptACK.Contains(seqnum))//seqnumber lost or corrupt
+				{
+                    SendPackageAt(seqnum);//resend seqnum
+                    MyTimer(seqnum, 0); 
+                }
+			}
+            else{
+                MyTimer(seqnum, counter);
             }
-            else if(tmr == 11) 
-            {
-                stopTmr = true;
-                int i = baseOfWindow; //packet to resend TODO RESEND
-				//timer elapsed -> resend only the packet itself
-                Debug.WriteLine("RESENT P: " + i);
-                await InvokeSender2(i);
-     
-                //restart timer
-                tmr = 0;
-                stopTmr = false;
-                MyTimer();
-            }
-            else if (tmr < 11)
-            {
-                PipelineProtocols.l_Timeout.Text = "Timeout: " + tmr;
-
-                var pointlessPoint = new CCRect(10, 10, 10, 10);//arbitrary
-                var cc_pointlessPoint = new CCDrawNode();
-                cc_pointlessPoint.DrawRect(
-                pointlessPoint,
-                fillColor: CCColor4B.Transparent,
-                borderWidth: 1,
-                borderColor: CCColor4B.Transparent);
-                layer.AddChild(cc_pointlessPoint); //DO NOT ADD the defined object to the layer. We only need it for simulating the timer
-
-                //define action
-                float timeToTake = 1f; //1 second!!
-                var distance = new CCPoint(100, 100); //arbitrary
-                var wasteASecondAction = new CCMoveTo(timeToTake, distance);
-                var removeAction = new CCRemoveSelf(); //this action removes the object*/
-
-                //define sequence of actions 
-                var cc_seq1 = new CCSequence(wasteASecondAction, removeAction);
-
-                //apply sequence of actions to object
-                await cc_pointlessPoint.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!
-
-                tmr++;
-                MyTimer();
-            }
-            
         }
 
         /**********************************************************************
@@ -136,20 +86,8 @@ namespace WertheApp.RN
             if(nextSeqnum < (baseOfWindow+windowSize))
             {
                 SendPackageAt(nextSeqnum);
-                //await InvokeSender2(nextSeqnum);
-
-                if(baseOfWindow == nextSeqnum)
-                {
-                    /*TODO TIMER*/
-                    //start timer 
-                    if (stopTmr)
-                    {
-                        stopTmr = false;
-                        tmr = 0;
-                        MyTimer();
-                    }//reset timer
-                    else { tmr = 0; }
-				}
+                MyTimer(nextSeqnum, 0); 
+										
                 nextSeqnum++;
             }
             else
@@ -160,17 +98,6 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        //is needed because turning sendPAckageAt into async is unpractical. The return had to be before actually sending, which is not possible
-        public static async Task<int> InvokeSender2(int a)
-        {
-            await Task.Delay(10); //this delay (10 milliseconds) makes sure one package arrives after another
-            SendPackageAt(a);
-            return 0;
-        }
-
-
-        /**********************************************************************
-        *********************************************************************/
         //this method imitates both sender and receiver of a packet. It is called by the method invoke 
         public static async void SendPackageAt(int seqnum)
         {
@@ -178,7 +105,7 @@ namespace WertheApp.RN
 
 			//define object
 			float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
-            var pp = new PipelineProtocolsPackage(seqnum, false);
+            var pp = new PipelineProtocolsPackage(seqnum);
             pp.Position = new CCPoint(80,yPos);
             layer.AddChild(pp);
 
@@ -192,49 +119,16 @@ namespace WertheApp.RN
 			var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
 
             //apply sequence of actions to object
-            tmr = 0;
             PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
-            Debug.WriteLine("SEND PACKAGE: " + pp.seqnum);
-            await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
+			await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
             /******************************************************************/
-
-            //packet was lost
-            if (pp.lost)
-            {
-                //if seqnum not already in list
-                if (!lostOrCorruptP.Contains(pp.seqnum))
-                {
-
-                    lostOrCorruptP.Add(pp.seqnum); //add to list 
-                    lostOrCorruptACK.Add(pp.seqnum); //the ACK will also never arrive 
-                    Debug.WriteLine("package lost: " + lostOrCorruptP.Last());
-                }
-
-                pp.Dispose();
-            }
-            //package corrupt
-            else if (pp.corrupt)
-            {
-                //if seqnum not already in list
-                if (!lostOrCorruptP.Contains(pp.seqnum))
-                {
-                    lostOrCorruptP.Add(pp.seqnum); //add to list 
-                    lostOrCorruptACK.Add(pp.seqnum); //the ACK will also never arrive 
-                    Debug.WriteLine("package corrupt: " + lostOrCorruptP.Last());
-                }
-
-                pp.Dispose();
-            }
-            //package arrived
-            else
+            if(!pp.lost && !pp.corrupt)
             {
                 //has been lost/corrupt and is therfore in the list
                 if (lostOrCorruptP.Contains(pp.seqnum))
                 {
-
                     lostOrCorruptP.Remove(pp.seqnum); //remove from list
-
                     //still other ack lost/corrupt
                     if (lostOrCorruptP.Any())
                     {
@@ -267,15 +161,12 @@ namespace WertheApp.RN
                     {
                         baseOfWindow2 = pp.seqnum + 1;
                     }
-
                 }
-
                 DrawWindow2(baseOfWindow2);
                 DrawFillRight(pp.seqnum);
                 SendACKFor(pp.seqnum); //send ACK 
-                pp.Dispose();
             }
-
+            pp.Dispose();
         }
 
         /**********************************************************************
@@ -285,7 +176,7 @@ namespace WertheApp.RN
         {
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //where the box !starts!
-            var pp = new PipelineProtocolsPackage(seqnum, true);
+            var pp = new PipelineProtocolsACK(seqnum);
             pp.Position = new CCPoint(280, yPos);
             layer.AddChild(pp);
 
@@ -297,47 +188,19 @@ namespace WertheApp.RN
 
             //define sequence of actions 
             var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
-            Debug.WriteLine("SEND ACK: " + pp.seqnum);
 
             //apply sequence of actions to object
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
             /******************************************************************/
 
-            //ack was lost
-            if (pp.lost)
-            {
-                //if seqnum not already in list
-                if (!lostOrCorruptACK.Contains(pp.seqnum))
-                {
-                    lostOrCorruptACK.Add(pp.seqnum); //add to list 
-                    Debug.WriteLine("ack lost: " + lostOrCorruptACK.Last());
-                }
-
-                pp.Dispose();
-            }
-            //ack corrupt
-            else if (pp.corrupt)
-            {
-                //do nothing
-                //if seqnum not already in list
-                if (!lostOrCorruptACK.Contains(pp.seqnum))
-                {
-                    lostOrCorruptACK.Add(pp.seqnum); //add to list 
-                    Debug.WriteLine("ack corrupt: " + lostOrCorruptACK.Last());
-                }
-
-                pp.Dispose();
-            }
             //ack arrived. in order is not necessary (but no cummulaive ackn)
-            else
+            if(!pp.lost && !pp.corrupt)
             {
                 //has been lost/corrupt and is therfore in the list
                 if (lostOrCorruptACK.Contains(pp.seqnum))
                 {
-
                     lostOrCorruptACK.Remove(pp.seqnum); //remove from list
-
                     //still other ack lost/corrupt
                     if (lostOrCorruptACK.Any())
                     {
@@ -370,58 +233,12 @@ namespace WertheApp.RN
                     {
                         baseOfWindow = pp.seqnum + 1;
                     }
-
                 }
                 DrawWindow(baseOfWindow);
                 DrawFillLeft2(pp.seqnum);  //only draw current fill
-                pp.Dispose();
-
-                /**************************************************************/
-                //*TODO TIMER*/
-                if (baseOfWindow == nextSeqnum)
-                {
-                    //stop timer
-                    stopTmr = true;
-
-                }
-                else
-                {
-                    //start timer 
-                    if (stopTmr)
-                    {
-                        stopTmr = false;
-                        tmr = 0;
-                        MyTimer();
-                    }//reset timer
-                    else { tmr = 0; }
-                }
             }
+            pp.Dispose();
         }
-
-        /**********************************************************************
-        *********************************************************************/
-        //what happens when a package is clicked ? first touch -> corrupt, second touch -> lost
-        private static void HandleInput(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
-		{
-            touchEvent.CurrentTarget.Color = CCColor3B.Blue;
-            touchEvent.CurrentTarget.UpdateColor();
-            touchEvent.CurrentTarget.Update(0);
-           
-            //touchEvent.CurrentTarget.Dispose();
-			if (touches.Count > 0)
-			{
-                
-                CCTouch firstTouch = touches[0];
-                Debug.WriteLine("first touch" + touches.Count());
-                //cc_startBox.PositionX = firstTouch.Location.X;
-				//cc_startBox.PositionY = firstTouch.Location.Y;
-			}
-            else{Debug.WriteLine("clicked " + touches.Count()); }
-
-            //cc_startBox.Color = CCColor3B.Magenta;
-
-            //col1 = CCColor4B.Magenta;
-		}
 
         /**********************************************************************
         *********************************************************************/
@@ -591,19 +408,3 @@ namespace WertheApp.RN
 		}
     }
 }
-
-/*//if it's the last ack in the lost/corrupt list and therfore there are no further lost/corrupt ack after this one
-if(lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString()) == lostOrCorruptACK.Last()){
-    Debug.WriteLine("there are NO futher lost or corrupt ack after: " + lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString()));
-    pufferACK.Add(                                                                                                                                                                                                            );
-    baseOfWindow = pufferACK.Last()+1;
-    pufferACK.Remove(pufferACK.Last()); //remove the arrived package from list
-
-}
-//if it's not the last one in the list
-else{
-    Debug.WriteLine("there ARE further lost or corrupt ack after: " + lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString()));
-    lostOrCorruptACK.Remove(lostOrCorruptACK.Find(item => item.ToString() == pp.seqnum.ToString())); // remove the arrived package from list
-    baseOfWindow = lostOrCorruptACK.First();
-
-}*/

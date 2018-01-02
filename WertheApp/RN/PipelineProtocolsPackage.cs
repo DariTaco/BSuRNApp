@@ -3,13 +3,13 @@ using CocosSharp;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-
 using Xamarin.Forms;
 namespace WertheApp.RN
 {
 	//CLASS FOR SPRITE OBJECT
 	public class PipelineProtocolsPackage : CCNode
 	{
+        //VARIABLES
 		//CCSpriteFrame greenFrame;
 		//CCSpriteFrame redFrame;
 
@@ -20,10 +20,10 @@ namespace WertheApp.RN
         int touchCount;
 		public bool corrupt = false;
         public bool lost = false;
-
 		CCEventListenerTouchOneByOne touchListener;
 
-		public PipelineProtocolsPackage(int seqnum, bool ack) : base()
+        //CONSTRUCTOR
+		public PipelineProtocolsPackage(int seqnum) : base()
 		{
 			this.sprite = new CCSprite();
 			this.id = count;
@@ -33,19 +33,9 @@ namespace WertheApp.RN
 			this.sprite.AnchorPoint = AnchorPoint = new CCPoint(0, 0);
 			//CCSpriteFrame greenFrame = new CCSpriteFrame(new CCTexture2D("myGreen.png"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and width and heigth of the sprite
             CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite.png"), new CCRect(0, 0, 40, 50));
-            //if its an ACK from the receiver
-            if (ack)
-            {
-                sprite.Color = CCColor3B.Green; //EXtra line of code for Android.....since I didn't find out how to access the png in Android. It crashed every single time
-                this.sprite.SpriteFrame = whiteFrame;
-            }//if its a packet
-            else
-            {
-                sprite.Color = CCColor3B.Gray; //workaround for Android. but also changes the base color of the sprite. Which is why I use a white image instead of a gray one
-				this.sprite.SpriteFrame = whiteFrame;
-            }
-
-
+      
+            sprite.Color = CCColor3B.Gray; //workaround for Android. but also changes the base color of the sprite. Which is why I use a white image instead of a gray one
+			this.sprite.SpriteFrame = whiteFrame;
 			this.AddChild(sprite);
 
 			touchListener = new CCEventListenerTouchOneByOne();
@@ -54,28 +44,14 @@ namespace WertheApp.RN
 
 		}
 
-		public void UpdateMyColor()
-		{
-			CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite"), new CCRect(0, 0, 40, 50));
-            this.sprite.SpriteFrame = whiteFrame;
-            this.sprite.Color = CCColor3B.Red; //workaround for Android. but also changes the base color of the sprite
-		}
-		public CCSprite GetSpriteByID(int id)
-		{
-			return this.sprite;
-		}
-
-		public int GetID()
-		{
-			return this.id;
-		}
-
+		/**********************************************************************
+        *********************************************************************/
 		private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
 		{
             //Debug.WriteLine("touch.Location.X = "+touch.Location.X);
             //Debug.WriteLine("touchEvent.CurrentTarget.PositionX = " + touchEvent.CurrentTarget.PositionX);
             //Debug.WriteLine("touchEvent.CurrentTarget.PositionX+40 = " + (touchEvent.CurrentTarget.Position.X + 40.0f));
-            //if package was clicked the first time
+            //if package was clicked the first time (corrupt)
             if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
                 && touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
                 && touchCount == 0) //50 because it's the height of the packages spriteframe
@@ -83,9 +59,18 @@ namespace WertheApp.RN
                 UpdateMyColor();
                 this.touchCount++;
                 this.corrupt = true;
+
+				//if seqnum not already in list
+                if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
+				{
+                    PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
+                    PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
+					Debug.WriteLine("package corrupt: " + PipelineProtocolsScene.lostOrCorruptP.Last());
+				}
+
                 return true;
             }
-            //if package was clicked a second time
+            //if package was clicked a second time (lost)
 			else if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
 				&& touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
 				&& touchCount > 0)
@@ -93,10 +78,42 @@ namespace WertheApp.RN
                 this.lost = true;
                 this.touchCount++;
                 this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
-                return false;
 
+				//if seqnum not already in list
+                if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
+				{
+
+                    PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
+                    PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
+					Debug.WriteLine("package lost: " + PipelineProtocolsScene.lostOrCorruptP.Last());
+				}
+
+                return false;
             }
             else { return false; }
+		}
+
+		/**********************************************************************
+        *********************************************************************/
+		public void UpdateMyColor()
+		{
+			CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite"), new CCRect(0, 0, 40, 50));
+			this.sprite.SpriteFrame = whiteFrame;
+			this.sprite.Color = CCColor3B.Red; //workaround for Android. but also changes the base color of the sprite
+		}
+
+		/**********************************************************************
+        *********************************************************************/
+		public CCSprite GetSpriteByID(int id)
+		{
+			return this.sprite;
+		}
+
+		/**********************************************************************
+        *********************************************************************/
+		public int GetID()
+		{
+			return this.id;
 		}
 	}
 

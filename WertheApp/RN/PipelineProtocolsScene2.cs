@@ -18,7 +18,6 @@ namespace WertheApp.RN
         //VARIABLES
         static CCLayer layer;
 
-
         String strategy;
 
         static CCRect window;
@@ -39,7 +38,6 @@ namespace WertheApp.RN
         //CONSTRUCTOR
         public PipelineProtocolsScene2(CCGameView gameView) : base(gameView)
         {
-            Debug.WriteLine("GO BACK N");
             //add a layer to draw on
             layer = new CCLayer();
             this.AddLayer(layer);
@@ -77,7 +75,6 @@ namespace WertheApp.RN
             {
                 //stop timer
                 PipelineProtocols.l_Timeout.Text = "Timeout: --";
-                Debug.WriteLine("stop");
             }
             else if (tmr == 11)
             {
@@ -87,7 +84,6 @@ namespace WertheApp.RN
                 //timer elapsed -> resend packets
                 while (i < b)
                 {
-                    Debug.WriteLine("Packet resent with seqnum: " + i);
                     await InvokeSender2(i);
                     i++;
                 }
@@ -101,28 +97,7 @@ namespace WertheApp.RN
             {
                 PipelineProtocols.l_Timeout.Text = "Timeout: " + tmr;
 
-                var pointlessPoint = new CCRect(10, 10, 10, 10);//arbitrary
-                var cc_pointlessPoint = new CCDrawNode();
-                cc_pointlessPoint.DrawRect(
-                pointlessPoint,
-                fillColor: CCColor4B.Transparent,
-                borderWidth: 1,
-                borderColor: CCColor4B.Transparent);
-                layer.AddChild(cc_pointlessPoint); //DO NOT ADD the defined object to the layer. We only need it for simulating the timer
-
-                //define action
-                float timeToTake = 1f; //1 second!!
-                var distance = new CCPoint(100, 100); //arbitrary
-                var wasteASecondAction = new CCMoveTo(timeToTake, distance);
-                var removeAction = new CCRemoveSelf(); //this action removes the object*/
-
-                //define sequence of actions 
-                var cc_seq1 = new CCSequence(wasteASecondAction, removeAction);
-
-                //apply sequence of actions to object
-                await cc_pointlessPoint.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!
-
-                Debug.WriteLine("did run" + tmr);
+                await Task.Delay(1000); //wait a second
                 tmr++;
                 MyTimer();
             }
@@ -141,15 +116,15 @@ namespace WertheApp.RN
 
                 if (baseOfWindow == nextSeqnum)
                 {
-                    //start timer 
                     if (stopTmr)
                     {
-                        stopTmr = false;
-                        Debug.WriteLine("start");
-                        tmr = 0;
+                        stopTmr = false; //start timer 
+						tmr = 0;
                         MyTimer();
-                    }//reset timer
-                    else { tmr = 0; }
+                    }
+                    else { 
+                        tmr = 0; //reset timer
+					}
                 }
                 nextSeqnum++;
             }
@@ -178,7 +153,7 @@ namespace WertheApp.RN
 
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
-            var pp = new PipelineProtocolsPackage(seqnum, false);
+            var pp = new PipelineProtocolsPackage(seqnum);
             pp.Position = new CCPoint(80, yPos);
             layer.AddChild(pp);
 
@@ -195,36 +170,25 @@ namespace WertheApp.RN
             tmr = 0;
             PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
-            Debug.WriteLine("#####done" + pp.seqnum);
             /*TODO maybe I have to put this code in a method wich will be executed for every single package that arrived...*/
 
+            /*******************************************************************/
             //Code for receiving packet and maybe sending ACK
-            //if packet was lost
-            if (pp.lost)
-            {
-                Debug.WriteLine("PACKAGE WAS LOST");
-                pp.Dispose();
-                //do nothing
-            }
             //if packet was not lost or corrupted and packet was received in order(expected sequence number) 
-            else if (!pp.corrupt && pp.seqnum == expectedSeqnum)
+            if (!pp.lost && !pp.corrupt && pp.seqnum == expectedSeqnum)
             {
                 expectedSeqnum++; //increase expectedSeqnum
-                Debug.WriteLine("PACKAGE" + pp.seqnum + " RECEIVED IN ORDER, NOT CORRUPT, NOT LOST");
                 DrawExpectedSeqnum();
                 DrawFillRight(pp.seqnum);
                 lastRecentInOrderSeqnum = pp.seqnum;
                 //PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
                 SendACKFor(pp.seqnum); //send ACK 
-                pp.Dispose();
             }//send ACK for last recently received in order sequence number
-            else
+            else if (pp.corrupt)
             {
-                Debug.WriteLine("PACKAGE CORRUPT");
                 SendACKFor(lastRecentInOrderSeqnum);
-                pp.Dispose();
             }
-
+			pp.Dispose();
         }
 
         /**********************************************************************
@@ -235,7 +199,7 @@ namespace WertheApp.RN
             //seqnum
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //where the box !starts!
-            var pp = new PipelineProtocolsPackage(seqnum, true);
+            var pp = new PipelineProtocolsACK(seqnum);
             pp.Position = new CCPoint(280, yPos);
             layer.AddChild(pp);
 
@@ -247,85 +211,43 @@ namespace WertheApp.RN
 
             //define sequence of actions 
             var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
-            Debug.WriteLine("ACK sent for seqnum: " + pp.seqnum);
 
             //apply sequence of actions to object
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
-            //Debug.WriteLine("ASYnc Action done");
 
-            //Code for sending ACK
-            //if ACK was lost
-            if (pp.lost)
-            {
-                Debug.WriteLine("ACK WAS LOST");
-                pp.Dispose();
-                //do nothing
-            }
             //if ACK was not lost or corrupted //in order is not necessary (cummulative ackn)
-            else if (!pp.corrupt)
+            if (!pp.corrupt && !pp.lost)
             {
                 for (int i = baseOfWindow; i <= pp.seqnum; i++)
                 {
                     DrawFillLeft2(i);
                 }
 
-                //if(pp.seqnum != -1){PipelineProtocols.l_LastRecentAcknowlegement.Text = "Last recent acknowlegment: " + pp.seqnum; }
-                Debug.WriteLine("Ack ARRIVED FOR SEQNR" + pp.seqnum);
                 baseOfWindow = pp.seqnum + 1;
                 DrawWindow(baseOfWindow);
-                pp.Dispose();
 
                 if (baseOfWindow == nextSeqnum)
                 {
-                    //stop timer
-                    stopTmr = true;
-
+                    stopTmr = true; //stop timer
                 }
                 else
                 {
-                    //start timer 
                     if (stopTmr)
                     {
-                        stopTmr = false;
-                        Debug.WriteLine("start");
+                        stopTmr = false; //start timer
                         tmr = 0;
                         MyTimer();
                         /*TODO hier timer resetten oder nicht?*/
-                    }//reset timer
-                    else { tmr = 0; }
+                    }
+                    else { 
+                        tmr = 0;// reset timer
+                    }
                 }
             }
-            else
-            {
-                Debug.WriteLine("ACK CORRUPT");
-                pp.Dispose();
-            }
+			pp.Dispose();
         }
 
-        /**********************************************************************
-        *********************************************************************/
-        //what happens when a package is clicked ? first touch -> corrupt, second touch -> lost
-        private static void HandleInput(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
-        {
-            touchEvent.CurrentTarget.Color = CCColor3B.Blue;
-            touchEvent.CurrentTarget.UpdateColor();
-            touchEvent.CurrentTarget.Update(0);
-
-            //touchEvent.CurrentTarget.Dispose();
-            if (touches.Count > 0)
-            {
-
-                CCTouch firstTouch = touches[0];
-                Debug.WriteLine("first touch" + touches.Count());
-                //cc_startBox.PositionX = firstTouch.Location.X;
-                //cc_startBox.PositionY = firstTouch.Location.Y;
-            }
-            else { Debug.WriteLine("clicked " + touches.Count()); }
-
-            //cc_startBox.Color = CCColor3B.Magenta;
-            //col1 = CCColor4B.Magenta;
-        }
 
         /**********************************************************************
         *********************************************************************/
@@ -531,23 +453,23 @@ namespace WertheApp.RN
                 borderColor: CCColor4B.Red);
             //layer.AddChild(cc_startBox); */
 
-            /*//add touch listener
-            var touchListener = new CCEventListenerTouchAllAtOnce();
-            touchListener.OnTouchesBegan = HandleInput; */
+/*//add touch listener
+var touchListener = new CCEventListenerTouchAllAtOnce();
+touchListener.OnTouchesBegan = HandleInput; */
 
-            /*//define action for DrawRect
-            var distance = new CCPoint(196, 0); //82 to 278 = 278-82 = 196
-            var distance2 = new CCPoint(0, 0); //0 as an x-value migth seem strange, but the reference value is the x-value of the object when it was first defined!
-            float timeToTake = 5f;
-            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
-            var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
-            var removeAction = new CCRemoveSelf(); //this action removes the object*/
+/*//define action for DrawRect
+var distance = new CCPoint(196, 0); //82 to 278 = 278-82 = 196
+var distance2 = new CCPoint(0, 0); //0 as an x-value migth seem strange, but the reference value is the x-value of the object when it was first defined!
+float timeToTake = 5f;
+var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
+var sendAckAction = new CCMoveTo(timeToTake, distance2); //this action moves the object back to where it originally was
+var removeAction = new CCRemoveSelf(); //this action removes the object*/
 
-            /*//apply action to object
-            cc_startBox.AddAction(sendingAction);*/
+/*//apply action to object
+cc_startBox.AddAction(sendingAction);*/
 
-            //apply sequence of actions to object
-            //cc_startBox.RunAction(cc_seq1);
+//apply sequence of actions to object
+//cc_startBox.RunAction(cc_seq1);
 
 /*var label4 = new CCLabel(i.ToString(), "Arial", 20)
 {
@@ -559,3 +481,48 @@ namespace WertheApp.RN
     IgnoreAnchorPointForPosition = true
 };
 layer.AddChild(label4);*/
+
+/**********************************************************************
+*********************************************************************/
+/*//what happens when a package is clicked ? first touch -> corrupt, second touch -> lost
+private static void HandleInput(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
+{
+	touchEvent.CurrentTarget.Color = CCColor3B.Blue;
+	touchEvent.CurrentTarget.UpdateColor();
+	touchEvent.CurrentTarget.Update(0);
+
+	//touchEvent.CurrentTarget.Dispose();
+	if (touches.Count > 0)
+	{
+
+		CCTouch firstTouch = touches[0];
+		Debug.WriteLine("first touch" + touches.Count());
+		//cc_startBox.PositionX = firstTouch.Location.X;
+		//cc_startBox.PositionY = firstTouch.Location.Y;
+	}
+	else { Debug.WriteLine("clicked " + touches.Count()); }
+
+	//cc_startBox.Color = CCColor3B.Magenta;
+	//col1 = CCColor4B.Magenta;
+}*/
+/*
+var pointlessPoint = new CCRect(10, 10, 10, 10);//arbitrary
+var cc_pointlessPoint = new CCDrawNode();
+cc_pointlessPoint.DrawRect(
+pointlessPoint,
+fillColor: CCColor4B.Transparent,
+borderWidth: 1,
+borderColor: CCColor4B.Transparent);
+layer.AddChild(cc_pointlessPoint); //DO NOT ADD the defined object to the layer. We only need it for simulating the timer
+
+//define action
+float timeToTake = 1f; //1 second!!
+var distance = new CCPoint(100, 100); //arbitrary
+var wasteASecondAction = new CCMoveTo(timeToTake, distance);
+var removeAction = new CCRemoveSelf(); //this action removes the object
+
+//define sequence of actions 
+var cc_seq1 = new CCSequence(wasteASecondAction, removeAction);
+
+//apply sequence of actions to object
+await cc_pointlessPoint.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!*/

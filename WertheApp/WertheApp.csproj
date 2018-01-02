@@ -69,6 +69,7 @@
     <Compile Include="BS\BuddySystemModal2.cs" />
     <Compile Include="RN\PipelineProtocolsPackage.cs" />
     <Compile Include="RN\PipelineProtocolsScene2.cs" />
+    <Compile Include="RN\PipelineProtocolsACK.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">
