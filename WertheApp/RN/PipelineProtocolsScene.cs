@@ -64,8 +64,22 @@ namespace WertheApp.RN
         public static async void MyTimer(int seqnum, int c)
         {
             int counter = c;
-            await Task.Delay(1000); //wait a second
+
+			//draw counter in respective rectangle
+			/*TODO*/
+			float a = 28 - seqnum;
+			float yPos = 15 + (a * 65);
+            String counterText = "" + counter;
+            var ccl_LNumber = new CCLabel(counterText, "Arial", 20);
+			ccl_LNumber.Position = new CCPoint(60, yPos + 25);
+            ccl_LNumber.Color = CCColor3B.Red;
+			layer.AddChild(ccl_LNumber);
+			//var counterInBox = new CCRect(40, yPos, 40, 50); //x,y,length, width
+
+			await Task.Delay(1000); //wait a second
 			counter++;
+            layer.RemoveChild(ccl_LNumber);
+
             if(counter == 11){ //11seconds. otherwise resending the package looks unnatural
                 if (lostOrCorruptP.Contains(seqnum) || lostOrCorruptACK.Contains(seqnum))//seqnumber lost or corrupt
 				{
@@ -176,7 +190,20 @@ namespace WertheApp.RN
         {
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //where the box !starts!
-            var pp = new PipelineProtocolsACK(seqnum);
+													
+            //smaller rectangle at -- 
+			PipelineProtocolsACK pp;
+			switch (seqnum)
+			{
+				case -1:
+					pp = new PipelineProtocolsACK(seqnum, 1);
+					yPos = yPos + 12; //since it's smaller, it has to be a little further up, in order to look pretty
+					break;
+				default:
+					pp = new PipelineProtocolsACK(seqnum);
+					break;
+			}
+
             pp.Position = new CCPoint(280, yPos);
             layer.AddChild(pp);
 

@@ -75,6 +75,7 @@ namespace WertheApp.RN
 				&& touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
 				&& touchCount > 0)
             {
+                this.corrupt = false;
                 this.lost = true;
                 this.touchCount++;
                 this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background

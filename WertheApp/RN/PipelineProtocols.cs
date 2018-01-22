@@ -185,7 +185,7 @@ namespace WertheApp.RN
                 case false:
                     gameView.Paused = true;
                     paused = true;
-                    b_Stop.Text = "Start";
+                    b_Stop.Text = "Continue";
 					break;
 			}
         }

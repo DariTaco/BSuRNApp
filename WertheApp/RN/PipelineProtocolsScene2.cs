@@ -170,7 +170,6 @@ namespace WertheApp.RN
             tmr = 0;
             PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
-            /*TODO maybe I have to put this code in a method wich will be executed for every single package that arrived...*/
 
             /*******************************************************************/
             //Code for receiving packet and maybe sending ACK
@@ -183,10 +182,10 @@ namespace WertheApp.RN
                 lastRecentInOrderSeqnum = pp.seqnum;
                 //PipelineProtocols.l_LastRecentInOrderAtReceiver.Text = "Last recent in-order received packet: " + pp.seqnum;
                 SendACKFor(pp.seqnum); //send ACK 
-            }//send ACK for last recently received in order sequence number
-            else if (pp.corrupt)
-            {
-                SendACKFor(lastRecentInOrderSeqnum);
+            }//corrupt package or package with an unexpected seqnum arrives 
+            else if (pp.corrupt ||/*TODO*/ !pp.lost && !pp.corrupt && pp.seqnum != expectedSeqnum)
+            {   //send ACK for last recently received in order sequence number
+				SendACKFor(lastRecentInOrderSeqnum);
             }
 			pp.Dispose();
         }
@@ -196,10 +195,23 @@ namespace WertheApp.RN
         //Receiver sends ACK
         public static async void SendACKFor(int seqnum)
         {
-            //seqnum
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //where the box !starts!
-            var pp = new PipelineProtocolsACK(seqnum);
+
+            //smaller rectangle at -- 
+            PipelineProtocolsACK pp;
+            switch (seqnum)
+            {
+                case -1:
+                    pp = new PipelineProtocolsACK(seqnum, 1);
+                    yPos = yPos + 12; //since it's smaller, it has to be a little further up, in order to look pretty
+                    break;
+                default:
+                    pp = new PipelineProtocolsACK(seqnum);
+                    break;
+            }
+
+
             pp.Position = new CCPoint(280, yPos);
             layer.AddChild(pp);
 
