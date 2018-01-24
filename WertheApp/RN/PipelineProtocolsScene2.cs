@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 //TAKE NOTE: the reference value of an action is always the same!! 
 //It always refers to the values that were set when the original object was first definded.
 //and not some altered value after some action that happended before the current one
-
+/**********************************************************************
+*********************************************************************/
 namespace WertheApp.RN
 {
     public class PipelineProtocolsScene2 : CCScene
@@ -33,7 +34,8 @@ namespace WertheApp.RN
         static int lastRecentInOrderSeqnum; // last recently received in ordner sequence number at receiver
 
         static int tmr;
-        static bool stopTmr;
+        static bool isATimerRunning;
+        static int seqnumThatRunsTheTimer;
 
         //CONSTRUCTOR
         public PipelineProtocolsScene2(CCGameView gameView) : base(gameView)
@@ -53,7 +55,8 @@ namespace WertheApp.RN
             lastRecentInOrderSeqnum = -1;
 
             tmr = 0;
-            stopTmr = true;
+            isATimerRunning = false;
+            seqnumThatRunsTheTimer = -1;
 
             DrawWindow(baseOfWindow);
             DrawExpectedSeqnum();
@@ -69,16 +72,36 @@ namespace WertheApp.RN
         //created an invisible object and applied an action of 1 second to it.
         //As long as the tmr variable is <10 the action is repeated.
         //as soon as the tmr variable equals 10, the timer is stopped and packages will be resent and the timer restarted
-        public static async void MyTimer()
+
+        public static async void MyTimer(){
+
+			float a = 28 - seqnumThatRunsTheTimer;
+			float yPos = 15 + (a * 65);
+			String counterText = "" + counter;
+			var ccl_LNumber = new CCLabel(counterText, "Arial", 20);
+			ccl_LNumber.Position = new CCPoint(60, yPos + 25);
+			ccl_LNumber.Color = CCColor3B.Red;
+			layer.AddChild(ccl_LNumber);
+        }
+        /*public static async void MyTimer()
         {
-            if (stopTmr)
+            
+			float a = 28 - seqnum;
+			float yPos = 15 + (a * 65);
+			String counterText = "" + counter;
+			var ccl_LNumber = new CCLabel(counterText, "Arial", 20);
+			ccl_LNumber.Position = new CCPoint(60, yPos + 25);
+			ccl_LNumber.Color = CCColor3B.Red;
+			layer.AddChild(ccl_LNumber);
+            if (!isATimerRunning)
             {
                 //stop timer
                 PipelineProtocols.l_Timeout.Text = "Timeout: --";
             }
             else if (tmr == 11)
             {
-                stopTmr = true;
+                Debug.WriteLine("tmr = 11");
+                isATimerRunning = false;
                 int i = baseOfWindow;
                 int b = nextSeqnum;
                 //timer elapsed -> resend packets
@@ -88,21 +111,22 @@ namespace WertheApp.RN
                     i++;
                 }
 
-                //restart timer
-                tmr = 0;
-                stopTmr = false;
-                MyTimer();
+				//restart timer
+				//tmr = 0;
+				//isATimerRunning = true;
+				MyTimer();
             }
             else if (tmr < 11)
             {
                 PipelineProtocols.l_Timeout.Text = "Timeout: " + tmr;
 
                 await Task.Delay(1000); //wait a second
+                Debug.WriteLine("tmr < 11, tmr = " + tmr);
                 tmr++;
                 MyTimer();
             }
 
-        }
+        }*/
 
         /**********************************************************************
         *********************************************************************/
@@ -116,14 +140,16 @@ namespace WertheApp.RN
 
                 if (baseOfWindow == nextSeqnum)
                 {
-                    if (stopTmr)
+                    if (!isATimerRunning)
                     {
-                        stopTmr = false; //start timer 
-						tmr = 0;
+                        Debug.WriteLine("TIMER LÄUFT NICHT BEREITS");
+						//tmr = 0; /*TODO*/
+                        isATimerRunning = true; //jetzt läuft ein Timer
+                        Debug.WriteLine("TIMERLÄUFT JETZT");
                         MyTimer();
                     }
                     else { 
-                        tmr = 0; //reset timer
+                        //tmr = 0; //reset timer
 					}
                 }
                 nextSeqnum++;
@@ -167,8 +193,6 @@ namespace WertheApp.RN
             var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
 
             //apply sequence of actions to object
-            tmr = 0;
-            PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
             /*******************************************************************/
@@ -241,19 +265,19 @@ namespace WertheApp.RN
 
                 if (baseOfWindow == nextSeqnum)
                 {
-                    stopTmr = true; //stop timer
+                    isATimerRunning = false; //stop timer
                 }
                 else
                 {
-                    if (stopTmr)
+                    if (!isATimerRunning)
                     {
-                        stopTmr = false; //start timer
-                        tmr = 0;
+                        //isATimerRunning = true; //start timer
+                        //tmr = 0;
                         MyTimer();
                         /*TODO hier timer resetten oder nicht?*/
                     }
                     else { 
-                        tmr = 0;// reset timer
+                        //tmr = 0;// reset timer
                     }
                 }
             }

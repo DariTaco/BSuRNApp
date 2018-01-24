@@ -20,6 +20,7 @@ namespace WertheApp.RN
 
 		static String strategy;
         static int windowSize;
+        static int timeouttime;
 
         static int baseOfWindow; //first sent but not yet acknowledged sequence number
         static int baseOfWindow2;
@@ -29,11 +30,13 @@ namespace WertheApp.RN
         static List<int> pufferACK; // list of ACK that where received accurate after a lost or corrupt one
         public static List<int> lostOrCorruptP; //list of currently lost or corrupt seqnum of a package
         public static List<int> lostOrCorruptACK; // list of currently lost or corrupt seqnum of an ACK
+        public static List<int> receivedACK; //list of already received ACK
 
         static CCRect window;
         static CCRect window2;
         static CCDrawNode cc_window;
         static CCDrawNode cc_window2;
+
 
         //CONSTRUCTOR
         public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
@@ -44,6 +47,8 @@ namespace WertheApp.RN
 
             windowSize = PipelineProtocols.windowSize;
             strategy = PipelineProtocols.strategy;
+            timeouttime = PipelineProtocols.timeoutTime;
+
 
             DrawLabelsAndBoxes();
 
@@ -55,6 +60,7 @@ namespace WertheApp.RN
             pufferACK = new List<int>();
             lostOrCorruptP = new List<int>();
             lostOrCorruptACK = new List<int>();
+            receivedACK = new List<int>();
 
             DrawWindow(baseOfWindow);
             DrawWindow2(0);
@@ -66,7 +72,6 @@ namespace WertheApp.RN
             int counter = c;
 
 			//draw counter in respective rectangle
-			/*TODO*/
 			float a = 28 - seqnum;
 			float yPos = 15 + (a * 65);
             String counterText = "" + counter;
@@ -74,21 +79,30 @@ namespace WertheApp.RN
 			ccl_LNumber.Position = new CCPoint(60, yPos + 25);
             ccl_LNumber.Color = CCColor3B.Red;
 			layer.AddChild(ccl_LNumber);
-			//var counterInBox = new CCRect(40, yPos, 40, 50); //x,y,length, width
 
 			await Task.Delay(1000); //wait a second
 			counter++;
             layer.RemoveChild(ccl_LNumber);
 
             if(counter == 11){ //11seconds. otherwise resending the package looks unnatural
-                if (lostOrCorruptP.Contains(seqnum) || lostOrCorruptACK.Contains(seqnum))//seqnumber lost or corrupt
+                if (lostOrCorruptP.Contains(seqnum) || lostOrCorruptACK.Contains(seqnum) || !receivedACK.Contains(seqnum)) //seqnumber lost or corrupt or didn't arrive in time
 				{
+                    Debug.WriteLine("SEQN lost or corrupt. send a new one");
                     SendPackageAt(seqnum);//resend seqnum
                     MyTimer(seqnum, 0); 
                 }
+                else{
+                    layer.RemoveChild(ccl_LNumber);
+                }
 			}
             else{
-                MyTimer(seqnum, counter);
+                if(receivedACK.Contains(seqnum)){
+                    //if in the meantime an ACK was received. Stop the timer
+                    layer.RemoveChild(ccl_LNumber);
+                }
+                else{
+                    MyTimer(seqnum, counter);//continue the timer
+                }
             }
         }
 
@@ -133,7 +147,7 @@ namespace WertheApp.RN
 			var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
 
             //apply sequence of actions to object
-            PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
+            //PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
 			await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
             /******************************************************************/
@@ -224,6 +238,10 @@ namespace WertheApp.RN
             //ack arrived. in order is not necessary (but no cummulaive ackn)
             if(!pp.lost && !pp.corrupt)
             {
+                if(!receivedACK.Contains(pp.seqnum)){
+                   receivedACK.Add(pp.seqnum); //add to List of received ACK 
+				}
+
                 //has been lost/corrupt and is therfore in the list
                 if (lostOrCorruptACK.Contains(pp.seqnum))
                 {
@@ -266,6 +284,7 @@ namespace WertheApp.RN
             }
             pp.Dispose();
         }
+
 
         /**********************************************************************
         *********************************************************************/

@@ -31,6 +31,7 @@ namespace WertheApp.RN
 			var stackLayout2 = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal
+                                              
 			};
 
 			this.Content = scrollView;
@@ -38,14 +39,15 @@ namespace WertheApp.RN
 
             //add elements to stackLayout2
             var l_Tahoe = new Label { 
-                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Tahoe"};
             s_Tahoe = new Switch();
             s_Tahoe.IsToggled = true;
             s_Tahoe.Toggled += S_Tahoe_Toggled; //adds an event 
+
+            var l_Space4 = new Label { HorizontalOptions = LayoutOptions.FillAndExpand, Text = " " };
+
             var l_Reno = new Label { 
-                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Reno" };
             s_Reno = new Switch();
@@ -54,6 +56,7 @@ namespace WertheApp.RN
 
             stackLayout2.Children.Add(l_Tahoe);
             stackLayout2.Children.Add(s_Tahoe);
+            stackLayout2.Children.Add(l_Space4);
             stackLayout2.Children.Add(l_Reno);
             stackLayout2.Children.Add(s_Reno);
 

@@ -11,6 +11,7 @@ namespace WertheApp.RN
         //VARIABLES
         public static int windowSize;
         public static String strategy;
+        public static int timeoutTime;
 
         public static bool paused = false;
         public static CocosSharpView gameView;
@@ -26,10 +27,11 @@ namespace WertheApp.RN
         public static Label l_Timeout;
 
 		//CONSTRUCTOR
-		public PipelineProtocols(int a, String s)
+		public PipelineProtocols(int a, String s, int t)
         {
             windowSize = a;
             strategy = s;
+            timeoutTime = t;
 
             Title = "Pipeline Protocols" + strategy;
 
