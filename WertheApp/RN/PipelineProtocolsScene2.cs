@@ -36,6 +36,7 @@ namespace WertheApp.RN
         static int tmr;
         static bool isATimerRunning;
         static int seqnumThatRunsTheTimer;
+		static int timeouttime;
 
         //CONSTRUCTOR
         public PipelineProtocolsScene2(CCGameView gameView) : base(gameView)
@@ -46,6 +47,7 @@ namespace WertheApp.RN
 
             windowSize = PipelineProtocols.windowSize;
             strategy = PipelineProtocols.strategy;
+			timeouttime = PipelineProtocols.timeoutTime;
 
             DrawLabelsAndBoxes();
 
@@ -63,8 +65,7 @@ namespace WertheApp.RN
 
         }
 
-        //METHODS
-
+		//METHODS
         /**********************************************************************
         *********************************************************************/
         //!!!!if you a better solution for a timer. please rewrite this section of code. Or maybe Xamarin will have an implementation of a useful time at some point
@@ -75,13 +76,13 @@ namespace WertheApp.RN
 
         public static async void MyTimer(){
 
-			float a = 28 - seqnumThatRunsTheTimer;
+			/*float a = 28 - seqnumThatRunsTheTimer;
 			float yPos = 15 + (a * 65);
 			String counterText = "" + counter;
 			var ccl_LNumber = new CCLabel(counterText, "Arial", 20);
 			ccl_LNumber.Position = new CCPoint(60, yPos + 25);
 			ccl_LNumber.Color = CCColor3B.Red;
-			layer.AddChild(ccl_LNumber);
+			layer.AddChild(ccl_LNumber);*/
         }
         /*public static async void MyTimer()
         {
@@ -214,9 +215,13 @@ namespace WertheApp.RN
 			pp.Dispose();
         }
 
+        static void ReceivePackage(PipelineProtocolsPackage pp)
+		{
+		
+
+		}
         /**********************************************************************
       *********************************************************************/
-        //Receiver sends ACK
         public static async void SendACKFor(int seqnum)
         {
             //define object
@@ -235,7 +240,6 @@ namespace WertheApp.RN
                     break;
             }
 
-
             pp.Position = new CCPoint(280, yPos);
             layer.AddChild(pp);
 
@@ -250,44 +254,50 @@ namespace WertheApp.RN
 
             //apply sequence of actions to object
             await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
-
-
-            //if ACK was not lost or corrupted //in order is not necessary (cummulative ackn)
-            if (!pp.corrupt && !pp.lost)
-            {
-                for (int i = baseOfWindow; i <= pp.seqnum; i++)
-                {
-                    DrawFillLeft2(i);
-                }
-
-                baseOfWindow = pp.seqnum + 1;
-                DrawWindow(baseOfWindow);
-
-                if (baseOfWindow == nextSeqnum)
-                {
-                    isATimerRunning = false; //stop timer
-                }
-                else
-                {
-                    if (!isATimerRunning)
-                    {
-                        //isATimerRunning = true; //start timer
-                        //tmr = 0;
-                        MyTimer();
-                        /*TODO hier timer resetten oder nicht?*/
-                    }
-                    else { 
-                        //tmr = 0;// reset timer
-                    }
-                }
-            }
-			pp.Dispose();
         }
 
-
-        /**********************************************************************
+		/**********************************************************************
         *********************************************************************/
-        static void DrawFillRight(int seqnum)
+        static void ReceiveACK(PipelineProtocolsACK pp){
+            //wait for timeout
+            Task.Delay(timeouttime);
+
+            //if ACK was not lost or corrupted //in order is not necessary (cummulative ackn)
+			if (!pp.corrupt && !pp.lost)
+			{
+				for (int i = baseOfWindow; i <= pp.seqnum; i++)
+				{
+					DrawFillLeft2(i);
+				}
+
+				baseOfWindow = pp.seqnum + 1;
+				DrawWindow(baseOfWindow);
+
+				if (baseOfWindow == nextSeqnum)
+				{
+					isATimerRunning = false; //stop timer
+				}
+				else
+				{
+					if (!isATimerRunning)
+					{
+						//isATimerRunning = true; //start timer
+						//tmr = 0;
+						MyTimer();
+						/*TODO hier timer resetten oder nicht?*/
+					}
+					else
+					{
+						//tmr = 0;// reset timer
+					}
+				}
+			}
+			pp.Dispose();
+
+        }
+		/**********************************************************************
+        *********************************************************************/
+		static void DrawFillRight(int seqnum)
         {
             float a = 28 - seqnum;
             float yPos = 15 + (a * 65);

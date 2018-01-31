@@ -35,10 +35,11 @@ namespace WertheApp.RN
             this.sprite.SpriteFrame = whiteFrame;
             this.AddChild(sprite);
 
-            touchListener = new CCEventListenerTouchOneByOne();
+			touchListener = new CCEventListenerTouchOneByOne();
             touchListener.OnTouchBegan = OnTouchBegan;
             AddEventListener(touchListener, this);
-        }
+			Schedule(Process); // prediefined mathod that takes an Action and schedules it to run for every cycle
+		}
 
         //CONSTRUCTOR 2
         public PipelineProtocolsACK(int seqnum, int small) : base()
@@ -59,12 +60,30 @@ namespace WertheApp.RN
             touchListener = new CCEventListenerTouchOneByOne();
             touchListener.OnTouchBegan = OnTouchBegan;
             AddEventListener(touchListener, this);
+			Schedule(Process); // prediefined method that takes an Action and schedules it to run for every cycle
+		}
+
+		/**********************************************************************
+        *********************************************************************/
+        /*TODO add to entsprechender List, Objekt nur zerstören wenn arrive, nicht bei timeout, timeout in der anderen Klasse, aufschrieb im Ordner*/
+        private void Process(float seconds){
+            //if ACK arrives (MinX + 81 = position of the rectangles on the left)
+            if(this.PositionX <= VisibleBoundsWorldspace.MinX+81){
+                Debug.WriteLine(this.seqnum + " HIT SOMETHING");
+                if(this.corrupt){
+                    Debug.WriteLine("corrupt");
+                }
+                //arrived without corruption and didn't get lost on the way
+                else{
+                    Debug.WriteLine("all good");
+                }
+                this.Dispose();
+            }
         }
 
-
-        /**********************************************************************
+		/**********************************************************************
         *********************************************************************/
-        private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
+		private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
         {
             //if ACK was clicked the first time (corrupt)
             if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
@@ -100,7 +119,7 @@ namespace WertheApp.RN
                     PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //add to list 
                     Debug.WriteLine("ack lost: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
                 }
-
+                this.Dispose();
                 return false;
             }
             else { return false; }
