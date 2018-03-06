@@ -49,6 +49,18 @@ namespace WertheApp.RN
             strategy = PipelineProtocols.strategy;
 			timeouttime = PipelineProtocols.timeoutTime;
 
+			//Android bug: Background in Android is always black. Workaround: draw a white rect with the size of the layer
+			if (Device.RuntimePlatform == Device.Android)
+			{
+				var cc_background = new CCDrawNode();
+				var backgroundWorkAround = new CCRect(
+					0, 0, layer.VisibleBoundsWorldspace.MaxX, layer.VisibleBoundsWorldspace.MaxY);
+				cc_background.DrawRect(backgroundWorkAround,
+					fillColor: CCColor4B.White);
+				layer.AddChild(cc_background);
+			}
+
+
             DrawLabelsAndBoxes();
 
             baseOfWindow = 0;
@@ -180,7 +192,7 @@ namespace WertheApp.RN
 
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
-            var pp = new PipelineProtocolsPackage(seqnum);
+            var pp = new PipelineProtocolsPack(seqnum,0);
             pp.Position = new CCPoint(80, yPos);
             layer.AddChild(pp);
 
@@ -215,7 +227,7 @@ namespace WertheApp.RN
 			pp.Dispose();
         }
 
-        static void ReceivePackage(PipelineProtocolsPackage pp)
+        static void ReceivePackage(PipelineProtocolsPack pp)
 		{
 		
 

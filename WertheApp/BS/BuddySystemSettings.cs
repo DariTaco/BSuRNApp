@@ -18,8 +18,11 @@ namespace WertheApp.BS
 			CreateContent();
         }
 
-        //METHODS
-        void CreateContent(){
+		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
+		void CreateContent(){
 			var scrollView = new ScrollView
 			{
 				Margin = new Thickness(10)
@@ -68,14 +71,18 @@ namespace WertheApp.BS
             stackLayout.Children.Add(b_Start);
 		}
 
-        //If Button Start is clicked
-        async void B_Start_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		//If Button Start is clicked
+		async void B_Start_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new BuddySystem(Int32.Parse(p_Exponent.SelectedItem.ToString())));
         }
 
-        //If an exponent was picked
-        void P_Exponent_SelectedIndexChanged(object sender, EventArgs e){
+		/**********************************************************************
+        *********************************************************************/
+		//If an exponent was picked
+		void P_Exponent_SelectedIndexChanged(object sender, EventArgs e){
             Debug.WriteLine("############################");
             Debug.WriteLine("     ");
             absoluteMemorySize = Math.Pow(2, Double.Parse(p_Exponent.SelectedItem.ToString())); //2ExponentX

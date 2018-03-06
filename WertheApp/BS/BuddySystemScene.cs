@@ -68,8 +68,11 @@ namespace WertheApp.BS
             DrawTest();
 		}
 
-        //METHODS
-        void DrawTest()
+		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
+		void DrawTest()
         {
 			var box = new CCRect(15, 21, 302, 50);//CCRect(x,y,legth,width)
 			cc_box = new CCDrawNode();
@@ -82,26 +85,34 @@ namespace WertheApp.BS
 			layer.AddChild(cc_box);
         }
 
-        //draws the current Memory
-        void DrawMemory()
+		/**********************************************************************
+        *********************************************************************/
+		//draws the current Memory
+		void DrawMemory()
         {
             
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		//Finds a free block of size 2k and marks it as occupied
-        void Allocate(int k)
+		void Allocate(int k)
         {
             
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		//Marks the previously allocated block B as free and may merge it with others to form a larger free block
-        void Dellocate(String b)
+		void Dellocate(String b)
         {
             
         }
 
-        //Merges to blocks
-        void MergeBlocks()
+		/**********************************************************************
+        *********************************************************************/
+		//Merges to blocks
+		void MergeBlocks()
         {
             
         }

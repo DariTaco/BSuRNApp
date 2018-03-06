@@ -62,6 +62,9 @@ namespace WertheApp.BS
         }
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			// This is the top-level grid, which will split our page in half
@@ -78,7 +81,9 @@ namespace WertheApp.BS
 			isContentCreated = true;
 		}
 
-        void CreateTopHalf(Grid grid){
+		/**********************************************************************
+        *********************************************************************/
+		void CreateTopHalf(Grid grid){
             var scrollview = new ScrollView();
             stackLayout2 = new StackLayout();
             AddScene();
@@ -86,7 +91,9 @@ namespace WertheApp.BS
             grid.Children.Add(scrollview, 0, 0);
         }
 
-        void CreateBottomHalf(Grid grid){
+		/**********************************************************************
+        *********************************************************************/
+		void CreateBottomHalf(Grid grid){
 			//set the size of the elements in such a way, that they all fit on the screen
 			//Screen Width is divided by the amount of elements (2)
 			//Screen Width -20 because Margin is 10
@@ -124,15 +131,16 @@ namespace WertheApp.BS
 			grid.Children.Add(stackLayout, 0, 1);
         }
 
-
+		/**********************************************************************
+        *********************************************************************/
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushModalAsync(new BuddySystemModal(), true);
 
-
-
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		async void B_End_Clicked(object sender, EventArgs e)
 		{
             await Navigation.PushModalAsync(new BuddySystemModal2(), true); //await pop up drop down menu wegen Konsistenz nicht verwendet
@@ -143,6 +151,8 @@ namespace WertheApp.BS
 			cc_gameView.RunWithScene(gameScene);
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
 		void DeleteContent()
 		{
@@ -151,6 +161,8 @@ namespace WertheApp.BS
 			isContentCreated = false;
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		void AddScene()
 		{
 
@@ -169,6 +181,8 @@ namespace WertheApp.BS
 			stackLayout2.Children.Add(gameView);
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
@@ -188,6 +202,8 @@ namespace WertheApp.BS
 			}
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)
 		{

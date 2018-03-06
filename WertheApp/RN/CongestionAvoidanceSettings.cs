@@ -20,6 +20,9 @@ namespace WertheApp.RN
 		}
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			var scrollView = new ScrollView
@@ -118,6 +121,8 @@ namespace WertheApp.RN
 
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
@@ -129,8 +134,10 @@ namespace WertheApp.RN
             ));
 		}
 
-        //sets default values
-        void B_Default_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		//sets default values
+		void B_Default_Clicked(object sender, EventArgs e)
         {
             s_Reno.IsToggled = true;
             s_Tahoe.IsToggled = true;
@@ -138,14 +145,18 @@ namespace WertheApp.RN
             p_Treshold.SelectedIndex = 7; //8
         }
 
-        void S_Tahoe_Toggled(object sender, ToggledEventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		void S_Tahoe_Toggled(object sender, ToggledEventArgs e)
         {
             if(!s_Tahoe.IsToggled){
                 s_Reno.IsToggled = true;
             }
         }
 
-        void S_Reno_Toggled(object sender, ToggledEventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		void S_Reno_Toggled(object sender, ToggledEventArgs e)
         {
             if(!s_Reno.IsToggled){
                 s_Tahoe.IsToggled = true;

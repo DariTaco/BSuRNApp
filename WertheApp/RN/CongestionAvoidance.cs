@@ -49,6 +49,9 @@ namespace WertheApp.RN
         }
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			// This is the top-level grid, which will split our page in half
@@ -65,6 +68,8 @@ namespace WertheApp.RN
 			isContentCreated = true;
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		void CreateTopHalf(Grid grid)
 		{
 			var gameView = new CocosSharpView()
@@ -78,6 +83,8 @@ namespace WertheApp.RN
 			grid.Children.Add(gameView, 0, 0);
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		void CreateBottomHalf(Grid grid)
 		{
 			//set the size of the elements in such a way, that they all fit on the screen
@@ -125,29 +132,39 @@ namespace WertheApp.RN
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
-        void B_Triple_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		void B_Triple_Clicked(object sender, EventArgs e)
         {
 
         }
 
-        void B_Set_ErrorValue_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		void B_Set_ErrorValue_Clicked(object sender, EventArgs e)
         {
 
         }
 
-        void B_Next_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		void B_Next_Clicked(object sender, EventArgs e)
         {
 
         }
 
-        /// <summary> deletes all content and informs the user to rotate the device </summary>
-        void DeleteContent()
+		/**********************************************************************
+        *********************************************************************/
+		/// <summary> deletes all content and informs the user to rotate the device </summary>
+		void DeleteContent()
 		{
 			this.Content = null;
 			this.Content = new Label { Text = "please rotate your device" };
 			isContentCreated = false;
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
@@ -166,6 +183,8 @@ namespace WertheApp.RN
 			}
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)
 		{

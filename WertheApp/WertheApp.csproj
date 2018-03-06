@@ -67,9 +67,9 @@
     <Compile Include="BS\AllocationStrategiesModal.cs" />
     <Compile Include="BS\BuddySystemModal.cs" />
     <Compile Include="BS\BuddySystemModal2.cs" />
-    <Compile Include="RN\PipelineProtocolsPackage.cs" />
     <Compile Include="RN\PipelineProtocolsScene2.cs" />
     <Compile Include="RN\PipelineProtocolsACK.cs" />
+    <Compile Include="RN\PipelineProtocolsPack.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">
@@ -84,6 +84,9 @@
     <Reference Include="CocosSharp.Forms">
       <HintPath>..\packages\CocosSharp.Forms.1.7.1.0\lib\portable-net45+win+wpa81+wp81\CocosSharp.Forms.dll</HintPath>
     </Reference>
+    <Reference Include="BinaryTree">
+      <HintPath>..\packages\BinaryTree.2.0.0\lib\BinaryTree.dll</HintPath>
+    </Reference>
     <Reference Include="Xamarin.Forms.Core">
       <HintPath>..\packages\Xamarin.Forms.2.3.4.247\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Core.dll</HintPath>
     </Reference>
@@ -92,9 +95,6 @@
     </Reference>
     <Reference Include="Xamarin.Forms.Xaml">
       <HintPath>..\packages\Xamarin.Forms.2.3.4.247\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Xaml.dll</HintPath>
-    </Reference>
-    <Reference Include="BinaryTree">
-      <HintPath>..\packages\BinaryTree.2.0.0\lib\BinaryTree.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

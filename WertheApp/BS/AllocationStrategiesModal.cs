@@ -30,6 +30,9 @@ namespace WertheApp.BS
 		}
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			var scrollView = new ScrollView
@@ -57,6 +60,8 @@ namespace WertheApp.BS
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//validates the string in e_MemoryRequest. For example a request with size 0 is not allowed.
 		//returns true if string is valid 
 		bool ValidateMemoryRequestInput()
@@ -65,8 +70,10 @@ namespace WertheApp.BS
 			return Regex.IsMatch(s, "^[1-9]+[0-9]*$"); //matches only numbers(exept 0);
 		}
 
-        //If Button Start is clicked
-        async void B_OK_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		//If Button Start is clicked
+		async void B_OK_Clicked(object sender, EventArgs e)
         {
             if (e_MemoryRequest.Text != null && ValidateMemoryRequestInput())
             {

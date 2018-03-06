@@ -21,6 +21,9 @@ namespace WertheApp.RN
 		}
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			var scrollView = new ScrollView
@@ -60,15 +63,15 @@ namespace WertheApp.RN
             var l_Space2 = new Label { Text = "  " };
 
             var l_Timeout = new Label { Text = "Timeout:" };
-            l_TimeoutValue = new Label { Text = "10" };
-            s_Timeout = new Slider(10,20,10); //min, max, val
+            l_TimeoutValue = new Label { Text = "11" };
+            s_Timeout = new Slider(11,20,11); //min, max, val
             s_Timeout.HorizontalOptions = LayoutOptions.FillAndExpand;
             s_Timeout.ValueChanged += S_Timeout_ValueChanged;;
             //s_Timeout.Minimum = 0.0f; //minimum roundtrip time
             //s_Timeout.Maximum = 10.0f; //maximum roundtrip time
             var l_TimeoutMi = new Label { VerticalOptions = LayoutOptions.Center, 
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
-                Text = "10" };
+                Text = "11" };
             var l_TimeoutMa = new Label { VerticalOptions = LayoutOptions.Center, 
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
                 Text = "20" };
@@ -99,8 +102,10 @@ namespace WertheApp.RN
 			stackLayout.Children.Add(b_Start);
 		}
 
-        //If slider is moved
-        void S_Timeout_ValueChanged(object sender, ValueChangedEventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		//If slider is moved
+		void S_Timeout_ValueChanged(object sender, ValueChangedEventArgs e)
         {
             var newStep = Math.Round(e.NewValue / stepValue);
             double val = newStep * stepValue;
@@ -108,8 +113,10 @@ namespace WertheApp.RN
             l_TimeoutValue.Text = "" + val;
         }
 
-        //If Button Start is clicked
-        async void B_Start_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		//If Button Start is clicked
+		async void B_Start_Clicked(object sender, EventArgs e)
 		{
             await Navigation.PushAsync(new PipelineProtocols(
                 Int32.Parse(p_WindowSize.SelectedItem.ToString()),

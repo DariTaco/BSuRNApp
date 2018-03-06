@@ -26,6 +26,9 @@ namespace WertheApp.RN
         public static Label l_LastRecentAcknowlegement;
         public static Label l_Timeout;
 
+        public const int gameviewWidth = 400;
+        public const int gameviewHeight = 2000;
+
 		//CONSTRUCTOR
 		public PipelineProtocols(int a, String s, int t)
         {
@@ -47,6 +50,9 @@ namespace WertheApp.RN
         }
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			// This is the top-level grid, which will split our page in half
@@ -65,7 +71,9 @@ namespace WertheApp.RN
             isContentCreated = true;
 		}
 
-        void CreateTopTopHalf(Grid grid)
+		/**********************************************************************
+        *********************************************************************/
+		void CreateTopTopHalf(Grid grid)
         {
 			//set the size of the elements in such a way, that they all fit on the screen
 			//Screen Width is divided by the amount of elements (2)
@@ -92,9 +100,12 @@ namespace WertheApp.RN
 			grid.Children.Add(stackLayout, 0, 0);
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		void CreateTopHalf(Grid grid)
 		{
             var scrollview = new ScrollView();
+
 			gameView = new CocosSharpView()
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -103,11 +114,14 @@ namespace WertheApp.RN
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
-            gameView.HeightRequest = 2000; // SCROLLING!!!!!!!!!!!!!!!!
+            double scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
+            gameView.HeightRequest = gameviewHeight* scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
             scrollview.Content = gameView;
 			grid.Children.Add(scrollview, 0, 1);
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		void CreateBottomHalf(Grid grid)
 		{
 			//set the size of the elements in such a way, that they all fit on the screen
@@ -146,7 +160,9 @@ namespace WertheApp.RN
 			grid.Children.Add(stackLayout, 0, 2);
 		}
 
-        async void B_Send_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		async void B_Send_Clicked(object sender, EventArgs e)
         {
             if (strategy == "Selective Repeat")
             {
@@ -175,7 +191,9 @@ namespace WertheApp.RN
 
         }
 
-        void B_Stop_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		void B_Stop_Clicked(object sender, EventArgs e)
         {
 			switch (paused)
 			{
@@ -185,13 +203,15 @@ namespace WertheApp.RN
                     b_Stop.Text = "Stop";
 					break;
                 case false:
+					b_Stop.Text = "Continue";
                     gameView.Paused = true;
                     paused = true;
-                    b_Stop.Text = "Continue";
 					break;
 			}
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
 		void DeleteContent()
 		{
@@ -200,6 +220,8 @@ namespace WertheApp.RN
 			isContentCreated = false;
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
@@ -208,10 +230,10 @@ namespace WertheApp.RN
 			var cc_gameView = sender as CCGameView;
 			if (cc_gameView != null)
 			{
-				// This sets the game "world" resolution to 330x100:
+				// This sets the game "world" resolution 
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
 				//###############################################################
-                cc_gameView.DesignResolution = new CCSizeI(400, 2000); //CLIPPING
+                cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //CLIPPING
                                                                        //###############################################################
 
                 //choose gamescene for GoBackN or Selective Repeat
@@ -229,6 +251,8 @@ namespace WertheApp.RN
 			}
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)
 		{

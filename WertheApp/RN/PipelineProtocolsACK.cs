@@ -29,7 +29,8 @@ namespace WertheApp.RN
             count++;
             touchCount = 0;
             this.sprite.AnchorPoint = AnchorPoint = new CCPoint(0, 0);
-            CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite.png"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and width and heigth of the sprite
+            CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and width and heigth of the sprite
+	
 
             sprite.Color = CCColor3B.Green; //EXtra line of code for Android.....since I didn't find out how to access the png in Android. It crashed every single time
             this.sprite.SpriteFrame = whiteFrame;
@@ -38,7 +39,8 @@ namespace WertheApp.RN
 			touchListener = new CCEventListenerTouchOneByOne();
             touchListener.OnTouchBegan = OnTouchBegan;
             AddEventListener(touchListener, this);
-			Schedule(Process); // prediefined mathod that takes an Action and schedules it to run for every cycle
+
+			Schedule(Process); // prediefined method that takes an Action and schedules it to run for every cycle
 		}
 
         //CONSTRUCTOR 2
@@ -76,13 +78,14 @@ namespace WertheApp.RN
                 //arrived without corruption and didn't get lost on the way
                 else{
                     Debug.WriteLine("all good");
+                    Debug.WriteLine("jhkjddgghjk");
                 }
                 this.Dispose();
             }
         }
 
 		/**********************************************************************
-        *********************************************************************/
+        ***************************************************hghjgkh******************/
 		private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
         {
             //if ACK was clicked the first time (corrupt)
@@ -144,18 +147,18 @@ namespace WertheApp.RN
             }
         }
 
-            /**********************************************************************
-            *********************************************************************/
-            public CCSprite GetSpriteByID(int id)
-            {
-                return this.sprite;
-            }
-
-            /***************************************************************
-            *********************************************************************/
-            public int GetID()
-            {
-                return this.id;
-            }
+        /**********************************************************************
+        *********************************************************************/
+        public CCSprite GetSpriteByID(int id)
+        {
+            return this.sprite;
         }
+
+        /***************************************************************
+        *********************************************************************/
+        public int GetID()
+        {
+            return this.id;
+        }
+    }
 }

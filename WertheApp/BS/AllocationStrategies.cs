@@ -25,6 +25,9 @@ namespace WertheApp.BS
 		private double width = 0;
 		private double height = 0;
 
+		public const int gameviewWidth = 330;
+		public const int gameviewHeight = 100;
+
         bool isContentCreated = false; //indicates weather the Content of the page was already created
 
         public enum myEnum
@@ -133,9 +136,11 @@ namespace WertheApp.BS
 			{
 				// This sets the game "world" resolution to 330x100:
                 //Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-				gameView.DesignResolution = new CCSizeI(330, 100);
+                gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight);
+               
 				// GameScene is the root of the CocosSharp rendering hierarchy:
 				gameScene = new AllocationStrategiesScene(gameView);
+
 				// Starts CocosSharp:
 				gameView.RunWithScene(gameScene);
 			}
@@ -143,15 +148,18 @@ namespace WertheApp.BS
 
 		void CreateTopHalf(Grid grid)
 		{
+            
+            /*TODO schwarzer Rand weg*/
             var gameView = new CocosSharpView()
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = Color.White,
+                BackgroundColor = Color.White, /*Android bug: Doesn't work for Android*/
                 // This gets called after CocosSharp starts up:
                 ViewCreated = HandleViewCreated
 			};
-			grid.Children.Add(gameView, 0, 0);
+
+            grid.Children.Add(gameView, 0, 0);
 		}
 
 		void CreateBottomHalf(Grid grid)

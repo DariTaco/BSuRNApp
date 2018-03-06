@@ -24,6 +24,9 @@ namespace WertheApp.BS
 		}
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			var scrollView = new ScrollView
@@ -118,7 +121,9 @@ namespace WertheApp.BS
             //note : a space label element can somehow only be added once, therefore I needed to define 4 of them
 		}
 
-        void CreateSequenceList(){
+		/**********************************************************************
+        *********************************************************************/
+		void CreateSequenceList(){
             String s = e_Sequence.Text;
             sequenceList = new List<int>();
             sequenceList.Add(0); //leading zero in settings
@@ -127,6 +132,8 @@ namespace WertheApp.BS
 			}
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
@@ -152,12 +159,16 @@ namespace WertheApp.BS
             }
 		}
 
-        //Apply default value for Reference Sequence
-        void B_DefaultValue_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		//Apply default value for Reference Sequence
+		void B_DefaultValue_Clicked(object sender, EventArgs e)
         {
             e_Sequence.Text = "12340156012356";
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		//validates the string in e_Sequence. For example a Fragment with size 0 is not allowed.
 		//returns true if string is valid 
 		bool ValidateSequenceInput()
@@ -166,8 +177,10 @@ namespace WertheApp.BS
 			return Regex.IsMatch(s, "^[0-9]*$"); //matches only a sequence of numbers
 		}
 
-        //validates if the sum of ram and disc together is smaller than eight
-        bool ValidateRAMandDISC(){
+		/**********************************************************************
+        *********************************************************************/
+		//validates if the sum of ram and disc together is smaller than eight
+		bool ValidateRAMandDISC(){
             int ram = Int32.Parse(p_RAM.SelectedItem.ToString());
             int disc = Int32.Parse(p_DISC.SelectedItem.ToString());
 

@@ -19,6 +19,9 @@ namespace WertheApp.BS
 
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			var scrollView = new ScrollView
@@ -54,6 +57,8 @@ namespace WertheApp.BS
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		//validates the string in e_ProcessSize. For example a request with size <2 is not allowed.
 		//returns true if string is valid 
 		bool ValidateMemoryRequestInput()
@@ -62,7 +67,9 @@ namespace WertheApp.BS
             return Regex.IsMatch(s, "^(?:[2-9]|[1-9]+[0-9]+)$"); //matches only numbers >= 2;
 		}
 
-        async void B_Start_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		async void B_Start_Clicked(object sender, EventArgs e)
         {
             if (e_ProcessSize.Text != null && ValidateMemoryRequestInput())
             {

@@ -37,7 +37,7 @@ namespace WertheApp.RN
         static CCDrawNode cc_window;
         static CCDrawNode cc_window2;
 
-
+          
         //CONSTRUCTOR
         public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
         {
@@ -49,6 +49,16 @@ namespace WertheApp.RN
             strategy = PipelineProtocols.strategy;
             timeouttime = PipelineProtocols.timeoutTime;
 
+			//Android bug: Background in Android is always black. Workaround: draw a white rect with the size of the layer
+			if (Device.RuntimePlatform == Device.Android)
+			{
+				var cc_background = new CCDrawNode();
+				var backgroundWorkAround = new CCRect(
+					0, 0, layer.VisibleBoundsWorldspace.MaxX, layer.VisibleBoundsWorldspace.MaxY);
+				cc_background.DrawRect(backgroundWorkAround,
+					fillColor: CCColor4B.White);
+				layer.AddChild(cc_background);
+			}
 
             DrawLabelsAndBoxes();
 
@@ -131,16 +141,45 @@ namespace WertheApp.RN
         {
             DrawFillLeft(seqnum);
 
+            //define object
+            float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
+            var pp = new PipelineProtocolsPack(seqnum,0);
+            pp.Position = new CCPoint(80, yPos);
+            layer.AddChild(pp);
+
+            //define action
+            float timeToTake = 5f;
+            var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
+            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
+            var removeAction = new CCRemoveSelf(); //this action removes the object
+
+            //define sequence of actions 
+            var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
+
+			//apply sequence of actions to object
+			//PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
+			await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
+
+			pp.Dispose();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        //this method imitates the sender of a packet. It is called by a package because it was slowed down (to slow a package down it has to be replaced with a sllow moving one) 
+        public static async void SendSlowPackageAt(int seqnum, int xPos)
+        {
+            DrawFillLeft(seqnum);
+
 			//define object
 			float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
-            var pp = new PipelineProtocolsPackage(seqnum);
-            pp.Position = new CCPoint(80,yPos);
+            var pp = new PipelineProtocolsPack(seqnum,2);
+            pp.Position = new CCPoint(xPos,yPos);
             layer.AddChild(pp);
 
 			//define action
             float timeToTake = 5f;
-            var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
-			var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
+            var distance = new CCPoint(280, yPos); 
+			var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the Object to the CCPoint
 			var removeAction = new CCRemoveSelf(); //this action removes the object*/
 
 			//define sequence of actions 
@@ -150,50 +189,6 @@ namespace WertheApp.RN
             //PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
 			await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
 
-            /******************************************************************/
-            if(!pp.lost && !pp.corrupt)
-            {
-                //has been lost/corrupt and is therfore in the list
-                if (lostOrCorruptP.Contains(pp.seqnum))
-                {
-                    lostOrCorruptP.Remove(pp.seqnum); //remove from list
-                    //still other ack lost/corrupt
-                    if (lostOrCorruptP.Any())
-                    {
-                        //seqnum is bigger than the first item in list. note the item itself was removed
-                        if (pp.seqnum > lostOrCorruptP.First())
-                        {
-                            pufferP.Add(pp.seqnum);
-                            baseOfWindow2 = baseOfWindow2; //just to make it clear
-                        }
-                        else
-                        {
-                            baseOfWindow2 = lostOrCorruptP.First();
-                        }
-                    }
-                    else
-                    {
-                        baseOfWindow2 = pufferP.Last() + 1;
-                    }
-                }
-                //has never been lost/corrupt before . this implies that there are no lost/corrupt packages after this one and also no other packages have arrived after this one
-                else
-                {
-                    //lost/corrupt packages before this one. since the implication above it is sufficient to only ask if there are any lost/corrupt packages existant
-                    if (lostOrCorruptP.Any())
-                    {
-                        pufferP.Add(pp.seqnum);
-                        baseOfWindow2 = baseOfWindow2; // just to make it clear
-                    }
-                    else
-                    {
-                        baseOfWindow2 = pp.seqnum + 1;
-                    }
-                }
-                DrawWindow2(baseOfWindow2);
-                DrawFillRight(pp.seqnum);
-                SendACKFor(pp.seqnum); //send ACK 
-            }
             pp.Dispose();
         }
 
@@ -454,3 +449,77 @@ namespace WertheApp.RN
 		}
     }
 }
+
+/*        //this method imitates both sender and receiver of a packet. It is called by the method invoke 
+        public static async void SendPackageAt(int seqnum)
+        {
+            DrawFillLeft(seqnum);
+
+            //define object
+            float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
+            var pp = new PipelineProtocolsPack(seqnum);
+            pp.Position = new CCPoint(80,yPos);
+            layer.AddChild(pp);
+
+            //define action
+            float timeToTake = 5f;
+            var distance = new CCPoint(280, yPos); //82 to 278 = 278-82 = 196
+            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
+            var removeAction = new CCRemoveSelf(); //this action removes the object
+
+//define sequence of actions 
+var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
+
+//apply sequence of actions to object
+//PipelineProtocols.l_Timeout.Text = "Timeout: restart";//everytime a new package is sent, the timer will be restarted
+await pp.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!!
+
+
+            if(!pp.lost && !pp.corrupt)
+            {
+                //has been lost/corrupt and is therfore in the list
+                if (lostOrCorruptP.Contains(pp.seqnum))
+                {
+                    lostOrCorruptP.Remove(pp.seqnum); //remove from list
+                    //still other ack lost/corrupt
+                    if (lostOrCorruptP.Any())
+                    {
+                        //seqnum is bigger than the first item in list. note the item itself was removed
+                        if (pp.seqnum > lostOrCorruptP.First())
+                        {
+                            pufferP.Add(pp.seqnum);
+                            baseOfWindow2 = baseOfWindow2; //just to make it clear
+                        }
+                        else
+                        {
+                            baseOfWindow2 = lostOrCorruptP.First();
+                        }
+                    }
+                    else
+                    {
+                        baseOfWindow2 = pufferP.Last() + 1;
+                    }
+                }
+                //has never been lost/corrupt before . this implies that there are no lost/corrupt packages after this one and also no other packages have arrived after this one
+                else
+                {
+                    //lost/corrupt packages before this one. since the implication above it is sufficient to only ask if there are any lost/corrupt packages existant
+                    if (lostOrCorruptP.Any())
+                    {
+                        pufferP.Add(pp.seqnum);
+                        baseOfWindow2 = baseOfWindow2; // just to make it clear
+                    }
+                    else
+                    {
+                        baseOfWindow2 = pp.seqnum + 1;
+                    }
+                }
+
+				DrawWindow2(baseOfWindow2);
+
+				DrawFillRight(pp.seqnum);
+
+				SendACKFor(pp.seqnum); //send ACK 
+            }
+            pp.Dispose();
+        }*/

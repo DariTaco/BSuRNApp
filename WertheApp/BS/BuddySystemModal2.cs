@@ -17,6 +17,9 @@ namespace WertheApp.BS
         }
 
 		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{
 			var scrollView = new ScrollView
@@ -55,14 +58,18 @@ namespace WertheApp.BS
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 		}
 
-        async void B_End_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		async void B_End_Clicked(object sender, EventArgs e)
         {
 			BuddySystem.endedProcessName = p_ProcessNames.SelectedItem.ToString();
 			MessagingCenter.Send<BuddySystemModal2>(this, "process ended");// inform all subscribers
 			await Navigation.PopModalAsync(); // close Modal
 		}
 
-        async void B_Cancel_Clicked(object sender, EventArgs e)
+		/**********************************************************************
+        *********************************************************************/
+		async void B_Cancel_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopModalAsync(); // close Modal
 		}

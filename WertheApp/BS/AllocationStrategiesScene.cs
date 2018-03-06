@@ -37,8 +37,6 @@ namespace WertheApp.BS
         static CCDrawNode cc_arrow1b;
         static float posArrow1;
 
-
-
         //lines and position of grey arrow
         static CCDrawNode cc_arrow2;
         static CCDrawNode cc_arrow2a;
@@ -72,7 +70,7 @@ namespace WertheApp.BS
                 memoryBlocks[i, 1] = 0;
 			}
 
-			/*for (int i = 0; i < memoryBlocks.GetLength(0); i++)
+            /*for (int i = 0; i < memoryBlocks.GetLength(0); i++)
 			{
 				for (int j = 0; j < memoryBlocks.GetLength(1); j++)
 				{
@@ -80,14 +78,28 @@ namespace WertheApp.BS
 				}
 			}*/
 
+            /*TODO*/
+            //Android bug: Background in Android is always black. Workaround: draw a white rect with the size of the layer
+            if(Device.RuntimePlatform == Device.Android){
+				var cc_background = new CCDrawNode();
+				var backgroundWorkAround = new CCRect(
+                    0, 0, layer.VisibleBoundsWorldspace.MaxX, layer.VisibleBoundsWorldspace.MaxY);
+                cc_background.DrawRect(backgroundWorkAround,
+					fillColor: CCColor4B.White);
+                layer.AddChild(cc_background);
+            }
+
             CalculateNeededVariables();
             DrawMemory();
 
 		}
 
-        //METHODS
-        //Calculates availableMemory, numerOfFragments, totalMemorySize, relativeFragmentSize
-        void CalculateNeededVariables(){
+		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
+		//Calculates availableMemory, numerOfFragments, totalMemorySize, relativeFragmentSize
+		void CalculateNeededVariables(){
             int sizeOfList = fragmentList.Count();
             availableMemory = 0;
             numberOfFragments = sizeOfList;
@@ -101,7 +113,9 @@ namespace WertheApp.BS
         }
 
 
-        static void DrawMemory()
+		/**********************************************************************
+        *********************************************************************/
+		static void DrawMemory()
         {
             //the problem with drawing lines is, that they don't start at a point and have a witdth in only one direction. 
             //The width actually spreads in both directions. wich makes it kinda difficult
@@ -143,7 +157,9 @@ namespace WertheApp.BS
             }
         }
 
-        public static void DrawRedArrow()
+		/**********************************************************************
+        *********************************************************************/
+		public static void DrawRedArrow()
         {
             //red arrow
             float c = 0;
@@ -183,7 +199,9 @@ namespace WertheApp.BS
 			layer.AddChild(cc_arrow1b);
         }
 
-        public static void ClearRedArrow()
+		/**********************************************************************
+        *********************************************************************/
+		public static void ClearRedArrow()
         {
 			if (cc_arrow1 != null && cc_arrow1a != null && cc_arrow1b != null)
 			{
@@ -193,7 +211,9 @@ namespace WertheApp.BS
 			}
         }
 
-        public static void DrawGrayArrow()
+		/**********************************************************************
+        *********************************************************************/
+		public static void DrawGrayArrow()
         {
 			//gray arrow
 			float c = 0;
@@ -232,7 +252,9 @@ namespace WertheApp.BS
 			layer.AddChild(cc_arrow2b);
         }
 
-        public static void ClearGrayArrow()
+		/**********************************************************************
+        *********************************************************************/
+		public static void ClearGrayArrow()
         {
 			if (cc_arrow2 != null && cc_arrow2a != null && cc_arrow2b != null)
 			{
@@ -242,7 +264,9 @@ namespace WertheApp.BS
 			}
         }
 
-        public static void DrawFill()
+		/**********************************************************************
+        *********************************************************************/
+		public static void DrawFill()
         {
             int request = AllocationStrategies.memoryRequest; 
 			float start = 0;
@@ -285,7 +309,9 @@ namespace WertheApp.BS
 
 		}
 
-        public static bool CheckIfFull()
+		/**********************************************************************
+        *********************************************************************/
+		public static bool CheckIfFull()
         {
             bool check = true;
             for (int i = 0; i < memoryBlocks.GetLength(0); i++)
@@ -295,7 +321,9 @@ namespace WertheApp.BS
             return check;
         }
 
-        public static bool FollowingFull()
+		/**********************************************************************
+        *********************************************************************/
+		public static bool FollowingFull()
         {
             bool check = true;
             Debug.WriteLine("strategy: " + strategy);
@@ -339,8 +367,9 @@ namespace WertheApp.BS
 			return check;
         }
 
-
-        public static void FirstFit(int memoryRequest)
+		/**********************************************************************
+        *********************************************************************/
+		public static void FirstFit(int memoryRequest)
         {
             //don't show previously drawn arrows
             ClearRedArrow();
@@ -374,6 +403,8 @@ namespace WertheApp.BS
 
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		public static void NextFit(int memoryRequest) 
         {
 			
@@ -455,7 +486,9 @@ namespace WertheApp.BS
 			}
         }
 
-        public static void BestFit(int memoryRequest) 
+		/**********************************************************************
+        *********************************************************************/
+		public static void BestFit(int memoryRequest) 
         {
 			//don't show previously drawn arrows
 			ClearRedArrow();
@@ -518,6 +551,8 @@ namespace WertheApp.BS
             }
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		public static void WorstFit(int memoryRequest) 
         {
 			// don't show previously drawn arrows
@@ -568,6 +603,8 @@ namespace WertheApp.BS
 			}
 		}
 
+		/**********************************************************************
+        *********************************************************************/
 		public static void TailoringBestFit(int memoryRequest) 
         {
 			//don't show previously drawn arrows
@@ -630,6 +667,8 @@ namespace WertheApp.BS
 			}
         }
 
+		/**********************************************************************
+        *********************************************************************/
 		public static void RequestNew(int memoryRequest)
 		{
 

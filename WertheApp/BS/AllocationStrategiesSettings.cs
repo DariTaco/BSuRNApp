@@ -21,8 +21,11 @@ namespace WertheApp.BS
             CreateContent();
         }
 
-        //METHODS
-        void CreateContent(){
+		//METHODS
+
+		/**********************************************************************
+        *********************************************************************/
+		void CreateContent(){
             var scrollView = new ScrollView
             {
                 Margin = new Thickness(10)
@@ -62,8 +65,10 @@ namespace WertheApp.BS
 			stackLayout.Children.Add(b_Start);
         }
 
-        //reads the input String from e_Fragmentation and adds elements to a List
-        void CreateFragmentsList(){
+		/**********************************************************************
+        *********************************************************************/
+		//reads the input String from e_Fragmentation and adds elements to a List
+		void CreateFragmentsList(){
             String s = e_Fragmentation.Text;
             fragmentsList = new List<int>();
             String ss = "";
@@ -90,14 +95,18 @@ namespace WertheApp.BS
 
         }
 
-        //validates the string in e_Fragmentation. For example a Fragment with size 0 is not allowed.
-        //returns true if string is valid 
-        bool ValidateFragmentationInput(){
+		/**********************************************************************
+        *********************************************************************/
+		//validates the string in e_Fragmentation. For example a Fragment with size 0 is not allowed.
+		//returns true if string is valid 
+		bool ValidateFragmentationInput(){
             String s = e_Fragmentation.Text;
             return Regex.IsMatch(s, "^[1-9]+[0-9]*(,[1-9]+[0-9]*)*$"); //matches only numbers(exept 0) separated by a comma;
 		}
 
-        //If Button Start is clicked
+		/**********************************************************************
+        *********************************************************************/
+		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
             //if a strategy was selected and a valid fragmentation was entered
