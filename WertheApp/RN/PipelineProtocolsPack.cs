@@ -13,7 +13,6 @@ namespace WertheApp.RN
 		//CCSpriteFrame greenFrame;
 		//CCSpriteFrame redFrame;
 
-
 		CCSprite sprite;
 		int id;
 		public int seqnum;
