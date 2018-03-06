@@ -12,7 +12,7 @@ namespace WertheApp.RN
 		//VARIABLES
 		//CCSpriteFrame greenFrame;
 		//CCSpriteFrame redFrame;
-        Debug.WriteLine("jkvnjkfrnjnvf");
+
 
 		CCSprite sprite;
 		int id;
