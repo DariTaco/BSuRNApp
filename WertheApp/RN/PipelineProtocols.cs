@@ -9,6 +9,9 @@ namespace WertheApp.RN
     public class PipelineProtocols : ContentPage
     {
         //VARIABLES
+        PipelineProtocolsScene gameScene;
+        PipelineProtocolsScene2 gameScene2;
+
         public static int windowSize;
         public static String strategy;
         public static int timeoutTime;
@@ -50,6 +53,14 @@ namespace WertheApp.RN
         }
 
 		//METHODS
+        /**********************************************************************
+        *********************************************************************/
+        //Gets called everytime the Page is not shown anymore. For example when clicking the back navigation
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Navigation.PopAsync(); // skip the settings page and go back to the overview
+        }
 
 		/**********************************************************************
         *********************************************************************/
@@ -215,6 +226,8 @@ namespace WertheApp.RN
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
 		void DeleteContent()
 		{
+            //if (gameScene != null) { gameScene.Dispose(); }
+            //if (gameScene2 != null) { gameScene2.Dispose(); }
 			this.Content = null;
 			this.Content = new Label { Text = "please rotate your device" };
 			isContentCreated = false;
@@ -225,8 +238,6 @@ namespace WertheApp.RN
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
-			PipelineProtocolsScene gameScene;
-            PipelineProtocolsScene2 gameScene2;
 			var cc_gameView = sender as CCGameView;
 			if (cc_gameView != null)
 			{

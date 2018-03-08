@@ -49,6 +49,14 @@ namespace WertheApp.RN
         }
 
 		//METHODS
+        /**********************************************************************
+        *********************************************************************/
+        //Gets called everytime the Page is not shown anymore. For example when clicking the back navigation
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Navigation.PopAsync(); // skip the settings page and go back to the overview
+        }
 
 		/**********************************************************************
         *********************************************************************/

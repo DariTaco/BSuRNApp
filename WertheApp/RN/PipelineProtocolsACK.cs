@@ -18,6 +18,7 @@ namespace WertheApp.RN
         public bool corrupt = false;
         public bool lost = false;
         public bool small = false; //indicates if the rectangle is smaller (for very first ACK at --)
+        public bool ignore = false;
         CCEventListenerTouchOneByOne touchListener;
 
         //CONSTRUCTOR 
@@ -88,8 +89,12 @@ namespace WertheApp.RN
         ***************************************************hghjgkh******************/
 		private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
         {
+            if(this.small){
+                //do nothing
+                return true;
+            }
             //if ACK was clicked the first time (corrupt)
-            if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
+            else if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
                 && touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
                 && touchCount == 0) //50 because it's the height of the packages spriteframe
             {
@@ -106,10 +111,51 @@ namespace WertheApp.RN
 
                 return true;
             }
-            //if ACK was clicked a second time (lost)
+            //if ACK was clicked a second time (slowed down)
             else if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
                 && touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
-                && touchCount > 0)
+                && touchCount == 1)
+            {
+                this.corrupt = false;
+                this.lost = false;
+
+                //if seqnum already in list
+                if (PipelineProtocolsScene.lostOrCorruptACK != null && PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
+                {
+                    PipelineProtocolsScene.lostOrCorruptACK.Remove(this.seqnum); 
+                }
+                this.ignore = true;
+                this.touchCount = 5;
+                this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
+                Debug.WriteLine(touch.Location.X);
+                PipelineProtocolsScene.SendSlowPackageAt(this.seqnum, ((int)touch.Location.X - 20));
+                //this.Dispose();// don't know why but it makes everything stop when you click somehwere on the screen, so I commented it out
+               
+                return false;
+            }
+            //if package was clicked a third time (slowed down & corrupt)
+            else if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
+                && touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
+                && touchCount == 2)
+            {
+                UpdateMyColor();
+                this.touchCount++;
+                this.corrupt = true;
+
+                //if seqnum not already in list
+                if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
+                {
+                    PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); 
+                    Debug.WriteLine("ACK corrupt: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
+                }
+
+                return true;
+            }
+
+            //if package was clicked a fourth time (lost)
+            else if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
+                && touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
+                && touchCount == 3)
             {
                 this.corrupt = false;
                 this.lost = true;
@@ -119,10 +165,10 @@ namespace WertheApp.RN
                 //if seqnum not already in list
                 if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
                 {
-                    PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //add to list 
-                    Debug.WriteLine("ack lost: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
+                    PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); 
+                    Debug.WriteLine("ACK lost: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
                 }
-                this.Dispose();
+
                 return false;
             }
             else { return false; }

@@ -77,6 +77,9 @@ namespace WertheApp.RN
         }
 
         //METHODS
+
+        /**********************************************************************
+        *********************************************************************/
         public static async void MyTimer(int seqnum, int c)
         {
             int counter = c;

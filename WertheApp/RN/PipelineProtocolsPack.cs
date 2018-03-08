@@ -46,17 +46,37 @@ namespace WertheApp.RN
 
 		}
 
+        /**********************************************************************
+        *********************************************************************/
+        /*TODO add to entsprechender List, Objekt nur zerstören wenn arrive, nicht bei timeout, timeout in der anderen Klasse, aufschrieb im Ordner*/
+        private void Process(float seconds)
+        {
+            //if ACK arrives (MinX + 319 = position of the rectangles on the right)
+            if (this.PositionX <= VisibleBoundsWorldspace.MinX + 319)
+            {
+                Debug.WriteLine(this.seqnum + " HIT SOMETHING");
+                if (this.corrupt)
+                {
+                    Debug.WriteLine("corrupt");
+                }
+                //arrived without corruption and didn't get lost on the way
+                else
+                {
+                    Debug.WriteLine("all good");
+                    Debug.WriteLine("jhkjddgghjk");
+                }
+                this.Dispose();
+            }
+        }
+
 		/**********************************************************************
         *********************************************************************/
 		private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
 		{
-			//Debug.WriteLine("touch.Location.X = "+touch.Location.X);
-			//Debug.WriteLine("touchEvent.CurrentTarget.PositionX = " + touchEvent.CurrentTarget.PositionX);
-			//Debug.WriteLine("touchEvent.CurrentTarget.PositionX+40 = " + (touchEvent.CurrentTarget.Position.X + 40.0f));
 			//if package was clicked the first time (corrupt)
 			if (touch.Location.X > touchEvent.CurrentTarget.PositionX && touch.Location.X < (touchEvent.CurrentTarget.Position.X + 40.0f) //40 because it's the width of the packages spriteframe
-				&& touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)
-				&& touchCount == 0) //50 because it's the height of the packages spriteframe
+                && touch.Location.Y > touchEvent.CurrentTarget.PositionY && touch.Location.Y < (touchEvent.CurrentTarget.PositionY + 50.0f)//50 because it's the height of the packages spriteframe
+				&& touchCount == 0) 
 			{
 				UpdateMyColor();
 				this.touchCount++;
@@ -90,10 +110,11 @@ namespace WertheApp.RN
 
                 this.ignore = true;
                 this.touchCount = 5;
-                this.RemoveChild(this.sprite);
+                this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
                 Debug.WriteLine(touch.Location.X);
+                Debug.WriteLine("ok1");
                 PipelineProtocolsScene.SendSlowPackageAt(this.seqnum, ((int)touch.Location.X-20));
-
+                //this.Dispose(); // don't know why but it makes everything stop when you click somehwere on the screen, so I commented it out
 
                 return false;
 			}   

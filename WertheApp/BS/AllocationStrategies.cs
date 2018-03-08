@@ -102,6 +102,17 @@ namespace WertheApp.BS
         }
 
 		//METHODS
+        /**********************************************************************
+        *********************************************************************/
+        //Gets called everytime the Page is not shown anymore. For example when clicking the back navigation
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Navigation.PopAsync(); // skip the settings page and go back to the overview
+        }
+
+        /**********************************************************************
+        *********************************************************************/
 		void CreateContent()
 		{   
             // This is the top-level grid, which will split our page in half
@@ -118,6 +129,8 @@ namespace WertheApp.BS
 			isContentCreated = true;
 		}
 
+        /**********************************************************************
+        *********************************************************************/
 		/// <summary> deletes all content and informs the user to rotate the device </summary>
 		void DeleteContent()
         {
@@ -126,6 +139,8 @@ namespace WertheApp.BS
 			isContentCreated = false;
         }
 
+        /**********************************************************************
+        *********************************************************************/
         //sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
@@ -146,6 +161,8 @@ namespace WertheApp.BS
 			}
 		}
 
+        /**********************************************************************
+        *********************************************************************/
 		void CreateTopHalf(Grid grid)
 		{
             
@@ -162,6 +179,8 @@ namespace WertheApp.BS
             grid.Children.Add(gameView, 0, 0);
 		}
 
+        /**********************************************************************
+        *********************************************************************/
 		void CreateBottomHalf(Grid grid)
 		{
 			//set the size of the elements in such a way, that they all fit on the screen
@@ -214,6 +233,8 @@ namespace WertheApp.BS
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
+        /**********************************************************************
+        *********************************************************************/
         async void B_Next_Clicked(object sender, EventArgs e)
         {
             switch (memoryRequestState)
