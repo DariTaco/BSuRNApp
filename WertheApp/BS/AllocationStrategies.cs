@@ -14,8 +14,8 @@ namespace WertheApp.BS
     //Bottom half are buttons and labels that interact with the scene
     public class AllocationStrategies : ContentPage
     {
-     
         //VARIABLES
+        double StackChildSize;
         public static List<int> fragmentList { get; set; } //List of fragments. From Settings Page passed to the constructor and later accesed from Scene
         public static String strategy { get; set; } //Choosen strategy (Firts Fit, ...) from Settings Page passed to the constructor and later accesed from Scene
         //public static int[] memoryBlocks; //=array of framents from fragmentList
@@ -28,7 +28,7 @@ namespace WertheApp.BS
 		public const int gameviewWidth = 330;
 		public const int gameviewHeight = 100;
 
-        bool isContentCreated = false; //indicates weather the Content of the page was already created
+        bool isContentCreated; //indicates weather the Content of the page was already created
 
         public enum myEnum
         {
@@ -48,15 +48,19 @@ namespace WertheApp.BS
         public static Label l_Best;
 
         //values for labels
-        String size = "-";
-        String free = "-";
-        String diff = "-";
-        String best = "-";
+        public static String size = "-";
+        public static String free = "-";
+        public static String diff = "-";
+        public static String best = "-";
 
 
         //CONSTRUCTOR
         public AllocationStrategies(List<int> l, String s)
         {
+            ToolbarItem i = new ToolbarItem();
+            i.Text = "Hilfe";
+            this.ToolbarItems.Add(i);
+
             fragmentList = l;
             strategy = s;
             memoryRequestState = myEnum.noRequestYet;
@@ -69,32 +73,35 @@ namespace WertheApp.BS
 
             Title = "Allocation Strategies: " + strategy;
 
+            isContentCreated = false;
+
             //do only create content if device is rotated in landscape
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
             {
                 CreateContent();
+                this.Content.IsVisible = true;
             }
             else
             {
-				this.Content = new Label { Text = "please rotate your device" };
+                CreateContent();
+                this.Content.IsVisible = false;
+                //DisplayAlert("Alert", "Please rotate the device", "OK");
+				//this.Content = new Label { Text = "please rotate your device" };
             }
 
             //EVENT LISTENER
 			//subscribe to Message in order to know if a new memory request was made
-            MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{ 
-                
+            MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{
                 l_Size.Text = memoryRequest.ToString();
                 l_Diff.Text = diff;
                 l_Free.Text = free;
 				if (AllocationStrategiesScene.CheckIfFull())
 				{
-					Debug.WriteLine("MEMORY IS FULL!");
 					memoryRequestState = myEnum.memoryFull;
                 }
                 else
                 {
                     memoryRequestState = myEnum.newRequest;
-                    Debug.WriteLine("Message is received: NEW REQUEST");
                 }
 
 
@@ -130,16 +137,6 @@ namespace WertheApp.BS
 
         /**********************************************************************
         *********************************************************************/
-		/// <summary> deletes all content and informs the user to rotate the device </summary>
-		void DeleteContent()
-        {
-			this.Content = null;
-			this.Content = new Label { Text = "please rotate your device" };
-			isContentCreated = false;
-        }
-
-        /**********************************************************************
-        *********************************************************************/
         //sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
@@ -157,6 +154,7 @@ namespace WertheApp.BS
 
 				// Starts CocosSharp:
 				gameView.RunWithScene(gameScene);
+
 			}
 		}
 
@@ -185,7 +183,12 @@ namespace WertheApp.BS
 			//set the size of the elements in such a way, that they all fit on the screen
             //Screen Width is divided by the amount of elements (9)
             //Screen Width -20 because Margin is 10
-            double StackChildSize = (Application.Current.MainPage.Width-20) / 9;
+            if(!isContentCreated){
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 9;
+            }
+            else{
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 9;
+            }
 
             //Using a Stacklayout to organize elements
             //with corresponding labels and String variables. 
@@ -225,7 +228,7 @@ namespace WertheApp.BS
             stackLayout.Children.Add(l_Best);
 
 			var b_Next = new Button{ Text = "Next", WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center };
+                VerticalOptions = LayoutOptions.CenterAndExpand };
             b_Next.Clicked += B_Next_Clicked;
             stackLayout.Children.Add(b_Next);
 
@@ -244,7 +247,7 @@ namespace WertheApp.BS
                     //Debug.WriteLine("NEW REQUEST");
 					break;
                 case myEnum.searchingForBlock: //searching for block
-                    //Debug.WriteLine("SEARCHING FOR BLOCK");
+                    Debug.WriteLine("SEARCHING FOR BLOCK");
 					switch (strategy)
 					{
 						case "First Fit":
@@ -306,60 +309,6 @@ namespace WertheApp.BS
                     break;
 			}
 
-
-            /*
-            //if new request
-            if(memoryRequestState == myEnum.newRequest)
-            {
-                AllocationStrategiesScene.RequestNew(memoryRequest);
-			}
-            //if searching for block
-            else if (memoryRequestState == myEnum.searchingForBlock)
-            {
-                switch (strategy)
-                {
-                    case "First Fit":
-                        AllocationStrategiesScene.pos++;
-                        AllocationStrategiesScene.FirstFit(memoryRequest);
-                        break;
-                    case "Next Fit":
-
-                        break;
-                    case "Best Fit":
-
-                        break;
-                    case "Worst Fit":
-
-                        break;
-                    case "Tailoring Best Fit":
-
-                        break;
-                }
-            }
-
-            //if unsuccessfull
-            else if(memoryRequestState == myEnum.unsuccessfull)
-            {
-                AllocationStrategiesScene.ClearGrayArrow();
-                AllocationStrategiesScene.ClearRedArrow();
-                await DisplayAlert("Alert", "No free space has been found", "OK");
-                memoryRequestState = myEnum.noRequestYet; //ready for a new request
-            }
-
-            //if successfull
-            else if(memoryRequestState == myEnum.successfull) 
-            {
-                AllocationStrategiesScene.ClearRedArrow();
-                AllocationStrategiesScene.ClearGrayArrow();
-                memoryRequestState = myEnum.noRequestYet; 
-            }
-            //if noRequestYet
-            else if(memoryRequestState == myEnum.noRequestYet) 
-			{
-				await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
-			}
-            */
-
         }
 		//this method is called everytime the device is rotated
 		protected override void OnSizeAllocated(double width, double height)
@@ -372,16 +321,81 @@ namespace WertheApp.BS
 			}
 
             //reconfigure layout
-            if (width > height && isContentCreated == false)
+            if (width > height)
 			{
-                CreateContent();
+                this.Content.IsVisible = true;
+                isContentCreated = true;
 			}
             else if (height > width && isContentCreated)
-			{
-                DeleteContent();
+            {
+                isContentCreated = false;
+                this.Content.IsVisible = false;
+
+                DisplayAlert("Alert", "Please rotate the device", "OK");
 			}
 		}
 
+
 	}
 }
+/**********************************************************************
+*********************************************************************/
+/// <summary> deletes all content and informs the user to rotate the device </summary>
+/*void DeleteContent()
+{
+    this.Content = null;
+    this.Content = new Label { Text = "please rotate your device" };
+    isContentCreated = false;
+}*/
+/*
+//if new request
+if(memoryRequestState == myEnum.newRequest)
+{
+    AllocationStrategiesScene.RequestNew(memoryRequest);
+}
+//if searching for block
+else if (memoryRequestState == myEnum.searchingForBlock)
+{
+    switch (strategy)
+    {
+        case "First Fit":
+            AllocationStrategiesScene.pos++;
+            AllocationStrategiesScene.FirstFit(memoryRequest);
+            break;
+        case "Next Fit":
 
+            break;
+        case "Best Fit":
+
+            break;
+        case "Worst Fit":
+
+            break;
+        case "Tailoring Best Fit":
+
+            break;
+    }
+}
+
+//if unsuccessfull
+else if(memoryRequestState == myEnum.unsuccessfull)
+{
+    AllocationStrategiesScene.ClearGrayArrow();
+    AllocationStrategiesScene.ClearRedArrow();
+    await DisplayAlert("Alert", "No free space has been found", "OK");
+    memoryRequestState = myEnum.noRequestYet; //ready for a new request
+}
+
+//if successfull
+else if(memoryRequestState == myEnum.successfull) 
+{
+    AllocationStrategiesScene.ClearRedArrow();
+    AllocationStrategiesScene.ClearGrayArrow();
+    memoryRequestState = myEnum.noRequestYet; 
+}
+//if noRequestYet
+else if(memoryRequestState == myEnum.noRequestYet) 
+{
+    await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
+}
+*/

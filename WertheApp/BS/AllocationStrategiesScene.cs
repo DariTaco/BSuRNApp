@@ -58,7 +58,6 @@ namespace WertheApp.BS
 			besValue = 0;
             besPos = -1;
 
-            Debug.WriteLine("CONSTRUCTOR WAS CALLED");
             fragmentList = AllocationStrategies.fragmentList;
             strategy = AllocationStrategies.strategy;
 
@@ -326,11 +325,9 @@ namespace WertheApp.BS
 		public static bool FollowingFull()
         {
             bool check = true;
-            Debug.WriteLine("strategy: " + strategy);
             //works different for strategy next fit
             if (strategy == "Next Fit")
             {
-                Debug.WriteLine("FOLLOWING FULL NEXT FIT");
                 if(pos < suc)
                 {
                     Debug.WriteLine("pos < suc");
@@ -357,13 +354,11 @@ namespace WertheApp.BS
             }
             else
             {
-                Debug.WriteLine("FOLLOWING FULL WAS ANDERES");
 				for (int i = pos + 1; i < memoryBlocks.GetLength(0); i++)
 				{
 					if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
 				}
             }
-            Debug.WriteLine("Return Following Full = "+check);
 			return check;
         }
 
@@ -383,20 +378,20 @@ namespace WertheApp.BS
             else //if there is still space left in the memory block
 			{ 
                 DrawRedArrow();
+                Debug.WriteLine("Free space" + memoryBlocks[pos, 0].ToString());
                 AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
+                Debug.WriteLine("label " + AllocationStrategies.l_Free.Text);
                 AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
 
                 //if the search was unsuccessfull
                 if ((pos == memoryBlocks.GetLength(0) - 1 || FollowingFull()) && memoryRequest > memoryBlocks[pos, 0])
 				{
-					Debug.WriteLine("End is reached");
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
 
 				}
                 //if the search was successfull
 				else if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
 				{
-					Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 				}
             }
@@ -415,7 +410,6 @@ namespace WertheApp.BS
             if(FollowingFull() && memoryRequest > memoryBlocks[pos,0])
             {
                 DrawRedArrow();
-				Debug.WriteLine("End is reached");
 				AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
 			}
             else if (memoryBlocks[pos, 0] == 0)
@@ -434,7 +428,6 @@ namespace WertheApp.BS
 				AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
 				AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
 
-                Debug.WriteLine("MEMORY REQ:" + memoryRequest + ", SUC:"+suc +", POS:" + pos + ", VALUE:" + memoryBlocks[pos, 0].ToString());
 				/*//if the search was unsuccessfull //||for the special case that the very first request is too big to fit in any block
                 if ((pos == suc-1 && memoryRequest > memoryBlocks[pos, 0]) || (suc == 0 && pos == memoryBlocks.GetLength(0)-1 && memoryRequest > memoryBlocks[pos, 0]))
 				{
@@ -446,7 +439,6 @@ namespace WertheApp.BS
 				else*/ if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
 				{
                     //if also the end is reached and memory request fits perfectly
-                    Debug.WriteLine("Following Full: " + FollowingFull());
                     if ((pos == memoryBlocks.GetLength(0) - 1 && memoryRequest == memoryBlocks[pos,0]|| (FollowingFull()) && memoryRequest == memoryBlocks[pos, 0]))
 					{
                         int j = 0;
@@ -454,24 +446,20 @@ namespace WertheApp.BS
                             {
                                 if (memoryBlocks[i, 0] != 0)
                                 {
-                                    Debug.WriteLine("Next suc:" + j);
                                     j = i;
                                     i = memoryBlocks.GetLength(0);
                                 }
                             }
                         //suc = erstes freies Stück
                         suc = j;
-                        Debug.WriteLine("Next suc:"+ j);
 					}
                     //if it fits perfectly and the following block has space left
                     else if(memoryRequest == memoryBlocks[pos,0])
                     { 
-                        Debug.WriteLine("It fits perfectly and the following block has space left");
                         suc = pos + 1;
                     }
                     else 
                     { 
-                        Debug.WriteLine("It fits in memory block: " + memoryBlocks[pos, 0]);
                         suc = pos; 
                     } //the latest successfull block, that was filled
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
@@ -481,7 +469,6 @@ namespace WertheApp.BS
 				else if(pos == memoryBlocks.GetLength(0) - 1)
 					{
 						pos = -1; //-1 becuase pos++ in button click method in allocationstrategies
-                        Debug.WriteLine("Start from the beginning");
 					}
 			}
         }
@@ -499,7 +486,6 @@ namespace WertheApp.BS
             {
 				pos++;
 				BestFit(memoryRequest);
-				Debug.WriteLine("Memory block is full");
 
             }
             else //if there is still space left in the memory block
@@ -515,7 +501,6 @@ namespace WertheApp.BS
 					besPos = pos;
 					besValue = memoryBlocks[pos, 0];
 					DrawGrayArrow();
-                    Debug.WriteLine("It fits PERFECTLY in memory block: " + memoryBlocks[pos, 0]);
                     AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
                 }
                 else
@@ -536,15 +521,12 @@ namespace WertheApp.BS
 				{
                     if(besValue == Int32.MaxValue)
                     {
-						Debug.WriteLine("END IS REACHED UNSUCCESSFULL");
 						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
                     }
                     else
                     {
-                        Debug.WriteLine("bestvalue = "+besValue+ " ,MaxValue = "+Int32.MaxValue);
 						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 						pos = besPos;
-						Debug.WriteLine("END IS REACHED SUCCESSFULL");
                     }
 
 				}
@@ -565,7 +547,6 @@ namespace WertheApp.BS
 			{
 				pos++;
 				WorstFit(memoryRequest);
-				Debug.WriteLine("Memory block is full");
 
 			}
 			else //if there is still space left in the memory block
@@ -590,14 +571,12 @@ namespace WertheApp.BS
 			{
 				if (besValue == 0)
 				{
-					Debug.WriteLine("END IS REACHED UNSUCCESSFULL");
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
 				}
 				else
 				{
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 					pos = besPos;
-					Debug.WriteLine("END IS REACHED SUCCESSFULL");
 				}
 
 			}
@@ -616,7 +595,6 @@ namespace WertheApp.BS
 			{
 				pos++;
 				BestFit(memoryRequest);
-				Debug.WriteLine("Memory block is full");
 
 			}
 			else //if there is still space left in the memory block
@@ -632,7 +610,6 @@ namespace WertheApp.BS
 					besPos = pos;
 					besValue = memoryBlocks[pos, 0];
 					DrawGrayArrow();
-					Debug.WriteLine("It fits PERFECTLY in memory block: " + memoryBlocks[pos, 0]);
 					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 				}
 				else
@@ -653,14 +630,12 @@ namespace WertheApp.BS
 				{
 					if (besValue == 0)
 					{
-						Debug.WriteLine("END IS REACHED UNSUCCESSFULL");
 						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
 					}
 					else
 					{
 						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
 						pos = besPos;
-						Debug.WriteLine("END IS REACHED SUCCESSFULL");
 					}
 
 				}
@@ -679,9 +654,7 @@ namespace WertheApp.BS
 						FirstFit(memoryRequest);
 						break;
 					case "Next Fit":
-                    Debug.WriteLine("SUC: " + suc);
                         pos = suc; // every new request starts where the previous successfull search ended
-					Debug.WriteLine("POS: " + pos);
 						NextFit(memoryRequest);
 						break;
 					case "Best Fit":
