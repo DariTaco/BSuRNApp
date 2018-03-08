@@ -121,6 +121,8 @@ namespace WertheApp.BS
         *********************************************************************/
 		void CreateContent()
 		{   
+            isContentCreated = true;
+
             // This is the top-level grid, which will split our page in half
 			var grid = new Grid();
 			this.Content = grid;
@@ -131,8 +133,6 @@ namespace WertheApp.BS
 				};
 			CreateTopHalf(grid);
 			CreateBottomHalf(grid);
-
-			isContentCreated = true;
 		}
 
         /**********************************************************************
