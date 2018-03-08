@@ -7,6 +7,7 @@ namespace WertheApp.RN
     public class PipelineProtocolsSettings : ContentPage
     {
         //VARIABLES
+        PipelineProtocols pipelineProtocols;
         Picker p_WindowSize; //
         Picker p_Strategy;
         Slider s_Timeout;
@@ -118,10 +119,27 @@ namespace WertheApp.RN
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
-            await Navigation.PushAsync(new PipelineProtocols(
+            pipelineProtocols = new PipelineProtocols(
                 Int32.Parse(p_WindowSize.SelectedItem.ToString()),
-                p_Strategy.SelectedItem.ToString(), Int32.Parse(s_Timeout.Value.ToString()) ));
+                p_Strategy.SelectedItem.ToString(), Int32.Parse(s_Timeout.Value.ToString()));
+            
+            await Navigation.PushAsync(pipelineProtocols);
 		}
+
+        /**********************************************************************
+        *********************************************************************/
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            GC.Collect();
+           /* if (pipelineProtocols != null)
+            {
+                Navigation.RemovePage(pipelineProtocols);
+            }*/
+            //this.Content = null;
+            //CreateContent();
+        }
+
     }
 }
 

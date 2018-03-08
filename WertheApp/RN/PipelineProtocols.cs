@@ -9,6 +9,7 @@ namespace WertheApp.RN
     public class PipelineProtocols : ContentPage
     {
         //VARIABLES
+        CCGameView cc_gameView;
         PipelineProtocolsScene gameScene;
         PipelineProtocolsScene2 gameScene2;
 
@@ -59,7 +60,13 @@ namespace WertheApp.RN
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            Navigation.PopAsync(); // skip the settings page and go back to the overview
+            if (gameScene != null) { gameScene.Dispose(); }
+            if (gameScene2 != null) { gameScene2.Dispose(); }
+            PipelineProtocolsPack.stopEverything = true;
+            PipelineProtocolsACK.stopEverything = true;
+            PipelineProtocolsScene.stopEverything = true;
+            //Navigation.PopAsync(); // skip the settings page and go back to the overview
+     
         }
 
 		/**********************************************************************
@@ -238,7 +245,7 @@ namespace WertheApp.RN
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
-			var cc_gameView = sender as CCGameView;
+			cc_gameView = sender as CCGameView;
 			if (cc_gameView != null)
 			{
 				// This sets the game "world" resolution 

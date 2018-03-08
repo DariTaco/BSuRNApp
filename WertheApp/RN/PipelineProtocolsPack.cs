@@ -9,9 +9,10 @@ namespace WertheApp.RN
 	//CLASS FOR SPRITE OBJECT
 	public class PipelineProtocolsPack : CCNode
 	{
-		//VARIABLES
-		//CCSpriteFrame greenFrame;
-		//CCSpriteFrame redFrame;
+        //VARIABLES
+        //CCSpriteFrame greenFrame;
+        //CCSpriteFrame redFrame;
+        public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
 
 		CCSprite sprite;
 		int id;
@@ -26,6 +27,7 @@ namespace WertheApp.RN
 		//CONSTRUCTOR
 		public PipelineProtocolsPack(int seqnum, int tc) : base()
 		{
+            stopEverything = false;
 			this.sprite = new CCSprite();
 			this.id = count;
 			this.seqnum = seqnum;
@@ -44,6 +46,7 @@ namespace WertheApp.RN
 			touchListener.OnTouchBegan = OnTouchBegan;
 			AddEventListener(touchListener, this);
 
+            Schedule(Process); // prediefined method that takes an Action and schedules it to run for every cycle
 		}
 
         /**********************************************************************
@@ -51,8 +54,10 @@ namespace WertheApp.RN
         /*TODO add to entsprechender List, Objekt nur zerstören wenn arrive, nicht bei timeout, timeout in der anderen Klasse, aufschrieb im Ordner*/
         private void Process(float seconds)
         {
+            //stop code from running in the background
+            if (stopEverything) { this.Dispose(); }
             //if ACK arrives (MinX + 319 = position of the rectangles on the right)
-            if (this.PositionX <= VisibleBoundsWorldspace.MinX + 319)
+            if (this.PositionX+40 >= VisibleBoundsWorldspace.MinX + 319)
             {
                 Debug.WriteLine(this.seqnum + " HIT SOMETHING");
                 if (this.corrupt)
@@ -65,7 +70,7 @@ namespace WertheApp.RN
                     Debug.WriteLine("all good");
                     Debug.WriteLine("jhkjddgghjk");
                 }
-                this.Dispose();
+                this.RemoveChild(this.sprite);
             }
         }
 

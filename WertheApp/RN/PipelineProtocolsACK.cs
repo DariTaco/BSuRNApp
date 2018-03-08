@@ -10,6 +10,7 @@ namespace WertheApp.RN
     public class PipelineProtocolsACK : CCNode
     {
         //VARIABLES
+        public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
         CCSprite sprite;
         int id;
         public int seqnum;
@@ -24,6 +25,7 @@ namespace WertheApp.RN
         //CONSTRUCTOR 
         public PipelineProtocolsACK(int seqnum) : base()
         {
+            stopEverything = false;
             this.sprite = new CCSprite();
             this.id = count;
             this.seqnum = seqnum;
@@ -70,10 +72,13 @@ namespace WertheApp.RN
         *********************************************************************/
         /*TODO add to entsprechender List, Objekt nur zerstören wenn arrive, nicht bei timeout, timeout in der anderen Klasse, aufschrieb im Ordner*/
         private void Process(float seconds){
+            if (stopEverything) { this.Dispose(); }
             //if ACK arrives (MinX + 81 = position of the rectangles on the left)
-            if(this.PositionX <= VisibleBoundsWorldspace.MinX+81){
+            if(this.PositionX <= VisibleBoundsWorldspace.MinX+81)
+            {
                 Debug.WriteLine(this.seqnum + " HIT SOMETHING");
-                if(this.corrupt){
+                if(this.corrupt)
+                {
                     Debug.WriteLine("corrupt");
                 }
                 //arrived without corruption and didn't get lost on the way
@@ -81,7 +86,7 @@ namespace WertheApp.RN
                     Debug.WriteLine("all good");
                     Debug.WriteLine("jhkjddgghjk");
                 }
-                this.Dispose();
+                this.RemoveChild(this.sprite);
             }
         }
 

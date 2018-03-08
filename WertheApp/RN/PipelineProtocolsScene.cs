@@ -16,6 +16,7 @@ namespace WertheApp.RN
     public class PipelineProtocolsScene : CCScene
     {
 		//VARIABLES
+        public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
 		static CCLayer layer;
 
 		static String strategy;
@@ -41,6 +42,7 @@ namespace WertheApp.RN
         //CONSTRUCTOR
         public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
         {
+            stopEverything = false;
             //add a layer to draw on
             layer = new CCLayer();
             this.AddLayer(layer);
@@ -82,6 +84,8 @@ namespace WertheApp.RN
         *********************************************************************/
         public static async void MyTimer(int seqnum, int c)
         {
+            if (stopEverything) { return; }
+
             int counter = c;
 
 			//draw counter in respective rectangle

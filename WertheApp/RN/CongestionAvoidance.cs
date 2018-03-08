@@ -55,7 +55,6 @@ namespace WertheApp.RN
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            Navigation.PopAsync(); // skip the settings page and go back to the overview
         }
 
 		/**********************************************************************
