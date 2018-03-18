@@ -78,12 +78,14 @@ namespace WertheApp.BS
             //do only create content if device is rotated in landscape
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
             {
+                this.isContentCreated = true;
                 CreateContent();
                 this.Content.IsVisible = true;
             }
             else
             {
                 CreateContent();
+                this.isContentCreated = true;
                 this.Content.IsVisible = false;
                 //DisplayAlert("Alert", "Please rotate the device", "OK");
 				//this.Content = new Label { Text = "please rotate your device" };
@@ -120,9 +122,7 @@ namespace WertheApp.BS
         /**********************************************************************
         *********************************************************************/
 		void CreateContent()
-		{   
-            isContentCreated = true;
-
+		{  
             // This is the top-level grid, which will split our page in half
 			var grid = new Grid();
 			this.Content = grid;
@@ -323,12 +323,12 @@ namespace WertheApp.BS
             //reconfigure layout
             if (width > height)
 			{
+                //isContentCreated = true;
                 this.Content.IsVisible = true;
-                isContentCreated = true;
 			}
             else if (height > width && isContentCreated)
             {
-                isContentCreated = false;
+                //isContentCreated = false;
                 this.Content.IsVisible = false;
 
                 DisplayAlert("Alert", "Please rotate the device", "OK");

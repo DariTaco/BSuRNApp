@@ -188,4 +188,3 @@ namespace WertheApp.BS
         }
     }
 }
-

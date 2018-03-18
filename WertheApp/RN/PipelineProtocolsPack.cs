@@ -37,8 +37,7 @@ namespace WertheApp.RN
 
 			CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite"), new CCRect(0, 0, 40, 50));//x and y pos in the sprite image and width and heigth of the sprite
 
-            this.sprite.Color = CCColor3B.Gray;
-			//sprite.Color = CCColor3B.Green; //EXtra line of code for Android.....since I didn't find out how to access the png in Android. It crashed every single time
+            this.sprite.Color = CCColor3B.Gray;//Extra line of code for Android.....since I didn't find out how to access the png in Android. It crashed every single time
 			this.sprite.SpriteFrame = whiteFrame;
 			this.AddChild(sprite);
 

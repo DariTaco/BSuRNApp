@@ -215,4 +215,3 @@ namespace WertheApp.RN
 
 	}
 }
-

@@ -122,4 +122,3 @@ namespace WertheApp.BS
 		}
     }
 }
-
