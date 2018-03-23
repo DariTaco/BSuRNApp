@@ -334,8 +334,6 @@ namespace WertheApp.BS
                 DisplayAlert("Alert", "Please rotate the device", "OK");
 			}
 		}
-
-
 	}
 }
 /**********************************************************************
