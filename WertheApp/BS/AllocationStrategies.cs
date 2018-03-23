@@ -75,7 +75,6 @@ namespace WertheApp.BS
 
             isContentCreated = false;
 
-            //do only create content if device is rotated in landscape
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
             {
                 this.isContentCreated = true;
@@ -87,8 +86,6 @@ namespace WertheApp.BS
                 CreateContent();
                 this.isContentCreated = true;
                 this.Content.IsVisible = false;
-                //DisplayAlert("Alert", "Please rotate the device", "OK");
-				//this.Content = new Label { Text = "please rotate your device" };
             }
 
             //EVENT LISTENER

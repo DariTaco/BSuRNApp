@@ -21,7 +21,7 @@ namespace WertheApp.RN
         public static CocosSharpView gameView;
         Button b_Stop;
 
-        bool isContentCreated = false; //indicates weather the Content of the page was already created
+        bool landscape = false; //indicates device orientation
 
 		private double width = 0;
 		private double height = 0;
@@ -42,14 +42,19 @@ namespace WertheApp.RN
 
             Title = "Pipeline Protocols" + strategy;
 
-            //do only create content if device is not roated
+            //if orientation Horizontal
 			if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)
 			{
+                landscape = false;
 				CreateContent();
 			}
+            //if orientation Landscape
 			else
-			{
-				this.Content = new Label { Text = "please rotate your device" };
+            {   
+                landscape = true;
+                CreateContent();
+                this.Content.IsVisible = false;
+				//this.Content = new Label { Text = "please rotate your device" };
 			}
         }
 
@@ -78,45 +83,13 @@ namespace WertheApp.RN
 			this.Content = grid;
 			grid.RowDefinitions = new RowDefinitionCollection {
                     // Each half will be the same size:
-                    new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)},
-                    new RowDefinition{ Height = new GridLength(14, GridUnitType.Star)},
-					new RowDefinition{ Height = new GridLength(2, GridUnitType.Star)}
+                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
+					new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
 				};
-            CreateTopTopHalf(grid);
+
 			CreateTopHalf(grid);
 			CreateBottomHalf(grid);
-
-            isContentCreated = true;
 		}
-
-		/**********************************************************************
-        *********************************************************************/
-		void CreateTopTopHalf(Grid grid)
-        {
-			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (2)
-			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 1;
-
-			//Using a Stacklayout to organize elements
-			//with corresponding labels and String variables. 
-			//For example l_Size, size
-			var stackLayout = new StackLayout
-			{
-                Orientation = StackOrientation.Vertical,
-				Margin = new Thickness(10),
-
-			};
-
-            l_Timeout = new Label { Text = "Timeout: --" };
-            //l_LastRecentInOrderAtReceiver = new Label{ Text = "Last recent in-order received packet: --"};
-            //l_LastRecentAcknowlegement = new Label { Text = "Last recent acknowlegment: --" };
-            stackLayout.Children.Add(l_Timeout);
-            //stackLayout.Children.Add(l_LastRecentInOrderAtReceiver);
-            //stackLayout.Children.Add(l_LastRecentAcknowlegement);
-
-			grid.Children.Add(stackLayout, 0, 0);
-        }
 
 		/**********************************************************************
         *********************************************************************/
@@ -132,20 +105,33 @@ namespace WertheApp.RN
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
-            double scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
-            gameView.HeightRequest = gameviewHeight* scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
+            double scaleFactor;
+            if(landscape){
+                scaleFactor = Application.Current.MainPage.Height / gameviewWidth;
+            }else{
+                scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
+            }
+            gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
             scrollview.Content = gameView;
-			grid.Children.Add(scrollview, 0, 1);
+			grid.Children.Add(scrollview, 0, 0);
 		}
 
 		/**********************************************************************
         *********************************************************************/
 		void CreateBottomHalf(Grid grid)
 		{
-			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (2)
-			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+            //set the size of the elements in such a way, that they all fit on the screen
+            //Screen Width is divided by the amount of elements (2)
+            //Screen Width -20 because Margin is 10
+            double StackChildSize;
+            if (landscape)
+            {
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 2;
+            }
+            else
+            {
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+            }
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -175,7 +161,7 @@ namespace WertheApp.RN
             b_Stop.Clicked += B_Stop_Clicked;
             stackLayout.Children.Add(b_Stop);
 
-			grid.Children.Add(stackLayout, 0, 2);
+			grid.Children.Add(stackLayout, 0, 1);
 		}
 
 		/**********************************************************************
@@ -227,19 +213,6 @@ namespace WertheApp.RN
 					break;
 			}
         }
-
-		/**********************************************************************
-        *********************************************************************/
-		/// <summary> deletes all content and informs the user to rotate the device </summary>
-		void DeleteContent()
-		{
-            //if (gameScene != null) { gameScene.Dispose(); }
-            //if (gameScene2 != null) { gameScene2.Dispose(); }
-			this.Content = null;
-			this.Content = new Label { Text = "please rotate your device" };
-			isContentCreated = false;
-		}
-
 		/**********************************************************************
         *********************************************************************/
 		//sets up the scene 
@@ -282,16 +255,44 @@ namespace WertheApp.RN
 			}
 
 			//reconfigure layout
-			if (width > height && isContentCreated)
+			if (width > height)
 			{
-				DeleteContent();
+                this.Content.IsVisible = false;
 			}
-			else if (height > width && isContentCreated == false)
+			else if (height > width)
 			{
-				CreateContent();
+                this.Content.IsVisible = true;
 			}
 		}
 
 
 	}
 }
+/*
+void CreateTopTopHalf(Grid grid)
+{
+    //set the size of the elements in such a way, that they all fit on the screen
+    //Screen Width is divided by the amount of elements (2)
+    //Screen Width -20 because Margin is 10
+    double StackChildSize = (Application.Current.MainPage.Width - 20) / 1;
+
+    //Using a Stacklayout to organize elements
+    //with corresponding labels and String variables. 
+    //For example l_Size, size
+    var stackLayout = new StackLayout
+    {
+        Orientation = StackOrientation.Vertical,
+        Margin = new Thickness(10),
+
+    };
+
+    l_Timeout = new Label { Text = "Timeout: --" };
+    //l_LastRecentInOrderAtReceiver = new Label{ Text = "Last recent in-order received packet: --"};
+    //l_LastRecentAcknowlegement = new Label { Text = "Last recent acknowlegment: --" };
+    stackLayout.Children.Add(l_Timeout);
+    //stackLayout.Children.Add(l_LastRecentInOrderAtReceiver);
+    //stackLayout.Children.Add(l_LastRecentAcknowlegement);
+
+    grid.Children.Add(stackLayout, 0, 0);
+}
+*/
