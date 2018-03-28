@@ -175,16 +175,6 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        //is needed because turning sendPAckageAt into async is unpractical. The return had to be before actually sending, which is not possible
-        public static async Task<int> InvokeSender2(int a)
-        {
-            await Task.Delay(10); //this delay (10 milliseconds) makes sure one package arrives after another
-            SendPackageAt(a);
-            return 0;
-        }
-
-        /**********************************************************************
-        *********************************************************************/
         //this method imitates both sender and receiver of a packet. It is called by the method invoke 
         public static async void SendPackageAt(int seqnum)
         {
@@ -244,11 +234,11 @@ namespace WertheApp.RN
             switch (seqnum)
             {
                 case -1:
-                    pp = new PipelineProtocolsACK(seqnum, 1);
+                    pp = new PipelineProtocolsACK(seqnum, 5, 1);
                     yPos = yPos + 12; //since it's smaller, it has to be a little further up, in order to look pretty
                     break;
                 default:
-                    pp = new PipelineProtocolsACK(seqnum);
+                    pp = new PipelineProtocolsACK(seqnum, 0);
                     break;
             }
 
@@ -584,3 +574,15 @@ var cc_seq1 = new CCSequence(wasteASecondAction, removeAction);
 
 //apply sequence of actions to object
 await cc_pointlessPoint.RunActionAsync(cc_seq1); //await async: only after this is done. The following code will be visited!!*/
+
+/**********************************************************************
+*********************************************************************/
+/*
+is needed because turning sendPAckageAt into async is unpractical. The return had to be before actually sending, which is not possible
+public static async Task<int> InvokeSender2(int a)
+{
+    await Task.Delay(10); //this delay (10 milliseconds) makes sure one package arrives after another
+    SendPackageAt(a);
+    return 0;
+}
+*/

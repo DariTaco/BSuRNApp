@@ -16,10 +16,11 @@ namespace WertheApp.RN
     public class PipelineProtocolsScene : CCScene
     {
 		//VARIABLES
-        public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
-		static CCLayer layer;
+        static CCLayer layer;
 
-		static String strategy;
+        public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
+		
+        static String strategy;
         static int windowSize;
         static int timeouttime;
 
@@ -135,10 +136,6 @@ namespace WertheApp.RN
 										
                 nextSeqnum++;
             }
-            else
-            {
-                //refuse //do nothing or either disable button before or pop up window: try again later
-            }
         }
 
         /**********************************************************************
@@ -212,11 +209,11 @@ namespace WertheApp.RN
 			switch (seqnum)
 			{
 				case -1:
-					pp = new PipelineProtocolsACK(seqnum, 1);
+					pp = new PipelineProtocolsACK(seqnum, 5, 1);
 					yPos = yPos + 12; //since it's smaller, it has to be a little further up, in order to look pretty
 					break;
 				default:
-					pp = new PipelineProtocolsACK(seqnum);
+					pp = new PipelineProtocolsACK(seqnum, 0);
 					break;
 			}
 

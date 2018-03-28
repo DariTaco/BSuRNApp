@@ -70,6 +70,8 @@
     <Compile Include="RN\PipelineProtocolsScene2.cs" />
     <Compile Include="RN\PipelineProtocolsACK.cs" />
     <Compile Include="RN\PipelineProtocolsPack.cs" />
+    <Compile Include="RN\PipelineProtocolsPack2.cs" />
+    <Compile Include="RN\PipelineProtocolsACK2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">
