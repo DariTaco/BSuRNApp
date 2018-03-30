@@ -72,6 +72,7 @@
     <Compile Include="RN\PipelineProtocolsPack.cs" />
     <Compile Include="RN\PipelineProtocolsPack2.cs" />
     <Compile Include="RN\PipelineProtocolsACK2.cs" />
+    <Compile Include="Helping Classes\MyTimer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">

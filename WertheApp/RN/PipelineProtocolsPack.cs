@@ -1,10 +1,7 @@
 ﻿/************************CLASS FOR SELECTIVE REPEAT****************************/
-using System;
 using CocosSharp;
-using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using Xamarin.Forms;
 namespace WertheApp.RN
 {
 	//CLASS FOR SPRITE OBJECT
@@ -12,13 +9,13 @@ namespace WertheApp.RN
 	{
         //VARIABLES
         public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
-		int id;
-		public int seqnum;
-		public int count = 0;
+        static int count = 0;
+        int id;
+        public int seqnum;
 		int touchCount;
-		public bool corrupt = false;
-		public bool lost = false;
-        public bool ignore = false;
+		public bool corrupt;
+		public bool lost;
+        public bool ignore;
         CCSprite sprite;
 		CCEventListenerTouchOneByOne touchListener;
 
@@ -26,6 +23,9 @@ namespace WertheApp.RN
 		public PipelineProtocolsPack(int seqnum, int tc) : base()
 		{
             stopEverything = false;
+            corrupt = false;
+            lost = false;
+            ignore = false;
 			this.id = count;
 			count++;
             this.seqnum = seqnum;
@@ -56,22 +56,27 @@ namespace WertheApp.RN
             //if Pack arrives (MinX + 319 = position of the rectangles on the right)
             if (this.PositionX+40 >= VisibleBoundsWorldspace.MinX + 319)
             {
-                Debug.WriteLine(this.seqnum + " HIT SOMETHING");
+                
+
                 if(this.ignore){
                     Debug.WriteLine("ignore");
                 }
                 else if (this.corrupt)
                 {
                     Debug.WriteLine("corrupt");
+                    PipelineProtocolsScene.PackCorrupt(this);
                 }
                 else if (this.lost)
                 {
                     Debug.WriteLine("lost");
+                    PipelineProtocolsScene.PackLost(this);
                 }
                 //arrived without corruption and didn't get lost on the way
                 else
                 {
                     Debug.WriteLine("all good");
+                    PipelineProtocolsScene.PackArrived(this);
+
                 }
                 this.RemoveChild(this.sprite);
             }
@@ -108,12 +113,12 @@ namespace WertheApp.RN
             UpdateMyColor();
 
             //if seqnum not already in list
-            if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
+            /*if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
             {
                 PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
                 PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
                 Debug.WriteLine("package corrupt: " + PipelineProtocolsScene.lostOrCorruptP.Last());
-            }
+            }*/
         }
 
         /**********************************************************************
@@ -127,12 +132,12 @@ namespace WertheApp.RN
             this.ignore = true;
 
             //seqnum is not corrupt anymore . just slowed down
-            if (PipelineProtocolsScene.lostOrCorruptP != null && PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
+            /*if (PipelineProtocolsScene.lostOrCorruptP != null && PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
             {
                 PipelineProtocolsScene.lostOrCorruptP.Remove(this.seqnum);
                 PipelineProtocolsScene.lostOrCorruptACK.Remove(this.seqnum);
             }
-
+            */
             this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
           }
 
@@ -148,12 +153,13 @@ namespace WertheApp.RN
             UpdateMyColor();
 
             //if seqnum not already in list
-            if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
+            /*if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
             {
                 PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
                 PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
                 Debug.WriteLine("package corrupt: " + PipelineProtocolsScene.lostOrCorruptP.Last());
             }
+            */
         }
 
         /**********************************************************************
@@ -168,13 +174,13 @@ namespace WertheApp.RN
             this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
 
             //if seqnum not already in list
-            if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
+            /*if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
             {
 
                 PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
                 PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
                 Debug.WriteLine("package lost: " + PipelineProtocolsScene.lostOrCorruptP.Last());
-            }
+            }*/
         }
 
 		/**********************************************************************
@@ -186,50 +192,9 @@ namespace WertheApp.RN
 
 		/**********************************************************************
         *********************************************************************/
-		public CCSprite GetSpriteByID(int id)
-		{
-			return this.sprite;
-		}
-
-		/**********************************************************************
-        *********************************************************************/
 		public int GetID()
 		{
 			return this.id;
 		}
 	}
-
-
-	/*CCSprite sprite;
-
-        CCEventListenerTouchOneByOne touchListener;
-
-        public PPackage() : base()
-        {
-            sprite = new CCSprite("ship.png");
-            // Center the Sprite in this entity to simplify
-            // centering the Ship on screen
-            //sprite.AnchorPoint = CCPoint.AnchorMiddle;
-            this.AddChild(sprite);
-
-            touchListener = new CCEventListenerTouchOneByOne();
-            touchListener.OnTouchBegan = OnTouchBegan;
-            AddEventListener(touchListener, this);
-
-        }
-
-        private bool OnTouchBegan(CCTouch touch, CCEvent touchEvent)
-        {
-            if (touchEvent.CurrentTarget.BoundingBoxTransformedToParent.ContainsPoint(touch.Location))
-            {
-                var location = touch.Location;
-                this.Color = CCColor3B.Magenta;
-                Debug.WriteLine("#############CLICKED: " + location + "#############");
-                return true;
-            }
-            else { Debug.WriteLine("##" + sprite.BoundingBox.UpperRight); return false; 
-
-                }
-        }*/
-
 }

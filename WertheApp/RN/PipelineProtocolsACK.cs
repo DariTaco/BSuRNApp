@@ -1,10 +1,7 @@
 ﻿/************************CLASS FOR SELECTIVE REPEAT****************************/
-using System;
 using CocosSharp;
-using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using Xamarin.Forms;
 namespace WertheApp.RN
 {
     //CLASS FOR SPRITE OBJECT
@@ -12,15 +9,14 @@ namespace WertheApp.RN
     {
         //VARIABLES
         public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
-
+        static int count = 0;
         int id;
         public int seqnum;
-        static int count = 0;
         int touchCount;
-        public bool corrupt = false;
-        public bool lost = false;
-        public bool small = false; //indicates if the rectangle is smaller (for very first ACK at --)
-        public bool ignore = false;
+        public bool corrupt;
+        public bool lost;
+        public bool small; //indicates if the rectangle is smaller (for very first ACK at --)
+        public bool ignore;
         CCSprite sprite;
         CCEventListenerTouchOneByOne touchListener;
 
@@ -28,6 +24,9 @@ namespace WertheApp.RN
         public PipelineProtocolsACK(int seqnum, int tc) : base()
         {
             stopEverything = false;
+            corrupt = false;
+            lost = false;
+            ignore = false;
             this.id = count;
             count++;
             this.seqnum = seqnum;
@@ -51,7 +50,9 @@ namespace WertheApp.RN
         public PipelineProtocolsACK(int seqnum, int tc, int small) : base()
         {
             this.small = true;
-            this.ignore = true;
+            corrupt = false;
+            lost = false;
+            ignore = true;
             stopEverything = false;
             this.id = count;
             count++;
@@ -81,20 +82,22 @@ namespace WertheApp.RN
             //if ACK arrives (MinX + 81 = position of the rectangles on the left)
             if(this.PositionX <= VisibleBoundsWorldspace.MinX + 81)
             {
-                Debug.WriteLine(this.seqnum + " HIT SOMETHING");
                 if(this.ignore){
-                    
+                    Debug.WriteLine("ignore");
                 }
                 else if(this.corrupt)
                 {
                     Debug.WriteLine("corrupt");
+                    PipelineProtocolsScene.AckCorrupt(this);
                 }
                 else if(this.lost){
                     Debug.WriteLine("lost");
+                    PipelineProtocolsScene.AckLost(this);
                 }
                 //arrived without corruption and didn't get lost on the way
                 else{
                     Debug.WriteLine("all good");
+                    PipelineProtocolsScene.AckArrived(this);
                 }
                 this.RemoveChild(this.sprite);
             }
@@ -134,11 +137,11 @@ namespace WertheApp.RN
             UpdateMyColor();
 
             //if seqnum not already in list
-            if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
+            /*if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
             {
                 PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //add to list 
                 Debug.WriteLine("ack corrupt: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
-            }
+            }*/
         }
 
         /**********************************************************************
@@ -152,11 +155,11 @@ namespace WertheApp.RN
             this.ignore = true;
 
             //seqnum is not corrupt anymore . just slowed down
-            if (PipelineProtocolsScene.lostOrCorruptACK != null && PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
+            /*if (PipelineProtocolsScene.lostOrCorruptACK != null && PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
             {
                 PipelineProtocolsScene.lostOrCorruptACK.Remove(this.seqnum);
             }
-
+            */
             this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
          }
 
@@ -172,11 +175,11 @@ namespace WertheApp.RN
             UpdateMyColor();
 
             //if seqnum not already in list
-            if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
+           /* if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
             {
                 PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum);
                 Debug.WriteLine("ACK corrupt: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
-            }
+            }*/
 
         }
 
@@ -192,11 +195,11 @@ namespace WertheApp.RN
             this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
 
             //if seqnum not already in list
-            if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
+            /*if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
             {
                 PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum);
                 Debug.WriteLine("ACK lost: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
-            }
+            }*/
         }
 
         /**********************************************************************
@@ -204,13 +207,6 @@ namespace WertheApp.RN
         public void UpdateMyColor()
         {
             this.sprite.Color = CCColor3B.Red;
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        public CCSprite GetSpriteByID(int id)
-        {
-            return this.sprite;
         }
 
         /***************************************************************
@@ -221,18 +217,3 @@ namespace WertheApp.RN
         }
     }
 }
-/*
-            if (this.small)
-            {
-                CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite"), new CCRect(0, 0, 20, 25));
-                this.sprite.SpriteFrame = whiteFrame;
-                this.sprite.Color = CCColor3B.Red; //workaround for Android. but also changes the base color of the sprite
-            }
-            else
-            {
-                CCSpriteFrame whiteFrame = new CCSpriteFrame(new CCTexture2D("myWhite"), new CCRect(0, 0, 40, 50));
-                this.sprite.SpriteFrame = whiteFrame;
-                this.sprite.Color = CCColor3B.Red; //workaround for Android. but also changes the base color of the sprite}
-
-            }
-*/
