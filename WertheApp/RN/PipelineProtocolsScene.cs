@@ -24,8 +24,8 @@ namespace WertheApp.RN
         static int windowSize;
         static int timeouttime;
 
-        static int baseOfWindow; //first sent but not yet acknowledged sequence number
-        static int baseOfWindow2;
+        static int baseOfWindowLeft; //first sent but not yet acknowledged sequence number
+        static int baseOfWindowRight; //first not yet received package sequencenumber
         public static int nextSeqnum; //first not sent yet sequence number
 
         static List<int> arrivedPack;
@@ -65,12 +65,12 @@ namespace WertheApp.RN
 
             DrawLabelsAndBoxes();
 
-            baseOfWindow = 0;
-            baseOfWindow2 = 0;
+            baseOfWindowLeft = 0;
+            baseOfWindowRight = 0;
             nextSeqnum = 0;
 
-            DrawWindow(baseOfWindow);
-            DrawWindow2(0);
+            DrawWindowLeft(baseOfWindowLeft);
+            DrawWindowRight(baseOfWindowRight);
             //Test();
         }
 
@@ -117,7 +117,7 @@ namespace WertheApp.RN
         public static void InvokeSender()
         {
             //if window is not full, that means if there are still packets left inside the window which are not sent yet
-            if(nextSeqnum < (baseOfWindow+windowSize))
+            if(nextSeqnum < (baseOfWindowLeft+windowSize))
             {
                 SendPackageAt(nextSeqnum);
                 MyTimer(nextSeqnum, 0); 
@@ -206,9 +206,7 @@ namespace WertheApp.RN
             var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
 
             //apply sequence of actions to object
-            pp.RunAction(cc_seq1); //await async: only after this is done. The following code will be visited!!!
-
-           
+            pp.RunAction(cc_seq1);
         }
         /**********************************************************************
         *********************************************************************/
@@ -220,7 +218,8 @@ namespace WertheApp.RN
             if(!arrivedPack.Any() || arrivedPack.Any() && !arrivedPack.Contains(pp.seqnum)){
                 arrivedPack.Add(pp.seqnum);
                 DrawFillRight(pp.seqnum);
-                DrawWindow2(findFirstNotYetArrivedPack());
+                baseOfWindowRight = findFirstNotYetArrivedPack();
+                DrawWindowRight(baseOfWindowRight);
             }
             SendACKFor(pp.seqnum);
         }
@@ -234,7 +233,8 @@ namespace WertheApp.RN
             if(!arrivedAck.Any() || arrivedAck.Any() && !arrivedAck.Contains(aa.seqnum)){
                 arrivedAck.Add(aa.seqnum);
                 DrawFillLeft2(aa.seqnum);
-                DrawWindow(findFirstNotYetArrivedAck());
+                baseOfWindowLeft = findFirstNotYetArrivedAck();
+                DrawWindowLeft(baseOfWindowLeft);
             }
         }
 
@@ -242,22 +242,24 @@ namespace WertheApp.RN
         *********************************************************************/
         public static int findFirstNotYetArrivedPack()
         {
-            do
+            int x = baseOfWindowRight;
+            while (arrivedPack.Any() && arrivedPack.Contains(x))
             {
-                baseOfWindow2++;
-            } while (arrivedPack.Any() && arrivedPack.Contains(baseOfWindow2));
-            return baseOfWindow2;
+                x++;
+            }
+            return x;
         }
 
         /**********************************************************************
         *********************************************************************/
         public static int findFirstNotYetArrivedAck()
         {
-            do
+            int x = baseOfWindowLeft;
+            while (arrivedAck.Any() && arrivedAck.Contains(x))
             {
-                baseOfWindow++;
-            } while (arrivedAck.Any() && arrivedAck.Contains(baseOfWindow));
-            return baseOfWindow;
+                x++;
+            } 
+            return x;
         }
 
         /**********************************************************************
@@ -323,7 +325,7 @@ namespace WertheApp.RN
         /**********************************************************************
         *********************************************************************/
         //window on the left
-        static void DrawWindow(float pos)
+        static void DrawWindowLeft(float pos)
         {
             //delete existing window
             if (cc_window != null)
@@ -347,7 +349,7 @@ namespace WertheApp.RN
         /**********************************************************************
         *********************************************************************/
         //window on the right 
-        static void DrawWindow2(float pos)
+        static void DrawWindowRight(float pos)
         {
             if(cc_window2 != null)
             {
