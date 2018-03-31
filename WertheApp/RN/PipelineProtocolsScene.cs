@@ -28,6 +28,7 @@ namespace WertheApp.RN
         static int baseOfWindowRight; //first not yet received package sequencenumber
         public static int nextSeqnum; //first not sent yet sequence number
 
+        static List<int> pendingAck;
         static List<int> arrivedPack;
         static List<int> arrivedAck;
 
@@ -49,6 +50,7 @@ namespace WertheApp.RN
             strategy = PipelineProtocols.strategy;
             timeouttime = PipelineProtocols.timeoutTime;
 
+            pendingAck = new List<int>();
             arrivedPack = new List<int>();
             arrivedAck = new List<int>();
 
@@ -89,11 +91,9 @@ namespace WertheApp.RN
         /*TODO*/
         public static void MyTimer(int seqnum, int c)
         {
-            if (stopEverything) { return; }
-
             int counter = c;
 
-			//draw counter in respective rectangle
+			//draw counter label in respective rectangle
 			float a = 28 - seqnum;
 			float yPos = 15 + (a * 65);
             String counterText = "" + counter;
@@ -102,14 +102,25 @@ namespace WertheApp.RN
             ccl_LNumber.Color = CCColor3B.Red;
 			layer.AddChild(ccl_LNumber);
 
-			Task.Delay(1000); //wait a second
-			counter++;
-            layer.RemoveChild(ccl_LNumber);
+            Debug.WriteLine(System.DateTime.Now);
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                // update counter label
+                counter++;
+                counterText = "" + counter;
+                ccl_LNumber.Text = counterText;
 
-
-            if(counter == 10){
-              
-            }
+                if (stopEverything || counter == timeouttime)
+                {
+                    //resend pending ACK after timeout if seqnum is in list
+                    if (pendingAck.Any() && pendingAck.Contains(seqnum) && !stopEverything)
+                    {
+                        SendPackageAt(seqnum);
+                        MyTimer(seqnum, 0);
+                    }
+                    return false; //False = Stop the timer
+                }else { return true; } // True = Repeat again
+             });
         }
 
         /**********************************************************************
@@ -130,7 +141,12 @@ namespace WertheApp.RN
         //this method imitates the sender of a packet. It is called by the method invoke 
         public static void SendPackageAt(int seqnum)
         {
-            DrawFillLeft(seqnum);
+            //pending if not already acknowledged . Add to list only once
+            if(!arrivedAck.Any() && !pendingAck.Contains(seqnum)
+               || arrivedAck.Any() && !arrivedAck.Contains(seqnum) && !pendingAck.Contains(seqnum)){
+                DrawFillLeft(seqnum);
+                pendingAck.Add(seqnum);
+            }
 
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
@@ -179,9 +195,9 @@ namespace WertheApp.RN
         {
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //where the box !starts!
-													
+            PipelineProtocolsACK pp;										
+
             //smaller rectangle at -- 
-			PipelineProtocolsACK pp;
 			switch (seqnum)
 			{
 				case -1:
@@ -192,7 +208,6 @@ namespace WertheApp.RN
 					pp = new PipelineProtocolsACK(seqnum, 0);
 					break;
 			}
-
             pp.Position = new CCPoint(280, yPos);
             layer.AddChild(pp);
 
@@ -202,18 +217,40 @@ namespace WertheApp.RN
             var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the object 196 in x-direction within 5 seconds
             var removeAction = new CCRemoveSelf(); //this action removes the object*/
 
-            //define sequence of actions 
+            //define sequence of actions and apply to object
             var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
-
-            //apply sequence of actions to object
             pp.RunAction(cc_seq1);
         }
+
+        /**********************************************************************
+        *********************************************************************/
+        //this method imitates the sender of a packet. It is called by an instance of pipelineProtocolsPack,
+        //because it was slowed down (to slow a package down it has to be replaced with a sllow moving one) 
+        public static void SendSlowACKAt(int seqnum, int xPos)
+        {
+            //define object
+            float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
+            var pp = new PipelineProtocolsPack(seqnum, 2);
+            pp.Position = new CCPoint(xPos, yPos);
+            layer.AddChild(pp);
+
+            //define actions
+            float timeToTake = 5f;
+            var distance = new CCPoint(80, yPos);
+            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the Object to the CCPoint
+            var removeAction = new CCRemoveSelf(); //this action removes the object*/
+
+            //define sequence of actions and apply to object 
+            var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
+            pp.RunAction(cc_seq1);
+        }
+
         /**********************************************************************
         *********************************************************************/
         public static void PackCorrupt(PipelineProtocolsPack pp){}
         public static void PackLost(PipelineProtocolsPack pp){}
-        public static void PackArrived(PipelineProtocolsPack pp){
 
+        public static void PackArrived(PipelineProtocolsPack pp){
             //if there has no other pack with the same seqnum has arrived before
             if(!arrivedPack.Any() || arrivedPack.Any() && !arrivedPack.Contains(pp.seqnum)){
                 arrivedPack.Add(pp.seqnum);
@@ -222,20 +259,25 @@ namespace WertheApp.RN
                 DrawWindowRight(baseOfWindowRight);
             }
             SendACKFor(pp.seqnum);
+            layer.RemoveChild(pp);
         }
 
         /**********************************************************************
         *********************************************************************/
         public static void AckCorrupt(PipelineProtocolsACK aa) { }
         public static void AckLost(PipelineProtocolsACK aa) { }
+
         public static void AckArrived(PipelineProtocolsACK aa) {
+
             //if there has no other Ack with the same seqnum has arrived before
             if(!arrivedAck.Any() || arrivedAck.Any() && !arrivedAck.Contains(aa.seqnum)){
                 arrivedAck.Add(aa.seqnum);
+                pendingAck.Remove(aa.seqnum);
                 DrawFillLeft2(aa.seqnum);
                 baseOfWindowLeft = findFirstNotYetArrivedAck();
                 DrawWindowLeft(baseOfWindowLeft);
             }
+            layer.RemoveChild(aa);
         }
 
         /**********************************************************************

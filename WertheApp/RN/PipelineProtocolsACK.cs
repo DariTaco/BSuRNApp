@@ -115,7 +115,7 @@ namespace WertheApp.RN
                 {
                     case 0: Corrupt(); break;
                     case 1: SlowDown();
-                            PipelineProtocolsScene.SendSlowPackageAt(this.seqnum, ((int)touch.Location.X - 20));
+                            PipelineProtocolsScene.SendSlowACKAt(this.seqnum, ((int)touch.Location.X - 20));
                             break;
                     case 2: SlowCorrupt(); break;
                     case 3: Lost(); break;
