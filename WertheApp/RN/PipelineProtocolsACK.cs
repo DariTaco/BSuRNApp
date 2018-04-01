@@ -115,7 +115,7 @@ namespace WertheApp.RN
                 {
                     case 0: Corrupt(); break;
                     case 1: SlowDown();
-                            PipelineProtocolsScene.SendSlowACKAt(this.seqnum, ((int)touch.Location.X - 20));
+                        PipelineProtocolsScene.SlowDownAck(this, ((int)touch.Location.X - 20));
                             break;
                     case 2: SlowCorrupt(); break;
                     case 3: Lost(); break;
@@ -134,14 +134,7 @@ namespace WertheApp.RN
             this.corrupt = true;
             this.lost = false;
             this.ignore = false;
-            UpdateMyColor();
-
-            //if seqnum not already in list
-            /*if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
-            {
-                PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //add to list 
-                Debug.WriteLine("ack corrupt: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
-            }*/
+            this.sprite.Color = CCColor3B.Red;
         }
 
         /**********************************************************************
@@ -149,19 +142,12 @@ namespace WertheApp.RN
         //if package was clicked a second time (slowed down)
         void SlowDown()
         {
-            this.touchCount = 5; // unable to react to another touch
+            this.touchCount++;
             this.corrupt = false;
             this.lost = false;
-            this.ignore = true;
-
-            //seqnum is not corrupt anymore . just slowed down
-            /*if (PipelineProtocolsScene.lostOrCorruptACK != null && PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
-            {
-                PipelineProtocolsScene.lostOrCorruptACK.Remove(this.seqnum);
-            }
-            */
-            this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
-         }
+            this.ignore = false;
+            this.sprite.Color = CCColor3B.Green;
+  }
 
         /**********************************************************************
         *********************************************************************/
@@ -172,15 +158,7 @@ namespace WertheApp.RN
             this.corrupt = true;
             this.lost = false;
             this.ignore = false;
-            UpdateMyColor();
-
-            //if seqnum not already in list
-           /* if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
-            {
-                PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum);
-                Debug.WriteLine("ACK corrupt: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
-            }*/
-
+            this.sprite.Color = CCColor3B.Red;
         }
 
         /**********************************************************************
@@ -193,20 +171,6 @@ namespace WertheApp.RN
             this.lost = true;
             this.ignore = false;
             this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
-
-            //if seqnum not already in list
-            /*if (PipelineProtocolsScene.lostOrCorruptACK != null && !PipelineProtocolsScene.lostOrCorruptACK.Contains(this.seqnum))
-            {
-                PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum);
-                Debug.WriteLine("ACK lost: " + PipelineProtocolsScene.lostOrCorruptACK.Last());
-            }*/
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        public void UpdateMyColor()
-        {
-            this.sprite.Color = CCColor3B.Red;
         }
 
         /***************************************************************

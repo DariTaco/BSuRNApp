@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 //It always refers to the values that were set when the original object was first definded.
 //and not some altered value after some action that happended before the current one
 
+/*TODO
+slow down anders implementieren??(wird teilweise zu langsam/ zu schnell -> beachten wie früh geklickt wird/ bzw wie weit das Packet ist)
+*/
 namespace WertheApp.RN
 {
     public class PipelineProtocolsScene : CCScene
@@ -112,6 +115,8 @@ namespace WertheApp.RN
 
                 if (stopEverything || counter == timeouttime)
                 {
+                    layer.RemoveChild(ccl_LNumber);
+
                     //resend pending ACK after timeout if seqnum is in list
                     if (pendingAck.Any() && pendingAck.Contains(seqnum) && !stopEverything)
                     {
@@ -141,10 +146,13 @@ namespace WertheApp.RN
         //this method imitates the sender of a packet. It is called by the method invoke 
         public static void SendPackageAt(int seqnum)
         {
+            if(seqnum == nextSeqnum){
+                DrawFillLeft(seqnum);  
+            }
+         
             //pending if not already acknowledged . Add to list only once
             if(!arrivedAck.Any() && !pendingAck.Contains(seqnum)
                || arrivedAck.Any() && !arrivedAck.Contains(seqnum) && !pendingAck.Contains(seqnum)){
-                DrawFillLeft(seqnum);
                 pendingAck.Add(seqnum);
             }
 
@@ -163,29 +171,6 @@ namespace WertheApp.RN
             //define sequence of actions and apply to object
             var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
 	        pp.RunAction(cc_seq1); 
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        //this method imitates the sender of a packet. It is called by an instance of pipelineProtocolsPack,
-        //because it was slowed down (to slow a package down it has to be replaced with a sllow moving one) 
-        public static void SendSlowPackageAt(int seqnum, int xPos)
-        {
-			//define object
-			float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
-            var pp = new PipelineProtocolsPack(seqnum,2);
-            pp.Position = new CCPoint(xPos,yPos);
-            layer.AddChild(pp);
-
-			//define actions
-            float timeToTake = 5f;
-            var distance = new CCPoint(280, yPos); 
-			var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the Object to the CCPoint
-			var removeAction = new CCRemoveSelf(); //this action removes the object*/
-
-			//define sequence of actions and apply to object 
-			var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
-            pp.RunAction(cc_seq1);
         }
 
         /**********************************************************************
@@ -224,19 +209,14 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        //this method imitates the sender of a packet. It is called by an instance of pipelineProtocolsPack,
-        //because it was slowed down (to slow a package down it has to be replaced with a sllow moving one) 
-        public static void SendSlowACKAt(int seqnum, int xPos)
-        {
-            //define object
-            float yPos = 15 + (65 * (28 - seqnum)); //calculate where the box !starts! in the coordinate system
-            var pp = new PipelineProtocolsPack(seqnum, 2);
-            pp.Position = new CCPoint(xPos, yPos);
-            layer.AddChild(pp);
+        public static void SlowDownPack(PipelineProtocolsPack pp, int xPos){
+            //stop running actions
+            pp.StopAllActions();
 
             //define actions
-            float timeToTake = 5f;
-            var distance = new CCPoint(80, yPos);
+            float yPos = 15 + (65 * (28 - pp.seqnum));
+            float timeToTake = 8f;
+            var distance = new CCPoint(280, yPos);
             var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the Object to the CCPoint
             var removeAction = new CCRemoveSelf(); //this action removes the object*/
 
@@ -247,10 +227,31 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        public static void SlowDownAck(PipelineProtocolsACK aa, int xPos)
+        {
+            //stop running actions
+            aa.StopAllActions();
+
+            //define actions
+            float yPos = 15 + (65 * (28 - aa.seqnum));
+            float timeToTake = 8f;
+            var distance = new CCPoint(80, yPos);
+            var sendPackageAction = new CCMoveTo(timeToTake, distance); //this action moves the Object to the CCPoint
+            var removeAction = new CCRemoveSelf(); //this action removes the object*/
+
+            //define sequence of actions and apply to object 
+            var cc_seq1 = new CCSequence(sendPackageAction, removeAction);
+            aa.RunAction(cc_seq1);
+        }
+
+
+        /**********************************************************************
+        *********************************************************************/
         public static void PackCorrupt(PipelineProtocolsPack pp){}
         public static void PackLost(PipelineProtocolsPack pp){}
 
         public static void PackArrived(PipelineProtocolsPack pp){
+
             //if there has no other pack with the same seqnum has arrived before
             if(!arrivedPack.Any() || arrivedPack.Any() && !arrivedPack.Contains(pp.seqnum)){
                 arrivedPack.Add(pp.seqnum);
@@ -268,7 +269,7 @@ namespace WertheApp.RN
         public static void AckLost(PipelineProtocolsACK aa) { }
 
         public static void AckArrived(PipelineProtocolsACK aa) {
-
+            Debug.WriteLine("arrived");
             //if there has no other Ack with the same seqnum has arrived before
             if(!arrivedAck.Any() || arrivedAck.Any() && !arrivedAck.Contains(aa.seqnum)){
                 arrivedAck.Add(aa.seqnum);
@@ -276,6 +277,7 @@ namespace WertheApp.RN
                 DrawFillLeft2(aa.seqnum);
                 baseOfWindowLeft = findFirstNotYetArrivedAck();
                 DrawWindowLeft(baseOfWindowLeft);
+                Debug.WriteLine("ACK arrived the first time " + aa.GetID());
             }
             layer.RemoveChild(aa);
         }

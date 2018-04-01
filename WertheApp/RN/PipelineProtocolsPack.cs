@@ -56,8 +56,6 @@ namespace WertheApp.RN
             //if Pack arrives (MinX + 319 = position of the rectangles on the right)
             if (this.PositionX+40 >= VisibleBoundsWorldspace.MinX + 319)
             {
-                
-
                 if(this.ignore){
                     Debug.WriteLine("ignore");
                 }
@@ -92,8 +90,8 @@ namespace WertheApp.RN
             {
                 switch(touchCount){
                     case 0: Corrupt(); break;
-                    case 1: SlowDown(); 
-                            PipelineProtocolsScene.SendSlowPackageAt(this.seqnum, ((int)touch.Location.X - 20));
+                    case 1: SlowDown();
+                        PipelineProtocolsScene.SlowDownPack(this, ((int)touch.Location.X - 20));
                             break;
                     case 2: SlowCorrupt(); break;
                     case 3: Lost(); break;
@@ -110,15 +108,7 @@ namespace WertheApp.RN
             this.corrupt = true;
             this.lost = false;
             this.ignore = false;
-            UpdateMyColor();
-
-            //if seqnum not already in list
-            /*if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
-            {
-                PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
-                PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
-                Debug.WriteLine("package corrupt: " + PipelineProtocolsScene.lostOrCorruptP.Last());
-            }*/
+            this.sprite.Color = CCColor3B.Red;
         }
 
         /**********************************************************************
@@ -126,19 +116,11 @@ namespace WertheApp.RN
         //if package was clicked a second time (slowed down)
         void SlowDown()
         {
-            this.touchCount = 5; // unable to react to another touch
+            this.touchCount++;
             this.corrupt = false;
             this.lost = false;
-            this.ignore = true;
-
-            //seqnum is not corrupt anymore . just slowed down
-            /*if (PipelineProtocolsScene.lostOrCorruptP != null && PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
-            {
-                PipelineProtocolsScene.lostOrCorruptP.Remove(this.seqnum);
-                PipelineProtocolsScene.lostOrCorruptACK.Remove(this.seqnum);
-            }
-            */
-            this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
+            this.ignore = false;
+            this.sprite.Color = CCColor3B.Green;
           }
 
         /**********************************************************************
@@ -150,16 +132,7 @@ namespace WertheApp.RN
             this.corrupt = true;
             this.lost = false;
             this.ignore = false;
-            UpdateMyColor();
-
-            //if seqnum not already in list
-            /*if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
-            {
-                PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
-                PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
-                Debug.WriteLine("package corrupt: " + PipelineProtocolsScene.lostOrCorruptP.Last());
-            }
-            */
+            this.sprite.Color = CCColor3B.Red;
         }
 
         /**********************************************************************
@@ -172,23 +145,7 @@ namespace WertheApp.RN
             this.lost = true;
             this.ignore = false;
             this.RemoveChild(this.sprite); //removes the visible! sprites. Actions are still running in the background
-
-            //if seqnum not already in list
-            /*if (PipelineProtocolsScene.lostOrCorruptP != null && !PipelineProtocolsScene.lostOrCorruptP.Contains(this.seqnum))
-            {
-
-                PipelineProtocolsScene.lostOrCorruptP.Add(this.seqnum); //add to list 
-                PipelineProtocolsScene.lostOrCorruptACK.Add(this.seqnum); //the ACK will also never arrive 
-                Debug.WriteLine("package lost: " + PipelineProtocolsScene.lostOrCorruptP.Last());
-            }*/
         }
-
-		/**********************************************************************
-        *********************************************************************/
-		public void UpdateMyColor()
-		{
-			this.sprite.Color = CCColor3B.Red; //workaround for Android. but also changes the base color of the sprite
-		}
 
 		/**********************************************************************
         *********************************************************************/
