@@ -7,6 +7,10 @@ using System.Diagnostics;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 
+//TODO: check was passiert wenn verlangsamt
+//wenn Packete wieder gesendet werden, scheinen sie alle zur exakt selben Zeit anzukommen. 
+//Dadurch wird leider nicht schnell genug erkannt, dass die erwartete seqnum weiter springt
+//und somit alle richtig ankommen
 //TAKE NOTE: the reference value of an action is always the same!! 
 //It always refers to the values that were set when the original object was first definded.
 //and not some altered value after some action that happended before the current one
@@ -19,6 +23,7 @@ namespace WertheApp.RN
         static CCLayer layer;
 
         public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
+        public static bool animationIsPaused; //indicates i the pause button(PipelineProtocols.cs) was clicked
 
         static String strategy;
         static int windowSize;
@@ -42,6 +47,7 @@ namespace WertheApp.RN
         public PipelineProtocolsScene2(CCGameView gameView) : base(gameView)
         {
             stopEverything = false;
+            animationIsPaused = false;
 
             //add a layer to draw on
             layer = new CCLayer();
@@ -100,20 +106,25 @@ namespace WertheApp.RN
             Debug.WriteLine(System.DateTime.Now);
             Device.StartTimer(TimeSpan.FromSeconds(1), () =>
             {
-                // update counter label
-                counter++;
+                // update counter label- but only if the user didn't click pause 
+                if (!animationIsPaused){
+                    counter++;
+                }
                 counterText = "" + counter;
                 ccl_LNumber.Text = counterText;
 
-                if (stopEverything || counter == timeouttime)
+                if (stopEverything || counter == timeouttime || (pendingAck.Any() && seqnum != pendingAck.Last()) )
                 {
                     layer.RemoveChild(ccl_LNumber);
 
-                    //resend pending ACK after timeout if seqnum is in list
-                    if (pendingAck.Any() && pendingAck.Contains(seqnum) && !stopEverything)
+                    //resend packages for all pending ACK after timeout if seqnum is in list
+                    if (pendingAck.Any() && pendingAck.Last() == seqnum && !stopEverything)
                     {
-                        SendPackageAt(seqnum);
-                        MyTimer(seqnum, 0);
+                        foreach(var sn in pendingAck){
+                            SendPackageAt(sn);
+                            MyTimer(seqnum, 0);
+                            //Task.Delay(1000);
+                        }
                     }
                     return false; //False = Stop the timer
                 }
@@ -136,7 +147,7 @@ namespace WertheApp.RN
         /**********************************************************************
         *********************************************************************/
         //this method imitates both sender and receiver of a packet. It is called by the method invoke 
-        public static async void SendPackageAt(int seqnum)
+        public static void SendPackageAt(int seqnum)
         {
             if(seqnum == nextSeqnum){
                 DrawFillLeft(seqnum);  
@@ -167,7 +178,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public static async void SendACKFor(int seqnum)
+        public static void SendACKFor(int seqnum)
         {
             //define object
             float yPos = 15 + (65 * (28 - seqnum)); //where the box !starts!
@@ -238,21 +249,26 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public static void PackCorrupt(PipelineProtocolsPack pp) { }
+        public static void PackCorrupt(PipelineProtocolsPack pp) {
+            SendACKFor(arrivedPack.Last()); // send ACK for las recent in Order received Pack
+        }
         public static void PackLost(PipelineProtocolsPack pp) { }
 
         public static void PackArrived(PipelineProtocolsPack pp)
         {
-
-            //if there has no other pack with the same seqnum has arrived before
-            if (!arrivedPack.Any() || arrivedPack.Any() && !arrivedPack.Contains(pp.seqnum))
+            //if it is the exoected seqnum and there has no other pack with the same seqnum has arrived before
+            if (pp.seqnum == expectedSeqnum && (!arrivedPack.Any() || arrivedPack.Any() && !arrivedPack.Contains(pp.seqnum)))
             {
                 arrivedPack.Add(pp.seqnum);
                 DrawFillRight(pp.seqnum);
                 expectedSeqnum = findFirstNotYetArrivedPack();
                 DrawExpectedSeqnum();
+                SendACKFor(pp.seqnum);
+            }else if(pp.seqnum <= expectedSeqnum){
+                SendACKFor(pp.seqnum);
+            }else if(pp.seqnum > expectedSeqnum){
+                SendACKFor(arrivedPack.Last()); // send ACK for las recent in Order received Pack
             }
-            SendACKFor(pp.seqnum);
             layer.RemoveChild(pp);
         }
 
@@ -267,9 +283,15 @@ namespace WertheApp.RN
             //if there has no other Ack with the same seqnum has arrived before
             if (!arrivedAck.Any() || arrivedAck.Any() && !arrivedAck.Contains(aa.seqnum))
             {
-                arrivedAck.Add(aa.seqnum);
-                pendingAck.Remove(aa.seqnum);
-                DrawFillLeft2(aa.seqnum);
+                //kummulatives ACK
+                for (int i = 0 ; i <= aa.seqnum; i++){
+                    if(pendingAck.Any() && pendingAck.Contains(i)){
+                        arrivedAck.Add(i);
+                        DrawFillLeft2(i);
+                        pendingAck.Remove(i); 
+                    }
+                }
+
                 baseOfWindowLeft = findFirstNotYetArrivedAck();
                 DrawWindow(baseOfWindowLeft);
                 Debug.WriteLine("ACK arrived the first time " + aa.GetID());

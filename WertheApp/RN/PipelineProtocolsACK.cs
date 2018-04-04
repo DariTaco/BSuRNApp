@@ -88,16 +88,23 @@ namespace WertheApp.RN
                 else if(this.corrupt)
                 {
                     Debug.WriteLine("corrupt");
-                    PipelineProtocolsScene.AckCorrupt(this);
+                    //PipelineProtocolsScene.AckCorrupt(this);
+                    //PipelineProtocolsScene2.AckCorrupt(this);
                 }
                 else if(this.lost){
                     Debug.WriteLine("lost");
-                    PipelineProtocolsScene.AckLost(this);
+                    //PipelineProtocolsScene.AckLost(this);
+                    //PipelineProtocolsScene2.AckLost(this);
                 }
                 //arrived without corruption and didn't get lost on the way
                 else{
                     Debug.WriteLine("all good");
-                    PipelineProtocolsScene.AckArrived(this);
+                    if (PipelineProtocols.strategy == "Selective Repeat")
+                    {
+                        PipelineProtocolsScene.AckArrived(this);
+                    }else{
+                        PipelineProtocolsScene2.AckArrived(this);  
+                    }
                 }
                 this.RemoveChild(this.sprite);
             }
@@ -115,7 +122,12 @@ namespace WertheApp.RN
                 {
                     case 0: Corrupt(); break;
                     case 1: SlowDown();
-                        PipelineProtocolsScene.SlowDownAck(this, ((int)touch.Location.X - 20));
+                        if (PipelineProtocols.strategy == "Selective Repeat")
+                        {
+                            PipelineProtocolsScene.SlowDownAck(this, ((int)touch.Location.X - 20));
+                        }else{
+                            PipelineProtocolsScene2.SlowDownAck(this, ((int)touch.Location.X - 20));
+                        }
                             break;
                     case 2: SlowCorrupt(); break;
                     case 3: Lost(); break;

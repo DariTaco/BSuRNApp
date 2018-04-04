@@ -62,19 +62,29 @@ namespace WertheApp.RN
                 else if (this.corrupt)
                 {
                     Debug.WriteLine("corrupt");
-                    PipelineProtocolsScene.PackCorrupt(this);
+                    if (PipelineProtocols.strategy == "Selective Repeat")
+                    {
+                        PipelineProtocolsScene.PackCorrupt(this);
+                    }else{
+                        PipelineProtocolsScene2.PackCorrupt(this);  
+                    }
                 }
                 else if (this.lost)
                 {
                     Debug.WriteLine("lost");
-                    PipelineProtocolsScene.PackLost(this);
+                    //PipelineProtocolsScene.PackLost(this);
+                    //PipelineProtocolsScene2.PackLost(this);
                 }
                 //arrived without corruption and didn't get lost on the way
                 else
                 {
                     Debug.WriteLine("all good");
-                    PipelineProtocolsScene.PackArrived(this);
-
+                    if (PipelineProtocols.strategy == "Selective Repeat")
+                    {
+                        PipelineProtocolsScene.PackArrived(this);
+                    }else{
+                        PipelineProtocolsScene2.PackArrived(this);
+                    }
                 }
                 this.RemoveChild(this.sprite);
             }
@@ -91,7 +101,12 @@ namespace WertheApp.RN
                 switch(touchCount){
                     case 0: Corrupt(); break;
                     case 1: SlowDown();
-                        PipelineProtocolsScene.SlowDownPack(this, ((int)touch.Location.X - 20));
+                        if (PipelineProtocols.strategy == "Selective Repeat")
+                        {
+                            PipelineProtocolsScene.SlowDownPack(this, ((int)touch.Location.X - 20));
+                        }else{
+                            PipelineProtocolsScene2.SlowDownPack(this, ((int)touch.Location.X - 20));
+                        }
                             break;
                     case 2: SlowCorrupt(); break;
                     case 3: Lost(); break;

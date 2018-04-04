@@ -22,7 +22,8 @@ namespace WertheApp.RN
         static CCLayer layer;
 
         public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything
-		
+        public static bool animationIsPaused; //indicates i the pause button(PipelineProtocols.cs) was clicked
+
         static String strategy;
         static int windowSize;
         static int timeouttime;
@@ -45,6 +46,7 @@ namespace WertheApp.RN
         public PipelineProtocolsScene(CCGameView gameView) : base(gameView)
         {
             stopEverything = false;
+            animationIsPaused = false;
 
             //add a layer to draw on
             layer = new CCLayer();
@@ -97,11 +99,12 @@ namespace WertheApp.RN
             ccl_LNumber.Color = CCColor3B.Red;
 			layer.AddChild(ccl_LNumber);
 
-            Debug.WriteLine(System.DateTime.Now);
             Device.StartTimer(TimeSpan.FromSeconds(1), () =>
             {
-                // update counter label
-                counter++;
+                // update counter label- but only if the user didn't click pause 
+                if(!animationIsPaused){
+                    counter++;
+                }
                 counterText = "" + counter;
                 ccl_LNumber.Text = counterText;
 
@@ -201,7 +204,8 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public static void SlowDownPack(PipelineProtocolsPack pp, int xPos){
+        public static void SlowDownPack(PipelineProtocolsPack pp, int xPos)
+        {
             //stop running actions
             pp.StopAllActions();
 
@@ -226,7 +230,7 @@ namespace WertheApp.RN
             aa.StopAllActions();
 
             //define actions
-            float timeToTake = 8f; //SET TIME TO TAKE DEPENDING ON xPos
+            float timeToTake = 8f; //SET TIME TO TAKE DEPENDING ON xPos?
 
             float yPos = 15 + (65 * (28 - aa.seqnum));
             var distance = new CCPoint(80, yPos);
@@ -244,7 +248,6 @@ namespace WertheApp.RN
         public static void PackLost(PipelineProtocolsPack pp){}
 
         public static void PackArrived(PipelineProtocolsPack pp){
-
             //if there has no other pack with the same seqnum has arrived before
             if(!arrivedPack.Any() || arrivedPack.Any() && !arrivedPack.Contains(pp.seqnum)){
                 arrivedPack.Add(pp.seqnum);

@@ -19,7 +19,7 @@ namespace WertheApp.RN
 
         public static bool paused = false;
         public static CocosSharpView gameView;
-        Button b_Stop;
+        Button b_Pause;
 
         bool landscape = false; //indicates device orientation
 
@@ -70,8 +70,6 @@ namespace WertheApp.RN
             PipelineProtocolsPack.stopEverything = true;
             PipelineProtocolsACK.stopEverything = true;
             PipelineProtocolsScene.stopEverything = true;
-            //Navigation.PopAsync(); // skip the settings page and go back to the overview
-     
         }
 
 		/**********************************************************************
@@ -152,14 +150,14 @@ namespace WertheApp.RN
             b_Send.Clicked += B_Send_Clicked;
             stackLayout.Children.Add(b_Send);
 
-            b_Stop = new Button
+            b_Pause = new Button
             {
-                Text = "Stop",
+                Text = "Pause",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            b_Stop.Clicked += B_Stop_Clicked;
-            stackLayout.Children.Add(b_Stop);
+            b_Pause.Clicked += B_Stop_Clicked;
+            stackLayout.Children.Add(b_Pause);
 
 			grid.Children.Add(stackLayout, 0, 1);
 		}
@@ -176,7 +174,7 @@ namespace WertheApp.RN
                     await DisplayAlert("Alert", "You are done!", "OK");
                 }
                 else
-                {//PipelineProtocolsScene.SendPackageAt(0);
+                {
                     PipelineProtocolsScene.InvokeSender();
                 }
             }
@@ -188,7 +186,7 @@ namespace WertheApp.RN
                     await DisplayAlert("Alert", "You are done!", "OK");
                 }
                 else
-                {//PipelineProtocolsScene.SendPackageAt(0);
+                {
                     PipelineProtocolsScene2.InvokeSender();
                 }
             }
@@ -202,12 +200,24 @@ namespace WertheApp.RN
 			switch (paused)
 			{
 				case true:
+                    if (strategy == "Selective Repeat"){ 
+                        PipelineProtocolsScene.animationIsPaused = false;
+                    }
+                    else{
+                        PipelineProtocolsScene2.animationIsPaused = false;
+                    }
                     gameView.Paused = false;
                     paused = false;
-                    b_Stop.Text = "Stop";
+                    b_Pause.Text = "Pause";
 					break;
                 case false:
-					b_Stop.Text = "Continue";
+                    if (strategy == "Selective Repeat"){
+                        PipelineProtocolsScene.animationIsPaused = true;
+                    }
+                    else{
+                        PipelineProtocolsScene2.animationIsPaused = true;
+                    }
+					b_Pause.Text = "Continue";
                     gameView.Paused = true;
                     paused = true;
 					break;
@@ -268,31 +278,3 @@ namespace WertheApp.RN
 
 	}
 }
-/*
-void CreateTopTopHalf(Grid grid)
-{
-    //set the size of the elements in such a way, that they all fit on the screen
-    //Screen Width is divided by the amount of elements (2)
-    //Screen Width -20 because Margin is 10
-    double StackChildSize = (Application.Current.MainPage.Width - 20) / 1;
-
-    //Using a Stacklayout to organize elements
-    //with corresponding labels and String variables. 
-    //For example l_Size, size
-    var stackLayout = new StackLayout
-    {
-        Orientation = StackOrientation.Vertical,
-        Margin = new Thickness(10),
-
-    };
-
-    l_Timeout = new Label { Text = "Timeout: --" };
-    //l_LastRecentInOrderAtReceiver = new Label{ Text = "Last recent in-order received packet: --"};
-    //l_LastRecentAcknowlegement = new Label { Text = "Last recent acknowlegment: --" };
-    stackLayout.Children.Add(l_Timeout);
-    //stackLayout.Children.Add(l_LastRecentInOrderAtReceiver);
-    //stackLayout.Children.Add(l_LastRecentAcknowlegement);
-
-    grid.Children.Add(stackLayout, 0, 0);
-}
-*/
