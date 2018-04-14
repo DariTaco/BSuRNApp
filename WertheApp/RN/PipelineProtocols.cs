@@ -69,7 +69,12 @@ namespace WertheApp.RN
             if (gameScene2 != null) { gameScene2.Dispose(); }
             PipelineProtocolsPack.stopEverything = true;
             PipelineProtocolsACK.stopEverything = true;
-            PipelineProtocolsScene.stopEverything = true;
+            if(strategy == "Selective Repeat"){
+                PipelineProtocolsScene.stopEverything = true;
+            }else{
+                PipelineProtocolsScene2.stopEverything = true;
+            }
+
         }
 
 		/**********************************************************************

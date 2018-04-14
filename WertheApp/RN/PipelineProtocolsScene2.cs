@@ -104,7 +104,7 @@ namespace WertheApp.RN
             layer.AddChild(ccl_LNumber);
 
             Debug.WriteLine(System.DateTime.Now);
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            Device.StartTimer(TimeSpan.FromSeconds(1), () => 
             {
                 // update counter label- but only if the user didn't click pause 
                 if (!animationIsPaused){
@@ -113,19 +113,16 @@ namespace WertheApp.RN
                 counterText = "" + counter;
                 ccl_LNumber.Text = counterText;
 
-                if (stopEverything || counter == timeouttime || (pendingAck.Any() && seqnum != pendingAck.Last()) )
+                ///*(pendingAck.Any() && seqnum != pendingAck.Last())*/
+                if (stopEverything || counter == timeouttime )
                 {
                     layer.RemoveChild(ccl_LNumber);
 
                     //resend packages for all pending ACK after timeout if seqnum is in list
                     if (pendingAck.Any() && pendingAck.Last() == seqnum && !stopEverything)
                     {
-                        foreach(var sn in pendingAck){
-                            SendPackageAt(sn);
-                            MyTimer(seqnum, 0);
-                            //Task.Delay(1000);
-                        }
-                    }
+                        ResendPending();
+  ;                 }
                     return false; //False = Stop the timer
                 }
                 else { return true; } // True = Repeat again
@@ -141,6 +138,16 @@ namespace WertheApp.RN
                 SendPackageAt(nextSeqnum);
                 MyTimer(nextSeqnum, 0);
                 nextSeqnum++;
+            }
+        }
+
+        public static async void ResendPending(){
+            int i = 0;
+            while(i < pendingAck.Count){
+                SendPackageAt(pendingAck.ElementAt(i));
+                MyTimer(pendingAck.ElementAt(i), 0);
+                await Task.Delay(100); // necessary! Packages that arrive all at once are hard to process for the receiver
+                i++;
             }
         }
 
@@ -261,7 +268,9 @@ namespace WertheApp.RN
             {
                 arrivedPack.Add(pp.seqnum);
                 DrawFillRight(pp.seqnum);
+                Debug.WriteLine("expected seqnum" + expectedSeqnum);
                 expectedSeqnum = findFirstNotYetArrivedPack();
+                Debug.WriteLine("expected seqnum" + expectedSeqnum);
                 DrawExpectedSeqnum();
                 SendACKFor(pp.seqnum);
             }else if(pp.seqnum <= expectedSeqnum){
