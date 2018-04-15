@@ -1,5 +1,7 @@
 ﻿using System;
 using CocosSharp;
+using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Diagnostics; //Debug.WriteLine("");
@@ -15,11 +17,9 @@ namespace WertheApp.BS
         public static string startedProcessName; //gets its value from the modal page
         public static string endedProcessName; //gets its value from modal page
         public static List<int> activeProcesses; //Process names
+        List<BuddySystemViewCell> buddySystemCells; // buddysystem canvas
 
-        StackLayout stackLayout2;
-        CocosSharpView gameView;
-		BuddySystemScene gameScene;
-		CCGameView cc_gameView;
+        ListView listView;
 
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
@@ -91,11 +91,20 @@ namespace WertheApp.BS
 		/**********************************************************************
         *********************************************************************/
 		void CreateTopHalf(Grid grid){
-            var scrollview = new ScrollView();
-            stackLayout2 = new StackLayout();
-            AddScene();
-            scrollview.Content = stackLayout2;
-            grid.Children.Add(scrollview, 0, 0);
+            listView = new ListView
+            {
+                ItemTemplate = new DataTemplate(typeof(BuddySystemViewCell)),
+                RowHeight = 100
+            };
+
+            buddySystemCells = new List<BuddySystemViewCell>();
+            BuddySystemViewCell a = new BuddySystemViewCell();
+            BuddySystemViewCell b = new BuddySystemViewCell();
+
+            buddySystemCells.Add(a);
+            buddySystemCells.Add(b);
+            listView.ItemsSource = buddySystemCells;
+            grid.Children.Add(listView, 0, 0);
         }
 
 		/**********************************************************************
@@ -143,6 +152,7 @@ namespace WertheApp.BS
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushModalAsync(new BuddySystemModal(), true);
+            /*TODO add Cell to listview */
 
 		}
 
@@ -151,63 +161,8 @@ namespace WertheApp.BS
 		async void B_End_Clicked(object sender, EventArgs e)
 		{
             await Navigation.PushModalAsync(new BuddySystemModal2(), true); //await pop up drop down menu wegen Konsistenz nicht verwendet
-       
-            gameView.HeightRequest = 900; // SCROLLING!!!!!!!!!!!!!!!!
-            cc_gameView.DesignResolution = new CCSizeI(330, 900); //CLIPPING
-			gameScene = new BuddySystemScene(cc_gameView);
-			cc_gameView.RunWithScene(gameScene);
-		}
-
-		/**********************************************************************
-        *********************************************************************/
-		/// <summary> deletes all content and informs the user to rotate the device </summary>
-		void DeleteContent()
-		{
-			this.Content = null;
-			this.Content = new Label { Text = "please rotate your device" };
-			isContentCreated = false;
-		}
-
-		/**********************************************************************
-        *********************************************************************/
-		void AddScene()
-		{
-
-			gameView = new CocosSharpView()
-			{
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				BackgroundColor = Color.White,
-				// This gets called after CocosSharp starts up:
-				ViewCreated = HandleViewCreated
-			};
-			////#######################################################
-			gameView.HeightRequest = 100; // SCROLLING!!!!!!!!!!!!!!!!
-										  //#########################################################
-
-			stackLayout2.Children.Add(gameView);
-		}
-
-		/**********************************************************************
-        *********************************************************************/
-		//sets up the scene 
-		void HandleViewCreated(object sender, EventArgs e)
-		{
-			
-			cc_gameView = sender as CCGameView;
-			if (cc_gameView != null)
-			{
-                // This sets the game "world" resolution to 330x100:
-                //Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-                //####################################################
-                cc_gameView.DesignResolution = new CCSizeI(330, 100); //CLIPPING
-                //########################################################
-				// GameScene is the root of the CocosSharp rendering hierarchy:
-				gameScene = new BuddySystemScene(cc_gameView);
-				// Starts CocosSharp:
-				cc_gameView.RunWithScene(gameScene);
-			}
-		}
+            /*TODO add Cell to listview */
+        }
 
 		/**********************************************************************
         *********************************************************************/
@@ -224,13 +179,17 @@ namespace WertheApp.BS
 			//reconfigure layout
 			if (width > height && isContentCreated == false)
 			{
-				CreateContent();
+				/*TODO*/
 			}
 			else if (height > width && isContentCreated)
 			{
-				DeleteContent();
+				/*TODO*/
 			}
 		}
 
 	}
 }
+/*            var scrollview = new ScrollView();
+            stackLayout2 = new StackLayout();
+            AddScene();
+            scrollview.Content = stackLayout2;*/
