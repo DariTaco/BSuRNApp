@@ -68,16 +68,7 @@ namespace WertheApp.BS
 				memoryBlocks[i, 0] = fragmentList.ElementAt(i);
                 memoryBlocks[i, 1] = 0;
 			}
-
-            /*for (int i = 0; i < memoryBlocks.GetLength(0); i++)
-			{
-				for (int j = 0; j < memoryBlocks.GetLength(1); j++)
-				{
-                    Debug.WriteLine(" " +memoryBlocks[i, j]);
-				}
-			}*/
-
-            /*TODO*/
+            
             //Android bug: Background in Android is always black. Workaround: draw a white rect with the size of the layer
             if(Device.RuntimePlatform == Device.Android){
 				var cc_background = new CCDrawNode();

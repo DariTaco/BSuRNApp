@@ -65,12 +65,6 @@ namespace WertheApp.BS
             strategy = s;
             memoryRequestState = myEnum.noRequestYet;
 
-            /*//create an array for all fragments=memoryblocks
-            memoryBlocks = new int[fragmentList.Count];
-            for (int i = 0; i < memoryBlocks.Length; i++){
-                memoryBlocks[i] = fragmentList.ElementAt(i);
-            }*/
-
             Title = "Allocation Strategies: " + strategy;
 
             isContentCreated = false;
@@ -333,64 +327,3 @@ namespace WertheApp.BS
 		}
 	}
 }
-/**********************************************************************
-*********************************************************************/
-/// <summary> deletes all content and informs the user to rotate the device </summary>
-/*void DeleteContent()
-{
-    this.Content = null;
-    this.Content = new Label { Text = "please rotate your device" };
-    isContentCreated = false;
-}*/
-/*
-//if new request
-if(memoryRequestState == myEnum.newRequest)
-{
-    AllocationStrategiesScene.RequestNew(memoryRequest);
-}
-//if searching for block
-else if (memoryRequestState == myEnum.searchingForBlock)
-{
-    switch (strategy)
-    {
-        case "First Fit":
-            AllocationStrategiesScene.pos++;
-            AllocationStrategiesScene.FirstFit(memoryRequest);
-            break;
-        case "Next Fit":
-
-            break;
-        case "Best Fit":
-
-            break;
-        case "Worst Fit":
-
-            break;
-        case "Tailoring Best Fit":
-
-            break;
-    }
-}
-
-//if unsuccessfull
-else if(memoryRequestState == myEnum.unsuccessfull)
-{
-    AllocationStrategiesScene.ClearGrayArrow();
-    AllocationStrategiesScene.ClearRedArrow();
-    await DisplayAlert("Alert", "No free space has been found", "OK");
-    memoryRequestState = myEnum.noRequestYet; //ready for a new request
-}
-
-//if successfull
-else if(memoryRequestState == myEnum.successfull) 
-{
-    AllocationStrategiesScene.ClearRedArrow();
-    AllocationStrategiesScene.ClearGrayArrow();
-    memoryRequestState = myEnum.noRequestYet; 
-}
-//if noRequestYet
-else if(memoryRequestState == myEnum.noRequestYet) 
-{
-    await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
-}
-*/

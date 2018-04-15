@@ -1,4 +1,5 @@
-﻿using System;
+﻿/********************CLASS FOR START PROCESS POP UP****************************/
+using System;
 using System.Text.RegularExpressions; //Regex.IsMatch
 using Xamarin.Forms;
 
@@ -75,6 +76,8 @@ namespace WertheApp.BS
             {
                 BuddySystem.startedProcessName = p_ProcessNames.SelectedItem.ToString();
                 BuddySystem.startedProcessSize = Int32.Parse(e_ProcessSize.Text);
+                BuddySystemViewCell a = new BuddySystemViewCell();
+                BuddySystem.AddBuddySystemCell(a);
                 MessagingCenter.Send<BuddySystemModal>(this, "new process started");// inform all subscribers
                 await Navigation.PopModalAsync(); // close Modal
             }

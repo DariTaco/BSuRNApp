@@ -4,22 +4,24 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics; //Debug.WriteLine("");
 
 namespace WertheApp.BS
 {
     public class BuddySystem : ContentPage
     {
-		//VARIABLES
+        //VARIABLES
+        public static double StackChildSize;
         public static double absoluteMemorySize;
         public static int powerOfTwo;
 		public static int startedProcessSize; //gets its value from the modal page
         public static string startedProcessName; //gets its value from the modal page
         public static string endedProcessName; //gets its value from modal page
         public static List<int> activeProcesses; //Process names
-        List<BuddySystemViewCell> buddySystemCells; // buddysystem canvas
+        public static ObservableCollection<BuddySystemViewCell> buddySystemCells; // buddysystem canvas
 
-        ListView listView;
+        public static ListView listView;
 
 		bool isContentCreated = false; //indicates weather the Content of the page was already created
 
@@ -35,15 +37,18 @@ namespace WertheApp.BS
 
 			Title = "Buddy System";
 
-            //do only create content if device is rotated in landscape
-			if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
-			{
-				CreateContent();
-			}
-			else
-			{
-				this.Content = new Label { Text = "please rotate your device" };
-			}
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                this.isContentCreated = true;
+                CreateContent();
+                this.Content.IsVisible = true;
+            }
+            else
+            {
+                CreateContent();
+                this.isContentCreated = true;
+                this.Content.IsVisible = false;
+            }
 
 			//subscribe to Message in order to know if a new process was started
 			MessagingCenter.Subscribe<BuddySystemModal>(this, "new process started", (args) =>
@@ -62,6 +67,13 @@ namespace WertheApp.BS
         }
 
 		//METHODS
+        /**********************************************************************
+        *********************************************************************/
+        public static void AddBuddySystemCell(BuddySystemViewCell c){
+            BuddySystemViewCell a = new BuddySystemViewCell();
+            buddySystemCells.Add(a);
+            listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
+        }
         /**********************************************************************
         *********************************************************************/
         //Gets called everytime the Page is not shown anymore. For example when clicking the back navigation
@@ -96,13 +108,7 @@ namespace WertheApp.BS
                 ItemTemplate = new DataTemplate(typeof(BuddySystemViewCell)),
                 RowHeight = 100
             };
-
-            buddySystemCells = new List<BuddySystemViewCell>();
-            BuddySystemViewCell a = new BuddySystemViewCell();
-            BuddySystemViewCell b = new BuddySystemViewCell();
-
-            buddySystemCells.Add(a);
-            buddySystemCells.Add(b);
+            buddySystemCells = new ObservableCollection<BuddySystemViewCell>();
             listView.ItemsSource = buddySystemCells;
             grid.Children.Add(listView, 0, 0);
         }
@@ -113,7 +119,14 @@ namespace WertheApp.BS
 			//set the size of the elements in such a way, that they all fit on the screen
 			//Screen Width is divided by the amount of elements (2)
 			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+            if (!isContentCreated)
+            {
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 2;
+            }
+            else
+            {
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+            }
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -176,15 +189,19 @@ namespace WertheApp.BS
 				this.height = height;
 			}
 
-			//reconfigure layout
-			if (width > height && isContentCreated == false)
-			{
-				/*TODO*/
-			}
-			else if (height > width && isContentCreated)
-			{
-				/*TODO*/
-			}
+            //reconfigure layout
+            if (width > height)
+            {
+                //isContentCreated = true;
+                this.Content.IsVisible = true;
+            }
+            else if (height > width && isContentCreated)
+            {
+                //isContentCreated = false;
+                this.Content.IsVisible = false;
+
+                DisplayAlert("Alert", "Please rotate the device", "OK");
+            }
 		}
 
 	}

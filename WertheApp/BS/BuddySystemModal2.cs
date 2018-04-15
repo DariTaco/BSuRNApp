@@ -1,4 +1,6 @@
-﻿using System;
+﻿/**********************CLASS FOR END PROCESS POP UP****************************/
+
+using System;
 
 using Xamarin.Forms;
 
