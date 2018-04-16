@@ -76,8 +76,7 @@ namespace WertheApp.BS
             {
                 BuddySystem.startedProcessName = p_ProcessNames.SelectedItem.ToString();
                 BuddySystem.startedProcessSize = Int32.Parse(e_ProcessSize.Text);
-                BuddySystemViewCell a = new BuddySystemViewCell();
-                BuddySystem.AddBuddySystemCell(a);
+                BuddySystem.AddBuddySystemCell();
                 MessagingCenter.Send<BuddySystemModal>(this, "new process started");// inform all subscribers
                 await Navigation.PopModalAsync(); // close Modal
             }

@@ -9,7 +9,7 @@ namespace WertheApp.BS
     public class BuddySystemViewCell : ViewCell
     {
         private SKCanvasView skiaview;
-        public static int dari = 0;
+        public static int dari;
 
         public BuddySystemViewCell()
         {
@@ -17,11 +17,12 @@ namespace WertheApp.BS
             skiaview = new SKCanvasView();
 
             if(dari%2 == 0){
-                skiaview.BackgroundColor = Color.Aquamarine; 
+                skiaview.BackgroundColor = Color.Azure; 
             }else{
-                skiaview.BackgroundColor = Color.Firebrick;
+                skiaview.BackgroundColor = Color.WhiteSmoke;
             }
             dari++;
+            Debug.WriteLine(dari);
 
 
             // do the drawing
@@ -31,18 +32,16 @@ namespace WertheApp.BS
                 var surfaceWidth = e.Info.Width;
                 var surfaceHeight = e.Info.Height;
                 var canvas = surface.Canvas;
+                canvas.Clear(); //Important! Otherwise the drawing will look messed up in iOS
 
+                /*important: the coordinate system starts in the upper left corner*/
                 float lborder = canvas.LocalClipBounds.Left;
                 float tborder = canvas.LocalClipBounds.Top;
                 float rborder = canvas.LocalClipBounds.Right;
                 float bborder = canvas.LocalClipBounds.Bottom;
 
-                //-1 -1 1281 134
-                //-1 -1 2185 200
-                /*TODO get absolute metrics of canvas*/
-
-                Debug.WriteLine(lborder+ " " + tborder + " " + rborder + " " + bborder);
-
+                float xe = rborder / 100;
+                float ye = bborder / 100;
 
                 //create something to paint with (color, textsize, and even more....)
                 SKPaint sk_1 = new SKPaint
@@ -53,20 +52,19 @@ namespace WertheApp.BS
                     Color = new SKColor(0, 0, 0) //black
                 };
 
-                SKRect sk_r = new SKRect(lborder+20, tborder+20, rborder-100, bborder); //left, top, right, bottom
-                /*TODO the rect looks always the same in ios*/
+                SKRect sk_r = new SKRect(xe*2, ye*10, xe*80, ye*90); //left, top, right, bottom
+
                 // draw on the canvas
                 canvas.DrawRect(sk_r, sk_1); //draw an rect with dimensions of sk_r and paint sk_1
-
                 //execute all drawing actions
-                canvas.Flush(); 
+                canvas.Flush();
             };
 
             // assign the canvas to the cell
             View = skiaview;
         }
 
-        protected override void OnBindingContextChanged()
+		protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();
 

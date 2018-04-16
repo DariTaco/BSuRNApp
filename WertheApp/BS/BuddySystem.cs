@@ -69,17 +69,12 @@ namespace WertheApp.BS
 		//METHODS
         /**********************************************************************
         *********************************************************************/
-        public static void AddBuddySystemCell(BuddySystemViewCell c){
+        public static void AddBuddySystemCell(){
+            Debug.WriteLine("add viewcell");
+            BuddySystemViewCell b = new BuddySystemViewCell();
             BuddySystemViewCell a = new BuddySystemViewCell();
-            buddySystemCells.Add(a);
+            buddySystemCells.Add(a); //actually creates a new buddysystemviewcell
             listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
-        }
-        /**********************************************************************
-        *********************************************************************/
-        //Gets called everytime the Page is not shown anymore. For example when clicking the back navigation
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
         }
 
 		/**********************************************************************
@@ -106,11 +101,13 @@ namespace WertheApp.BS
             listView = new ListView
             {
                 ItemTemplate = new DataTemplate(typeof(BuddySystemViewCell)),
-                RowHeight = 100
+                RowHeight = 100,
             };
             buddySystemCells = new ObservableCollection<BuddySystemViewCell>();
             listView.ItemsSource = buddySystemCells;
             grid.Children.Add(listView, 0, 0);
+            Debug.WriteLine("create tophalft viewcell");
+            AddBuddySystemCell();
         }
 
 		/**********************************************************************
@@ -206,7 +203,3 @@ namespace WertheApp.BS
 
 	}
 }
-/*            var scrollview = new ScrollView();
-            stackLayout2 = new StackLayout();
-            AddScene();
-            scrollview.Content = stackLayout2;*/
