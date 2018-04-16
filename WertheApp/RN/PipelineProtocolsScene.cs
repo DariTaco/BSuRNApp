@@ -265,7 +265,6 @@ namespace WertheApp.RN
         public static void AckLost(PipelineProtocolsACK aa) { }
 
         public static void AckArrived(PipelineProtocolsACK aa) {
-            Debug.WriteLine("arrived");
             //if there has no other Ack with the same seqnum has arrived before
             if(!arrivedAck.Any() || arrivedAck.Any() && !arrivedAck.Contains(aa.seqnum)){
                 arrivedAck.Add(aa.seqnum);
@@ -273,7 +272,6 @@ namespace WertheApp.RN
                 DrawFillLeft2(aa.seqnum);
                 baseOfWindowLeft = findFirstNotYetArrivedAck();
                 DrawWindowLeft(baseOfWindowLeft);
-                Debug.WriteLine("ACK arrived the first time " + aa.GetID());
             }
             layer.RemoveChild(aa);
         }

@@ -70,7 +70,6 @@ namespace WertheApp.BS
         /**********************************************************************
         *********************************************************************/
         public static void AddBuddySystemCell(){
-            Debug.WriteLine("add viewcell");
             BuddySystemViewCell b = new BuddySystemViewCell();
             BuddySystemViewCell a = new BuddySystemViewCell();
             buddySystemCells.Add(a); //actually creates a new buddysystemviewcell

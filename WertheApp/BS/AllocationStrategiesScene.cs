@@ -321,7 +321,6 @@ namespace WertheApp.BS
             {
                 if(pos < suc)
                 {
-                    Debug.WriteLine("pos < suc");
 					for (int i = pos +1; i < suc; i++)
 					{
 						if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
@@ -329,8 +328,6 @@ namespace WertheApp.BS
                 }
                 else
                 {
-                    Debug.WriteLine("pos"+pos);
-                    Debug.WriteLine("suc" + suc);
 					for (int i = pos + 1; i < memoryBlocks.GetLength(0); i++)
 					{
 						if (memoryBlocks[i, 0] != 0) { check = false; } //as long as one memory block with free space remains it's(the whole memory) not full!
@@ -369,9 +366,7 @@ namespace WertheApp.BS
             else //if there is still space left in the memory block
 			{ 
                 DrawRedArrow();
-                Debug.WriteLine("Free space" + memoryBlocks[pos, 0].ToString());
                 AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
-                Debug.WriteLine("label " + AllocationStrategies.l_Free.Text);
                 AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
 
                 //if the search was unsuccessfull
@@ -419,15 +414,7 @@ namespace WertheApp.BS
 				AllocationStrategies.l_Free.Text = memoryBlocks[pos, 0].ToString();
 				AllocationStrategies.l_Diff.Text = (memoryBlocks[pos, 0] - memoryRequest).ToString();
 
-				/*//if the search was unsuccessfull //||for the special case that the very first request is too big to fit in any block
-                if ((pos == suc-1 && memoryRequest > memoryBlocks[pos, 0]) || (suc == 0 && pos == memoryBlocks.GetLength(0)-1 && memoryRequest > memoryBlocks[pos, 0]))
-				{
-					Debug.WriteLine("End is reached");
-					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
-
-				}
-                //if the search was successfull
-				else*/ if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
+                if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
 				{
                     //if also the end is reached and memory request fits perfectly
                     if ((pos == memoryBlocks.GetLength(0) - 1 && memoryRequest == memoryBlocks[pos,0]|| (FollowingFull()) && memoryRequest == memoryBlocks[pos, 0]))
@@ -691,53 +678,15 @@ namespace WertheApp.BS
 					    TailoringBestFit(memoryRequest);
 						break;  
 			}
-            /*
-            Debug.WriteLine("total memorysize = "+totalMemorySize);
-            Debug.WriteLine("relative fragment size = "+ relativeFragmentSize);
-            Debug.WriteLine("total memorysize *relativefragmentsize = " +totalMemorySize*relativeFragmentSize);
-
-
-            Debug.WriteLine("##############");
-            Debug.WriteLine(availableMemory);
-            Debug.WriteLine(numberOfFragments);
-            Debug.WriteLine(totalMemorySize);
-            Debug.WriteLine(relativeFragmentSize);*/
-
-			//test for 2 Fragments with size 1 
-			/*
-            bool colorS = true;
-            for (int i = 0; i < 3; i++)
-            {
-                if (colorS)
-                {
-                    CCDrawNode cc_partingLine = new CCDrawNode();
-                    cc_partingLine.DrawLine(
-                        from: new CCPoint(startX, 2),
-                        to: new CCPoint(startX, 70),
-                        lineWidth: partingLineWidth,
-                        color: CCColor4B.Blue);
-                    layer.AddChild(cc_partingLine);
-					startX += relativeFragmentSize;
-                    colorS = false;
-                    continue;
-                }
-                else if(!colorS)
-                {
-                    CCDrawNode cc_partingLine = new CCDrawNode();
-                    cc_partingLine.DrawLine(
-                        from: new CCPoint(startX, 2),
-                        to: new CCPoint(startX, 70),
-                        lineWidth: partingLineWidth,
-                        color: CCColor4B.Orange);
-                    layer.AddChild(cc_partingLine);
-                    startX += relativeFragmentSize;
-                    colorS = true;
-                    continue;
-                }
-            }*/
-
         }
-
-
     }
 }
+/*//if the search was unsuccessfull //||for the special case that the very first request is too big to fit in any block
+if ((pos == suc-1 && memoryRequest > memoryBlocks[pos, 0]) || (suc == 0 && pos == memoryBlocks.GetLength(0)-1 && memoryRequest > memoryBlocks[pos, 0]))
+{
+    Debug.WriteLine("End is reached");
+    AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+
+}
+//if the search was successfull
+else*/

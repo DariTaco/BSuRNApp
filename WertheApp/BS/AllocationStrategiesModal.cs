@@ -78,11 +78,7 @@ namespace WertheApp.BS
             if (e_MemoryRequest.Text != null && ValidateMemoryRequestInput())
             {
                 AllocationStrategies.memoryRequest = Int32.Parse(e_MemoryRequest.Text);
-
-                Debug.WriteLine("memory request " + e_MemoryRequest.Text + " " + AllocationStrategies.memoryRequest);
-
 				MessagingCenter.Send<AllocationStrategiesModal>(this, "new memory request");// inform all subscribers
-              
 				await Navigation.PopModalAsync(); // close Modal
             }
             else if (e_MemoryRequest.Text == null) { await DisplayAlert("Alert", "Please enter size of memory request", "OK"); }

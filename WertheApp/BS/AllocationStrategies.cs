@@ -3,8 +3,6 @@ using CocosSharp;
 using Xamarin.Forms;
 using System.Collections.Generic; 
 using System.Linq; //fragmentList.ElementAt(i);
-
-
 using System.Diagnostics; //Debug.WriteLine("");
 
 namespace WertheApp.BS
@@ -235,10 +233,8 @@ namespace WertheApp.BS
                 case myEnum.newRequest: //new request
                     memoryRequestState = myEnum.searchingForBlock;
                     AllocationStrategiesScene.RequestNew(memoryRequest);
-                    //Debug.WriteLine("NEW REQUEST");
 					break;
                 case myEnum.searchingForBlock: //searching for block
-                    Debug.WriteLine("SEARCHING FOR BLOCK");
 					switch (strategy)
 					{
 						case "First Fit":
@@ -264,7 +260,6 @@ namespace WertheApp.BS
 					}
 					break;
                 case myEnum.successfull: //successfull
-                    //Debug.WriteLine("SUCCESSFULL");
 					AllocationStrategiesScene.ClearRedArrow();
 					AllocationStrategiesScene.ClearGrayArrow();
                     AllocationStrategiesScene.DrawFill();
@@ -277,7 +272,6 @@ namespace WertheApp.BS
 					l_Free.Text = free;
 					break;
                 case myEnum.unsuccessfull: //unsucessfull
-                    //Debug.WriteLine("UNSUCCESSFULL");
 					AllocationStrategiesScene.ClearGrayArrow();
 					AllocationStrategiesScene.ClearRedArrow();
 					await DisplayAlert("Alert", "No free space has been found", "OK");
@@ -290,11 +284,9 @@ namespace WertheApp.BS
 					l_Free.Text = free;
 					break;
                 case myEnum.noRequestYet: //no requst yet
-                    //Debug.WriteLine("NO REQUEST YET");
                     await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
                     break;
                 case myEnum.memoryFull: //memory is full
-                    //Debug.WriteLine("MEMORY IS FULL");
                     await DisplayAlert("Alert", "Out of memory! The app will close now", "OK");
                     await Navigation.PopAsync();
                     break;

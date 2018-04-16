@@ -103,7 +103,6 @@ namespace WertheApp.RN
             ccl_LNumber.Color = CCColor3B.Red;
             layer.AddChild(ccl_LNumber);
 
-            Debug.WriteLine(System.DateTime.Now);
             Device.StartTimer(TimeSpan.FromSeconds(1), () => 
             {
                 // update counter label- but only if the user didn't click pause 
@@ -268,9 +267,7 @@ namespace WertheApp.RN
             {
                 arrivedPack.Add(pp.seqnum);
                 DrawFillRight(pp.seqnum);
-                Debug.WriteLine("expected seqnum" + expectedSeqnum);
                 expectedSeqnum = findFirstNotYetArrivedPack();
-                Debug.WriteLine("expected seqnum" + expectedSeqnum);
                 DrawExpectedSeqnum();
                 SendACKFor(pp.seqnum);
             }else if(pp.seqnum <= expectedSeqnum){
@@ -288,7 +285,6 @@ namespace WertheApp.RN
 
         public static void AckArrived(PipelineProtocolsACK aa)
         {
-            Debug.WriteLine("arrived");
             //if there has no other Ack with the same seqnum has arrived before
             if (!arrivedAck.Any() || arrivedAck.Any() && !arrivedAck.Contains(aa.seqnum))
             {
@@ -303,7 +299,6 @@ namespace WertheApp.RN
 
                 baseOfWindowLeft = findFirstNotYetArrivedAck();
                 DrawWindow(baseOfWindowLeft);
-                Debug.WriteLine("ACK arrived the first time " + aa.GetID());
             }
             layer.RemoveChild(aa);
         }
