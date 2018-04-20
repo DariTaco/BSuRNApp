@@ -2,6 +2,7 @@
 using CocosSharp;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System.Linq; //list.Any()
 using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +19,9 @@ namespace WertheApp.BS
 		public static int startedProcessSize; //gets its value from the modal page
         public static string startedProcessName; //gets its value from the modal page
         public static string endedProcessName; //gets its value from modal page
-        public static List<int> activeProcesses; //Process names
+        public static string [] availableProcessesInput;
+        public static List<String> availableProcesses; //unued process names
+        public static List<String> activeProcesses; //Process names that are in use right now 
         public static ObservableCollection<BuddySystemViewCell> buddySystemCells; // buddysystem canvas
 
         public static ListView listView;
@@ -33,7 +36,10 @@ namespace WertheApp.BS
         {
             powerOfTwo = a;
             absoluteMemorySize = Math.Pow(2, Double.Parse(powerOfTwo.ToString())); //2ExponentX
-			activeProcesses = new List<int>();
+			activeProcesses = new List<String>();
+            availableProcessesInput= new string [26] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+                "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+            availableProcesses = new List<string>(availableProcessesInput);
 
 			Title = "Buddy System";
 
@@ -160,8 +166,13 @@ namespace WertheApp.BS
         *********************************************************************/
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushModalAsync(new BuddySystemModal(), true);
-            /*TODO add Cell to listview */
+            if (availableProcesses.Any())
+            {
+                await Navigation.PushModalAsync(new BuddySystemModal(), true);
+            }else
+            {
+                await DisplayAlert("Alert", "Maximum amount of active processes is reached", "OK");
+            }
 
 		}
 
@@ -169,8 +180,13 @@ namespace WertheApp.BS
         *********************************************************************/
 		async void B_End_Clicked(object sender, EventArgs e)
 		{
-            await Navigation.PushModalAsync(new BuddySystemModal2(), true); //await pop up drop down menu wegen Konsistenz nicht verwendet
-            /*TODO add Cell to listview */
+            if(activeProcesses.Any()){
+                await Navigation.PushModalAsync(new BuddySystemModal2(), true); //await pop up drop down menu wegen Konsistenz nicht verwendet
+            }else{
+                await DisplayAlert("Alert", "No active processes", "OK");
+            }
+
+
         }
 
 		/**********************************************************************

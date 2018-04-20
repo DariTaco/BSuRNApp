@@ -77,7 +77,7 @@ namespace WertheApp.RN
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
                 Text = "20" };
             var l_RoundtripTime = new Label { FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), 
-                Text = "min. RTT: 10" };
+                Text = "RTT: 10" };
             var l_Space3 = new Label { Text = "  " };
 
 			var b_Start = new Button { Text = "Start" };

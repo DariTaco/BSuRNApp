@@ -49,7 +49,7 @@ namespace WertheApp.BS
 
 			var l_Active = new Label { Text = "Active processes:" };
 			p_ProcessNames = new Picker();
-			p_ProcessNames.Items.Add("TESTNAME");
+            p_ProcessNames.ItemsSource = BuddySystem.activeProcesses;
 			p_ProcessNames.SelectedIndex = 0;
 
 			stackLayout.Children.Add(l_Active);
@@ -66,7 +66,10 @@ namespace WertheApp.BS
         {
 			BuddySystem.endedProcessName = p_ProcessNames.SelectedItem.ToString();
 			MessagingCenter.Send<BuddySystemModal2>(this, "process ended");// inform all subscribers
-			await Navigation.PopModalAsync(); // close Modal
+
+            BuddySystem.activeProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
+            BuddySystem.availableProcesses.Add(p_ProcessNames.SelectedItem.ToString());
+            await Navigation.PopModalAsync(); // close Modal
 		}
 
 		/**********************************************************************

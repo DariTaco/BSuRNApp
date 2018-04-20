@@ -34,8 +34,8 @@ namespace WertheApp.BS
 			var stackLayout = new StackLayout();
 
 			var l_Available = new Label { Text = "Available process names:" };
-			p_ProcessNames = new Picker(); 
-            p_ProcessNames.Items.Add("TESTNAME");
+            p_ProcessNames = new Picker();
+            p_ProcessNames.ItemsSource = BuddySystem.availableProcesses;
             p_ProcessNames.SelectedIndex = 0;
             var l_Space = new Label { Text = "  " };
             var l_ProcessSize = new Label { Text = "Process size:" };
@@ -76,8 +76,11 @@ namespace WertheApp.BS
             {
                 BuddySystem.startedProcessName = p_ProcessNames.SelectedItem.ToString();
                 BuddySystem.startedProcessSize = Int32.Parse(e_ProcessSize.Text);
-                BuddySystem.AddBuddySystemCell();
                 MessagingCenter.Send<BuddySystemModal>(this, "new process started");// inform all subscribers
+
+                BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
+                BuddySystem.activeProcesses.Add(p_ProcessNames.SelectedItem.ToString());
+                BuddySystem.AddBuddySystemCell();
                 await Navigation.PopModalAsync(); // close Modal
             }
             else if (e_ProcessSize.Text == null){await DisplayAlert("Alert", "Please enter a process size", "OK");}
