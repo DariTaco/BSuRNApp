@@ -74,8 +74,6 @@ namespace WertheApp.BS
         {
             if (e_ProcessSize.Text != null && ValidateMemoryRequestInput())
             {
-                BuddySystem.startedProcessName = p_ProcessNames.SelectedItem.ToString();
-                BuddySystem.startedProcessSize = Int32.Parse(e_ProcessSize.Text);
                 MessagingCenter.Send<BuddySystemModal>(this, "new process started");// inform all subscribers
 
                 BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());

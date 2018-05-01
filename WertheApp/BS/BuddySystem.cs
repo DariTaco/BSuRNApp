@@ -1,5 +1,4 @@
 ﻿using System;
-using CocosSharp;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System.Linq; //list.Any()
@@ -16,13 +15,12 @@ namespace WertheApp.BS
         public static double StackChildSize;
         public static double absoluteMemorySize;
         public static int powerOfTwo;
-		public static int startedProcessSize; //gets its value from the modal page
-        public static string startedProcessName; //gets its value from the modal page
-        public static string endedProcessName; //gets its value from modal page
+		
         public static string [] availableProcessesInput;
         public static List<String> availableProcesses; //unued process names
         public static List<String> activeProcesses; //Process names that are in use right now 
         public static ObservableCollection<BuddySystemViewCell> buddySystemCells; // buddysystem canvas
+        public static List<BuddySystemBlock> buddySystem;
 
         public static ListView listView;
 
@@ -34,14 +32,16 @@ namespace WertheApp.BS
         //CONSTRUCTOR
 		public BuddySystem(int a)
         {
+            Title = "Buddy System";
+
             powerOfTwo = a;
             absoluteMemorySize = Math.Pow(2, Double.Parse(powerOfTwo.ToString())); //2ExponentX
 			activeProcesses = new List<String>();
             availableProcessesInput= new string [26] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                 "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
             availableProcesses = new List<string>(availableProcessesInput);
-
-			Title = "Buddy System";
+            buddySystem = new List<BuddySystemBlock>();
+            buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize));
 
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
             {
@@ -59,20 +59,48 @@ namespace WertheApp.BS
 			//subscribe to Message in order to know if a new process was started
 			MessagingCenter.Subscribe<BuddySystemModal>(this, "new process started", (args) =>
 			{
-				Debug.WriteLine("#####################");
-                Debug.WriteLine("new Process size: " + startedProcessSize);
-                Debug.WriteLine("new Process name: " + startedProcessName);
+
 			});
 
 			//subscribe to Message in order to know if a new process was ended
 			MessagingCenter.Subscribe<BuddySystemModal>(this, "process ended", (args) =>
 			{
-				Debug.WriteLine("#####################");
-				Debug.WriteLine("ended Process name: " + endedProcessName);
+
 			});
         }
 
 		//METHODS
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void AllocateBlock(int bsize){
+            //buddySystem.
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void DeallocateBlock(){
+            
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void MergeBlocks(){
+
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static int FindFittingBlockSize(int psize){
+            int fitting = (int)absoluteMemorySize;
+            if (psize > absoluteMemorySize) { return 0; }
+            while(fitting >= psize){
+                fitting = fitting / 2; 
+            }
+            fitting = fitting * 2;
+            return fitting;
+        }
+
         /**********************************************************************
         *********************************************************************/
         public static void AddBuddySystemCell(){
@@ -111,7 +139,6 @@ namespace WertheApp.BS
             buddySystemCells = new ObservableCollection<BuddySystemViewCell>();
             listView.ItemsSource = buddySystemCells;
             grid.Children.Add(listView, 0, 0);
-            Debug.WriteLine("create tophalft viewcell");
             AddBuddySystemCell();
         }
 
@@ -185,8 +212,6 @@ namespace WertheApp.BS
             }else{
                 await DisplayAlert("Alert", "No active processes", "OK");
             }
-
-
         }
 
 		/**********************************************************************

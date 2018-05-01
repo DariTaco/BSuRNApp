@@ -7,10 +7,6 @@ using System.Diagnostics;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 
-//TODO: check was passiert wenn verlangsamt
-//wenn Packete wieder gesendet werden, scheinen sie alle zur exakt selben Zeit anzukommen. 
-//Dadurch wird leider nicht schnell genug erkannt, dass die erwartete seqnum weiter springt
-//und somit alle richtig ankommen
 //TAKE NOTE: the reference value of an action is always the same!! 
 //It always refers to the values that were set when the original object was first definded.
 //and not some altered value after some action that happended before the current one
@@ -89,7 +85,6 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        /*TODO*/
         public static void MyTimer(int seqnum, int c)
         {
             int counter = c;
@@ -121,7 +116,7 @@ namespace WertheApp.RN
                     if (pendingAck.Any() && pendingAck.Last() == seqnum && !stopEverything)
                     {
                         ResendPending();
-  ;                 }
+                   }
                     return false; //False = Stop the timer
                 }
                 else { return true; } // True = Repeat again
@@ -267,7 +262,7 @@ namespace WertheApp.RN
             {
                 arrivedPack.Add(pp.seqnum);
                 DrawFillRight(pp.seqnum);
-                expectedSeqnum = findFirstNotYetArrivedPack();
+                expectedSeqnum = FindFirstNotYetArrivedPack();
                 DrawExpectedSeqnum();
                 SendACKFor(pp.seqnum);
             }else if(pp.seqnum <= expectedSeqnum){
@@ -297,7 +292,7 @@ namespace WertheApp.RN
                     }
                 }
 
-                baseOfWindowLeft = findFirstNotYetArrivedAck();
+                baseOfWindowLeft = FindFirstNotYetArrivedAck();
                 DrawWindow(baseOfWindowLeft);
             }
             layer.RemoveChild(aa);
@@ -305,7 +300,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public static int findFirstNotYetArrivedPack()
+        public static int FindFirstNotYetArrivedPack()
         {
             int x = expectedSeqnum;
             while (arrivedPack.Any() && arrivedPack.Contains(x))
@@ -317,7 +312,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public static int findFirstNotYetArrivedAck()
+        public static int FindFirstNotYetArrivedAck()
         {
             int x = baseOfWindowLeft;
             while (arrivedAck.Any() && arrivedAck.Contains(x))

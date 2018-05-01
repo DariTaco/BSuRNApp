@@ -8,9 +8,19 @@ namespace WertheApp.BS
 {
     public class BuddySystemViewCell : ViewCell
     {
+        //VARIABLES
         private SKCanvasView skiaview;
-        public static int dari;
+        public static int dari; //determines backgroundcolor of the canvas
 
+        private SKPaint sk_Paint1;
+        private SKPaint sk_blackText;
+        private SKPaint sk_greenText;
+        private SKPaint sk_redText;
+
+        private float xe, ye;
+
+
+        //CONSTRUCTOR
         public BuddySystemViewCell()
         {
             // crate the canvas
@@ -22,8 +32,6 @@ namespace WertheApp.BS
                 skiaview.BackgroundColor = Color.WhiteSmoke;
             }
             dari++;
-            Debug.WriteLine(dari);
-
 
             // do the drawing
             skiaview.PaintSurface += (object sender, SKPaintSurfaceEventArgs e) =>
@@ -40,22 +48,21 @@ namespace WertheApp.BS
                 float rborder = canvas.LocalClipBounds.Right;
                 float bborder = canvas.LocalClipBounds.Bottom;
 
-                float xe = rborder / 100;
-                float ye = bborder / 100;
+                xe = rborder / 100;
+                ye = bborder / 100;
 
-                //create something to paint with (color, textsize, and even more....)
-                SKPaint sk_1 = new SKPaint
-                {
-                    IsStroke = true, //indicates whether to paint the stroke or the fill
-                    StrokeWidth = 5,
-                    IsAntialias = true,
-                    Color = new SKColor(0, 0, 0) //black
-                };
+                makeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
+
 
                 SKRect sk_r = new SKRect(xe*2, ye*10, xe*80, ye*90); //left, top, right, bottom
+                SKPoint sk_p1 = new SKPoint(xe * 50, ye * 10);
+                SKPoint sk_p2 = new SKPoint(xe * 50, ye * 90);
 
                 // draw on the canvas
-                canvas.DrawRect(sk_r, sk_1); //draw an rect with dimensions of sk_r and paint sk_1
+                canvas.DrawRect(sk_r, sk_Paint1); //draw an rect with dimensions of sk_r and paint sk_1
+                canvas.DrawLine(sk_p1, sk_p2, sk_Paint1); 
+                canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe*82, ye*50), sk_blackText);
+
                 //execute all drawing actions
                 canvas.Flush();
             };
@@ -64,6 +71,44 @@ namespace WertheApp.BS
             View = skiaview;
         }
 
+        //METHODS
+        /**********************************************************************
+        *********************************************************************/
+        private void makeSKPaint(){
+            //create something to paint with (color, textsize, and even more....)
+            sk_Paint1 = new SKPaint
+            {
+                IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(0, 0, 0) //black
+            };
+
+            //black neutral text
+            sk_blackText = new SKPaint
+            {
+                Color = SKColors.Black,
+                TextSize = ye*30
+                                
+            };
+
+            //green text for starting an process
+            sk_greenText = new SKPaint
+            {
+                Color = SKColors.Green,
+                TextSize = ye*30
+            };
+
+            //red text for ending an process
+            sk_redText = new SKPaint
+            {
+                Color = SKColors.Red,
+                TextSize = ye*30
+            };
+        }
+
+        /**********************************************************************
+        *********************************************************************/
 		protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();

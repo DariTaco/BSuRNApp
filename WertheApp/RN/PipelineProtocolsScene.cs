@@ -85,7 +85,6 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        /*TODO*/
         public static void MyTimer(int seqnum, int c)
         {
             int counter = c;
@@ -223,7 +222,6 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        /*TODO */
         public static void SlowDownAck(PipelineProtocolsACK aa, int xPos)
         {
             //stop running actions
@@ -252,7 +250,7 @@ namespace WertheApp.RN
             if(!arrivedPack.Any() || arrivedPack.Any() && !arrivedPack.Contains(pp.seqnum)){
                 arrivedPack.Add(pp.seqnum);
                 DrawFillRight(pp.seqnum);
-                baseOfWindowRight = findFirstNotYetArrivedPack();
+                baseOfWindowRight = FindFirstNotYetArrivedPack();
                 DrawWindowRight(baseOfWindowRight);
             }
             SendACKFor(pp.seqnum);
@@ -270,7 +268,7 @@ namespace WertheApp.RN
                 arrivedAck.Add(aa.seqnum);
                 pendingAck.Remove(aa.seqnum);
                 DrawFillLeft2(aa.seqnum);
-                baseOfWindowLeft = findFirstNotYetArrivedAck();
+                baseOfWindowLeft = FindFirstNotYetArrivedAck();
                 DrawWindowLeft(baseOfWindowLeft);
             }
             layer.RemoveChild(aa);
@@ -278,7 +276,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public static int findFirstNotYetArrivedPack()
+        public static int FindFirstNotYetArrivedPack()
         {
             int x = baseOfWindowRight;
             while (arrivedPack.Any() && arrivedPack.Contains(x))
@@ -290,7 +288,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public static int findFirstNotYetArrivedAck()
+        public static int FindFirstNotYetArrivedAck()
         {
             int x = baseOfWindowLeft;
             while (arrivedAck.Any() && arrivedAck.Contains(x))

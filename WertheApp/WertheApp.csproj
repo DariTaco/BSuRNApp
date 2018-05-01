@@ -70,6 +70,7 @@
     <Compile Include="RN\PipelineProtocolsPack.cs" />
     <Compile Include="Helping Classes\MyTimer.cs" />
     <Compile Include="BS\BuddySystemViewCell.cs" />
+    <Compile Include="BS\BuddySystemBlock.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">
@@ -83,9 +84,6 @@
     </Reference>
     <Reference Include="CocosSharp.Forms">
       <HintPath>..\packages\CocosSharp.Forms.1.7.1.0\lib\portable-net45+win+wpa81+wp81\CocosSharp.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="BinaryTree">
-      <HintPath>..\packages\BinaryTree.2.0.0\lib\BinaryTree.dll</HintPath>
     </Reference>
     <Reference Include="SkiaSharp">
       <HintPath>..\packages\SkiaSharp.1.60.0\lib\portable-net45+win8+wpa81+wp8\SkiaSharp.dll</HintPath>
@@ -101,6 +99,9 @@
     </Reference>
     <Reference Include="SkiaSharp.Views.Forms">
       <HintPath>..\packages\SkiaSharp.Views.Forms.1.60.0\lib\portable-net45+win8+wpa81+wp8\SkiaSharp.Views.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="BinaryTree">
+      <HintPath>..\packages\BinaryTree.2.0.0\lib\BinaryTree.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -64,11 +64,11 @@ namespace WertheApp.BS
         *********************************************************************/
 		async void B_End_Clicked(object sender, EventArgs e)
         {
-			BuddySystem.endedProcessName = p_ProcessNames.SelectedItem.ToString();
 			MessagingCenter.Send<BuddySystemModal2>(this, "process ended");// inform all subscribers
 
             BuddySystem.activeProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
             BuddySystem.availableProcesses.Add(p_ProcessNames.SelectedItem.ToString());
+            BuddySystem.AddBuddySystemCell();
             await Navigation.PopModalAsync(); // close Modal
 		}
 
