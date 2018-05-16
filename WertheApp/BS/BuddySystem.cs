@@ -55,32 +55,66 @@ namespace WertheApp.BS
                 this.isContentCreated = true;
                 this.Content.IsVisible = false;
             }
-
-			//subscribe to Message in order to know if a new process was started
-			MessagingCenter.Subscribe<BuddySystemModal>(this, "new process started", (args) =>
-			{
-
-			});
-
-			//subscribe to Message in order to know if a new process was ended
-			MessagingCenter.Subscribe<BuddySystemModal>(this, "process ended", (args) =>
-			{
-
-			});
         }
 
 		//METHODS
 
         /**********************************************************************
         *********************************************************************/
-        public static void AllocateBlock(int bsize){
-            //buddySystem.
+        //checks if there is a block, in which the process could possibly fit in
+        public static bool AllocateBlock(int processSize, String processName){
+            //find the fitting block size
+            int blockSize = BuddySystem.FindFittingBlockSize(processSize); //is 0 when process is bigger than the whole memory
+
+            //does such a block exist? or a bigger one?
+            int block = (int)absoluteMemorySize+1; //bigger than all blocks ever available
+            int index = -1;
+            //find the block clostest(and still bigger) to requested blocksize
+            for (int i = 0; i < buddySystem.Count; i++){
+                int dummy = buddySystem[i].GetBlockSize();
+                if(dummy >= blockSize && dummy <= block && buddySystem[i].GetFree()){
+                    block = dummy;
+                    index = i;
+                }
+            }
+            //process bigger than memory or a blog with fitting size doesn't exist
+            if(index == -1 || blockSize == 0){
+                Debug.WriteLine("process bigger than memory or a blog with fitting size doesn't exist");
+                printBuddySystemList();
+                return false;
+            } 
+            //block fits perfectly
+            if(block == blockSize && buddySystem[index].GetFree()){
+                Debug.WriteLine("block "+block + "blocksize "+ blockSize);
+                Debug.WriteLine("block fits perfectly");
+                buddySystem[index].OccupyBlock(processName, processSize);
+                printBuddySystemList();
+                return true;
+            }
+
+            //blocksize found but has to be split
+            if(block > blockSize && buddySystem[index].GetFree()){
+                Debug.WriteLine("blocksize found but has to be split");
+                SplitBlock(index, blockSize);
+                buddySystem[index].OccupyBlock(processName, processSize);
+                printBuddySystemList();
+                return true;
+            }
+            Debug.WriteLine("sonderfall");
+            return false;
         }
 
         /**********************************************************************
         *********************************************************************/
-        public static void DeallocateBlock(){
-            
+        public static void DeallocateBlock(String processName){
+            for (int i = 0; i < buddySystem.Count; i++)
+            { 
+                if(buddySystem[i].GetProcessName() == processName){
+                    buddySystem[i].FreeBlock();
+                    i = buddySystem.Count;
+                }
+            }
+            printBuddySystemList();
         }
 
         /**********************************************************************
@@ -89,12 +123,36 @@ namespace WertheApp.BS
 
         }
 
+
         /**********************************************************************
         *********************************************************************/
-        public static int FindFittingBlockSize(int psize){
+        //splits the block at the index until it has the required size 
+        public static void SplitBlock(int index, int requiredSize){
+
+            int blockSize = buddySystem[index].GetBlockSize();
+            //entferne Block an Index in der Liste 
+            //Teile in zwei auf, solange bis blocksize = requiredsize entspricht 
+            while (blockSize > requiredSize)
+            {
+                int dummy = blockSize / 2;
+                if (dummy >= requiredSize)
+                {
+                    //split
+                    buddySystem.Remove(buddySystem[index]);
+                    buddySystem.Insert(index, new BuddySystemBlock(dummy));
+                    buddySystem.Insert(index, new BuddySystemBlock(dummy));
+                }
+                blockSize = dummy;
+            }
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        //finds the fitting blocksize for a process and returns 0 when process is bigger than the whole memory
+        public static int FindFittingBlockSize(int processSize){
             int fitting = (int)absoluteMemorySize;
-            if (psize > absoluteMemorySize) { return 0; }
-            while(fitting >= psize){
+            if (processSize > absoluteMemorySize) { return 0; }
+            while(fitting >= processSize){
                 fitting = fitting / 2; 
             }
             fitting = fitting * 2;
@@ -164,7 +222,6 @@ namespace WertheApp.BS
 			{
 				Orientation = StackOrientation.Horizontal,
 				Margin = new Thickness(10),
-
 			};
 
             //add elements to stacklayout
@@ -200,7 +257,6 @@ namespace WertheApp.BS
             {
                 await DisplayAlert("Alert", "Maximum amount of active processes is reached", "OK");
             }
-
 		}
 
 		/**********************************************************************
@@ -241,5 +297,23 @@ namespace WertheApp.BS
             }
 		}
 
+        private static void printBuddySystemList(){
+            Debug.WriteLine("##############");
+            String s = "";
+            for (int i = 0; i < buddySystem.Count; i++)
+            {
+                int value = buddySystem[i].GetBlockSize();
+                s += value + " ";
+            }
+            Debug.WriteLine(s);
+
+            String st = "";
+            for (int i = 0; i < buddySystem.Count; i++)
+            {
+                int value = buddySystem[i].GetProcessSize();
+                st += value + " ";
+            }
+            Debug.WriteLine(st);
+        }
 	}
 }

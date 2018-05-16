@@ -1,5 +1,6 @@
 ﻿/********************CLASS FOR START PROCESS POP UP****************************/
 using System;
+using System.Diagnostics; //Debug.WriteLine("");
 using System.Text.RegularExpressions; //Regex.IsMatch
 using Xamarin.Forms;
 
@@ -72,14 +73,23 @@ namespace WertheApp.BS
         *********************************************************************/
 		async void B_Start_Clicked(object sender, EventArgs e)
         {
+            //check if there was a vailid input
             if (e_ProcessSize.Text != null && ValidateMemoryRequestInput())
             {
-                MessagingCenter.Send<BuddySystemModal>(this, "new process started");// inform all subscribers
+                bool bfound = BuddySystem.AllocateBlock(Int32.Parse(e_ProcessSize.Text), p_ProcessNames.SelectedItem.ToString());
 
-                BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
-                BuddySystem.activeProcesses.Add(p_ProcessNames.SelectedItem.ToString());
-                BuddySystem.AddBuddySystemCell();
-                await Navigation.PopModalAsync(); // close Modal
+                //if fitting blocksize was found
+                if (bfound){
+                    BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
+                    BuddySystem.activeProcesses.Add(p_ProcessNames.SelectedItem.ToString());
+                    BuddySystem.AddBuddySystemCell();
+                    await Navigation.PopModalAsync(); // close Modal
+                }
+                else 
+                { 
+                    await DisplayAlert("Alert", "Process doesn't fit in memory", "OK");
+                }
+
             }
             else if (e_ProcessSize.Text == null){await DisplayAlert("Alert", "Please enter a process size", "OK");}
             else if (!ValidateMemoryRequestInput()){await DisplayAlert("Alert", "Please enter a valid process size (only integers >= 2)", "OK");}
