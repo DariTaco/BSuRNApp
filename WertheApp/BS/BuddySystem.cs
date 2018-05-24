@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics; //Debug.WriteLine("");
 
+/*TODO ganz wichtig : Zellen übernehmen komischerweise Eigenschaften von vorherigen Zellen,jede Zelle sollte individuell sein*/
 namespace WertheApp.BS
 {
     public class BuddySystem : ContentPage
@@ -79,19 +80,13 @@ namespace WertheApp.BS
             }
             //process bigger than memory or a blog with fitting size doesn't exist
             if(index == -1 || blockSize == 0){
-                Debug.WriteLine("process bigger than memory or a blog with fitting size doesn't exist");
-                PrintBuddySystemList();
 
                 return false;
             } 
             //block fits perfectly
             if(block == blockSize && buddySystem[index].GetFree()){
                 buddySystem[index].OccupyBlock(processName, processSize);
-
-                Debug.WriteLine("block "+block + "blocksize "+ blockSize);
-                Debug.WriteLine("block fits perfectly");
-                PrintBuddySystemList();
-
+                AddBuddySystemCell();
                 return true;
             }
 
@@ -99,13 +94,9 @@ namespace WertheApp.BS
             if(block > blockSize && buddySystem[index].GetFree()){
                 SplitBlock(index, blockSize);
                 buddySystem[index].OccupyBlock(processName, processSize);
-
-                Debug.WriteLine("blocksize found but has to be split");
-                PrintBuddySystemList();
-
+                AddBuddySystemCell();
                 return true;
             }
-            Debug.WriteLine("sonderfall");
             return false;
         }
 
@@ -113,7 +104,6 @@ namespace WertheApp.BS
         *********************************************************************/
         //Deallocates the Block which contains the given process
         public static void DeallocateBlock(String processName){
-            Debug.WriteLine("Deallocate block");
             for (int i = 0; i < buddySystem.Count; i++)
             { 
                 if(buddySystem[i].GetProcessName() == processName){
@@ -121,7 +111,6 @@ namespace WertheApp.BS
                     i = buddySystem.Count;
                 }
             }
-            PrintBuddySystemList();
             MergeBlocks();
         }
 
@@ -162,7 +151,7 @@ namespace WertheApp.BS
                         buddySystem.Insert(i - 1, new BuddySystemBlock(blockSize + blockSizeL, buddyNoMergedBlock));
              
                         buddySystem[i].SetBuddyNoList(buddyNoListCopy);
-                        PrintBuddySystemList();
+                        AddBuddySystemCell();
                         i = 1; //start again
                     }    
                 }
@@ -178,8 +167,7 @@ namespace WertheApp.BS
                         //replace them with the merged block 
                         buddySystem.Insert(i, new BuddySystemBlock(blockSize + blockSizeR, buddyNoMergedBlock));
                         buddySystem[i].SetBuddyNoList(buddyNoListCopy);
-
-                        PrintBuddySystemList();
+                        AddBuddySystemCell();
                         i = 1; //start again
                     }  
                 }
@@ -188,7 +176,6 @@ namespace WertheApp.BS
                 }
             }
 
-            Debug.WriteLine("buddysytsem count " + buddySystem.Count);
             //for 2 items in list
             if (buddySystem.Count == 2)
             {
@@ -200,12 +187,9 @@ namespace WertheApp.BS
                     buddySystem.Remove(buddySystem[1]);
                     buddySystem.Remove(buddySystem[0]);
                     buddySystem.Insert(0, new BuddySystemBlock(blockSize*2, 0));
-                    PrintBuddySystemList();
+                    AddBuddySystemCell();
                 }
             }
-
-            //buddySystem.Insert(index, new BuddySystemBlock(dummy, 2));
-            PrintBuddySystemList();
         }
 
 
@@ -252,9 +236,10 @@ namespace WertheApp.BS
         /**********************************************************************
         *********************************************************************/
         public static void AddBuddySystemCell(){
-            BuddySystemViewCell b = new BuddySystemViewCell();
-            BuddySystemViewCell a = new BuddySystemViewCell();
-            buddySystemCells.Add(a); //actually creates a new buddysystemviewcell
+            //BuddySystemViewCell b = new BuddySystemViewCell();
+            //BuddySystemViewCell a = new BuddySystemViewCell();/*TODO*/
+            buddySystemCells.Add(new BuddySystemViewCell()); //actually creates a new buddysystemviewcell
+            Debug.WriteLine(buddySystemCells.Count());
             listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
         }
 
@@ -287,7 +272,7 @@ namespace WertheApp.BS
             buddySystemCells = new ObservableCollection<BuddySystemViewCell>();
             listView.ItemsSource = buddySystemCells;
             grid.Children.Add(listView, 0, 0);
-            AddBuddySystemCell();
+            AddBuddySystemCell(); //add very first cell
         }
 
 		/**********************************************************************

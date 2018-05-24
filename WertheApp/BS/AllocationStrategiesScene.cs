@@ -372,13 +372,13 @@ namespace WertheApp.BS
                 //if the search was unsuccessfull
                 if ((pos == memoryBlocks.GetLength(0) - 1 || FollowingFull()) && memoryRequest > memoryBlocks[pos, 0])
 				{
-					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.unsuccessfull;
 
 				}
                 //if the search was successfull
 				else if (memoryRequest <= memoryBlocks[pos, 0]) //if it fits ->successfull
 				{
-					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.successfull;
 				}
             }
 
@@ -396,7 +396,7 @@ namespace WertheApp.BS
             if(FollowingFull() && memoryRequest > memoryBlocks[pos,0])
             {
                 DrawRedArrow();
-				AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+				AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.unsuccessfull;
 			}
             else if (memoryBlocks[pos, 0] == 0)
 			{
@@ -440,7 +440,7 @@ namespace WertheApp.BS
                     { 
                         suc = pos; 
                     } //the latest successfull block, that was filled
-					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.successfull;
 
 				}
                 //if the end is reached and wasn't successfull start from the beginning
@@ -479,7 +479,7 @@ namespace WertheApp.BS
 					besPos = pos;
 					besValue = memoryBlocks[pos, 0];
 					DrawGrayArrow();
-                    AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+                    AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.successfull;
                 }
                 else
                 {
@@ -499,11 +499,11 @@ namespace WertheApp.BS
 				{
                     if(besValue == Int32.MaxValue)
                     {
-						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.unsuccessfull;
                     }
                     else
                     {
-						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.successfull;
 						pos = besPos;
                     }
 
@@ -549,11 +549,11 @@ namespace WertheApp.BS
 			{
 				if (besValue == 0)
 				{
-					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.unsuccessfull;
 				}
 				else
 				{
-					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.successfull;
 					pos = besPos;
 				}
 
@@ -588,7 +588,7 @@ namespace WertheApp.BS
 					besPos = pos;
 					besValue = memoryBlocks[pos, 0];
 					DrawGrayArrow();
-					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+					AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.successfull;
 				}
 				else
 				{
@@ -608,11 +608,11 @@ namespace WertheApp.BS
 				{
 					if (besValue == 0)
 					{
-						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.unsuccessfull;
 					}
 					else
 					{
-						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.successfull;
+						AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.MyEnum)AllocationStrategies.MyEnum.successfull;
 						pos = besPos;
 					}
 

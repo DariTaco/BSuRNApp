@@ -28,7 +28,7 @@ namespace WertheApp.BS
 
         bool isContentCreated; //indicates weather the Content of the page was already created
 
-        public enum myEnum
+        public enum MyEnum
         {
             newRequest = 0, //new request was entered after clicking th next button
             searchingForBlock = 1, // currently searching for a memory block which is big enough 
@@ -37,7 +37,7 @@ namespace WertheApp.BS
             noRequestYet = 4,   //the application just started an no memory has been requested yet
             memoryFull = 5 //no free space at all. Every block is full
         }
-        public static myEnum memoryRequestState;
+        public static MyEnum memoryRequestState;
 
         //Labels. Values change
         public static Label l_Size;
@@ -61,7 +61,7 @@ namespace WertheApp.BS
 
             fragmentList = l;
             strategy = s;
-            memoryRequestState = myEnum.noRequestYet;
+            memoryRequestState = MyEnum.noRequestYet;
 
             Title = "Allocation Strategies: " + strategy;
 
@@ -88,11 +88,11 @@ namespace WertheApp.BS
                 l_Free.Text = free;
 				if (AllocationStrategiesScene.CheckIfFull())
 				{
-					memoryRequestState = myEnum.memoryFull;
+					memoryRequestState = MyEnum.memoryFull;
                 }
                 else
                 {
-                    memoryRequestState = myEnum.newRequest;
+                    memoryRequestState = MyEnum.newRequest;
                 }
 
 
@@ -230,11 +230,11 @@ namespace WertheApp.BS
         {
             switch (memoryRequestState)
 			{
-                case myEnum.newRequest: //new request
-                    memoryRequestState = myEnum.searchingForBlock;
+                case MyEnum.newRequest: //new request
+                    memoryRequestState = MyEnum.searchingForBlock;
                     AllocationStrategiesScene.RequestNew(memoryRequest);
 					break;
-                case myEnum.searchingForBlock: //searching for block
+                case MyEnum.searchingForBlock: //searching for block
 					switch (strategy)
 					{
 						case "First Fit":
@@ -259,11 +259,11 @@ namespace WertheApp.BS
 							break;
 					}
 					break;
-                case myEnum.successfull: //successfull
+                case MyEnum.successfull: //successfull
 					AllocationStrategiesScene.ClearRedArrow();
 					AllocationStrategiesScene.ClearGrayArrow();
                     AllocationStrategiesScene.DrawFill();
-					memoryRequestState = myEnum.noRequestYet;
+					memoryRequestState = MyEnum.noRequestYet;
 
 					//clear information bar
 					l_Size.Text = size;
@@ -271,11 +271,11 @@ namespace WertheApp.BS
 					l_Best.Text = best;
 					l_Free.Text = free;
 					break;
-                case myEnum.unsuccessfull: //unsucessfull
+                case MyEnum.unsuccessfull: //unsucessfull
 					AllocationStrategiesScene.ClearGrayArrow();
 					AllocationStrategiesScene.ClearRedArrow();
 					await DisplayAlert("Alert", "No free space has been found", "OK");
-					memoryRequestState = myEnum.noRequestYet; //ready for a new request
+					memoryRequestState = MyEnum.noRequestYet; //ready for a new request
 															  
                     //clear information bar
 					l_Size.Text = size;
@@ -283,10 +283,10 @@ namespace WertheApp.BS
 					l_Best.Text = best;
 					l_Free.Text = free;
 					break;
-                case myEnum.noRequestYet: //no requst yet
+                case MyEnum.noRequestYet: //no requst yet
                     await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
                     break;
-                case myEnum.memoryFull: //memory is full
+                case MyEnum.memoryFull: //memory is full
                     await DisplayAlert("Alert", "Out of memory! The app will close now", "OK");
                     await Navigation.PopAsync();
                     break;

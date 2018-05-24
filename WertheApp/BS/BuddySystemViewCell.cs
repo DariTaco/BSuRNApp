@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System.Diagnostics; //Debug.WriteLine("");
+using System.Collections.Generic;
 
 namespace WertheApp.BS
 {
@@ -21,11 +22,16 @@ namespace WertheApp.BS
 
 
         //CONSTRUCTOR
+        /*TODO constructor with parameters is somehow not possible. give buddySystem List to constructor*/
         public BuddySystemViewCell()
         {
+            //TODO get buddySystem List through constructor
+            List<BuddySystemBlock> buddySystem = BuddySystem.buddySystem;
+ 
             // crate the canvas
             skiaview = new SKCanvasView();
 
+            //changing background color for better clarity
             if(dari%2 == 0){
                 skiaview.BackgroundColor = Color.Azure; 
             }else{
@@ -53,15 +59,28 @@ namespace WertheApp.BS
 
                 makeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
 
-
-                SKRect sk_r = new SKRect(xe*2, ye*10, xe*80, ye*90); //left, top, right, bottom
-                SKPoint sk_p1 = new SKPoint(xe * 50, ye * 10);
-                SKPoint sk_p2 = new SKPoint(xe * 50, ye * 90);
-
                 // draw on the canvas
+
+                //rect for memory 80units long
+                SKRect sk_r = new SKRect(xe*2, ye*10, xe*82, ye*90); //left, top, right, bottom
                 canvas.DrawRect(sk_r, sk_Paint1); //draw an rect with dimensions of sk_r and paint sk_1
-                canvas.DrawLine(sk_p1, sk_p2, sk_Paint1); 
-                canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe*82, ye*50), sk_blackText);
+
+                //calculate units for memory
+                float memoryUnit = (float)(80f / BuddySystem.absoluteMemorySize);
+
+                for (int i = 0; i < buddySystem.Count; i++)
+                { 
+                    int blockSize = buddySystem[i].GetBlockSize();
+                    float value = memoryUnit * blockSize;
+                    SKPoint sk_p1 = new SKPoint(xe * 2 + xe * value, ye * 10);
+                    SKPoint sk_p2 = new SKPoint(xe * 2 + xe * value, ye * 90);
+                    canvas.DrawLine(sk_p1, sk_p2, sk_Paint1);
+
+                }
+
+
+                //text
+                canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe*84, ye*50), sk_blackText);
 
                 //execute all drawing actions
                 canvas.Flush();
@@ -89,7 +108,6 @@ namespace WertheApp.BS
             {
                 Color = SKColors.Black,
                 TextSize = ye*30
-                                
             };
 
             //green text for starting an process

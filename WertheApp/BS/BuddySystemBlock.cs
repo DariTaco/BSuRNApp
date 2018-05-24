@@ -24,7 +24,6 @@ namespace WertheApp.BS
             if(bNo == 0){
                 buddyNoList = new List<int>();
                 buddyNoList.Add(bNo);
-                PrintBuddyNoList();
             }
             processName = null;
             processSize = 0;
@@ -70,7 +69,6 @@ namespace WertheApp.BS
         public void SetBuddyNoList(List<int> l){
             this.buddyNoList = new List<int>(l);
             buddyNoList.Add(this.GetBuddyNo());
-            PrintBuddyNoList();
         }
 
         public void PrintBuddyNoList()
@@ -86,17 +84,3 @@ namespace WertheApp.BS
         }
     }
 }
-
-
-/*        public BuddySystemBlock(int bSize, int bNo, List<int> bNoL)
-        {
-            free = true;
-            blockSize = bSize;
-            buddyNo = bNo;
-            //BuddyNoList = new List<int>();
-            buddyNoList = bNoL;
-            buddyNoList.Add(bSize);
-            processName = null;
-            processSize = 0;
-            PrintBuddyNoList();
-        }*/

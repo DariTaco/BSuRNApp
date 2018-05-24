@@ -82,12 +82,12 @@ namespace WertheApp.BS
                 if (bfound){
                     BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
                     BuddySystem.activeProcesses.Add(p_ProcessNames.SelectedItem.ToString());
-                    BuddySystem.AddBuddySystemCell();
                     await Navigation.PopModalAsync(); // close Modal
                 }
                 else 
                 { 
                     await DisplayAlert("Alert", "Process doesn't fit in memory", "OK");
+                    await Navigation.PopModalAsync(); // close Modal
                 }
 
             }
