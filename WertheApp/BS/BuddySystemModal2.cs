@@ -66,6 +66,7 @@ namespace WertheApp.BS
         {
 			MessagingCenter.Send<BuddySystemModal2>(this, "process ended");// inform all subscribers
 
+            BuddySystem.DeallocateBlock(p_ProcessNames.SelectedItem.ToString());
             BuddySystem.activeProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
             BuddySystem.availableProcesses.Add(p_ProcessNames.SelectedItem.ToString());
             BuddySystem.AddBuddySystemCell();

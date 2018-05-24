@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
 namespace WertheApp.BS
 {
     public class BuddySystemBlock
@@ -8,12 +11,21 @@ namespace WertheApp.BS
         private int blockSize;
         private String processName;
         private int processSize;
+        private int buddyNo; //indicates if block is the first(1) or second(2) buddy or has no buddy(0)
+        private List<int> buddyNoList; //-1 means no parent
 
         //CONTRUCTOR
-        public BuddySystemBlock(int bsize)
+        public BuddySystemBlock(int bSize, int bNo)
         {
             free = true;
-            blockSize = bsize;
+            blockSize = bSize;
+            buddyNo = bNo;
+            //if very first block without buddy
+            if(bNo == 0){
+                buddyNoList = new List<int>();
+                buddyNoList.Add(bNo);
+                PrintBuddyNoList();
+            }
             processName = null;
             processSize = 0;
         }
@@ -46,5 +58,45 @@ namespace WertheApp.BS
         public String GetProcessName(){
             return this.processName;
         }
+
+        public int GetBuddyNo(){
+            return this.buddyNo;
+        }
+
+        public List<int> GetBuddyNoList(){
+            return this.buddyNoList;
+        }
+
+        public void SetBuddyNoList(List<int> l){
+            this.buddyNoList = new List<int>(l);
+            buddyNoList.Add(this.GetBuddyNo());
+            PrintBuddyNoList();
+        }
+
+        public void PrintBuddyNoList()
+        {
+            Debug.WriteLine("############## Buddy No List");
+            String s = "";
+            for (int i = 0; i < this.buddyNoList.Count; i++)
+            {
+                String value = this.buddyNoList[i].ToString();
+                s += value + " ";
+            }
+            Debug.WriteLine(s);
+        }
     }
 }
+
+
+/*        public BuddySystemBlock(int bSize, int bNo, List<int> bNoL)
+        {
+            free = true;
+            blockSize = bSize;
+            buddyNo = bNo;
+            //BuddyNoList = new List<int>();
+            buddyNoList = bNoL;
+            buddyNoList.Add(bSize);
+            processName = null;
+            processSize = 0;
+            PrintBuddyNoList();
+        }*/

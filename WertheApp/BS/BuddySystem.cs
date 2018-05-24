@@ -28,9 +28,9 @@ namespace WertheApp.BS
 
 		private double width = 0;
 		private double height = 0;
-        					   
+    
         //CONSTRUCTOR
-		public BuddySystem(int a)
+        public BuddySystem(int a)
         {
             Title = "Buddy System";
 
@@ -41,7 +41,7 @@ namespace WertheApp.BS
                 "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
             availableProcesses = new List<string>(availableProcessesInput);
             buddySystem = new List<BuddySystemBlock>();
-            buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize));
+            buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize, 0));
 
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
             {
@@ -80,24 +80,29 @@ namespace WertheApp.BS
             //process bigger than memory or a blog with fitting size doesn't exist
             if(index == -1 || blockSize == 0){
                 Debug.WriteLine("process bigger than memory or a blog with fitting size doesn't exist");
-                printBuddySystemList();
+                PrintBuddySystemList();
+
                 return false;
             } 
             //block fits perfectly
             if(block == blockSize && buddySystem[index].GetFree()){
+                buddySystem[index].OccupyBlock(processName, processSize);
+
                 Debug.WriteLine("block "+block + "blocksize "+ blockSize);
                 Debug.WriteLine("block fits perfectly");
-                buddySystem[index].OccupyBlock(processName, processSize);
-                printBuddySystemList();
+                PrintBuddySystemList();
+
                 return true;
             }
 
             //blocksize found but has to be split
             if(block > blockSize && buddySystem[index].GetFree()){
-                Debug.WriteLine("blocksize found but has to be split");
                 SplitBlock(index, blockSize);
                 buddySystem[index].OccupyBlock(processName, processSize);
-                printBuddySystemList();
+
+                Debug.WriteLine("blocksize found but has to be split");
+                PrintBuddySystemList();
+
                 return true;
             }
             Debug.WriteLine("sonderfall");
@@ -106,7 +111,9 @@ namespace WertheApp.BS
 
         /**********************************************************************
         *********************************************************************/
+        //Deallocates the Block which contains the given process
         public static void DeallocateBlock(String processName){
+            Debug.WriteLine("Deallocate block");
             for (int i = 0; i < buddySystem.Count; i++)
             { 
                 if(buddySystem[i].GetProcessName() == processName){
@@ -114,13 +121,91 @@ namespace WertheApp.BS
                     i = buddySystem.Count;
                 }
             }
-            printBuddySystemList();
+            PrintBuddySystemList();
+            MergeBlocks();
         }
 
         /**********************************************************************
         *********************************************************************/
+        //checks if there a blocks that can be merged
         public static void MergeBlocks(){
 
+            int blockSize, blockSizeR, blockSizeL;
+            int buddyNo, buddyNoR, buddyNoL, buddyNoMergedBlock;
+            bool free, freeR, freeL;
+            List<int> buddyNoListCopy = new List<int>();
+
+            //for 3 or more items in list, check every item, except the outter right and outter left
+            for (int i = 1; i < buddySystem.Count - 1;)
+            {
+                blockSize = buddySystem[i].GetBlockSize();
+                blockSizeR = buddySystem[i + 1].GetBlockSize();
+                blockSizeL = buddySystem[i - 1].GetBlockSize();
+                buddyNo = buddySystem[i].GetBuddyNo();
+                buddyNoR = buddySystem[i + 1].GetBuddyNo();
+                buddyNoL = buddySystem[i - 1].GetBuddyNo();
+                free = buddySystem[i].GetFree();
+                freeR = buddySystem[i + 1].GetFree();
+                freeL = buddySystem[i - 1].GetFree();
+                buddyNoListCopy = buddySystem[i].GetBuddyNoList();
+
+                if(free && buddyNo == 2){
+                    if(blockSizeL == blockSize && buddyNoL == 1 && freeL){
+                        buddyNoListCopy.Remove(buddyNoListCopy.Last()); //remove last in List, which is the buddyNo of the child
+                        buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
+
+                        //merge:
+                        //remove the 2 blocks that will be merged
+                        buddySystem.Remove(buddySystem[i]);
+                        buddySystem.Remove(buddySystem[i - 1]);
+                        //replace them with the merged block 
+                        buddySystem.Insert(i - 1, new BuddySystemBlock(blockSize + blockSizeL, buddyNoMergedBlock));
+             
+                        buddySystem[i].SetBuddyNoList(buddyNoListCopy);
+                        PrintBuddySystemList();
+                        i = 1; //start again
+                    }    
+                }
+                else if(free && buddyNo == 1){
+                    if(blockSizeR == blockSize && buddyNoR == 2 && freeR){
+                        buddyNoListCopy.Remove(buddyNoListCopy.Last()); //remove last in List, which is the buddyNo of the child
+                        buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
+
+                        //merge:
+                        //remove the 2 blocks that will be merged
+                        buddySystem.Remove(buddySystem[i + 1]);
+                        buddySystem.Remove(buddySystem[i]);
+                        //replace them with the merged block 
+                        buddySystem.Insert(i, new BuddySystemBlock(blockSize + blockSizeR, buddyNoMergedBlock));
+                        buddySystem[i].SetBuddyNoList(buddyNoListCopy);
+
+                        PrintBuddySystemList();
+                        i = 1; //start again
+                    }  
+                }
+                else{
+                    i++;
+                }
+            }
+
+            Debug.WriteLine("buddysytsem count " + buddySystem.Count);
+            //for 2 items in list
+            if (buddySystem.Count == 2)
+            {
+                blockSize = buddySystem[0].GetBlockSize();
+                //and both are free (no check for other properties since they have to be buddys)
+                if (buddySystem[0].GetFree() && buddySystem[1].GetFree())
+                {
+                    //merge
+                    buddySystem.Remove(buddySystem[1]);
+                    buddySystem.Remove(buddySystem[0]);
+                    buddySystem.Insert(0, new BuddySystemBlock(blockSize*2, 0));
+                    PrintBuddySystemList();
+                }
+            }
+
+            //buddySystem.Insert(index, new BuddySystemBlock(dummy, 2));
+            PrintBuddySystemList();
         }
 
 
@@ -138,9 +223,14 @@ namespace WertheApp.BS
                 if (dummy >= requiredSize)
                 {
                     //split
+                    List<int> buddyNoList = buddySystem[index].GetBuddyNoList();
                     buddySystem.Remove(buddySystem[index]);
-                    buddySystem.Insert(index, new BuddySystemBlock(dummy));
-                    buddySystem.Insert(index, new BuddySystemBlock(dummy));
+                    BuddySystemBlock block1 = new BuddySystemBlock(dummy, 2);
+                    BuddySystemBlock block2 = new BuddySystemBlock(dummy, 1);
+                    block1.SetBuddyNoList(buddyNoList);
+                    block2.SetBuddyNoList(buddyNoList);
+                    buddySystem.Insert(index, block1);
+                    buddySystem.Insert(index, block2);
                 }
                 blockSize = dummy;
             }
@@ -297,8 +387,11 @@ namespace WertheApp.BS
             }
 		}
 
-        private static void printBuddySystemList(){
-            Debug.WriteLine("##############");
+        /**********************************************************************
+        *********************************************************************/
+        //Debug Fuction: prints the memory
+        private static void PrintBuddySystemList(){
+            Debug.WriteLine("#Buddy System List#");
             String s = "";
             for (int i = 0; i < buddySystem.Count; i++)
             {
