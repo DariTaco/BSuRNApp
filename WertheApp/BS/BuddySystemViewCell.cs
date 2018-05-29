@@ -17,6 +17,7 @@ namespace WertheApp.BS
         private SKPaint sk_blackText;
         private SKPaint sk_greenText;
         private SKPaint sk_redText;
+        private SKPaint sk_processColor;
 
         private float xe, ye;
 
@@ -26,7 +27,11 @@ namespace WertheApp.BS
         public BuddySystemViewCell()
         {
             //TODO get buddySystem List through constructor
-            List<BuddySystemBlock> buddySystem = BuddySystem.buddySystem;
+            List<BuddySystemBlock> buddySystem = new List<BuddySystemBlock>(BuddySystem.buddySystem);
+            //note: List<BuddySystemBlock> budd<System  = BuddySystem.buddySystem would not copy the list
+            /*TODO gerade im Moment verweist die kopierte Lise noch auf dieselben Elemente man sollte deswegen die Elementeigenschaften 
+            sofort rauskopieren und dann verwenden. bevor sie geändert werden. zb. getfree()*/
+
  
             // crate the canvas
             skiaview = new SKCanvasView();
@@ -68,16 +73,28 @@ namespace WertheApp.BS
                 //calculate units for memory
                 float memoryUnit = (float)(80f / BuddySystem.absoluteMemorySize);
 
+                //Draw blocks and processes in memory
+                float startValue = xe * 2;
                 for (int i = 0; i < buddySystem.Count; i++)
                 { 
+                    //block
                     int blockSize = buddySystem[i].GetBlockSize();
                     float value = memoryUnit * blockSize;
-                    SKPoint sk_p1 = new SKPoint(xe * 2 + xe * value, ye * 10);
-                    SKPoint sk_p2 = new SKPoint(xe * 2 + xe * value, ye * 90);
+                    SKPoint sk_p1 = new SKPoint(startValue + xe * value, ye * 10);
+                    SKPoint sk_p2 = new SKPoint(startValue + xe * value, ye * 90);
                     canvas.DrawLine(sk_p1, sk_p2, sk_Paint1);
 
-                }
+                    //process
+                   /* if (buddySystem[i].GetFree() == false)
+                    {
+                        int processSize = buddySystem[i].GetProcessSize();
+                        float processValue = memoryUnit * processSize;
+                        canvas.DrawRect(startValue, ye * 10, startValue + xe * processValue, ye * 90, sk_processColor); //left, top, right, bottom, color
+                    }
+*/
+                    startValue = startValue + xe * value;
 
+                }
 
                 //text
                 canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe*84, ye*50), sk_blackText);
@@ -122,6 +139,15 @@ namespace WertheApp.BS
             {
                 Color = SKColors.Red,
                 TextSize = ye*30
+            };
+
+            //process color
+            sk_processColor = new SKPaint
+            {
+                StrokeWidth = 5,
+                IsStroke = false,
+                //IsAntialias = true,
+                Color = new SKColor(20, 200, 0)
             };
         }
 

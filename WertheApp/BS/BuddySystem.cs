@@ -236,11 +236,11 @@ namespace WertheApp.BS
         /**********************************************************************
         *********************************************************************/
         public static void AddBuddySystemCell(){
-            //BuddySystemViewCell b = new BuddySystemViewCell();
+            BuddySystemViewCell b = new BuddySystemViewCell();
             //BuddySystemViewCell a = new BuddySystemViewCell();/*TODO*/
             buddySystemCells.Add(new BuddySystemViewCell()); //actually creates a new buddysystemviewcell
-            Debug.WriteLine(buddySystemCells.Count());
             listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
+            PrintBuddySystemList();
         }
 
 		/**********************************************************************

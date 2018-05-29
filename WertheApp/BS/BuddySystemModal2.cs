@@ -1,7 +1,7 @@
 ﻿/**********************CLASS FOR END PROCESS POP UP****************************/
 
 using System;
-
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace WertheApp.BS
@@ -64,12 +64,9 @@ namespace WertheApp.BS
         *********************************************************************/
 		async void B_End_Clicked(object sender, EventArgs e)
         {
-			MessagingCenter.Send<BuddySystemModal2>(this, "process ended");// inform all subscribers
-
             BuddySystem.DeallocateBlock(p_ProcessNames.SelectedItem.ToString());
             BuddySystem.activeProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
             BuddySystem.availableProcesses.Add(p_ProcessNames.SelectedItem.ToString());
-            BuddySystem.AddBuddySystemCell();
             await Navigation.PopModalAsync(); // close Modal
 		}
 
