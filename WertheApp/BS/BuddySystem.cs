@@ -111,7 +111,12 @@ namespace WertheApp.BS
                     i = buddySystem.Count;
                 }
             }
-            MergeBlocks();
+            if(buddySystem.Count > 1){
+                MergeBlocks();
+            }
+            else{
+                AddBuddySystemCell();
+            }
         }
 
         /**********************************************************************

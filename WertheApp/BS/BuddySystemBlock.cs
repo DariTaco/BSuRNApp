@@ -17,16 +17,16 @@ namespace WertheApp.BS
         //CONTRUCTOR
         public BuddySystemBlock(int bSize, int bNo)
         {
-            free = true;
-            blockSize = bSize;
-            buddyNo = bNo;
+            this.free = true;
+            this.blockSize = bSize;
+            this.buddyNo = bNo;
             //if very first block without buddy
             if(bNo == 0){
-                buddyNoList = new List<int>();
-                buddyNoList.Add(bNo);
+                this.buddyNoList = new List<int>();
+                this.buddyNoList.Add(bNo);
             }
-            processName = null;
-            processSize = 0;
+            this.processName = null;
+            this.processSize = 0;
         }
 
         //METHODS
@@ -68,7 +68,7 @@ namespace WertheApp.BS
 
         public void SetBuddyNoList(List<int> l){
             this.buddyNoList = new List<int>(l);
-            buddyNoList.Add(this.GetBuddyNo());
+            this.buddyNoList.Add(this.GetBuddyNo());
         }
 
         public void PrintBuddyNoList()
