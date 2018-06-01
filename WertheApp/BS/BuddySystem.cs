@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics; //Debug.WriteLine("");
 
-/*TODO ganz wichtig : Zellen übernehmen komischerweise Eigenschaften von vorherigen Zellen,jede Zelle sollte individuell sein*/
+/*TODO manchmal wird bei Prozess beenden keine Zeile hinzugefügt*/
+/*TODO minimum Process size entsprechend anpassen, ab exponent hoch 6*/
 namespace WertheApp.BS
 {
     public class BuddySystem : ContentPage

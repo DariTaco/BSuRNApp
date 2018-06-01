@@ -18,6 +18,9 @@ namespace WertheApp.BS
         private SKPaint sk_greenText;
         private SKPaint sk_redText;
         private SKPaint sk_processColor;
+        private SKPaint sk_A, sk_B, sk_C, sk_D, sk_E, sK_F, sk_G, sk_H, sk_I,
+        sk_J, sk_K, sk_L, sk_M, sk_N, sk_O, sk_P, sk_Q, sk_R, sk_S, sk_T, sk_U,
+        sK_V, sk_W, sk_X, sk_Y, sk_Z;
 
         private float xe, ye;
 
@@ -28,13 +31,25 @@ namespace WertheApp.BS
         public BuddySystemViewCell()
         {
             //TODO get buddySystem List through constructor
-            buddySystem = new List<BuddySystemBlock>(BuddySystem.buddySystem);
+
             //note: List<BuddySystemBlock> budd<System  = BuddySystem.buddySystem would not copy the list
-            /*TODO gerade im Moment verweist die kopierte Lise noch auf dieselben Elemente man sollte deswegen die Elementeigenschaften 
-            sofort rauskopieren und dann verwenden. bevor sie geändert werden. zb. getfree()*/
+            //note: buddySystem = new List<BuddySystemBlock>(BuddySystem.buddySystem); would not create new references
+            //since the paintsurface method get's called several times, even after the object was created, 
+            //there has to be a constant copy of the original list at the time
+            //and since the upper way of copying the list keeps the same references to the original buddysystemblock objects
+            //it has to be copied manually
+            List<BuddySystemBlock> original = new List<BuddySystemBlock>(BuddySystem.buddySystem);
+            buddySystem = new List<BuddySystemBlock>();
+            for (int i = 0; i < original.Count; i++){
+                BuddySystemBlock b = new BuddySystemBlock(original[i].GetBlockSize(), original[i].GetBuddyNo());
+                if(original[i].GetFree() == false){
+                    b.OccupyBlock(original[i].GetProcessName(), original[i].GetProcessSize());
+                }
+                buddySystem.Add(b);
+             }
+       
             /*TODO: Eingabe: 5 dann 2 , dann A beenden. Bleibt hängen*/
-            /*TODO: keine Ahnung wieso, aber eingezeichnete Prozesse verschwinden immer nach ein paar eingaben*/
-            //IDEE!!! im Konstruktor einfach eine komplett neue buddylist machen die die blocks kopiert und jeweils einen neuen extra erstellt.
+            //TODO: je nachdem ob gestartet oder beendet wird den Prozessname an die Seite schreiben mit start A oder beende b
             // crate the canvas
             skiaview = new SKCanvasView();
             skiaview.PaintSurface += PaintSurface;
@@ -42,7 +57,7 @@ namespace WertheApp.BS
             //changing background color for better clarity
             if (dari % 2 == 0)
             {
-                skiaview.BackgroundColor = Color.Azure;
+                skiaview.BackgroundColor = Color.Transparent;
             }
             else
             {
@@ -59,6 +74,7 @@ namespace WertheApp.BS
         /**********************************************************************
         *********************************************************************/
         // do the drawing
+        //notice: this method get's called several times. For example when you scroll the listview in buddysystem or when the listview is updated
         void PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             SKImageInfo info = e.Info;
@@ -69,7 +85,7 @@ namespace WertheApp.BS
             if (canvas != null)
             {
                 canvas.Clear(); //Important! Otherwise the drawing will look messed up in iOS
-            } //Important! Otherwise the drawing will look messed up in iOS
+            }
 
             /*important: the coordinate system starts in the upper left corner*/
             float lborder = canvas.LocalClipBounds.Left;
@@ -77,7 +93,7 @@ namespace WertheApp.BS
             float rborder = canvas.LocalClipBounds.Right;
             float bborder = canvas.LocalClipBounds.Bottom;
 
-            this.xe = rborder / 100;
+            this.xe = rborder / 100; //using the variable surfacewidth instead would mess everything up
             this.ye = bborder / 100;
 
             MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
@@ -116,10 +132,98 @@ namespace WertheApp.BS
                 int processSize = buddySystem[i].GetProcessSize();
                 float processValue = memoryUnit * processSize;
                 bool isFree = buddySystem[i].GetFree();
-                if (true)
+                if (!isFree)
                 {
-                    SKRect sk_r2 = new SKRect(startValue2, ye * 10 + ye, xe * 82 - xe, ye * 90 - ye);
-                    canvas.DrawRect(sk_r2, sk_processColor); //left, top, right, bottom, color
+                    //sry for that. Is there a better(shorter) solution?
+                    SKPaint processColor;
+                    switch(buddySystem[i].GetProcessName()){
+                        case "A": 
+                            processColor = sk_A;
+                            break;
+                        case "B":
+                            processColor = sk_B;
+                            break;
+                        case "C":
+                            processColor = sk_C;
+                            break;
+                        case "D":
+                            processColor = sk_D;
+                            break;
+                        case "E":
+                            processColor = sk_E;
+                            break;
+                        case "F":
+                            processColor = sK_F;
+                            break;
+                        case "G":
+                            processColor = sk_G;
+                            break;
+                        case "H":
+                            processColor = sk_H;
+                            break;
+                        case "I":
+                            processColor = sk_I;
+                            break;
+                        case "J":
+                            processColor = sk_J;
+                            break;
+                        case "K":
+                            processColor = sk_K;
+                            break;
+                        case "L":
+                            processColor = sk_L;
+                            break;
+                        case "M":
+                            processColor = sk_M;
+                            break;
+                        case "N":
+                            processColor = sk_N;
+                            break;
+                        case "O":
+                            processColor = sk_O;
+                            break;
+                        case "P":
+                            processColor = sk_P;
+                            break;
+                        case "Q":
+                            processColor = sk_Q;
+                            break;
+                        case "R":
+                            processColor = sk_R;
+                            break;
+                        case "S":
+                            processColor = sk_S;
+                            break;
+                        case "T":
+                            processColor = sk_T;
+                            break;
+                        case "U":
+                            processColor = sk_U;
+                            break;
+                        case "V":
+                            processColor = sK_V;
+                            break;
+                        case "W":
+                            processColor = sk_W;
+                            break;
+                        case "X":
+                            processColor = sk_X;
+                            break;
+                        case "Y":
+                            processColor = sk_Y;
+                            break;
+                        case "Z":
+                            processColor = sk_Z;
+                            break;
+                        default:
+                            processColor = sk_processColor;
+                            break;
+                    }
+
+                    SKRect sk_r2 = new SKRect(startValue2, ye * 10 , startValue2 + xe * processValue , ye * 90);
+                    canvas.DrawRect(sk_r2, processColor); //left, top, right, bottom, color
+                    SKPoint textPosition = new SKPoint(startValue2 - xe + ((xe * processValue) / 2), ye * 60);
+                    canvas.DrawText(buddySystem[i].GetProcessName(), textPosition, sk_blackText);
                 }
 
                 startValue2 = startValue2 + xe * value2;
@@ -149,9 +253,10 @@ namespace WertheApp.BS
             {
                 Style = SKPaintStyle.Fill,
                 //IsStroke = true,
+
                 StrokeWidth = 5,
                 IsAntialias = true,
-                Color = new SKColor(20, 200, 0)
+                Color = new SKColor(4, 200, 0).WithAlpha(80) //rgb Transparency
             };
 
             //black neutral text
@@ -175,6 +280,212 @@ namespace WertheApp.BS
                 TextSize = ye*30
             };
 
+            //sk Paint for every single process name
+            sk_A = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(238, 130, 238).WithAlpha(80)
+            };
+
+            sk_B = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(132,112,255).WithAlpha(80)
+            };
+
+            sk_C = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(64,224,208).WithAlpha(80)
+            };
+
+            sk_D = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(172,255,47).WithAlpha(80)
+            };
+            sk_E = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255,215,0).WithAlpha(80)
+            };
+
+            sK_F = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255,105,180).WithAlpha(80)
+            };
+
+            sk_G = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(67,110,238).WithAlpha(80)
+            };
+
+            sk_H = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255,255,0).WithAlpha(80)
+            };
+
+            sk_I = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(238, 130, 238).WithAlpha(80)
+            };
+
+            sk_J = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(132, 112, 255).WithAlpha(80)
+            };
+
+            sk_K = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(64, 224, 208).WithAlpha(80)
+            };
+
+            sk_L = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(172, 255, 47).WithAlpha(80)
+            };
+
+            sk_M = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255, 215, 0).WithAlpha(80)
+            };
+
+            sk_N = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255, 105, 180).WithAlpha(80)
+            };
+
+            sk_O = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(67, 110, 238).WithAlpha(80)
+            };
+
+            sk_P = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255, 255, 0).WithAlpha(80)
+            };
+
+            sk_Q = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(238, 130, 238).WithAlpha(80)
+            };
+
+            sk_R = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(132, 112, 255).WithAlpha(80)
+            };
+
+            sk_S = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(64, 224, 208).WithAlpha(80)
+            };
+
+            sk_T = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(172, 255, 47).WithAlpha(80)
+            };
+
+            sk_U = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255, 215, 0).WithAlpha(80)
+            };
+
+            sK_V = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255, 105, 180).WithAlpha(80)
+            };
+
+            sk_W = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(67, 110, 238).WithAlpha(80)
+            };
+
+            sk_X = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255, 255, 0).WithAlpha(80)
+            };
+            sk_Y = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(238, 130, 238).WithAlpha(80)
+            };
+
+            sk_Z = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(132, 112, 255).WithAlpha(80)
+            };
         }
 
         /**********************************************************************
@@ -189,3 +500,17 @@ namespace WertheApp.BS
         */
     }
 }
+/*Random
+            //process color
+            Random random = new Random(this.GetHashCode());
+            byte red = (byte)random.Next(0, 255);
+            sk_processColor = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                //IsStroke = true,
+
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(red, 200, 0).WithAlpha(80) //rgb Transparency
+            };
+*/
