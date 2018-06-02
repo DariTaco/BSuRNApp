@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics; //Debug.WriteLine("");
 
 /*TODO manchmal wird bei Prozess beenden keine Zeile hinzugefügt*/
-/*TODO minimum Process size entsprechend anpassen, ab exponent hoch 6*/
 namespace WertheApp.BS
 {
     public class BuddySystem : ContentPage

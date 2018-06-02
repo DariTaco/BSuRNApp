@@ -14,7 +14,7 @@ namespace WertheApp.BS
         public static int dari; //determines backgroundcolor of the canvas
 
         private SKPaint sk_Paint1;
-        private SKPaint sk_blackText;
+        private SKPaint sk_blackText, sk_blackTextSmall;
         private SKPaint sk_greenText;
         private SKPaint sk_redText;
         private SKPaint sk_processColor;
@@ -27,11 +27,9 @@ namespace WertheApp.BS
         private List<BuddySystemBlock> buddySystem;
 
         //CONSTRUCTOR
-        /*TODO constructor with parameters is somehow not possible. give buddySystem List to constructor*/
+        /*TODO(get buddySystem List through constructor) constructor with parameters is somehow not possible. give buddySystem List to constructor*/
         public BuddySystemViewCell()
         {
-            //TODO get buddySystem List through constructor
-
             //note: List<BuddySystemBlock> budd<System  = BuddySystem.buddySystem would not copy the list
             //note: buddySystem = new List<BuddySystemBlock>(BuddySystem.buddySystem); would not create new references
             //since the paintsurface method get's called several times, even after the object was created, 
@@ -223,14 +221,18 @@ namespace WertheApp.BS
                     SKRect sk_r2 = new SKRect(startValue2, ye * 10 , startValue2 + xe * processValue , ye * 90);
                     canvas.DrawRect(sk_r2, processColor); //left, top, right, bottom, color
                     SKPoint textPosition = new SKPoint(startValue2 - xe + ((xe * processValue) / 2), ye * 60);
-                    canvas.DrawText(buddySystem[i].GetProcessName(), textPosition, sk_blackText);
+                    canvas.DrawText(buddySystem[i].GetProcessName(), textPosition, sk_blackTextSmall);
                 }
 
                 startValue2 = startValue2 + xe * value2;
             }
 
             //text
-            canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe * 84, ye * 50), sk_blackText);
+            SKPaint infoColor = sk_blackTextSmall;
+            if(BuddySystem.powerOfTwo >= 7){
+                infoColor = sk_blackTextSmall;
+            }
+            canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe * 84, ye * 55), infoColor);
 
             //execute all drawing actions
             canvas.Flush();
@@ -264,6 +266,13 @@ namespace WertheApp.BS
             {
                 Color = SKColors.Black,
                 TextSize = ye*30
+            };
+
+            //black neutral text
+            sk_blackTextSmall = new SKPaint
+            {
+                Color = SKColors.Black,
+                TextSize = ye * 20
             };
 
             //green text for starting an process
