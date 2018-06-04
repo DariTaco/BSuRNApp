@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics; //Debug.WriteLine("");
 
-/*TODO manchmal wird bei Prozess beenden keine Zeile hinzugefügt*/
 namespace WertheApp.BS
 {
     public class BuddySystem : ContentPage
@@ -22,6 +21,8 @@ namespace WertheApp.BS
         public static List<String> activeProcesses; //Process names that are in use right now 
         public static ObservableCollection<BuddySystemViewCell> buddySystemCells; // buddysystem canvas
         public static List<BuddySystemBlock> buddySystem;
+        public static String currentProcess; //important variable for class buddysytsemviewcell
+        public static bool endProcess; //important variable for class buddysytsemviewcell
 
         public static ListView listView;
 
@@ -41,6 +42,8 @@ namespace WertheApp.BS
             availableProcessesInput= new string [26] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                 "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
             availableProcesses = new List<string>(availableProcessesInput);
+
+            currentProcess = "first";
             buddySystem = new List<BuddySystemBlock>();
             buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize, 0));
 
@@ -64,6 +67,8 @@ namespace WertheApp.BS
         *********************************************************************/
         //checks if there is a block, in which the process could possibly fit in
         public static bool AllocateBlock(int processSize, String processName){
+            currentProcess = processName;
+
             //find the fitting block size
             int blockSize = BuddySystem.FindFittingBlockSize(processSize); //is 0 when process is bigger than the whole memory
 
@@ -104,6 +109,7 @@ namespace WertheApp.BS
         *********************************************************************/
         //Deallocates the Block which contains the given process
         public static void DeallocateBlock(String processName){
+            currentProcess = processName;
             for (int i = 0; i < buddySystem.Count; i++)
             { 
                 if(buddySystem[i].GetProcessName() == processName){
@@ -111,11 +117,11 @@ namespace WertheApp.BS
                     i = buddySystem.Count;
                 }
             }
+            PrintBuddySystemList();
+            AddBuddySystemCell();
+
             if(buddySystem.Count > 1){
                 MergeBlocks();
-            }
-            else{
-                AddBuddySystemCell();
             }
         }
 
@@ -123,12 +129,12 @@ namespace WertheApp.BS
         *********************************************************************/
         //checks if there a blocks that can be merged
         public static void MergeBlocks(){
+            currentProcess = "merge";
 
             int blockSize, blockSizeR, blockSizeL;
             int buddyNo, buddyNoR, buddyNoL, buddyNoMergedBlock;
             bool free, freeR, freeL;
             List<int> buddyNoListCopy = new List<int>();
-
             //for 3 or more items in list, check every item, except the outter right and outter left
             for (int i = 1; i < buddySystem.Count - 1;)
             {
@@ -142,6 +148,7 @@ namespace WertheApp.BS
                 freeR = buddySystem[i + 1].GetFree();
                 freeL = buddySystem[i - 1].GetFree();
                 buddyNoListCopy = buddySystem[i].GetBuddyNoList();
+
 
                 if(free && buddyNo == 2){
                     if(blockSizeL == blockSize && buddyNoL == 1 && freeL){
@@ -158,7 +165,9 @@ namespace WertheApp.BS
                         buddySystem[i].SetBuddyNoList(buddyNoListCopy);
                         AddBuddySystemCell();
                         i = 1; //start again
-                    }    
+                    }else{
+                        i++;
+                    }   
                 }
                 else if(free && buddyNo == 1){
                     if(blockSizeR == blockSize && buddyNoR == 2 && freeR){
@@ -174,7 +183,9 @@ namespace WertheApp.BS
                         buddySystem[i].SetBuddyNoList(buddyNoListCopy);
                         AddBuddySystemCell();
                         i = 1; //start again
-                    }  
+                    }else{
+                        i++;
+                    }    
                 }
                 else{
                     i++;
@@ -244,6 +255,7 @@ namespace WertheApp.BS
             BuddySystemViewCell b = new BuddySystemViewCell();
             //BuddySystemViewCell a = new BuddySystemViewCell();/*TODO*/
             buddySystemCells.Add(new BuddySystemViewCell()); //actually creates a new buddysystemviewcell
+
             listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
             PrintBuddySystemList();
         }

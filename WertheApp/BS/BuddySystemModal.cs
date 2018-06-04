@@ -162,7 +162,8 @@ namespace WertheApp.BS
 
                     //if fitting blocksize was found
                     if (bfound)
-                    {
+                    {   
+                        BuddySystem.endProcess = false;
                         BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
                         BuddySystem.activeProcesses.Add(p_ProcessNames.SelectedItem.ToString());
                         await Navigation.PopModalAsync(); // close Modal

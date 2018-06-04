@@ -64,9 +64,10 @@ namespace WertheApp.BS
         *********************************************************************/
 		async void B_End_Clicked(object sender, EventArgs e)
         {
-            BuddySystem.DeallocateBlock(p_ProcessNames.SelectedItem.ToString());
+            BuddySystem.endProcess = true;
             BuddySystem.activeProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
             BuddySystem.availableProcesses.Add(p_ProcessNames.SelectedItem.ToString());
+            BuddySystem.DeallocateBlock(p_ProcessNames.SelectedItem.ToString());
             await Navigation.PopModalAsync(); // close Modal
 		}
 

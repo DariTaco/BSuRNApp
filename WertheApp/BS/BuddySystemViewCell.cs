@@ -21,6 +21,8 @@ namespace WertheApp.BS
         private SKPaint sk_A, sk_B, sk_C, sk_D, sk_E, sK_F, sk_G, sk_H, sk_I,
         sk_J, sk_K, sk_L, sk_M, sk_N, sk_O, sk_P, sk_Q, sk_R, sk_S, sk_T, sk_U,
         sK_V, sk_W, sk_X, sk_Y, sk_Z;
+        private String processName; //added or ended process
+        private bool endProcess;
 
         private float xe, ye;
 
@@ -45,9 +47,11 @@ namespace WertheApp.BS
                 }
                 buddySystem.Add(b);
              }
-       
+
+            this.processName = BuddySystem.currentProcess;
+            this.endProcess = BuddySystem.endProcess;
+
             /*TODO: Eingabe: 5 dann 2 , dann A beenden. Bleibt hängen*/
-            //TODO: je nachdem ob gestartet oder beendet wird den Prozessname an die Seite schreiben mit start A oder beende b
             // crate the canvas
             skiaview = new SKCanvasView();
             skiaview.PaintSurface += PaintSurface;
@@ -62,7 +66,6 @@ namespace WertheApp.BS
                 skiaview.BackgroundColor = Color.WhiteSmoke;
             }
             dari++;
-
 
             // assign the canvas to the cell
             this.View = skiaview;
@@ -95,7 +98,6 @@ namespace WertheApp.BS
             this.ye = bborder / 100;
 
             MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
-
 
             // draw on the canvas
             //rect for memory 80units long
@@ -229,10 +231,17 @@ namespace WertheApp.BS
 
             //text
             SKPaint infoColor = sk_blackTextSmall;
-            if(BuddySystem.powerOfTwo >= 7){
-                infoColor = sk_blackTextSmall;
+            if(this.processName == "merge"){
+                canvas.DrawText("merge", new SKPoint(xe * 84, ye * 55), infoColor);
+            }else if(this.processName == "first"){
+                canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe * 84, ye * 55), infoColor); 
+            }else{
+                if(endProcess){
+                    canvas.DrawText("end: " + processName, new SKPoint(xe * 84, ye * 55), infoColor);
+                }else{
+                    canvas.DrawText("start: " + processName, new SKPoint(xe * 84, ye * 55), infoColor);
+                }
             }
-            canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe * 84, ye * 55), infoColor);
 
             //execute all drawing actions
             canvas.Flush();
