@@ -34,6 +34,10 @@ namespace WertheApp.BS
                 HorizontalOptions = LayoutOptions.Center
             };
             var stackLayout = new StackLayout();
+            var stackLayout2 = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal
+            };
 
             var l_Available = new Label { Text = "Available process names:" };
             p_ProcessNames = new Picker();
@@ -101,6 +105,14 @@ namespace WertheApp.BS
 
             var b_Start = new Button { Text = "Start process" };
             b_Start.Clicked += B_Start_Clicked;
+            var l_Space2 = new Label { Text = "  " };
+            var b_Cancel = new Button { Text = "Cancel" };
+            b_Cancel.Clicked += B_Cancel_Clicked;
+
+            stackLayout2.Children.Add(b_Start);
+            stackLayout2.Children.Add(l_Space2);
+            stackLayout2.Children.Add(b_Cancel);
+
 
 
             stackLayout.Children.Add(l_Available);
@@ -109,7 +121,7 @@ namespace WertheApp.BS
             stackLayout.Children.Add(l_ProcessSize);
             stackLayout.Children.Add(e_ProcessSize);
             stackLayout.Children.Add(l_Min);
-            stackLayout.Children.Add(b_Start);
+            stackLayout.Children.Add(stackLayout2);
 
             this.Content = scrollView;
             scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
@@ -178,6 +190,13 @@ namespace WertheApp.BS
                 else if (e_ProcessSize.Text == null) { await DisplayAlert("Alert", "Please enter a process size", "OK"); }
                 else if (!ValidateMemoryRequestInput()) { await DisplayAlert("Alert", "Please enter a valid process size (only integers >= " + minimumProcessSize + ")", "OK"); }
             }
+
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Cancel_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PopModalAsync(); // close Modal
+        }
         }
     }
 // return Regex.IsMatch(s, "^(?:[2-9]|[1-9]+[0-9]+)$"); //matches only numbers >= 2;
