@@ -104,7 +104,7 @@ namespace WertheApp.RN
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 				VerticalOptions = LayoutOptions.FillAndExpand,
-				BackgroundColor = Color.White,
+                BackgroundColor = Color.White,
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
@@ -114,6 +114,10 @@ namespace WertheApp.RN
             }else{
                 scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
             }
+
+            //TODO: Seit neuem update funktioniert das scrollen bei ios nicht mehr 
+            //und zwar für die Werte 400 und 2000. Für 1000 geht es aber dann ist die Anzwige verschoben
+            Debug.WriteLine("##### " + scaleFactor + " ### " + gameviewHeight);
             gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
             scrollview.Content = gameView;
 			grid.Children.Add(scrollview, 0, 0);
@@ -195,7 +199,6 @@ namespace WertheApp.RN
                     PipelineProtocolsScene2.InvokeSender();
                 }
             }
-
         }
 
 		/**********************************************************************
@@ -252,8 +255,6 @@ namespace WertheApp.RN
                     // Starts CocosSharp:
                     cc_gameView.RunWithScene(gameScene2);
                 }
-				
-			
 			}
 		}
 
@@ -279,7 +280,5 @@ namespace WertheApp.RN
                 this.Content.IsVisible = true;
 			}
 		}
-
-
 	}
 }
