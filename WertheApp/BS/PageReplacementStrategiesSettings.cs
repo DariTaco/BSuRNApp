@@ -151,7 +151,7 @@ namespace WertheApp.BS
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Maximal size of RAM and DISC together must be equal or smaller than 8", "OK");
+                    await DisplayAlert("Alert", "RAM and DISC together must be equal or smaller than 8", "OK");
                 }
 
             }else{

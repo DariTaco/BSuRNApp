@@ -385,7 +385,7 @@ namespace WertheApp.BS
                 //isContentCreated = false;
                 this.Content.IsVisible = false;
 
-                DisplayAlert("Alert", "Please rotate the device", "OK");
+                //DisplayAlert("Alert", "Please rotate the device", "OK");
             }
 		}
 

@@ -16,7 +16,6 @@ namespace WertheApp.BS
         double StackChildSize;
         public static List<int> fragmentList { get; set; } //List of fragments. From Settings Page passed to the constructor and later accesed from Scene
         public static String strategy { get; set; } //Choosen strategy (Firts Fit, ...) from Settings Page passed to the constructor and later accesed from Scene
-        //public static int[] memoryBlocks; //=array of framents from fragmentList
 
         public static int memoryRequest; //gets its value from the modal page
 
@@ -314,7 +313,7 @@ namespace WertheApp.BS
                 //isContentCreated = false;
                 this.Content.IsVisible = false;
 
-                DisplayAlert("Alert", "Please rotate the device", "OK");
+                //DisplayAlert("Alert", "Please rotate the device", "OK");
 			}
 		}
 	}

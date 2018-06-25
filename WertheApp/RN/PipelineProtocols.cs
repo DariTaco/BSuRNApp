@@ -118,6 +118,9 @@ namespace WertheApp.RN
             //TODO: Seit neuem update funktioniert das scrollen bei ios nicht mehr 
             //und zwar für die Werte 400 und 2000. Für 1000 geht es aber dann ist die Anzwige verschoben
             Debug.WriteLine("##### " + scaleFactor + " ### " + gameviewHeight);
+            Debug.WriteLine(gameView.MinimumHeightRequest);
+
+            //Debug.WriteLine("get heightrequest : " + gameView.GetSizeRequest());
             gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
             scrollview.Content = gameView;
 			grid.Children.Add(scrollview, 0, 0);

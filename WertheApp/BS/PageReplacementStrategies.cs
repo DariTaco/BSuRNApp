@@ -10,16 +10,23 @@ namespace WertheApp.BS
     public class PageReplacementStrategies : ContentPage
     {
         //VARIABLES
+        double StackChildSize;
         public static List<int> sequenceList { get; set; }
         public static String strategy;
         public static int ram;
         public static int disc;
 
-
-		bool isContentCreated = false; //indicates weather the Content of the page was already created
+        bool isContentCreated; //indicates weather the Content of the page was already created
 
 		private double width = 0;
 		private double height = 0;
+        public int gameviewWidth;
+        public int gameviewHeight;
+
+        public static ScrollView scrollview;
+        public static Button b_Reset_Rbits;
+        public static Button b_Set_Mbit;
+
 
 		//CONSTRUCTOR
 		public PageReplacementStrategies(List<int> l, String s, int r, int d)
@@ -38,15 +45,23 @@ namespace WertheApp.BS
 			Title = "Page Replacement Strategies"; //since the name is longer than average, 
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"
 
-			//do only create content if device is rotated in landscape
-			if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
-			{
-				CreateContent();
-			}
-			else
-			{
-				this.Content = new Label { Text = "please rotate your device" };
-			}
+            isContentCreated = false;
+
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                this.isContentCreated = true;
+                CreateContent();
+                this.Content.IsVisible = true;
+            }
+            else
+            {
+                CreateContent();
+                this.isContentCreated = true;
+                this.Content.IsVisible = false;
+            }
+
+            b_Set_Mbit.IsEnabled = false;
+            b_Reset_Rbits.IsEnabled = false;
         }
 
 		//METHODS
@@ -70,6 +85,7 @@ namespace WertheApp.BS
                     new RowDefinition{ Height = new GridLength(4, GridUnitType.Star)},
 					new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
 				};
+
 			CreateTopHalf(grid);
 			CreateBottomHalf(grid);
 
@@ -79,16 +95,21 @@ namespace WertheApp.BS
 		/**********************************************************************
         *********************************************************************/
 		void CreateTopHalf(Grid grid)
-		{
+        {
+            scrollview = new ScrollView();
+
 			var gameView = new CocosSharpView()
 			{
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				BackgroundColor = Color.White,
+				//HorizontalOptions = LayoutOptions.FillAndExpand,
+				//VerticalOptions = LayoutOptions.FillAndExpand,
+                BackgroundColor = Color.Red,
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
-			grid.Children.Add(gameView, 0, 0);
+            //gameView.WidthRequest = (int)Application.Current.MainPage.Width;
+            gameView.HeightRequest = (int)(Application.Current.MainPage.Height / 5) * 4;
+            scrollview.Content = gameView;
+            grid.Children.Add(scrollview, 0, 0);
 		}
 
 		/**********************************************************************
@@ -98,7 +119,14 @@ namespace WertheApp.BS
 			//set the size of the elements in such a way, that they all fit on the screen
 			//Screen Width is divided by the amount of elements (3)
 			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
+            if (!isContentCreated)
+            {
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
+            }
+            else
+            {
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
+            }
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -110,7 +138,7 @@ namespace WertheApp.BS
 
 			};
 
-            Button b_Reset_Rbits = new Button
+            b_Reset_Rbits = new Button
             {
                 Text = "Reset R-Bits",
                 WidthRequest = StackChildSize,
@@ -119,7 +147,7 @@ namespace WertheApp.BS
             b_Reset_Rbits.Clicked += B_Reset_Rbits_Clicked;
             stackLayout.Children.Add(b_Reset_Rbits);
 
-            Button b_Set_Mbit = new Button
+            b_Set_Mbit = new Button
             {
                 Text = "Set M-Bit",
                 WidthRequest = StackChildSize,
@@ -158,24 +186,34 @@ namespace WertheApp.BS
         *********************************************************************/
 		void B_Next_Clicked(object sender, EventArgs e)
         {
-
+            switch (strategy)
+            {
+                case "Optimal Strategy":
+                    PageReplacementStrategiesScene.Optimal();
+                    break;
+                case "FIFO":
+                    PageReplacementStrategiesScene.Fifo();
+                    break;
+                case "FIFO Second Chance":
+                    PageReplacementStrategiesScene.FifoSecond();
+                    break;
+                case "RNU FIFO":
+                    PageReplacementStrategiesScene.Rnu();
+                    break;
+                case "RNU FIFO Second Chance":
+                    PageReplacementStrategiesScene.RnuSecond();
+                    break;
+            }
         }
-
-		/**********************************************************************
-        *********************************************************************/
-		/// <summary> deletes all content and informs the user to rotate the device </summary>
-		void DeleteContent()
-		{
-			this.Content = null;
-			this.Content = new Label { Text = "please rotate your device" };
-			isContentCreated = false;
-		}
 
 		/**********************************************************************
         *********************************************************************/
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
+            gameviewWidth = (int)Application.Current.MainPage.Width;
+            gameviewHeight = (int)(Application.Current.MainPage.Height / 5) * 4;
+
             PageReplacementStrategiesScene gameScene;
 
 			var gameView = sender as CCGameView;
@@ -183,7 +221,7 @@ namespace WertheApp.BS
 			{
 				// This sets the game "world" resolution to 330x100:
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-				gameView.DesignResolution = new CCSizeI(330, 100);
+                gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight);
 				// GameScene is the root of the CocosSharp rendering hierarchy:
 				gameScene = new PageReplacementStrategiesScene(gameView);
 				// Starts CocosSharp:
@@ -203,15 +241,19 @@ namespace WertheApp.BS
 				this.height = height;
 			}
 
-			//reconfigure layout
-			if (width > height && isContentCreated == false)
-			{
-				CreateContent();
-			}
-			else if (height > width && isContentCreated)
-			{
-				DeleteContent();
-			}
+            //reconfigure layout
+            if (width > height)
+            {
+                //isContentCreated = true;
+                this.Content.IsVisible = true;
+            }
+            else if (height > width && isContentCreated)
+            {
+                //isContentCreated = false;
+                this.Content.IsVisible = false;
+
+                //DisplayAlert("Alert", "Please rotate the device", "OK");
+            }
 		}
 
 	}

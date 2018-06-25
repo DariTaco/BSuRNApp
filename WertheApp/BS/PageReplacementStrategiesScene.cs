@@ -24,12 +24,57 @@ namespace WertheApp.BS
 			layer = new CCLayer();
 			this.AddLayer(layer);
 
+            //Android bug: Background in Android is always black. Workaround: draw a white rect with the size of the layer
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                var cc_background = new CCDrawNode();
+                var backgroundWorkAround = new CCRect(
+                    0, 0, layer.VisibleBoundsWorldspace.MaxX, layer.VisibleBoundsWorldspace.MaxY);
+                cc_background.DrawRect(backgroundWorkAround,
+                    fillColor: CCColor4B.White);
+                layer.AddChild(cc_background);
+            }
+
             sequenceList = PageReplacementStrategies.sequenceList;
             strategy = PageReplacementStrategies.strategy;
             ram = PageReplacementStrategies.ram;
             disc = PageReplacementStrategies.disc;
+
+            Debug.WriteLine("x: " + layer.VisibleBoundsWorldspace.MaxX);
+            Debug.WriteLine("y: " + layer.VisibleBoundsWorldspace.MaxY);
 		}
 
         //METHODS
+        /**********************************************************************
+        *********************************************************************/
+        public static void Optimal(){
+            
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void Fifo(){
+            
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void FifoSecond(){
+            
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void Rnu(){
+            
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void RnuSecond(){
+            
+        }
+
+
     }
 }
