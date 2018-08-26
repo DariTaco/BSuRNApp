@@ -17,6 +17,7 @@ namespace WertheApp.BS
         public static int disc;
 
         bool isContentCreated; //indicates weather the Content of the page was already created
+        bool landscape = false; //indicates device orientation
 
 		private double width = 0;
 		private double height = 0;
@@ -31,6 +32,7 @@ namespace WertheApp.BS
 		//CONSTRUCTOR
 		public PageReplacementStrategies(List<int> l, String s, int r, int d)
         {
+            
             sequenceList = l;
             strategy = s;
             ram = r;
@@ -47,17 +49,18 @@ namespace WertheApp.BS
 
             isContentCreated = false;
 
-            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            //if orientation Horizontal
+            if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)
             {
-                this.isContentCreated = true;
+                landscape = false;
                 CreateContent();
-                this.Content.IsVisible = true;
+                this.Content.IsVisible = false;
             }
+            //if orientation Landscape
             else
             {
+                landscape = true;
                 CreateContent();
-                this.isContentCreated = true;
-                this.Content.IsVisible = false;
             }
 
             b_Set_Mbit.IsEnabled = false;
@@ -88,8 +91,6 @@ namespace WertheApp.BS
 
 			CreateTopHalf(grid);
 			CreateBottomHalf(grid);
-
-			isContentCreated = true;
 		}
 
 		/**********************************************************************
@@ -98,16 +99,40 @@ namespace WertheApp.BS
         {
             scrollview = new ScrollView();
 
+            double scaleFactor;
+            double desiredGameViewHeight;
+            if (landscape)
+            {
+                gameviewWidth = (int)Application.Current.MainPage.Width;
+                gameviewHeight = (int)Application.Current.MainPage.Height;
+
+                scaleFactor = gameviewWidth/ 200;
+                desiredGameViewHeight = gameviewHeight;
+            }
+            else
+            {
+                gameviewWidth = (int)Application.Current.MainPage.Height;
+                gameviewHeight = (int)Application.Current.MainPage.Width;
+
+                scaleFactor = gameviewHeight/ 200;
+                desiredGameViewHeight = gameviewWidth;
+            }
+
 			var gameView = new CocosSharpView()
 			{
-				//HorizontalOptions = LayoutOptions.FillAndExpand,
-				//VerticalOptions = LayoutOptions.FillAndExpand,
+				HorizontalOptions = LayoutOptions.FillAndExpand,
+				VerticalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = Color.Red,
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
+
+          
+
+            Debug.WriteLine("GAMMEVIEW WIDTH: " + gameviewWidth + " GAMEVIEW HEIGHT:" + gameviewHeight);
             //gameView.WidthRequest = (int)Application.Current.MainPage.Width;
-            gameView.HeightRequest = (int)(Application.Current.MainPage.Height / 5) * 4;
+            gameView.HeightRequest = desiredGameViewHeight *scaleFactor;
+            //gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
             scrollview.Content = gameView;
             grid.Children.Add(scrollview, 0, 0);
 		}
@@ -119,13 +144,13 @@ namespace WertheApp.BS
 			//set the size of the elements in such a way, that they all fit on the screen
 			//Screen Width is divided by the amount of elements (3)
 			//Screen Width -20 because Margin is 10
-            if (!isContentCreated)
+            if (!landscape)
             {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
+                StackChildSize = (Application.Current.MainPage.Height -20)/ 3;
             }
             else
             {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
+                StackChildSize = (Application.Current.MainPage.Width -20) / 3;
             }
 
 			//Using a Stacklayout to organize elements
@@ -211,17 +236,18 @@ namespace WertheApp.BS
 		//sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
-            gameviewWidth = (int)Application.Current.MainPage.Width;
-            gameviewHeight = (int)(Application.Current.MainPage.Height / 5) * 4;
+           // gameviewWidth = (int)Application.Current.MainPage.Width;
+            //gameviewHeight = (int)(Application.Current.MainPage.Height / 5) * 4;
 
             PageReplacementStrategiesScene gameScene;
 
 			var gameView = sender as CCGameView;
 			if (gameView != null)
 			{
-				// This sets the game "world" resolution to 330x100:
+				// This sets the game "world" resolution to 200x400:
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-                gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight);
+                gameView.DesignResolution = new CCSizeI(200,400);
+                Debug.WriteLine("gameviewWidth: " + gameviewWidth + " GameviewHeight: " + gameviewHeight);
 				// GameScene is the root of the CocosSharp rendering hierarchy:
 				gameScene = new PageReplacementStrategiesScene(gameView);
 				// Starts CocosSharp:
@@ -247,12 +273,9 @@ namespace WertheApp.BS
                 //isContentCreated = true;
                 this.Content.IsVisible = true;
             }
-            else if (height > width && isContentCreated)
+            else if (height > width)
             {
-                //isContentCreated = false;
                 this.Content.IsVisible = false;
-
-                //DisplayAlert("Alert", "Please rotate the device", "OK");
             }
 		}
 

@@ -246,7 +246,7 @@ namespace WertheApp.RN
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
 				//###############################################################
                 cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //CLIPPING
-                                                                       //###############################################################
+                //###############################################################
 
                 //choose gamescene for GoBackN or Selective Repeat
                 if(strategy == "Selective Repeat"){

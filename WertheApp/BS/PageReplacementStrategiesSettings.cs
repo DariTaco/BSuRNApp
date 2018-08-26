@@ -49,7 +49,7 @@ namespace WertheApp.BS
 
 			//add elements to stackLayout2
             var l_Zero = new Label { Text = "0" ,VerticalOptions = LayoutOptions.Center };
-            e_Sequence = new Entry { Text = "12340156012356" ,HorizontalOptions = LayoutOptions.FillAndExpand };
+            e_Sequence = new Entry { Keyboard = Keyboard.Numeric, Text = "12340156012356" ,HorizontalOptions = LayoutOptions.FillAndExpand };
 
 
 			stackLayout2.Children.Add(l_Zero);

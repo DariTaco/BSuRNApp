@@ -135,7 +135,7 @@ namespace WertheApp.RN
             this.corrupt = false;
             this.lost = false;
             this.ignore = false;
-            this.sprite.Color = CCColor3B.Green;
+            this.sprite.Color = CCColor3B.Gray;
           }
 
         /**********************************************************************

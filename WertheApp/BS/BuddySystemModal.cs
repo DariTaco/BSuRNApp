@@ -45,7 +45,7 @@ namespace WertheApp.BS
             p_ProcessNames.SelectedIndex = 0;
             var l_Space = new Label { Text = "  " };
             var l_ProcessSize = new Label { Text = "Process size:" };
-            e_ProcessSize = new Entry();
+            e_ProcessSize = new Entry{ Keyboard = Keyboard.Numeric };
             switch (BuddySystem.powerOfTwo)
             {
                 case 1:

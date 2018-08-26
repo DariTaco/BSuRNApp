@@ -46,7 +46,7 @@ namespace WertheApp.BS
 
             var l_Space = new Label { Text = " " };
             var l_Fragmentation = new Label { Text = "Fragmentation:" };
-            e_Fragmentation = new Entry { Text = "10,4,20,18,7,9,12,15"};
+            e_Fragmentation = new Entry { Keyboard = Keyboard.Numeric, Text = "10,4,20,18,7,9,12,15"};
             var b_Default = new Button { Text = "Default Value", HorizontalOptions = LayoutOptions.Start };
             b_Default.Clicked += (sender, e) => e_Fragmentation.Text= "10,4,20,18,7,9,12,15"; //add Click Event(so short, no Method needed)
 

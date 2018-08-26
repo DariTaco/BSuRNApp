@@ -71,7 +71,7 @@ namespace WertheApp
 			};
             var l_pick = new Label 
             { 
-                Text = "Pick your course:"
+                Text = "Pick your course"
             };
             stackLayout.Children.Add(l_pick);
 
