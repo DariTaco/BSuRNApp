@@ -32,7 +32,7 @@ namespace WertheApp.BS
         /*TODO(get buddySystem List through constructor) constructor with parameters is somehow not possible. give buddySystem List to constructor*/
         public BuddySystemViewCell()
         {
-            //note: List<BuddySystemBlock> budd<System  = BuddySystem.buddySystem would not copy the list
+            //note: List<BuddySystemBlock> buddySystem  = BuddySystem.buddySystem would not copy the list
             //note: buddySystem = new List<BuddySystemBlock>(BuddySystem.buddySystem); would not create new references
             //since the paintsurface method get's called several times, even after the object was created, 
             //there has to be a constant copy of the original list at the time
@@ -51,7 +51,6 @@ namespace WertheApp.BS
             this.processName = BuddySystem.currentProcess;
             this.endProcess = BuddySystem.endProcess;
 
-            /*TODO: Eingabe: 5 dann 2 , dann A beenden. Bleibt hängen*/
             // crate the canvas
             skiaview = new SKCanvasView();
             skiaview.PaintSurface += PaintSurface;

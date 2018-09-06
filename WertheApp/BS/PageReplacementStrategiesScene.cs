@@ -14,8 +14,8 @@ namespace WertheApp.BS
 		CCLayer layer;
 		List<int> sequenceList { get; set; }
 		String strategy;
-		int ram; 
-        int disc;
+		int ramSize; 
+        int discSize;
 
         //CONSTRUCTOR
         public PageReplacementStrategiesScene(CCGameView gameView): base(gameView)
@@ -35,10 +35,10 @@ namespace WertheApp.BS
                 layer.AddChild(cc_background);
             }
 
-            sequenceList = PageReplacementStrategies.sequenceList;
+            sequenceList = PageReplacementStrategies.SequenceList;
             strategy = PageReplacementStrategies.strategy;
-            ram = PageReplacementStrategies.ram;
-            disc = PageReplacementStrategies.disc;
+            ramSize = PageReplacementStrategies.ramSize;
+            discSize = PageReplacementStrategies.discSize;
 
             Debug.WriteLine("x: " + layer.VisibleBoundsWorldspace.MaxX);
             Debug.WriteLine("y: " + layer.VisibleBoundsWorldspace.MaxY);
