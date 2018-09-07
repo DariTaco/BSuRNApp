@@ -29,12 +29,18 @@ namespace WertheApp.BS
         public static ScrollView scrollview;
         public static Button b_Reset_Rbits;
         public static Button b_Set_Mbit;
+        public static Button b_Next;
 
         public static int currentStep;
+        public static int currentPage;
+        public static int sequenceLength;
+        public static List<int> pagesInRam;
+        public static List<int> pagesInDisc;
 
 
-		//CONSTRUCTOR
-		public PageReplacementStrategies(List<int> l, String s, int r, int d)
+
+        //CONSTRUCTOR
+        public PageReplacementStrategies(List<int> l, String s, int r, int d)
         {
             
             SequenceList = l;
@@ -51,6 +57,9 @@ namespace WertheApp.BS
             disc = new int[SequenceList.Count, discSize];
 
             currentStep = -1; //no page in ram or disc yet
+            sequenceLength = SequenceList.Count();
+            pagesInRam = new List<int>();
+            pagesInDisc = new List<int>();
             
 			/*Debug.WriteLine("##########");
             Debug.WriteLine("strategy: " + strategy);
@@ -75,65 +84,85 @@ namespace WertheApp.BS
                 CreateContent();
             }
 
-            b_Set_Mbit.IsEnabled = false;
-            b_Reset_Rbits.IsEnabled = false;
+            if(strategy == "RNU FIFO" || strategy == "RNU FIFO Second Chance")
+            {
+                b_Set_Mbit.IsEnabled = true;
+                b_Reset_Rbits.IsEnabled = true;
+            }
+            else
+            {
+                b_Set_Mbit.IsEnabled = false;
+                b_Reset_Rbits.IsEnabled = false;
+            }
+            b_Next.IsEnabled = true;
+         
 
 
             InitializeDisc(disc);
             InitializeRam(ram);
             PrintRam(ram);
 
-
         }
 
-		//METHODS
-		/**********************************************************************
+        //METHODS
+        /**********************************************************************
         *********************************************************************/
-		void B_Reset_Rbits_Clicked(object sender, EventArgs e)
+        void B_Reset_Rbits_Clicked(object sender, EventArgs e)
         {
-            // Loop over ram int array reset all r-bits
-            for (int i = 0; i <= ram.GetUpperBound(0); i++)
-            {
+            if(currentStep > -1){
+                //reset all r-bits of current step in ram
                 for (int j = 0; j <= ram.GetUpperBound(1); j++)
                 {
-                    ram[i, j, 1] = 0; //r-bit reset
+                    ram[currentStep, j, 1] = 0; //r-bit reset
                 }
+                PrintRam(ram);
+                //TODO: Update canvas
             }
-
-            //TODO: Update canvas
         }
 
 		/**********************************************************************
         *********************************************************************/
 		void B_Set_Mbit_Clicked(object sender, EventArgs e)
         {
-            //set m-bit of current page
-            //TODO: ram[currentStep, 1, 2] = 1;
+            if(currentStep > -1){
+                //set m-bit of current page
+                ram[currentStep, 0, 2] = 1;
+                PrintRam(ram);
+            }
         }
 
 		/**********************************************************************
         *********************************************************************/
 		void B_Next_Clicked(object sender, EventArgs e)
         {
-            currentStep++; 
-
+            currentStep++;
+            currentPage = SequenceList.First();
+            Debug.WriteLine(SequenceList.First());
+            SequenceList.Remove(SequenceList.First());
+            //Debug.WriteLine(SequenceList.First());
             switch (strategy)
             {
                 case "Optimal Strategy":
-                    PageReplacementStrategiesScene.Optimal();
+                    Optimal();
                     break;
                 case "FIFO":
-                    PageReplacementStrategiesScene.Fifo();
+                    Fifo();
                     break;
                 case "FIFO Second Chance":
-                    PageReplacementStrategiesScene.FifoSecond();
+                    FifoSecond();
                     break;
                 case "RNU FIFO":
-                    PageReplacementStrategiesScene.Rnu();
+                    Rnu();
                     break;
                 case "RNU FIFO Second Chance":
-                    PageReplacementStrategiesScene.RnuSecond();
+                    RnuSecond();
                     break;
+            }
+            PrintRam(ram);
+            PrintDisc(disc);
+            //disable next button if the sequence was processed entirely
+            if(currentStep == sequenceLength-1){
+                b_Next.IsEnabled = false;
             }
         }
 
@@ -141,20 +170,80 @@ namespace WertheApp.BS
         *********************************************************************/
         public static void Optimal()
         {
-            //set r-bit bei Zugriff
+
+            ram[currentStep, 0, 0] = currentPage;
+
         }
 
         /**********************************************************************
         *********************************************************************/
         public static void Fifo()
         {
+            int prevStep = currentStep - 1;
 
+            //if ram is full 
+            if (pagesInRam.Count == ramSize)
+            {
+                //if Pagefail, push oldest page in disc and push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    int oldestPageInRam = pagesInRam.First();
+                    pagesInRam.Remove(pagesInRam.First());
+                    pagesInDisc.Add(oldestPageInRam);
+                    disc[currentStep, 0] = oldestPageInRam;
+                    //if there where pages in disc bevore, push previous pages forward
+                    if(disc[currentStep-1, 0] != -1){
+                        //TODO: Fall Disc oder Ram = 1
+                        for (int j = 1; j <= disc.GetUpperBound(1); j++)
+                        {
+                            disc[currentStep, j] = disc[prevStep, j - 1];
+                        }
+                    }
+
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Add(currentPage);
+                    for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                    }
+
+                }
+                //if page is already in ram, leave everything as it is
+                else
+                {
+                    //in ram
+                    for (int j = 0; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j, 0];
+                    }
+                    //in disc
+                    for (int j = 0; j <= disc.GetUpperBound(1); j++)
+                    {
+                        disc[currentStep, j] = disc[prevStep, j];
+                    }
+                }
+            }
+            //if there's still space in ram
+            else{
+                ram[currentStep, 0, 0] = currentPage;
+                pagesInRam.Add(currentPage);
+
+                //push previous pages forward in ram
+                if (currentStep > 0)
+                {
+                    for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                    }
+                }
+            }
         }
 
         /**********************************************************************
         *********************************************************************/
         public static void FifoSecond()
         {
+            ram[currentStep, 0, 0] = currentPage;
 
         }
 
@@ -162,14 +251,18 @@ namespace WertheApp.BS
         *********************************************************************/
         public static void Rnu()
         {
-
+            ram[currentStep, 0, 0] = currentPage;
+            //set r-bit bei Zugriff
+            ram[currentStep, 0, 1] = 1;
         }
 
         /**********************************************************************
         *********************************************************************/
         public static void RnuSecond()
         {
-
+            ram[currentStep, 0, 0] = currentPage;
+            //set r-bit bei Zugriff
+            ram[currentStep, 0, 1] = 1;
         }
 
         /**********************************************************************
@@ -235,9 +328,9 @@ namespace WertheApp.BS
 
             Debug.WriteLine("GAMMEVIEW WIDTH: " + gameviewWidth + " GAMEVIEW HEIGHT:" + gameviewHeight);
             //gameView.WidthRequest = (int)Application.Current.MainPage.Width;
-            gameView.HeightRequest = desiredGameViewHeight * scaleFactor;
+            //gameView.HeightRequest = desiredGameViewHeight * scaleFactor;
             //gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
-            scrollview.Content = gameView;
+            //scrollview.Content = gameView;
             grid.Children.Add(scrollview, 0, 0);
         }
 
@@ -285,7 +378,7 @@ namespace WertheApp.BS
             b_Set_Mbit.Clicked += B_Set_Mbit_Clicked;
             stackLayout.Children.Add(b_Set_Mbit);
 
-            Button b_Next = new Button
+            b_Next = new Button
             {
                 Text = "Next",
                 WidthRequest = StackChildSize,
@@ -350,6 +443,7 @@ namespace WertheApp.BS
         *********************************************************************/
         static void InitializeRam(int[,,] array)
         {
+
             // Loop over 2D int array and fill it with default values
             for (int i = 0; i <= array.GetUpperBound(0); i++)
             {
@@ -360,6 +454,7 @@ namespace WertheApp.BS
                     array[i, j, 2] = 0; //m-bit is not set
                     array[i, j, 3] = 0; //kein Seitenfehler
                 }
+
             }
         }
 
