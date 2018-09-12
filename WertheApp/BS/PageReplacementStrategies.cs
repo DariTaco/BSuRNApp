@@ -34,6 +34,7 @@ namespace WertheApp.BS
         public static int currentStep;
         public static int currentPage;
         public static int sequenceLength;
+        public static int indexCurrentPage;
         public static List<int> pagesInRam;
         public static List<int> pagesInDisc;
 
@@ -57,15 +58,11 @@ namespace WertheApp.BS
             disc = new int[SequenceList.Count, discSize];
 
             currentStep = -1; //no page in ram or disc yet
+            currentPage = -1;
+            indexCurrentPage = -1;
             sequenceLength = SequenceList.Count();
             pagesInRam = new List<int>();
             pagesInDisc = new List<int>();
-            
-			/*Debug.WriteLine("##########");
-            Debug.WriteLine("strategy: " + strategy);
-            Debug.WriteLine("ram: " + ram);
-            Debug.WriteLine("disc: "+ disc);
-            Debug.WriteLine("seq: " + sequenceList.ElementAt(2));*/
 
 			Title = "Page Replacement Strategies"; //since the name is longer than average, 
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"
@@ -84,6 +81,7 @@ namespace WertheApp.BS
                 CreateContent();
             }
 
+            //enable/disable buttons depending on strategy
             if(strategy == "RNU FIFO" || strategy == "RNU FIFO Second Chance")
             {
                 b_Set_Mbit.IsEnabled = true;
@@ -96,12 +94,8 @@ namespace WertheApp.BS
             }
             b_Next.IsEnabled = true;
          
-
-
             InitializeDisc(disc);
             InitializeRam(ram);
-            PrintRam(ram);
-
         }
 
         //METHODS
@@ -126,9 +120,10 @@ namespace WertheApp.BS
         {
             if(currentStep > -1){
                 //set m-bit of current page
-                ram[currentStep, 0, 2] = 1;
+                ram[currentStep, indexCurrentPage, 2] = 1;
                 PrintRam(ram);
             }
+            //TODO: Update Canvas
         }
 
 		/**********************************************************************
@@ -162,6 +157,7 @@ namespace WertheApp.BS
             if(currentStep == sequenceLength-1){
                 b_Next.IsEnabled = false;
             }
+            //TODO: Update Canvas
         }
 
         /**********************************************************************
@@ -460,20 +456,283 @@ namespace WertheApp.BS
 
         /**********************************************************************
         *********************************************************************/
+        //
+        // 1. class  r0 m0
+        // 2. class  r0 m1
+        // 3. class  r1 m0
+        // 4. class  r1 m1
+        //
+        //replace page with lowest class
+        //
+        //[step, ram , 0] = pagenumber (range 0-9, -1 -> no page)
+        //[step, ram , 1] = r-bit (0 -> not set, 1 -> set)
+        //[step, ram , 2] = m-bit (0 -> not set, 1 -> set)
+        //[step, ram , 3] = pagefail (0 -> no pagefail, 1 -> pagefail without replacement, 2 -> pagefail with replacement)
         public static void Rnu()
         {
-            ram[currentStep, 0, 0] = currentPage;
-            //set r-bit bei Zugriff
-            ram[currentStep, 0, 1] = 1;
+            int prevStep = currentStep - 1;
+
+            //----------------------------------------------------------//
+            //----------------------------------------------------------//
+            //if ram is full 
+            if (pagesInRam.Count == ramSize)
+            {
+                //----------------------------------------------------------//
+                //----------------------------------------------------------//
+                //if Pagefail, push rnu page in disc. in case two or more pages have the lowest class, push oldest page in disc 
+                //alsopush previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    //find rnu page
+                    int rnuPage = -1;
+                    int rnuIndex = -1;
+                    int lowestRnuClass = 5;
+                    //TODO
+                    PrintPagesInRam();
+                    for (var i = 0; i < pagesInRam.Count; i++)
+                    {
+                        //find page with lowest class
+                        bool r = false;
+                        bool m = false;
+                        int rnuClass = 6;
+                        //determine if bits are set
+                        if(ram[prevStep, i, 1] == 1){
+                            r = true;
+                        }
+                        if(ram[prevStep, i, 2] == 1){
+                            m = true;
+                        }
+                        //determine class
+                        if (!r && !m) { rnuClass = 1; }
+                        else if (!r && m) { rnuClass = 2; }
+                        else if (r && !m) { rnuClass = 3; }
+                        else if (r && m) { rnuClass = 4; }
+                        //determine if lowest class so far
+                        if(rnuClass < lowestRnuClass){
+                            rnuIndex = i;
+                            rnuPage = ram[prevStep, rnuIndex, 0];
+                            lowestRnuClass = rnuClass;
+                        }
+                    }
+
+                    pagesInRam.Remove(rnuPage);
+                    pagesInDisc.Add(rnuPage);  
+
+                    //remove current page from disc if it is in disc
+                    if (pagesInDisc.Contains(currentPage))
+                    {
+                        pagesInDisc.Remove(currentPage);
+                    }
+                    disc[currentStep, 0] =rnuPage;
+                    //if there where pages in disc bevore, push previous pages forward
+                    if (disc[currentStep - 1, 0] != -1)
+                    {
+                        for (int j = 1; j <= disc.GetUpperBound(1); j++)
+                        {
+                            if (pagesInDisc.Count - j - 1 >= 0)
+                            {
+                                disc[currentStep, j] = pagesInDisc.ElementAt(pagesInDisc.Count - j - 1);
+                            }
+                            else
+                            {
+                                disc[currentStep, j] = -1;
+                            }
+                        }
+                    }
+
+                    //rewrite ram
+                    ram[currentStep, 0, 0] = currentPage;
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access//TODO
+                    ram[currentStep, 0, 2] = 0; //no m bit set
+                    indexCurrentPage = 0;//TODO
+                    pagesInRam.Add(currentPage);
+                    for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                        ram[currentStep, j, 1] = ram[prevStep, j - 1, 1];
+                        ram[currentStep, j, 2] = ram[prevStep, j - 1, 2];
+                    }
+                }
+                //----------------------------------------------------------//
+                //----------------------------------------------------------//
+                //if page is already in ram, leave everything as it is
+                else
+                {
+                    //in ram
+                    for (int j = 0; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j, 0];
+                        ram[currentStep, j, 1] = ram[prevStep, j, 1];
+                        ram[currentStep, j, 2] = ram[prevStep, j, 2];
+                        if (ram[currentStep, j, 0] == currentPage)
+                        {
+                            ram[currentStep, j, 1] = 1; //set r-bit by access//TODO
+                            indexCurrentPage = j; //TODO
+                        }
+                    }
+
+                    //in disc
+                    for (int j = 0; j <= disc.GetUpperBound(1); j++)
+                    {
+                        disc[currentStep, j] = disc[prevStep, j];
+                    }
+                }
+            }
+            //----------------------------------------------------------//
+            //----------------------------------------------------------//
+            //if there's still space in ram
+            else
+            {
+                //----------------------------------------------------------//
+                //----------------------------------------------------------//
+                //if page is not already in ram, push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    ram[currentStep, 0, 0] = currentPage;
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access //TODO
+                    ram[currentStep, 0, 2] = 0; //no m bit set
+                    indexCurrentPage = 0; //TODO
+                    pagesInRam.Add(currentPage);
+
+                    //push previous pages forward in ram
+                    if (currentStep > 0)
+                    {
+                        for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                        {
+                            ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                            ram[currentStep, j, 1] = ram[prevStep, j - 1, 1];
+                            ram[currentStep, j, 2] = ram[prevStep, j - 1, 2];
+                        }
+                    }
+                }
+                //----------------------------------------------------------//
+                //----------------------------------------------------------//
+                //if page is already in ram, leave everything as it is
+                else
+                {
+                    for (int j = 0; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j, 0];
+                        ram[currentStep, j, 1] = ram[prevStep, j, 1];
+                        ram[currentStep, j, 2] = ram[prevStep, j, 2];
+                        if (ram[currentStep, j, 0] == currentPage)
+                        {
+                            //set r-bit bei Zugriff
+                            ram[currentStep, j, 1] = 1;//TODO
+                            indexCurrentPage = j; //TODO
+                        }
+                    }
+                }
+            }
         }
 
         /**********************************************************************
         *********************************************************************/
         public static void RnuSecond()
         {
-            ram[currentStep, 0, 0] = currentPage;
-            //set r-bit bei Zugriff
-            ram[currentStep, 0, 1] = 1;
+            int prevStep = currentStep - 1;
+
+            //if ram is full 
+            if (pagesInRam.Count == ramSize)
+            {
+                //if Pagefail, push rnu page in disc. in case two or more pages have the lowest class, push oldest page in disc 
+                //alsopush previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    int oldestPageInRam = pagesInRam.First();
+                    pagesInRam.Remove(pagesInRam.First());
+
+                    pagesInDisc.Add(oldestPageInRam);
+                    disc[currentStep, 0] = oldestPageInRam;
+                    if (pagesInDisc.Contains(currentPage))
+                    {
+                        pagesInDisc.Remove(currentPage);
+                    }
+
+                    //if there where pages in disc bevore, push previous pages forward
+                    if (disc[currentStep - 1, 0] != -1)
+                    {
+                        for (int j = 1; j <= disc.GetUpperBound(1); j++)
+                        {
+                            if (pagesInDisc.Count - j - 1 >= 0)
+                            {
+                                disc[currentStep, j] = pagesInDisc.ElementAt(pagesInDisc.Count - j - 1);
+                            }
+                            else
+                            {
+                                disc[currentStep, j] = -1;
+                            }
+                        }
+                    }
+
+                    ram[currentStep, 0, 0] = currentPage;
+                    //set r-bit bei Zugriff
+                    ram[currentStep, 0, 1] = 1; //TODO
+                    indexCurrentPage = 0;//TODO
+                    pagesInRam.Add(currentPage);
+                    for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                    }
+
+                }
+                //if page is already in ram, put current page at first place
+                else
+                {
+                    //in ram
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Remove(currentPage); // remove current page from it's position
+                    pagesInRam.Add(currentPage); // and put it at the end of the list
+                    for (int j = 0; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - j);
+                        if (ram[currentStep, j, 0] == currentPage)
+                        {
+                            //set r-bit bei Zugriff
+                            ram[currentStep, j, 1] = 1;//TODO
+                            indexCurrentPage = j; //TODO
+                        }
+                    }
+                    //in disc
+                    for (int j = 0; j <= disc.GetUpperBound(1); j++)
+                    {
+                        disc[currentStep, j] = disc[prevStep, j];
+                    }
+                }
+            }
+            //if there's still space in ram
+            else
+            {
+                //if page is not already in ram, push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    ram[currentStep, 0, 0] = currentPage;
+                    //set r-bit bei Zugriff
+                    ram[currentStep, 0, 1] = 1; //TODO
+                    indexCurrentPage = 0; //TODO
+                    pagesInRam.Add(currentPage);
+
+                    //push previous pages forward in ram
+                    if (currentStep > 0)
+                    {
+                        for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                        {
+                            ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                        }
+                    }
+                }
+                //if current page is already in ram, put current page at first place
+                else
+                {
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Remove(currentPage); // remove current page from it's position
+                    pagesInRam.Add(currentPage); // and put it at the end of the list
+                    for (int j = 0; j <= pagesInRam.Count - 1; j++)
+                    {
+                        ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - j);
+                    }
+                }
+            }
         }
 
         /**********************************************************************
