@@ -137,9 +137,7 @@ namespace WertheApp.BS
         {
             currentStep++;
             currentPage = SequenceList.First();
-            Debug.WriteLine(SequenceList.First());
             SequenceList.Remove(SequenceList.First());
-            //Debug.WriteLine(SequenceList.First());
             switch (strategy)
             {
                 case "Optimal Strategy":
@@ -170,9 +168,114 @@ namespace WertheApp.BS
         *********************************************************************/
         public static void Optimal()
         {
+            int prevStep = currentStep - 1;
 
-            ram[currentStep, 0, 0] = currentPage;
+            //if ram is full 
+            if (pagesInRam.Count == ramSize)
+            {
+                //if Pagefail, push optimal page in disc and push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    PrintPagesInRam();
+                    //find optimal page, which will be accessed the furthest in the future
+                    int optimalPage = -1;
+                    for (var i = 0; i < pagesInRam.Count; i++)
+                    {
+                        bool inSequenceList = false;
+                        int optimalIndex = -1;
+                        //under the pages in ram, find the page in remaining sequence which is the furthest away
+                        for (var j = 0; j < SequenceList.Count; j++){
+                            if(pagesInRam.ElementAt(i) == SequenceList.ElementAt(j) && j > optimalIndex){
+                                inSequenceList = true;
+                                optimalIndex = j;
+                                optimalPage = pagesInRam.ElementAt(i);
+                                j = SequenceList.Count; //exit for loop
+                            }
+                        }
+                        if(!inSequenceList){
+                            optimalPage = pagesInRam.ElementAt(i);
+                            break;
+                        }
+                    }
 
+                    pagesInRam.Remove(optimalPage);
+                    pagesInDisc.Add(optimalPage);
+                    if(pagesInDisc.Contains(currentPage)){
+                        pagesInDisc.Remove(currentPage);
+                    }
+                    PrintPagesInDisc();
+
+                    disc[currentStep, 0] = optimalPage;
+                    //if there where pages in disc bevore, push previous pages forward
+                    if (disc[currentStep - 1, 0] != -1)
+                    {
+                        for (int j = 1; j <= disc.GetUpperBound(1); j++)
+                        {
+                            if(pagesInDisc.Count -j -1 >= 0){
+                                disc[currentStep, j] = pagesInDisc.ElementAt(pagesInDisc.Count - j - 1);
+                            }else{
+                                disc[currentStep, j] = -1;
+                            }
+
+                        }
+                    }
+
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Add(currentPage);
+                    for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count -1 - j);
+                    }
+
+                }
+                //if page is already in ram, put current page at first place
+                else
+                {
+                    //in ram
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Remove(currentPage); // remove current page from it's position
+                    pagesInRam.Add(currentPage); // and put it at the end of the list
+                    for (int j = 0; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - j);
+                    }
+                    //in disc leave everything as it is
+                    for (int j = 0; j <= disc.GetUpperBound(1); j++)
+                    {
+                        disc[currentStep, j] = disc[prevStep, j];
+                    }
+                }
+            }
+            //if there's still space in ram
+            else
+            {
+                //if page is not already in ram, push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Add(currentPage);
+
+                    //push previous pages forward in ram
+                    if (currentStep > 0)
+                    {
+                        for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                        {
+                            ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                        }
+                    }
+                }
+                //if current page is already in ram, put current page at first place
+                else
+                {
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Remove(currentPage); // remove current page from it's position
+                    pagesInRam.Add(currentPage); // and put it at the end of the list
+                    for (int j = 0; j <= pagesInRam.Count - 1; j++)
+                    {
+                        ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - j);
+                    }
+                }
+            }
         }
 
         /**********************************************************************
@@ -189,14 +292,25 @@ namespace WertheApp.BS
                 {
                     int oldestPageInRam = pagesInRam.First();
                     pagesInRam.Remove(pagesInRam.First());
+
                     pagesInDisc.Add(oldestPageInRam);
+                    if (pagesInDisc.Contains(currentPage))
+                    {
+                        pagesInDisc.Remove(currentPage);
+                    }
                     disc[currentStep, 0] = oldestPageInRam;
                     //if there where pages in disc bevore, push previous pages forward
                     if(disc[currentStep-1, 0] != -1){
-                        //TODO: Fall Disc oder Ram = 1
                         for (int j = 1; j <= disc.GetUpperBound(1); j++)
                         {
-                            disc[currentStep, j] = disc[prevStep, j - 1];
+                            if (pagesInDisc.Count - j - 1 >= 0)
+                            {
+                                disc[currentStep, j] = pagesInDisc.ElementAt(pagesInDisc.Count - j - 1);
+                            }
+                            else
+                            {
+                                disc[currentStep, j] = -1;
+                            }
                         }
                     }
 
@@ -225,15 +339,25 @@ namespace WertheApp.BS
             }
             //if there's still space in ram
             else{
-                ram[currentStep, 0, 0] = currentPage;
-                pagesInRam.Add(currentPage);
+                //if page is not already in ram, push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage)){
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Add(currentPage);
 
-                //push previous pages forward in ram
-                if (currentStep > 0)
-                {
-                    for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                    //push previous pages forward in ram
+                    if (currentStep > 0)
                     {
-                        ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                        for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                        {
+                            ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                        }
+                    }
+                }
+                //if page is already in ram, leave everything as it is
+                else{
+                    for (int j = 0; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j, 0];
                     }
                 }
             }
@@ -243,8 +367,95 @@ namespace WertheApp.BS
         *********************************************************************/
         public static void FifoSecond()
         {
-            ram[currentStep, 0, 0] = currentPage;
+            int prevStep = currentStep - 1;
 
+            //if ram is full 
+            if (pagesInRam.Count == ramSize)
+            {
+                //if Pagefail, push oldest page in disc and push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    int oldestPageInRam = pagesInRam.First();
+                    pagesInRam.Remove(pagesInRam.First());
+
+                    pagesInDisc.Add(oldestPageInRam);
+                    disc[currentStep, 0] = oldestPageInRam;
+                    if (pagesInDisc.Contains(currentPage))
+                    {
+                        pagesInDisc.Remove(currentPage);
+                    }
+
+                    //if there where pages in disc bevore, push previous pages forward
+                    if (disc[currentStep - 1, 0] != -1)
+                    {
+                        for (int j = 1; j <= disc.GetUpperBound(1); j++)
+                        {
+                            if (pagesInDisc.Count - j - 1 >= 0)
+                            {
+                                disc[currentStep, j] = pagesInDisc.ElementAt(pagesInDisc.Count - j - 1);
+                            }
+                            else
+                            {
+                                disc[currentStep, j] = -1;
+                            }
+                        }
+                    }
+
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Add(currentPage);
+                    for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                    }
+
+                }
+                //if page is already in ram, put current page at first place
+                else
+                {
+                    //in ram
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Remove(currentPage); // remove current page from it's position
+                    pagesInRam.Add(currentPage); // and put it at the end of the list
+                    for (int j = 0; j <= ram.GetUpperBound(1); j++)
+                    {
+                        ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - j);
+                    }
+                    //in disc
+                    for (int j = 0; j <= disc.GetUpperBound(1); j++)
+                    {
+                        disc[currentStep, j] = disc[prevStep, j];
+                    }
+                }
+            }
+            //if there's still space in ram
+            else
+            {
+                //if page is not already in ram, push previous pages forward in ram
+                if (!pagesInRam.Contains(currentPage))
+                {
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Add(currentPage);
+
+                    //push previous pages forward in ram
+                    if (currentStep > 0)
+                    {
+                        for (int j = 1; j <= ram.GetUpperBound(1); j++)
+                        {
+                            ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
+                        }
+                    }
+                }
+                //if current page is already in ram, put current page at first place
+                else{
+                    ram[currentStep, 0, 0] = currentPage;
+                    pagesInRam.Remove(currentPage); // remove current page from it's position
+                    pagesInRam.Add(currentPage); // and put it at the end of the list
+                    for (int j = 0; j <= pagesInRam.Count-1; j++)
+                    {
+                        ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - j);
+                    }
+                }
+            }
         }
 
         /**********************************************************************
@@ -525,6 +736,22 @@ namespace WertheApp.BS
             }
         }
 
+        static void PrintPagesInRam(){
+            String s = "";
+            foreach(var p in pagesInRam){
+                s += ", " + p;
+            }
+            Debug.WriteLine(s);
+        }
+
+        static void PrintPagesInDisc(){
+            String s = "";
+            foreach (var p in pagesInDisc)
+            {
+                s += ", " + p;
+            }
+            Debug.WriteLine(s);
+        }
         /**********************************************************************
         *********************************************************************/
     }
