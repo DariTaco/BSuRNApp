@@ -3,6 +3,8 @@ using CocosSharp;
 using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq; //fragmentList.ElementAt(i);
+using SkiaSharp.Views.Forms;
+using SkiaSharp;
 
 using System.Diagnostics;
 namespace WertheApp.BS
@@ -38,6 +40,8 @@ namespace WertheApp.BS
         public static List<int> pagesInRam;
         public static List<int> pagesInDisc;
 
+        private SKCanvasView skiaview;
+        private PageReplacementStrategiesDraw draw;
 
 
         //CONSTRUCTOR
@@ -63,6 +67,8 @@ namespace WertheApp.BS
             sequenceLength = SequenceList.Count();
             pagesInRam = new List<int>();
             pagesInDisc = new List<int>();
+
+            draw = new PageReplacementStrategiesDraw();
 
 			Title = "Page Replacement Strategies"; //since the name is longer than average, 
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"
@@ -851,44 +857,9 @@ namespace WertheApp.BS
         *********************************************************************/
         void CreateTopHalf(Grid grid)
         {
-            scrollview = new ScrollView();
-
-            double scaleFactor;
-            double desiredGameViewHeight;
-            if (landscape)
-            {
-                gameviewWidth = (int)Application.Current.MainPage.Width;
-                gameviewHeight = (int)Application.Current.MainPage.Height;
-
-                scaleFactor = gameviewWidth / 200;
-                desiredGameViewHeight = gameviewHeight;
-            }
-            else
-            {
-                gameviewWidth = (int)Application.Current.MainPage.Height;
-                gameviewHeight = (int)Application.Current.MainPage.Width;
-
-                scaleFactor = gameviewHeight / 200;
-                desiredGameViewHeight = gameviewWidth;
-            }
-
-            var gameView = new CocosSharpView()
-            {
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = Color.Red,
-                // This gets called after CocosSharp starts up:
-                ViewCreated = HandleViewCreated
-            };
-
-
-
-            Debug.WriteLine("GAMMEVIEW WIDTH: " + gameviewWidth + " GAMEVIEW HEIGHT:" + gameviewHeight);
-            //gameView.WidthRequest = (int)Application.Current.MainPage.Width;
-            //gameView.HeightRequest = desiredGameViewHeight * scaleFactor;
-            //gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
-            //scrollview.Content = gameView;
-            grid.Children.Add(scrollview, 0, 0);
+            skiaview = new SKCanvasView();
+            skiaview = PageReplacementStrategiesDraw.ReturnCanvas();
+            grid.Children.Add(skiaview, 0, 0);
         }
 
         /**********************************************************************
@@ -946,30 +917,6 @@ namespace WertheApp.BS
 
             grid.Children.Add(stackLayout, 0, 1);
         }
-
-        /**********************************************************************
-        *********************************************************************/
-        //sets up the scene 
-        void HandleViewCreated(object sender, EventArgs e)
-		{
-           // gameviewWidth = (int)Application.Current.MainPage.Width;
-            //gameviewHeight = (int)(Application.Current.MainPage.Height / 5) * 4;
-
-            PageReplacementStrategiesScene gameScene;
-
-			var gameView = sender as CCGameView;
-			if (gameView != null)
-			{
-				// This sets the game "world" resolution to 200x400:
-				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-                gameView.DesignResolution = new CCSizeI(200,400);
-                Debug.WriteLine("gameviewWidth: " + gameviewWidth + " GameviewHeight: " + gameviewHeight);
-				// GameScene is the root of the CocosSharp rendering hierarchy:
-				gameScene = new PageReplacementStrategiesScene(gameView);
-				// Starts CocosSharp:
-				gameView.RunWithScene(gameScene);
-			}
-		}
 
 		/**********************************************************************
         *********************************************************************/

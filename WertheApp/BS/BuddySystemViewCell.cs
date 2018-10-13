@@ -245,8 +245,9 @@ namespace WertheApp.BS
             //execute all drawing actions
             canvas.Flush();
         }
-    
 
+        /**********************************************************************
+        *********************************************************************/
         private void MakeSKPaint(){
             //create something to paint with (color, textsize, and even more....)
             sk_Paint1 = new SKPaint
