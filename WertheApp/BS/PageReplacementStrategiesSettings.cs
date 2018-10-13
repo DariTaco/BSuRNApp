@@ -50,7 +50,7 @@ namespace WertheApp.BS
 			//add elements to stackLayout2
             var l_Zero = new Label { Text = "0" ,VerticalOptions = LayoutOptions.Center };
             e_Sequence = new Entry { Keyboard = Keyboard.Numeric, Text = "12340156012356" ,HorizontalOptions = LayoutOptions.FillAndExpand };
-
+           
 
 			stackLayout2.Children.Add(l_Zero);
 			stackLayout2.Children.Add(e_Sequence);
@@ -137,16 +137,25 @@ namespace WertheApp.BS
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
+
             if (ValidateSequenceInput())
             {
-                if(ValidateRAMandDISC())
+
+                if (ValidateRAMandDISC())
                 {
                     CreateSequenceList();
-                    await Navigation.PushAsync(new PageReplacementStrategies(sequenceList, 
-                                                                             p_Strategy.SelectedItem.ToString(), 
-                                                                             Int32.Parse(p_RAM.SelectedItem.ToString()), 
-                                                                             Int32.Parse(p_DISC.SelectedItem.ToString())
-                                                                            )); 
+                    if (sequenceList.Count > 19)
+                    {
+                        await DisplayAlert("Alert", "reference sequence is too long (has to be <= 19)", "OK");
+                    }
+                    else{
+                        await Navigation.PushAsync(new PageReplacementStrategies(sequenceList,
+                                                                                 p_Strategy.SelectedItem.ToString(),
+                                                                                 Int32.Parse(p_RAM.SelectedItem.ToString()),
+                                                                                 Int32.Parse(p_DISC.SelectedItem.ToString())
+                                                                                ));
+                    }
+
 
                 }
                 else

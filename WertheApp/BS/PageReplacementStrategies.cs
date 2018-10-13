@@ -68,7 +68,7 @@ namespace WertheApp.BS
             pagesInRam = new List<int>();
             pagesInDisc = new List<int>();
 
-            draw = new PageReplacementStrategiesDraw();
+            draw = new PageReplacementStrategiesDraw(ramSize, discSize, sequenceLength, SequenceList);
 
 			Title = "Page Replacement Strategies"; //since the name is longer than average, 
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"
