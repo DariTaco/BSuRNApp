@@ -113,8 +113,8 @@ namespace WertheApp.BS
             }
             float posRow = 1;
             for (int i = 0; i <= rows ; i++){
-                if(i == 0 || i == 1 || i == rows )
-                { //first, second and last line is fat
+                if(i == 0 || i == 1 || i == rows || i == ramSize + 1)
+                { //first, second and last line is fat, also the seperating line between ram and disc
                     canvas.DrawLine(new SKPoint(1 * xe, posRow * ye), new SKPoint(99 * xe, posRow * ye), sk_PaintFat);
                 }
                 else{
@@ -122,8 +122,25 @@ namespace WertheApp.BS
                 }
                 posRow += rowWidth;
             }
+            //draw the words RAM and DISC
+            float posText1 = rowTextStart + rowWidth;
+            for (int i = 0; i < ramSize; i++){
+                canvas.DrawText("RAM", columnCenter * xe + xe, posText1 * ye, sk_blackText);
+                posText1 += rowWidth;
+            }
+            float posText2 = rowTextStart + (rowWidth * (ramSize + 1));
+            for (int i = 0; i < discSize; i++){
+                canvas.DrawText("DISC", columnCenter * xe + xe, posText2 * ye, sk_blackText);
+                posText2 += rowWidth;
+            }
+            //draw the page sequence
+            float posText3 = 1 + columnCenter + columnWidth;
+            foreach (var p in SequenceList)
+            {
+                canvas.DrawText(p.ToString(), posText3 * xe, rowTextStart * ye, sk_blackText);
+                posText3 += columnWidth;
+            }
 
-            canvas.DrawText("RAM", columnCenter * xe + xe, rowTextStart*ye, sk_blackText);
             //SKRect sk_r2 = new SKRect(0*xe,0*ye,99*xe,99*ye); //left , top, right, bottom
             //canvas.DrawRect(sk_r2, sk_Paint1); //left, top, right, bottom, color
 
