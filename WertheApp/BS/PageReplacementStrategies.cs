@@ -118,7 +118,7 @@ namespace WertheApp.BS
                     ram[currentStep, j, 1] = 0; //r-bit reset
                 }
                 PrintRam(ram);
-                //TODO: Update canvas
+                PageReplacementStrategiesDraw.Paint();//Update Canvas
             }
         }
 
@@ -131,7 +131,7 @@ namespace WertheApp.BS
                 ram[currentStep, indexCurrentPage, 2] = 1;
                 PrintRam(ram);
             }
-            //TODO: Update Canvas
+            PageReplacementStrategiesDraw.Paint();//Update Canvas
         }
 
 		/**********************************************************************
@@ -160,12 +160,12 @@ namespace WertheApp.BS
                     break;
             }
             PrintRam(ram);
+            PageReplacementStrategiesDraw.Paint();//Update Canvas
             //PrintDisc(disc);
             //disable next button if the sequence was processed entirely
-            if(currentStep == sequenceLength-1){
+            if (currentStep == sequenceLength-1){
                 b_Next.IsEnabled = false;
             }
-            //TODO: Update Canvas
         }
 
         /**********************************************************************
@@ -1006,7 +1006,7 @@ namespace WertheApp.BS
         {
             Debug.WriteLine("");
             Debug.WriteLine("RAM" + SequenceList.Count + "x" + ramSize);
-            // Loop over 2D int array and display it.
+            // Loop over 3D int array and display it.
             for (int i = 0; i <= array.GetUpperBound(0); i++)
             {
                 String s = "";

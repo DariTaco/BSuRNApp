@@ -21,7 +21,8 @@ namespace WertheApp.BS
         private static SKCanvasView skiaview;
         private static float xe, ye;
         private static SKPaint sk_blackText, sk_blackTextSmall;
-        private static SKPaint sk_PaintThin, sk_PaintFat, sk_Paint1;
+        private static SKPaint sk_PaintThin, sk_PaintFat, sk_Paint1, sk_PaintRed;
+        private static SKPaint sk_PaintYellow, sk_PaintPink;
         private static float rows, colums;
         private static float columnWidth, rowWidth, strokeWidth;// Width of a paint stroke
         private static float columnCenter, rowCenter, rowTextStart; //rowtextstart: it's not possible to center the text vertically, only horizontally...
@@ -99,6 +100,17 @@ namespace WertheApp.BS
 
             /*********************HERE GOES THE DRAWING************************/
 
+            //draw background for ram and disc: pink and yellow
+            float bgRamY1 = 1 + rowWidth;
+            float bgRamY2 = bgRamY1 + (rowWidth * ramSize);
+            float bgDiscY1 = bgRamY2;
+            float bgDiscY2 = bgDiscY1 + (rowWidth * discSize);
+            SKRect sk_rBackgroundRam = new SKRect(1 * xe, bgRamY1* ye, 99 * xe, bgRamY2 * ye); //left , top, right, bottom
+            SKRect sk_rBackgroundDisc = new SKRect(1 * xe, bgDiscY1 * ye, 99 * xe, bgDiscY2 * ye); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackgroundRam, sk_PaintPink); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackgroundDisc, sk_PaintYellow);
+
+
             //Draw rows and colums
             float posCol = 1;
             for (int i = 0; i <= colums ; i++){
@@ -122,6 +134,7 @@ namespace WertheApp.BS
                 }
                 posRow += rowWidth;
             }
+
             //draw the words RAM and DISC
             float posText1 = rowTextStart + rowWidth;
             for (int i = 0; i < ramSize; i++){
@@ -133,6 +146,7 @@ namespace WertheApp.BS
                 canvas.DrawText("DISC", columnCenter * xe + xe, posText2 * ye, sk_blackText);
                 posText2 += rowWidth;
             }
+
             //draw the page sequence
             float posText3 = 1 + columnCenter + columnWidth;
             foreach (var p in SequenceList)
@@ -141,8 +155,55 @@ namespace WertheApp.BS
                 posText3 += columnWidth;
             }
 
-            //SKRect sk_r2 = new SKRect(0*xe,0*ye,99*xe,99*ye); //left , top, right, bottom
-            //canvas.DrawRect(sk_r2, sk_Paint1); //left, top, right, bottom, color
+            //draw Ram: for every step thats done yet, look for pages in ram
+            float posXText4 = 1 + columnCenter + columnWidth;
+            float posYText4 = rowTextStart + rowWidth;
+            for (int step = 0; step <= PageReplacementStrategies.currentStep; step++){
+                for (int ram = 0; ram <= PageReplacementStrategies.ram.GetUpperBound(1); ram++){
+                    int page = PageReplacementStrategies.ram[step, ram, 0];
+                    if(page != -1){
+                        canvas.DrawText(page.ToString(), posXText4 * xe, posYText4 * ye, sk_blackText);
+                    }
+
+                    posYText4 += rowWidth;
+                }
+                posYText4 = rowTextStart + rowWidth;
+                posXText4 += columnWidth;
+            }
+            //draw Disc: for evry step thats done yet, look for pages in disc
+            float posXText5 = 1 + columnCenter + columnWidth;
+            float posYText5 = rowTextStart + (rowWidth * (ramSize + 1));
+            for (int step = 0; step <= PageReplacementStrategies.currentStep; step++)
+            {
+                for (int disc = 0; disc <= PageReplacementStrategies.disc.GetUpperBound(1); disc++)
+                {
+                    int page = PageReplacementStrategies.disc[step, disc];
+                    if (page != -1)
+                    {
+                        canvas.DrawText(page.ToString(), posXText5 * xe, posYText5 * ye, sk_blackText);
+                    }
+
+                    posYText5 += rowWidth;
+                }
+                posYText5 = rowTextStart + (rowWidth * (ramSize + 1));
+                posXText5 += columnWidth;
+            }
+
+            //draw pagefails
+            float posPFX1 = 1 + columnWidth + (columnWidth / 6) * 1;
+            float posPFX2 = posPFX1 + (columnWidth / 6) * 4;
+            float posPFY1 = 1 + rowWidth + (rowWidth / 10) * 1;
+            float posPFY2 = posPFY1 + (rowWidth / 10) * 8;
+            SKRect sk_PagefailElimination = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, bottom
+            canvas.DrawRect(sk_PagefailElimination, sk_PaintRed); //left, top, right, bottom, color
+            float radius = 0;
+            if(rowWidth > columnWidth){
+                radius = columnWidth * xe;
+            }
+            else{
+                radius = rowWidth * ye;
+            }
+            canvas.DrawCircle(info.Width / 2, info.Height / 2, radius, sk_PaintRed);
 
             //execute all drawing actions
             canvas.Flush();
@@ -200,6 +261,31 @@ namespace WertheApp.BS
                 IsAntialias = true,
                 IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
                 TextAlign = SKTextAlign.Center
+            };
+
+            sk_PaintPink = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(238, 130, 238).WithAlpha(30)
+            };
+
+            sk_PaintYellow = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(255, 255, 0).WithAlpha(30)
+            };
+
+            sk_PaintRed = new SKPaint
+            {
+                Color = SKColors.Red,
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+
             };
         }
 
