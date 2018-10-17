@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq; //fragmentList.ElementAt(i);
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
-
 using System.Diagnostics;
 namespace WertheApp.BS
 {
+
+    //TODO: Pagefails in ram array
     public class PageReplacementStrategies : ContentPage
     {
         //VARIABLES
@@ -20,7 +21,8 @@ namespace WertheApp.BS
 
         public static int[,,] ram; //3d array to save the page numbers in ram (1d,2d) and if r-bits and m-bits are set(3d)
         public static int[,] disc; //2d array to save the page numbers in disc
-        
+
+
         bool landscape = false; //indicates device orientation
 
 		private double width = 0;
@@ -495,7 +497,7 @@ namespace WertheApp.BS
                     int rnuPage = -1;
                     int rnuIndex = -1;
                     int lowestRnuClass = 5;
-                    //TODO
+
                     for (var i = 0; i < pagesInRam.Count; i++)
                     {
                         //find page with lowest class
@@ -551,9 +553,9 @@ namespace WertheApp.BS
 
                     //rewrite ram
                     ram[currentStep, 0, 0] = currentPage;
-                    ram[currentStep, 0, 1] = 1; //set r-bit by access//TODO
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access
                     ram[currentStep, 0, 2] = 0; //no m bit set
-                    indexCurrentPage = 0;//TODO
+                    indexCurrentPage = 0;
                     pagesInRam.Add(currentPage);
                     for (int i = 1; i <= ram.GetUpperBound(1); i++)
                     {
@@ -581,8 +583,8 @@ namespace WertheApp.BS
                         ram[currentStep, j, 2] = ram[prevStep, j, 2];
                         if (ram[currentStep, j, 0] == currentPage)
                         {
-                            ram[currentStep, j, 1] = 1; //set r-bit by access//TODO
-                            indexCurrentPage = j; //TODO
+                            ram[currentStep, j, 1] = 1; //set r-bit by access
+                            indexCurrentPage = j; 
                         }
                     }
 
@@ -606,9 +608,9 @@ namespace WertheApp.BS
                     Debug.WriteLine("ram is not full and page is not in ram");
                     PrintPagesInRam();
                     ram[currentStep, 0, 0] = currentPage;
-                    ram[currentStep, 0, 1] = 1; //set r-bit by access //TODO
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access 
                     ram[currentStep, 0, 2] = 0; //no m bit set
-                    indexCurrentPage = 0; //TODO
+                    indexCurrentPage = 0; 
                     pagesInRam.Add(currentPage);
 
                     //push previous pages forward in ram
@@ -637,8 +639,8 @@ namespace WertheApp.BS
                         if (ram[currentStep, j, 0] == currentPage)
                         {
                             //set r-bit bei Zugriff
-                            ram[currentStep, j, 1] = 1;//TODO
-                            indexCurrentPage = j; //TODO
+                            ram[currentStep, j, 1] = 1;
+                            indexCurrentPage = j; 
                         }
                     }
                 }
@@ -664,7 +666,7 @@ namespace WertheApp.BS
                     int rnuPage = -1;
                     int rnuIndex = -1;
                     int lowestRnuClass = 5;
-                    //TODO
+                   
                     for (var i = 0; i < pagesInRam.Count; i++)
                     {
                         //find page with lowest class
@@ -723,9 +725,9 @@ namespace WertheApp.BS
 
                     //rewrite ram
                     ram[currentStep, 0, 0] = currentPage;
-                    ram[currentStep, 0, 1] = 1; //set r-bit by access//TODO
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access
                     ram[currentStep, 0, 2] = 0; //no m bit set
-                    indexCurrentPage = 0;//TODO
+                    indexCurrentPage = 0;
                     pagesInRam.Add(currentPage);
                     for (int i = 1; i <= ram.GetUpperBound(1); i++)
                     {
@@ -746,9 +748,9 @@ namespace WertheApp.BS
                 {
                     //rewrite ram
                     ram[currentStep, 0, 0] = currentPage;
-                    ram[currentStep, 0, 1] = 1; //set r-bit by access//TODO
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access
                     ram[currentStep, 0, 2] = 0; //no m bit set
-                    indexCurrentPage = 0;//TODO
+                    indexCurrentPage = 0;
                     pagesInRam.Remove(currentPage); // remove current page from it's position
                     pagesInRam.Add(currentPage); // and put it at the end of the list
                     for (int i = 0; i <= ram.GetUpperBound(1); i++)
@@ -784,9 +786,9 @@ namespace WertheApp.BS
                     Debug.WriteLine("ram is not full and page is not in ram");
                     PrintPagesInRam();
                     ram[currentStep, 0, 0] = currentPage;
-                    ram[currentStep, 0, 1] = 1; //set r-bit by access //TODO
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access 
                     ram[currentStep, 0, 2] = 0; //no m bit set
-                    indexCurrentPage = 0; //TODO
+                    indexCurrentPage = 0; 
                     pagesInRam.Add(currentPage);
 
                     //push previous pages forward in ram
@@ -805,9 +807,9 @@ namespace WertheApp.BS
                 else
                 {
                     ram[currentStep, 0, 0] = currentPage;
-                    ram[currentStep, 0, 1] = 1; //set r-bit by access//TODO
+                    ram[currentStep, 0, 1] = 1; //set r-bit by access
                     ram[currentStep, 0, 2] = 0; //no m bit set
-                    indexCurrentPage = 0;//TODO
+                    indexCurrentPage = 0;
                     pagesInRam.Remove(currentPage); // remove current page from it's position
                     pagesInRam.Add(currentPage); // and put it at the end of the list
                     for (int i = 0; i <= ram.GetUpperBound(1); i++)
