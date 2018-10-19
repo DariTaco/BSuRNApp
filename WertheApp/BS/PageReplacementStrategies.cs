@@ -230,6 +230,7 @@ namespace WertheApp.BS
                     {
                         ram[currentStep, j, 0] = pagesInRam.ElementAt(pagesInRam.Count -1 - j);
                     }
+                    ram[currentStep, 0, 3] = 2;//mark pagefail with replacment
 
                 }
                 //if page is already in ram, put current page at first place
@@ -267,6 +268,7 @@ namespace WertheApp.BS
                             ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
                         }
                     }
+                    ram[currentStep, 0, 3] = 1;//mark pagefail without replacment
                 }
                 //if current page is already in ram, put current page at first place
                 else
@@ -324,6 +326,7 @@ namespace WertheApp.BS
                     {
                         ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
                     }
+                    ram[currentStep, 0, 3] = 2;//mark pagefail with replacment
 
                 }
                 //if page is already in ram, leave everything as it is
@@ -356,6 +359,7 @@ namespace WertheApp.BS
                             ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
                         }
                     }
+                    ram[currentStep, 0, 3] = 1;//mark pagefail without replacment
                 }
                 //if page is already in ram, leave everything as it is
                 else{
@@ -411,7 +415,7 @@ namespace WertheApp.BS
                     {
                         ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
                     }
-
+                    ram[currentStep, 0, 3] = 2;//mark pagefail with replacment
                 }
                 //if page is already in ram, put current page at first place
                 else
@@ -448,6 +452,7 @@ namespace WertheApp.BS
                             ram[currentStep, j, 0] = ram[prevStep, j - 1, 0];
                         }
                     }
+                    ram[currentStep, 0, 3] = 1;//mark pagefail without replacment
                 }
                 //if current page is already in ram, put current page at first place
                 else{
@@ -567,6 +572,7 @@ namespace WertheApp.BS
                             }
                         }
                     }
+                    ram[currentStep, 0, 3] = 2;//mark pagefail with replacment
                 }
                 //----------------------------------------------------------//
                 //----------------------------------------------------------//
@@ -623,6 +629,7 @@ namespace WertheApp.BS
                             ram[currentStep, j, 2] = ram[prevStep, j - 1, 2];
                         }
                     }
+                    ram[currentStep, 0, 3] = 1;//mark pagefail without replacment
                 }
                 //----------------------------------------------------------//
                 //----------------------------------------------------------//
@@ -741,6 +748,7 @@ namespace WertheApp.BS
                             }
                         }
                     }
+                    ram[currentStep, 0, 3] = 2;//mark pagefail with replacment
 
                 }
                 //if page is already in ram, put current page at first place
@@ -801,6 +809,7 @@ namespace WertheApp.BS
                             ram[currentStep, j, 2] = ram[prevStep, j - 1, 2];
                         }
                     }
+                    ram[currentStep, 0, 3] = 1;//mark pagefail without replacment
                 }
 ///////////////
                 //if current page is already in ram, put current page at first place
@@ -812,8 +821,14 @@ namespace WertheApp.BS
                     indexCurrentPage = 0;
                     pagesInRam.Remove(currentPage); // remove current page from it's position
                     pagesInRam.Add(currentPage); // and put it at the end of the list
-                    for (int i = 0; i <= ram.GetUpperBound(1); i++)
+                    for (int i = 0; i <= pagesInRam.Count - 1; i++)
                     {
+                        PrintPagesInRam();
+                        Debug.WriteLine("current step: " + currentStep);
+                        Debug.WriteLine("Pagesinram.count" + pagesInRam.Count);
+                        Debug.WriteLine("i:" + i);
+
+                        //TODO: Sonderfall 0,0 Sequenz am Anfang (tritt sonst nirgends auf) oder 011. immer wenn ram nicht voll
                         ram[currentStep, i, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - i);
                         ram[currentStep, 0, 1] = 1; //set r-bit
                         indexCurrentPage = 0;

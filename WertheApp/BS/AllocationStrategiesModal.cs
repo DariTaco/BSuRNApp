@@ -67,8 +67,7 @@ namespace WertheApp.BS
 		bool ValidateMemoryRequestInput()
 		{
 			String s = e_MemoryRequest.Text;
-			return Regex.IsMatch(s, "" +
-                                 "+[1-9]+[0-9]*$"); //matches only numbers(exept 0);
+			return Regex.IsMatch(s, "[1-9]+[0-9]*$"); //matches only numbers(exept 0);
 		}
 
 		/**********************************************************************

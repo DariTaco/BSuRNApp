@@ -189,21 +189,46 @@ namespace WertheApp.BS
                 posXText5 += columnWidth;
             }
 
-            //draw pagefails
+            //prepare a red square
             float posPFX1 = 1 + columnWidth + (columnWidth / 6) * 1;
             float posPFX2 = posPFX1 + (columnWidth / 6) * 4;
             float posPFY1 = 1 + rowWidth + (rowWidth / 10) * 1;
             float posPFY2 = posPFY1 + (rowWidth / 10) * 8;
-            SKRect sk_PagefailElimination = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, bottom
-            canvas.DrawRect(sk_PagefailElimination, sk_PaintRed); //left, top, right, bottom, color
-            float radius = 0;
-            if(rowWidth > columnWidth){
-                radius = columnWidth * xe;
+
+            //prepare a red circle
+            float radius = 0; 
+            float cx = 1 + columnWidth + columnCenter;
+            float cy = 1 + rowWidth + rowCenter;
+            if (rowWidth > columnWidth){ radius = columnWidth / 2.6f * xe;}
+            else{ radius = rowWidth / 2.2f * ye;}
+
+
+            //draw pagefails
+            for (int step = 0; step <= PageReplacementStrategies.currentStep; step++){
+                if(PageReplacementStrategies.ram[step, 0, 3] == 2){
+                    //with replacement(circle)
+                    canvas.DrawCircle(cx * xe, cy * ye, radius, sk_PaintRed); //center x, center y, radius, paint
+                }
+                else if(PageReplacementStrategies.ram[step, 0, 3] == 1){
+                    //without replacement (square)
+                    SKRect sk_Pagefail = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, bottom
+                    canvas.DrawRect(sk_Pagefail, sk_PaintRed); //left, top, right, bottom, color
+                }
+                posPFX1 += columnWidth;
+                posPFX2 = posPFX1 + (columnWidth / 6) * 4;
+                cx += columnWidth;
             }
-            else{
-                radius = rowWidth * ye;
+
+            //draw M-Bits and R-Bits
+            float posXMbit = 1 + columnWidth + columnCenter - columnCenter / 2;
+            float posYMbit = 1 + rowWidth + rowCenter + rowCenter / 2 ;
+            float posXRbit = 1 + columnWidth + columnCenter - columnCenter / 2;
+            float posYRbit = 1 + rowWidth + rowCenter - rowCenter / 2 ;
+            if (PageReplacementStrategies.strategy == "RNU FIFO Second Chance" || PageReplacementStrategies.strategy == "RNU FIFO"){
+                canvas.DrawText("M", posXMbit * xe, posYMbit * ye, sk_blackTextSmall);
+                canvas.DrawText("R", posXRbit * xe, posYRbit * ye, sk_blackTextSmall);
             }
-            canvas.DrawCircle(info.Width / 2, info.Height / 2, radius, sk_PaintRed);
+
 
             //execute all drawing actions
             canvas.Flush();
@@ -248,7 +273,7 @@ namespace WertheApp.BS
                 Color = SKColors.Black,
                 TextSize = ye * textSize,
                 IsAntialias =true,
-                IsStroke = false,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
                 TextAlign = SKTextAlign.Center
                 
             };
@@ -257,10 +282,11 @@ namespace WertheApp.BS
             sk_blackTextSmall = new SKPaint
             {
                 Color = SKColors.Black,
-                TextSize = ye * (columnWidth/4),
+                TextSize = ye * textSize/2,
                 IsAntialias = true,
                 IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
-                TextAlign = SKTextAlign.Center
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText =true
             };
 
             sk_PaintPink = new SKPaint
