@@ -60,7 +60,9 @@ namespace WertheApp.BS
             //[step, ram , 1] = r-bit (0 -> not set, 1 -> set)
             //[step, ram , 2] = m-bit (0 -> not set, 1 -> set)
             //[step, ram , 3] = pagefail (0 -> no pagefail, 1 -> pagefail without replacement, 2 -> pagefail with replacement)
-            ram = new int[SequenceList.Count, ramSize, 4]; 
+            //[step, ram , 4] = r bit were reset in this step -> 1, else -> 0
+            //[step, ram , 5] = m bit was set in this step -> 1, else -> 0
+            ram = new int[SequenceList.Count, ramSize, 6]; 
             disc = new int[SequenceList.Count, discSize];
 
             currentStep = -1; //no page in ram or disc yet
@@ -115,7 +117,12 @@ namespace WertheApp.BS
                 //reset all r-bits of current step in ram
                 for (int j = 0; j <= ram.GetUpperBound(1); j++)
                 {
-                    ram[currentStep, j, 1] = 0; //r-bit reset
+                    if (ram[currentStep, j, 1] == 1)
+                    {
+                        ram[currentStep, j, 1] = 0; //r-bit reset
+                        ram[currentStep, j, 4] = 1; //mark r-bit as reset
+                    }
+
                 }
                 PrintRam(ram);
                 PageReplacementStrategiesDraw.Paint();//Update Canvas
@@ -129,6 +136,7 @@ namespace WertheApp.BS
             if(currentStep > -1){
                 //set m-bit of current page
                 ram[currentStep, indexCurrentPage, 2] = 1;
+                ram[currentStep, 0, 5] = 1;
                 PrintRam(ram);
             }
             PageReplacementStrategiesDraw.Paint();//Update Canvas
@@ -973,7 +981,9 @@ namespace WertheApp.BS
                     array[i, j, 0] = -1; //-1 means no page (pages range from 0 to 9)
                     array[i, j, 1] = 0; //r-bit is not set
                     array[i, j, 2] = 0; //m-bit is not set
-                    array[i, j, 3] = 0; //kein Seitenfehler
+                    array[i, j, 3] = 0; //no pagefail
+                    array[i, j, 4] = 0; //no r-bits were reset
+                    array[i, j, 5] = 0; //no m-bit was set
                 }
 
             }

@@ -10,6 +10,8 @@ using System.Collections.Generic;
 //[step, ram , 1] = r-bit (0 -> not set, 1 -> set)
 //[step, ram , 2] = m-bit (0 -> not set, 1 -> set)
 //[step, ram , 3] = pagefail (0 -> no pagefail, 1 -> pagefail without replacement, 2 -> pagefail with replacement)
+//[step, ram , 4] = r bit were reset in this step -> 1, else -> 0
+//[step, ram , 5] = m bit was set in this step -> 1, else -> 0
 
 namespace WertheApp.BS
 {
@@ -20,7 +22,7 @@ namespace WertheApp.BS
         //VARIABLES
         private static SKCanvasView skiaview;
         private static float xe, ye;
-        private static SKPaint sk_blackText, sk_blackTextSmall;
+        private static SKPaint sk_blackText, sk_blackTextSmall, sk_redTextSmall;
         private static SKPaint sk_PaintThin, sk_PaintFat, sk_Paint1, sk_PaintRed;
         private static SKPaint sk_PaintYellow, sk_PaintPink;
         private static float rows, colums;
@@ -225,8 +227,31 @@ namespace WertheApp.BS
             float posXRbit = 1 + columnWidth + columnCenter - columnCenter / 2;
             float posYRbit = 1 + rowWidth + rowCenter - rowCenter / 2 ;
             if (PageReplacementStrategies.strategy == "RNU FIFO Second Chance" || PageReplacementStrategies.strategy == "RNU FIFO"){
-                canvas.DrawText("M", posXMbit * xe, posYMbit * ye, sk_blackTextSmall);
-                canvas.DrawText("R", posXRbit * xe, posYRbit * ye, sk_blackTextSmall);
+                for (int step = 0; step <= PageReplacementStrategies.currentStep; step++){
+                    for (int ram = 0; ram <= PageReplacementStrategies.ram.GetUpperBound(1); ram++){
+                        if(PageReplacementStrategies.ram[step, ram, 0] != -1){
+                            String rBitValue = PageReplacementStrategies.ram[step, ram, 1].ToString();
+                            String mBitValue = PageReplacementStrategies.ram[step, ram, 2].ToString();
+                            if(PageReplacementStrategies.ram[step, ram, 4] == 0){
+                                canvas.DrawText(rBitValue, posXRbit * xe, posYRbit * ye, sk_blackTextSmall);
+                            }else{
+                                canvas.DrawText(rBitValue, posXRbit * xe, posYRbit * ye, sk_redTextSmall);
+                            }
+                            if(PageReplacementStrategies.ram[step,ram,5] == 0){
+                                canvas.DrawText(mBitValue, posXMbit * xe, posYMbit * ye, sk_blackTextSmall);
+                            }else{
+                                canvas.DrawText(mBitValue, posXMbit * xe, posYMbit * ye, sk_redTextSmall);
+                            }
+                        }
+                        posYMbit += rowWidth;
+                        posYRbit += rowWidth;
+                    }
+                    posXMbit += columnWidth;
+                    posXRbit += columnWidth;
+                    posYMbit = 1 + rowWidth + rowCenter + rowCenter / 2;
+                    posYRbit = 1 + rowWidth + rowCenter - rowCenter / 2;
+                }
+
             }
 
 
@@ -278,7 +303,7 @@ namespace WertheApp.BS
                 
             };
 
-            //black neutral text
+            //black small text
             sk_blackTextSmall = new SKPaint
             {
                 Color = SKColors.Black,
@@ -287,6 +312,17 @@ namespace WertheApp.BS
                 IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText =true
+            };
+
+            //red small text
+            sk_redTextSmall = new SKPaint
+            {
+                Color = SKColors.OrangeRed,
+                TextSize = ye * textSize / 2,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = true
             };
 
             sk_PaintPink = new SKPaint
@@ -352,22 +388,24 @@ namespace WertheApp.BS
             };
             skiaview.GestureRecognizers.Add(tapGestureRecognizer);
 
-            //TODO: Maybe better pan gesture. reacts not good enough
             //add pan gesture recognizer
             double x = 0;
             double y = 0;
             var panGesture = new PanGestureRecognizer();
             panGesture.PanUpdated += (s, e) => {
+
                 // Handle the pan (only in zoomed in state)
                 if (toggleZoom == 1 && e.StatusType != GestureStatus.Completed)
                 {
-                    //TODO: only when within screen bounds
-                    if(true){
+                    //only when within screen bounds or 20% more or less
+                    if(x + e.TotalX >= skiaview.Width*1.2f/2*-1 
+                       && x + e.TotalX <= skiaview.Width*1.2f/2
+                       && y + e.TotalY >= skiaview.Height*1.2f/2*-1
+                       && y+ e.TotalY <= skiaview.Height*1.2f/2){
                         x = x + e.TotalX;
                         y = y + e.TotalY;
                         skiaview.TranslateTo(x, y);
                     }
-                    Debug.WriteLine(e.TotalX + "," + e.TotalY);
                 }
             };
             skiaview.GestureRecognizers.Add(panGesture);
