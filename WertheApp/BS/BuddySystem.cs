@@ -78,7 +78,7 @@ namespace WertheApp.BS
             //find the block clostest(and still bigger) to requested blocksize
             for (int i = 0; i < buddySystem.Count; i++){
                 int dummy = buddySystem[i].GetBlockSize();
-                if(dummy >= blockSize && dummy <= block && buddySystem[i].GetFree()){
+                if(dummy >= blockSize && dummy < block && buddySystem[i].GetFree()){
                     block = dummy;
                     index = i;
                 }
