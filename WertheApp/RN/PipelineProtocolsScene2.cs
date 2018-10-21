@@ -24,6 +24,8 @@ namespace WertheApp.RN
         static String strategy;
         static int windowSize;
         static int timeouttime;
+        static bool timerRunning;
+        static int counter;
 
 
         static int baseOfWindowLeft; //first sent but not yet acknowledged sequence number
@@ -52,6 +54,7 @@ namespace WertheApp.RN
             windowSize = PipelineProtocols.windowSize;
             strategy = PipelineProtocols.strategy;
 			timeouttime = PipelineProtocols.timeoutTime;
+            timerRunning = false;
 
 
             pendingAck = new List<int>();
@@ -87,7 +90,8 @@ namespace WertheApp.RN
         *********************************************************************/
         public static void MyTimer(int seqnum, int c)
         {
-            int counter = c;
+            timerRunning = true;
+            counter = c;
 
             //draw counter label in respective rectangle
             float a = 28 - seqnum;
@@ -107,19 +111,26 @@ namespace WertheApp.RN
                 counterText = "" + counter;
                 ccl_LNumber.Text = counterText;
 
-                ///*(pendingAck.Any() && seqnum != pendingAck.Last())*/
+                ///when timer runs out
                 if (stopEverything || counter == timeouttime )
                 {
                     layer.RemoveChild(ccl_LNumber);
+                    timerRunning = false;
 
-                    //resend packages for all pending ACK after timeout if seqnum is in list
-                    if (pendingAck.Any() && pendingAck.Last() == seqnum && !stopEverything)
+                    //resend packages for all pending ACK after timeout 
+                    if (pendingAck.Any() && !stopEverything)
                     {
                         ResendPending();
                    }
                     return false; //False = Stop the timer
                 }
-                else { return true; } // True = Repeat again
+                else { 
+                    if(arrivedAck.Any() && arrivedAck.Contains(seqnum) && pendingAck.Any()){
+                        timerRunning = false;
+                        MyTimer(pendingAck.First(), 0);
+                        return false;
+                    }
+                    return true; } // True = Repeat again
             });
         }
         /**********************************************************************
@@ -130,16 +141,20 @@ namespace WertheApp.RN
             if (nextSeqnum < (baseOfWindowLeft + windowSize))
             {
                 SendPackageAt(nextSeqnum);
-                MyTimer(nextSeqnum, 0);
+                if(timerRunning == false){
+                    MyTimer(nextSeqnum, 0);
+                }
+
                 nextSeqnum++;
             }
         }
 
         public static async void ResendPending(){
             int i = 0;
-            while(i < pendingAck.Count){
+            Debug.WriteLine("element at 0" + pendingAck.ElementAt(0).ToString());
+            MyTimer(pendingAck.ElementAt(0), 0);
+            while (i < pendingAck.Count){
                 SendPackageAt(pendingAck.ElementAt(i));
-                MyTimer(pendingAck.ElementAt(i), 0);
                 await Task.Delay(100); // necessary! Packages that arrive all at once are hard to process for the receiver
                 i++;
             }
