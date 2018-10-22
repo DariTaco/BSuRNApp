@@ -59,7 +59,6 @@
     <Compile Include="BS\BuddySystemSettings.cs" />
     <Compile Include="BS\PageReplacementStrategiesSettings.cs" />
     <Compile Include="RN\CongestionAvoidanceSettings.cs" />
-    <Compile Include="RN\CongestionAvoidanceScene.cs" />
     <Compile Include="RN\PipelineProtocolsSettings.cs" />
     <Compile Include="RN\PipelineProtocolsScene.cs" />
     <Compile Include="BS\AllocationStrategiesModal.cs" />
@@ -71,6 +70,7 @@
     <Compile Include="BS\BuddySystemViewCell.cs" />
     <Compile Include="BS\BuddySystemBlock.cs" />
     <Compile Include="BS\PageReplacementStrategiesDraw.cs" />
+    <Compile Include="RN\CongestionAvoidanceDraw.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">

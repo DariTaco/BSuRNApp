@@ -127,7 +127,6 @@ namespace WertheApp.RN
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
             await Navigation.PushAsync(new CongestionAvoidance(
-                Int32.Parse(p_ErrorTreshold.SelectedItem.ToString()), 
                 Int32.Parse(p_Treshold.SelectedItem.ToString()),
                 s_Reno.IsToggled,
                 s_Tahoe.IsToggled

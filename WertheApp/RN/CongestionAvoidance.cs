@@ -1,8 +1,9 @@
 ﻿using System;
-using CocosSharp;
 using Xamarin.Forms;
 using System.Collections.Generic;
-
+using System.Linq; //fragmentList.ElementAt(i);
+using SkiaSharp.Views.Forms;
+using SkiaSharp;
 using System.Diagnostics;
 
 namespace WertheApp.RN
@@ -15,16 +16,17 @@ namespace WertheApp.RN
         public static bool reno;
         public static bool tahoe;
 
-		bool isContentCreated = false; //indicates weather the Content of the page was already created
+        bool landscape = false; //indicates device orientation
 
-		private double width = 0;
+        private double width = 0;
 		private double height = 0;
 
-		//CONSTRUCTOR
-		public CongestionAvoidance(int eth, int th, bool r, bool t)
-        {
+        private SKCanvasView skiaview;
+        private CongestionAvoidanceDraw draw;
 
-            errorTreshold = eth;
+        //CONSTRUCTOR
+        public CongestionAvoidance(int th, bool r, bool t)
+        {
             treshold = th;
             reno = r;
             tahoe = t;
@@ -37,15 +39,21 @@ namespace WertheApp.RN
 
 			Title = "Congestion Avoidance";
 
-			//do only create content if device is rotated in landscape
-			if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
-			{
-				CreateContent();
-			}
-			else
-			{
-				this.Content = new Label { Text = "please rotate your device" };
-			}
+            //if orientation Horizontal
+            if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)
+            {
+                landscape = false;
+                CreateContent();
+                this.Content.IsVisible = false;
+            }
+            //if orientation Landscape
+            else
+            {
+                landscape = true;
+                CreateContent();
+            }
+
+            draw = new CongestionAvoidanceDraw();
         }
 
 		//METHODS
@@ -71,24 +79,17 @@ namespace WertheApp.RN
 				};
 			CreateTopHalf(grid);
 			CreateBottomHalf(grid);
-
-			isContentCreated = true;
 		}
 
 		/**********************************************************************
         *********************************************************************/
 		void CreateTopHalf(Grid grid)
 		{
-			var gameView = new CocosSharpView()
-			{
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				BackgroundColor = Color.White,
-				// This gets called after CocosSharp starts up:
-				ViewCreated = HandleViewCreated
-			};
-			grid.Children.Add(gameView, 0, 0);
-		}
+
+            skiaview = new SKCanvasView();
+            skiaview = CongestionAvoidanceDraw.ReturnCanvas();
+            grid.Children.Add(skiaview, 0, 0);
+        }
 
 		/**********************************************************************
         *********************************************************************/
@@ -167,27 +168,6 @@ namespace WertheApp.RN
 		{
 			this.Content = null;
 			this.Content = new Label { Text = "please rotate your device" };
-			isContentCreated = false;
-		}
-
-		/**********************************************************************
-        *********************************************************************/
-		//sets up the scene 
-		void HandleViewCreated(object sender, EventArgs e)
-		{
-			CongestionAvoidanceScene gameScene;
-
-			var gameView = sender as CCGameView;
-			if (gameView != null)
-			{
-				// This sets the game "world" resolution to 330x100:
-				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-				gameView.DesignResolution = new CCSizeI(330, 100);
-				// GameScene is the root of the CocosSharp rendering hierarchy:
-				gameScene = new CongestionAvoidanceScene(gameView);
-				// Starts CocosSharp:
-				gameView.RunWithScene(gameScene);
-			}
 		}
 
 		/**********************************************************************
@@ -202,16 +182,17 @@ namespace WertheApp.RN
 				this.height = height;
 			}
 
-			//reconfigure layout
-			if (width > height && isContentCreated == false)
-			{
-				CreateContent();
-			}
-			else if (height > width && isContentCreated)
-			{
-				DeleteContent();
-			}
-		}
+            //reconfigure layout
+            if (width > height)
+            {
+                //isContentCreated = true;
+                this.Content.IsVisible = true;
+            }
+            else if (height > width)
+            {
+                this.Content.IsVisible = false;
+            }
+        }
 
 	}
 }
