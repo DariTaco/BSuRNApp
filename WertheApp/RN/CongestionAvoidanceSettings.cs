@@ -8,7 +8,6 @@ namespace WertheApp.RN
     {
         //VARIABLES
         Picker p_Treshold;//has to be definded here instead of Constructor because value is also needed in method
-		Picker p_ErrorTreshold;//same as above
         Switch s_Tahoe;//same
         Switch s_Reno;//same
 
@@ -85,24 +84,6 @@ namespace WertheApp.RN
             p_Treshold.Items.Add("15");
             p_Treshold.SelectedIndex = 7; //8
             var l_Space2 = new Label { Text = "  " };
-            var l_ErrorTreshold = new Label { Text = "Initial error treshold" };
-            p_ErrorTreshold = new Picker();
-            p_ErrorTreshold.Items.Add("1");
-            p_ErrorTreshold.Items.Add("2");
-            p_ErrorTreshold.Items.Add("3");
-            p_ErrorTreshold.Items.Add("4");
-            p_ErrorTreshold.Items.Add("5");
-            p_ErrorTreshold.Items.Add("6");
-            p_ErrorTreshold.Items.Add("7");
-            p_ErrorTreshold.Items.Add("8");
-            p_ErrorTreshold.Items.Add("9");
-            p_ErrorTreshold.Items.Add("10");
-            p_ErrorTreshold.Items.Add("11");
-            p_ErrorTreshold.Items.Add("12");
-            p_ErrorTreshold.Items.Add("13");
-            p_ErrorTreshold.Items.Add("14");
-            p_ErrorTreshold.Items.Add("15");
-            p_ErrorTreshold.SelectedIndex = 11; //12
             var b_Default = new Button { Text = "Set default values" , HorizontalOptions = LayoutOptions.Start };
             b_Default.Clicked += B_Default_Clicked; //add Click Event(Method)
 			var b_Start = new Button { Text = "Start" };
@@ -114,8 +95,6 @@ namespace WertheApp.RN
             stackLayout.Children.Add(l_Treshold);
             stackLayout.Children.Add(p_Treshold);
             stackLayout.Children.Add(l_Space2);
-            stackLayout.Children.Add(l_ErrorTreshold);
-            stackLayout.Children.Add(p_ErrorTreshold);
             stackLayout.Children.Add(b_Default);
 			stackLayout.Children.Add(b_Start);
 
@@ -140,7 +119,6 @@ namespace WertheApp.RN
         {
             s_Reno.IsToggled = true;
             s_Tahoe.IsToggled = true;
-            p_ErrorTreshold.SelectedIndex = 11; //12
             p_Treshold.SelectedIndex = 7; //8
         }
 

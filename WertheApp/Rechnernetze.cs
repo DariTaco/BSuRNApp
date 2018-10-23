@@ -32,7 +32,7 @@ namespace WertheApp
 			var listView = new ListView();
 			listView.ItemsSource = new string[]
 			{
-				"Congestion Avoidance", "Pipeline Protocols"
+				"Congestion Control", "Pipeline Protocols"
 			};
             //after an item was clicked, open the respective app 
 			listView.ItemTapped += async (sender, e) =>
@@ -41,7 +41,7 @@ namespace WertheApp
 
                 switch(appName)
                 {
-                    case "Congestion Avoidance":
+                    case "Congestion Control":
                         await Navigation.PushAsync(new CongestionAvoidanceSettings());
                         break;
                     case "Pipeline Protocols":

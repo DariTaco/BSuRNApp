@@ -11,18 +11,22 @@ namespace WertheApp.RN
     public class CongestionAvoidance : ContentPage
     {
         //VARIABLES
-        public static int errorTreshold;
         public static int treshold;
         public static bool reno;
         public static bool tahoe;
 
         bool landscape = false; //indicates device orientation
+        double StackChildSize;
 
         private double width = 0;
 		private double height = 0;
 
         private SKCanvasView skiaview;
         private CongestionAvoidanceDraw draw;
+
+        Label l_DupAck;
+        public static int dupAckCount;
+        public static int state; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
 
         //CONSTRUCTOR
         public CongestionAvoidance(int th, bool r, bool t)
@@ -31,13 +35,18 @@ namespace WertheApp.RN
             reno = r;
             tahoe = t;
 
+            dupAckCount = 0;
+            state = 0;
+
 			/*Debug.WriteLine("##########");
             Debug.WriteLine("error Treshold: " + errorTreshold);
 			Debug.WriteLine("treshold: " + treshold);
 			Debug.WriteLine("reno: " + reno);
 			Debug.WriteLine("tahoe: " + tahoe);*/
 
-			Title = "Congestion Avoidance";
+			Title = "Congestion Control";
+
+            draw = new CongestionAvoidanceDraw();
 
             //if orientation Horizontal
             if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)
@@ -53,7 +62,7 @@ namespace WertheApp.RN
                 CreateContent();
             }
 
-            draw = new CongestionAvoidanceDraw();
+
         }
 
 		//METHODS
@@ -95,80 +104,100 @@ namespace WertheApp.RN
         *********************************************************************/
 		void CreateBottomHalf(Grid grid)
 		{
-			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (3)
-			//Screen Width -20 because Margin is 10
-			double StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
+            //set the size of the elements in such a way, that they all fit on the screen
+            //Screen Width is divided by the amount of elements (3)
+            //Screen Width -20 because Margin is 10
+            if (!landscape)
+            {
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
+            }
+            else
+            {
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
+            }
 
-			//Using a Stacklayout to organize elements
-			//with corresponding labels and String variables. 
-			//For example l_Size, size
-			var stackLayout = new StackLayout
+            //Using a Stacklayout to organize elements
+            //with corresponding labels and String variables. 
+            //For example l_Size, size
+            var stackLayout = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
 				Margin = new Thickness(10),
 
 			};
 
-            Button b_Triple = new Button
+            StackLayout stackLayout2 = new StackLayout
             {
-                Text = "Triple Duplicate Ack",
+                Orientation = StackOrientation.Horizontal,
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            Button b_DupAck = new Button
+            {
+                Text = "Dup ACK",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = StackChildSize * 0.70
+            };
+            b_DupAck.Clicked += B_DupAck_Clicked;
+            stackLayout2.Children.Add(b_DupAck);
+
+            l_DupAck = new Label
+            {
+                Text = "= " + dupAckCount,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.CenterAndExpand
+
+            };
+            stackLayout2.Children.Add(l_DupAck);
+            stackLayout.Children.Add(stackLayout2);
+
+            Button b_NewAck = new Button
+            {
+                Text = "New Ack",
 				WidthRequest = StackChildSize,
 				VerticalOptions = LayoutOptions.Center
             };
-            b_Triple.Clicked += B_Triple_Clicked;
-            stackLayout.Children.Add(b_Triple);
+            b_NewAck.Clicked += B_NewAck_Clicked;;
+            stackLayout.Children.Add(b_NewAck);
 
-            Button b_Set_ErrorValue = new Button
+            Button b_Timeout = new Button
             {
-                Text = "Set Error-Value",
+                Text = "Timeout",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            b_Set_ErrorValue.Clicked += B_Set_ErrorValue_Clicked;
-            stackLayout.Children.Add(b_Set_ErrorValue);
+            b_Timeout.Clicked += B_Timeout_Clicked;
+            stackLayout.Children.Add(b_Timeout);
 
-            Button b_Next = new Button
-            {
-                Text = "Next Step",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
-            };
-            b_Next.Clicked += B_Next_Clicked;
-            stackLayout.Children.Add(b_Next);
-
-			grid.Children.Add(stackLayout, 0, 1);
+            grid.Children.Add(stackLayout, 0, 1);
 		}
 
+
 		/**********************************************************************
         *********************************************************************/
-		void B_Triple_Clicked(object sender, EventArgs e)
+		void B_NewAck_Clicked(object sender, EventArgs e)
         {
-
+            dupAckCount = 0;
+            l_DupAck.Text = "= " + dupAckCount;
         }
 
 		/**********************************************************************
         *********************************************************************/
-		void B_Set_ErrorValue_Clicked(object sender, EventArgs e)
+		void B_DupAck_Clicked(object sender, EventArgs e)
         {
-
+            dupAckCount++;
+            l_DupAck.Text = "= " + dupAckCount;
         }
 
 		/**********************************************************************
         *********************************************************************/
-		void B_Next_Clicked(object sender, EventArgs e)
+		void B_Timeout_Clicked(object sender, EventArgs e)
         {
-
+            state = (state + 1) % 3;
+            CongestionAvoidanceDraw.state = state;
+            CongestionAvoidanceDraw.Paint();
         }
-
-		/**********************************************************************
-        *********************************************************************/
-		/// <summary> deletes all content and informs the user to rotate the device </summary>
-		void DeleteContent()
-		{
-			this.Content = null;
-			this.Content = new Label { Text = "please rotate your device" };
-		}
 
 		/**********************************************************************
         *********************************************************************/

@@ -13,13 +13,20 @@ namespace WertheApp.RN
         private static float xe, ye;
         private static int toggleZoom;
 
-        private static SKPaint sk_blackTextSmall;
+        private static SKPaint sk_blackTextSmall, sk_TextSlowStart, sk_TextCongestionAvoidance, sk_TextFastRecovery;
+        private static SKPaint sk_PaintSlowStart, sk_PaintCongestionAvoidance, sk_FastRecovery;
+        private static SKPaint sk_PaintThin, sk_PaintFat;
         private static float textSize;
+        private static float strokeWidth;
+
+        public static int state; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
 
         //CONSTRUCTOR
         public CongestionAvoidanceDraw()
         {
             textSize = 5;
+            strokeWidth = 0.2f;
+            state = 0;
 
             // crate the canvas
             skiaview = new SKCanvasView();
@@ -55,8 +62,26 @@ namespace WertheApp.RN
 
             MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
 
-
             /*********************HERE GOES THE DRAWING************************/
+            //draw Background (which indicates the current state)
+            SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
+            switch (state)
+            {
+                case 0:
+                    canvas.DrawRect(sk_rBackground, sk_PaintSlowStart); //left, top, right, bottom, color
+                    canvas.DrawText("SLOW START", 50f * xe + xe, 50f * ye, sk_TextSlowStart);
+                    break;
+                case 1:
+                    canvas.DrawRect(sk_rBackground, sk_PaintCongestionAvoidance); //left, top, right, bottom, color
+                    canvas.DrawText("CONGESTION AVOIDANCE", 50f * xe + xe, 50f * ye, sk_TextCongestionAvoidance);
+                    break;
+                case 2:
+                    canvas.DrawRect(sk_rBackground, sk_FastRecovery); //left, top, right, bottom, color
+                    canvas.DrawText("FAST RECOVERY", 50f * xe + xe, 50f * ye, sk_TextFastRecovery);
+                    break;
+            }
+
+
             canvas.DrawText("HELLO WORLD", 20 * xe, 90 * ye, sk_blackTextSmall);
 
             //execute all drawing actions
@@ -78,6 +103,78 @@ namespace WertheApp.RN
                 IsVerticalText = true
             };
 
+            sk_TextSlowStart = new SKPaint
+            {
+                Color = new SKColor(147, 230, 22).WithAlpha(50),
+                TextSize = ye * textSize*3,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                FakeBoldText = true
+            };
+
+            sk_TextCongestionAvoidance = new SKPaint
+            {
+                Color = new SKColor(238, 130, 238).WithAlpha(40),
+                TextSize = ye * textSize*3,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                FakeBoldText = true
+            };
+
+            sk_TextFastRecovery = new SKPaint
+            {
+                Color = new SKColor(67, 110, 238).WithAlpha(30),
+                TextSize = ye * textSize*3,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                FakeBoldText = true
+            };
+
+
+            sk_PaintThin = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                Color = new SKColor(0, 0, 0) //black
+            };
+
+            sk_PaintFat = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * 2 * xe,
+                IsAntialias = true,
+                Color = new SKColor(0, 0, 0) //black
+            };
+
+            sk_PaintSlowStart = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(172, 255, 47).WithAlpha(30)
+            };
+
+            sk_PaintCongestionAvoidance = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(238, 130, 238).WithAlpha(30)
+            };
+
+            sk_FastRecovery = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(67, 110, 238).WithAlpha(30)
+            };
         }
 
         /**********************************************************************
