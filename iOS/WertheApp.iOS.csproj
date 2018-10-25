@@ -169,6 +169,12 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Webp.net-resizeimage34.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Webp.net-resizeimage35.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Webp.net-resizeimage36.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize88x88.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize100x100.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize216x216.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize120x120.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize180x180.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize1024x1024.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

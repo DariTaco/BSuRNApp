@@ -24,9 +24,10 @@ namespace WertheApp.RN
         private SKCanvasView skiaview;
         private CongestionAvoidanceDraw draw;
 
-        Label l_DupAck;
+        Button b_DupAck;
         public static int dupAckCount;
         public static int state; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
+        private Color orange1 = new Color(242, 115, 0);
 
         //CONSTRUCTOR
         public CongestionAvoidance(int th, bool r, bool t)
@@ -126,40 +127,15 @@ namespace WertheApp.RN
 
 			};
 
-            StackLayout stackLayout2 = new StackLayout
+            b_DupAck = new Button
             {
-                Orientation = StackOrientation.Horizontal,
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
-            };
-
-            Button b_DupAck = new Button
-            {
-                Text = "Dup ACK",
+                Text = "Dup ACK (" + dupAckCount +")",
+                TextColor = Color.Green,
                 VerticalOptions = LayoutOptions.Center,
-                WidthRequest = StackChildSize * 0.70
+                WidthRequest = StackChildSize
             };
             b_DupAck.Clicked += B_DupAck_Clicked;
-            stackLayout2.Children.Add(b_DupAck);
-
-            l_DupAck = new Label
-            {
-                Text = "= " + dupAckCount,
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.CenterAndExpand
-
-            };
-            stackLayout2.Children.Add(l_DupAck);
-            stackLayout.Children.Add(stackLayout2);
-
-            Button b_NewAck = new Button
-            {
-                Text = "New Ack",
-				WidthRequest = StackChildSize,
-				VerticalOptions = LayoutOptions.Center
-            };
-            b_NewAck.Clicked += B_NewAck_Clicked;;
-            stackLayout.Children.Add(b_NewAck);
+            stackLayout.Children.Add(b_DupAck);
 
             Button b_Timeout = new Button
             {
@@ -170,6 +146,15 @@ namespace WertheApp.RN
             b_Timeout.Clicked += B_Timeout_Clicked;
             stackLayout.Children.Add(b_Timeout);
 
+            Button b_NewAck = new Button
+            {
+                Text = "New Ack",
+				WidthRequest = StackChildSize,
+				VerticalOptions = LayoutOptions.Center
+            };
+            b_NewAck.Clicked += B_NewAck_Clicked;;
+            stackLayout.Children.Add(b_NewAck);
+
             grid.Children.Add(stackLayout, 0, 1);
 		}
 
@@ -179,7 +164,8 @@ namespace WertheApp.RN
 		void B_NewAck_Clicked(object sender, EventArgs e)
         {
             dupAckCount = 0;
-            l_DupAck.Text = "= " + dupAckCount;
+            b_DupAck.Text = "Dup ACK (" + dupAckCount + ")";
+            b_DupAck.TextColor = Color.Green;
         }
 
 		/**********************************************************************
@@ -187,7 +173,19 @@ namespace WertheApp.RN
 		void B_DupAck_Clicked(object sender, EventArgs e)
         {
             dupAckCount++;
-            l_DupAck.Text = "= " + dupAckCount;
+            b_DupAck.Text = "Dup ACK (" + dupAckCount + ")";
+            switch(dupAckCount){
+                case 0: b_DupAck.TextColor = Color.Green;
+                    break;
+                case 1: b_DupAck.TextColor = Color.DarkOrange;
+                    break;
+                case 2: b_DupAck.TextColor = Color.Crimson;
+                    break;
+                case 3: b_DupAck.TextColor = Color.Purple;
+                    break;
+                default: b_DupAck.TextColor = Color.Purple;
+                    break;
+            }
         }
 
 		/**********************************************************************
