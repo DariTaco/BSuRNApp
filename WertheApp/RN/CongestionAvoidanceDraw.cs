@@ -20,13 +20,27 @@ namespace WertheApp.RN
         private static float strokeWidth;
 
         public static int state; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
+        public static int dupAckCount;
+        public static int transmissionrate;
+        public static int currentStep;
+        public static int numberOfSteps;
+        public static int treshold;
+        public static int[] xyValues;
+
 
         //CONSTRUCTOR
         public CongestionAvoidanceDraw()
         {
             textSize = 5;
             strokeWidth = 0.2f;
+
             state = 0;
+            dupAckCount = 0;
+            transmissionrate = 0;
+            currentStep = 0;
+            numberOfSteps = 32;
+            treshold = CongestionAvoidance.treshold;
+            xyValues = new int[numberOfSteps];
 
             // crate the canvas
             skiaview = new SKCanvasView();

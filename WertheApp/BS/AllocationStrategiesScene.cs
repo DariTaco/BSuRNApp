@@ -572,7 +572,7 @@ namespace WertheApp.BS
 			if (memoryBlocks[pos, 0] == 0)
 			{
 				pos++;
-				BestFit(memoryRequest);
+				TailoringBestFit(memoryRequest);
 
 			}
 			else //if there is still space left in the memory block

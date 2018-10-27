@@ -118,6 +118,10 @@ namespace WertheApp.BS
                 }
             }
             PrintBuddySystemList();
+            for (int i = 0; i < buddySystem.Count; i++){
+                buddySystem[i].PrintBuddyNoList();
+            }
+           
             AddBuddySystemCell();
 
             if(buddySystem.Count > 1){
@@ -130,7 +134,6 @@ namespace WertheApp.BS
         //checks if there a blocks that can be merged
         public static void MergeBlocks(){
             currentProcess = "merge";
-
             int blockSize, blockSizeR, blockSizeL;
             int buddyNo, buddyNoR, buddyNoL, buddyNoMergedBlock;
             bool free, freeR, freeL;
@@ -138,6 +141,8 @@ namespace WertheApp.BS
             //for 3 or more items in list, check every item, except the outter right and outter left
             for (int i = 1; i < buddySystem.Count - 1;)
             {
+                Debug.WriteLine("buddysytem.count: " + buddySystem.Count());
+                Debug.WriteLine("start merge block at index: " + i );
                 blockSize = buddySystem[i].GetBlockSize();
                 blockSizeR = buddySystem[i + 1].GetBlockSize();
                 blockSizeL = buddySystem[i - 1].GetBlockSize();
@@ -151,9 +156,13 @@ namespace WertheApp.BS
 
 
                 if(free && buddyNo == 2){
-                    if(blockSizeL == blockSize && buddyNoL == 1 && freeL){
-                        buddyNoListCopy.Remove(buddyNoListCopy.Last()); //remove last in List, which is the buddyNo of the child
+                    Debug.WriteLine("free and buddy no = 2");
+                    if (blockSizeL == blockSize && buddyNoL == 1 && freeL){
+                        Debug.WriteLine("left buddy free");
+                        PrintList(buddyNoListCopy);
+                        buddyNoListCopy.RemoveAt(buddyNoListCopy.Count - 1); //remove last in List, which is the buddyNo of the child
                         buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
+                        PrintList(buddyNoListCopy);
 
                         //merge:
                         //remove the 2 blocks that will be merged
@@ -163,16 +172,23 @@ namespace WertheApp.BS
                         buddySystem.Insert(i - 1, new BuddySystemBlock(blockSize + blockSizeL, buddyNoMergedBlock));
              
                         buddySystem[i].SetBuddyNoList(buddyNoListCopy);
+   /**/                     buddySystem[i].FreeBlock();
                         AddBuddySystemCell();
                         i = 1; //start again
                     }else{
+                        Debug.WriteLine("left Buddy occupied");
                         i++;
                     }   
                 }
                 else if(free && buddyNo == 1){
+                    Debug.WriteLine("free and buddy no = 1");
+                    Debug.WriteLine("buddy no right =" + buddyNoR);
                     if(blockSizeR == blockSize && buddyNoR == 2 && freeR){
-                        buddyNoListCopy.Remove(buddyNoListCopy.Last()); //remove last in List, which is the buddyNo of the child
+                        Debug.WriteLine("right buddy free");
+                        PrintList(buddyNoListCopy);
+                        buddyNoListCopy.RemoveAt(buddyNoListCopy.Count-1); //remove last in List, which is the buddyNo of the child
                         buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
+                        PrintList(buddyNoListCopy);
 
                         //merge:
                         //remove the 2 blocks that will be merged
@@ -181,9 +197,11 @@ namespace WertheApp.BS
                         //replace them with the merged block 
                         buddySystem.Insert(i, new BuddySystemBlock(blockSize + blockSizeR, buddyNoMergedBlock));
                         buddySystem[i].SetBuddyNoList(buddyNoListCopy);
+    /**/                    buddySystem[i].FreeBlock();
                         AddBuddySystemCell();
                         i = 1; //start again
                     }else{
+                        Debug.WriteLine("rignht Buddy occupied");
                         i++;
                     }    
                 }
@@ -195,6 +213,7 @@ namespace WertheApp.BS
             //for 2 items in list
             if (buddySystem.Count == 2)
             {
+                Debug.WriteLine("merge last 2 items");
                 blockSize = buddySystem[0].GetBlockSize();
                 //and both are free (no check for other properties since they have to be buddys)
                 if (buddySystem[0].GetFree() && buddySystem[1].GetFree())
@@ -360,6 +379,16 @@ namespace WertheApp.BS
             }else{
                 await DisplayAlert("Alert", "No active processes", "OK");
             }
+        }
+
+        public static void PrintList(List<int> list)
+        {
+            String s = "";
+            foreach (int i in list){
+                s += i;
+            }
+            Debug.WriteLine(s);
+
         }
 
 		/**********************************************************************
