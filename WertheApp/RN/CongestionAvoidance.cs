@@ -11,9 +11,8 @@ namespace WertheApp.RN
     public class CongestionAvoidance : ContentPage
     {
         //VARIABLES
-        public static int treshold;
-        public static bool reno;
-        public static bool tahoe;
+        public static bool renoOn;
+        public static bool tahoeOn;
 
         bool landscape = false; //indicates device orientation
         double StackChildSize;
@@ -25,27 +24,40 @@ namespace WertheApp.RN
         private CongestionAvoidanceDraw draw;
 
         Button b_DupAck;
-        public static int dupAckCount;
-        public static int state; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
         private Color orange1 = new Color(242, 115, 0);
+
+        public static int stateT, stateR; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
+        public static int dupAckCount;
+        public static int rateR, rateT;
+        public static int currentStep;
+        public static int numberOfSteps;
+        public static int tresholdR,tresholdT;
+        public static int[] reno; //contains y values for reno
+        public static int[] tahoe; //contains y values for tahoe
+        public static int[] treshR; //contains y values for treshold Reno
+        public static int[] treshT; //contains y values for treshold Tahoe
 
         //CONSTRUCTOR
         public CongestionAvoidance(int th, bool r, bool t)
         {
-            treshold = th;
-            reno = r;
-            tahoe = t;
-
+            tresholdR = th;
+            tresholdT = th;
+            renoOn = r;
+            tahoeOn = t;
+            stateT = 0;
+            stateR = 0;
             dupAckCount = 0;
-            state = 0;
+            rateR = 1;
+            rateT = 1;
+            currentStep = 0;
+            numberOfSteps = 32;
 
-			/*Debug.WriteLine("##########");
-            Debug.WriteLine("error Treshold: " + errorTreshold);
-			Debug.WriteLine("treshold: " + treshold);
-			Debug.WriteLine("reno: " + reno);
-			Debug.WriteLine("tahoe: " + tahoe);*/
+            reno = new int[numberOfSteps];
+            tahoe = new int[numberOfSteps];
+            treshR = new int[numberOfSteps];
+            treshT = new int[numberOfSteps];
 
-			Title = "Congestion Control";
+            Title = "Congestion Control";
 
             draw = new CongestionAvoidanceDraw();
 
@@ -66,18 +78,208 @@ namespace WertheApp.RN
 
         }
 
-		//METHODS
+        //METHODS
         /**********************************************************************
         *********************************************************************/
-        //Gets called everytime the Page is not shown anymore. For example when clicking the back navigation
-        protected override void OnDisappearing()
+        void B_NewAck_Clicked(object sender, EventArgs e)
         {
-            base.OnDisappearing();
+            currentStep++;
+            dupAckCount = 0;
+
+            UpdateDupAckButton();
+
+            //RENO:
+            switch (stateR){
+                case 0: 
+                    rateR = rateR + rateR; //exponential growth
+                    if (rateR >= tresholdR) { stateR = 1; rateR = tresholdR; } //switch to congestion avoidance
+                    break;
+                case 1: 
+                    rateR++; //linear growth
+                    break;
+                case 2: 
+                    rateR = tresholdR;
+                    stateR = 1; //switch to congestion avoidance
+                    break;
+            }
+
+            //TAHOE:
+            switch (stateT)
+            {
+                case 0: 
+                    rateT = rateT + rateT; //exponential growth
+                    if (rateT >= tresholdT) { stateT = 1; rateT = tresholdT; } //switch to congestion avoidance
+                    break;
+                case 1:
+                    rateT++;
+                    break;
+            }
+
+            //save in arrays 
+            treshR[currentStep] = tresholdR;
+            reno[currentStep] = rateR;
+            treshT[currentStep] = tresholdT;
+            tahoe[currentStep] = rateT;
+
+            UpdateDrawing();
         }
 
-		/**********************************************************************
+        /**********************************************************************
         *********************************************************************/
-		void CreateContent()
+        void B_DupAck_Clicked(object sender, EventArgs e)
+        {
+            currentStep++;
+            dupAckCount++;
+
+            UpdateDupAckButton();
+
+            //RENO:
+            switch (stateR)
+            {
+                case 0:
+                    if (dupAckCount == 3) 
+                    { 
+                        tresholdR = rateR / 2; 
+                        rateR = tresholdR; 
+                        stateR = 2; //switch to fast recovery
+                    }
+                    break;
+                case 1:
+                    if (dupAckCount == 3)
+                    {
+                        tresholdR = rateR / 2;
+                        rateR = tresholdR;
+                        stateR = 2; //switch to fast recovery
+                    }
+                    break;
+                case 2:
+                    rateR++;
+                    break;
+            }
+
+            //TAHOE:
+            switch (stateT)
+            {
+                case 0:
+                    if(dupAckCount == 3)
+                    {
+                        tresholdT = rateT / 2;
+                        rateT = 1;
+                    }
+                    break;
+                case 1:
+                    if (dupAckCount == 3)
+                    {
+                        tresholdT = rateT / 2;
+                        rateT = 1;
+                        stateT = 0;
+                    }
+                    break;
+            }
+
+            //save in arrays
+            treshR[currentStep] = tresholdR;
+            reno[currentStep] = rateR;
+            treshT[currentStep] = tresholdT;
+            tahoe[currentStep] = rateT;
+
+            UpdateDrawing();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        void B_Timeout_Clicked(object sender, EventArgs e)
+        {
+            currentStep++;
+            dupAckCount = 0;
+
+            UpdateDupAckButton();
+
+            //RENO:
+            switch (stateR)
+            {
+                case 0:
+                    tresholdR = rateR / 2;
+                    rateR = 1;
+                    break;
+                case 1:
+                    tresholdR = rateR / 2;
+                    rateR = 1;
+                    stateR = 0;
+                    break;
+                case 2:
+                    tresholdR = rateR / 2;
+                    rateR = 1;
+                    stateR = 0;
+                    break;
+            }
+
+            //TAHOE:
+            switch (stateT)
+            {
+                case 0:
+                    tresholdT = rateT / 2;
+                    rateT = 1;
+                    break;
+                case 1:
+                    tresholdT = rateT / 2;
+                    rateT = 1;
+                    stateT = 0;
+                    break;
+            }
+
+            //save in arrays
+            treshR[currentStep] = tresholdR;
+            reno[currentStep] = rateR;
+            treshT[currentStep] = tresholdT;
+            tahoe[currentStep] = rateT;
+
+            UpdateDrawing();
+        }
+
+
+
+
+
+        /**********************************************************************
+        *********************************************************************/
+        void UpdateDrawing(){
+            //update background
+            CongestionAvoidanceDraw.stateR = stateR;
+            CongestionAvoidance.stateT = stateT;
+            CongestionAvoidanceDraw.Paint();
+        }
+
+
+        /***************************************************************
+        *********************************************************************/
+       
+        void UpdateDupAckButton(){
+            //update Button Color and Text
+            b_DupAck.Text = "Dup ACK (" + dupAckCount + ")";
+            switch (dupAckCount)
+            {
+                case 0:
+                    b_DupAck.TextColor = Color.Green;
+                    break;
+                case 1:
+                    b_DupAck.TextColor = Color.DarkOrange;
+                    break;
+                case 2:
+                    b_DupAck.TextColor = Color.Crimson;
+                    break;
+                case 3:
+                    b_DupAck.TextColor = Color.Purple;
+                    break;
+                default:
+                    b_DupAck.TextColor = Color.Purple;
+                    break;
+            }
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        void CreateContent()
 		{
 			// This is the top-level grid, which will split our page in half
 			var grid = new Grid();
@@ -157,45 +359,6 @@ namespace WertheApp.RN
 
             grid.Children.Add(stackLayout, 0, 1);
 		}
-
-
-		/**********************************************************************
-        *********************************************************************/
-		void B_NewAck_Clicked(object sender, EventArgs e)
-        {
-            dupAckCount = 0;
-            b_DupAck.Text = "Dup ACK (" + dupAckCount + ")";
-            b_DupAck.TextColor = Color.Green;
-        }
-
-		/**********************************************************************
-        *********************************************************************/
-		void B_DupAck_Clicked(object sender, EventArgs e)
-        {
-            dupAckCount++;
-            b_DupAck.Text = "Dup ACK (" + dupAckCount + ")";
-            switch(dupAckCount){
-                case 0: b_DupAck.TextColor = Color.Green;
-                    break;
-                case 1: b_DupAck.TextColor = Color.DarkOrange;
-                    break;
-                case 2: b_DupAck.TextColor = Color.Crimson;
-                    break;
-                case 3: b_DupAck.TextColor = Color.Purple;
-                    break;
-                default: b_DupAck.TextColor = Color.Purple;
-                    break;
-            }
-        }
-
-		/**********************************************************************
-        *********************************************************************/
-		void B_Timeout_Clicked(object sender, EventArgs e)
-        {
-            state = (state + 1) % 3;
-            CongestionAvoidanceDraw.state = state;
-            CongestionAvoidanceDraw.Paint();
-        }
 
 		/**********************************************************************
         *********************************************************************/

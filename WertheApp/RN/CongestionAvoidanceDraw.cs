@@ -19,14 +19,7 @@ namespace WertheApp.RN
         private static float textSize;
         private static float strokeWidth;
 
-        public static int state; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
-        public static int dupAckCount;
-        public static int transmissionrate;
-        public static int currentStep;
-        public static int numberOfSteps;
-        public static int treshold;
-        public static int[] xyValues;
-
+        public static int stateR, stateT; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
 
         //CONSTRUCTOR
         public CongestionAvoidanceDraw()
@@ -34,19 +27,15 @@ namespace WertheApp.RN
             textSize = 5;
             strokeWidth = 0.2f;
 
-            state = 0;
-            dupAckCount = 0;
-            transmissionrate = 0;
-            currentStep = 0;
-            numberOfSteps = 32;
-            treshold = CongestionAvoidance.treshold;
-            xyValues = new int[numberOfSteps];
-
             // crate the canvas
             skiaview = new SKCanvasView();
             skiaview.PaintSurface += PaintSurface;
 
             AddGestureRecognizers();
+
+            stateR = 0;
+            stateT = 0;
+
         }
 
         //METHODS
@@ -79,7 +68,7 @@ namespace WertheApp.RN
             /*********************HERE GOES THE DRAWING************************/
             //draw Background (which indicates the current state)
             SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
-            switch (state)
+            switch (stateR)
             {
                 case 0:
                     canvas.DrawRect(sk_rBackground, sk_PaintSlowStart); //left, top, right, bottom, color
