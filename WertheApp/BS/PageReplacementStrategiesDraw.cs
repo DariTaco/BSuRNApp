@@ -280,6 +280,7 @@ namespace WertheApp.BS
                 //IsStroke = true, //indicates whether to paint the stroke or the fill
                 StrokeWidth = strokeWidth * xe,
                 IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
                 Color = new SKColor(0, 0, 0) //black
             };
 
@@ -289,6 +290,7 @@ namespace WertheApp.BS
                 //IsStroke = true, //indicates whether to paint the stroke or the fill
                 StrokeWidth = strokeWidth * 2 * xe,
                 IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
                 Color = new SKColor(0, 0, 0) //black
             };
 

@@ -23,7 +23,7 @@ namespace WertheApp.RN
         private SKCanvasView skiaview;
         private CongestionAvoidanceDraw draw;
 
-        Button b_DupAck;
+        Button b_DupAck, b_Timeout, b_NewAck;
         private Color orange1 = new Color(242, 115, 0);
 
         public static int stateT, stateR; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
@@ -31,6 +31,7 @@ namespace WertheApp.RN
         public static int rateR, rateT;
         public static int currentStep;
         public static int numberOfSteps;
+        public static int maxRate;
         public static int tresholdR,tresholdT;
         public static int[] reno; //contains y values for reno
         public static int[] tahoe; //contains y values for tahoe
@@ -51,6 +52,7 @@ namespace WertheApp.RN
             rateT = 1;
             currentStep = 0;
             numberOfSteps = 32;
+            maxRate = 16;
 
             reno = new int[numberOfSteps];
             tahoe = new int[numberOfSteps];
@@ -84,9 +86,10 @@ namespace WertheApp.RN
         void B_NewAck_Clicked(object sender, EventArgs e)
         {
             currentStep++;
+
             dupAckCount = 0;
 
-            UpdateDupAckButton();
+            UpdateButtons();
 
             //RENO:
             switch (stateR){
@@ -131,7 +134,7 @@ namespace WertheApp.RN
             currentStep++;
             dupAckCount++;
 
-            UpdateDupAckButton();
+            UpdateButtons();
 
             //RENO:
             switch (stateR)
@@ -193,7 +196,7 @@ namespace WertheApp.RN
             currentStep++;
             dupAckCount = 0;
 
-            UpdateDupAckButton();
+            UpdateButtons();
 
             //RENO:
             switch (stateR)
@@ -246,7 +249,7 @@ namespace WertheApp.RN
         void UpdateDrawing(){
             //update background
             CongestionAvoidanceDraw.stateR = stateR;
-            CongestionAvoidance.stateT = stateT;
+            CongestionAvoidanceDraw.stateT = stateT;
             CongestionAvoidanceDraw.Paint();
         }
 
@@ -254,7 +257,7 @@ namespace WertheApp.RN
         /***************************************************************
         *********************************************************************/
        
-        void UpdateDupAckButton(){
+        void UpdateButtons(){
             //update Button Color and Text
             b_DupAck.Text = "Dup ACK (" + dupAckCount + ")";
             switch (dupAckCount)
@@ -274,6 +277,14 @@ namespace WertheApp.RN
                 default:
                     b_DupAck.TextColor = Color.Purple;
                     break;
+            }
+
+            //enable / disbale
+            if (currentStep == numberOfSteps-1)
+            {
+                b_DupAck.IsEnabled = false;
+                b_NewAck.IsEnabled = false;
+                b_Timeout.IsEnabled = false;
             }
         }
 
@@ -339,7 +350,7 @@ namespace WertheApp.RN
             b_DupAck.Clicked += B_DupAck_Clicked;
             stackLayout.Children.Add(b_DupAck);
 
-            Button b_Timeout = new Button
+            b_Timeout = new Button
             {
                 Text = "Timeout",
                 WidthRequest = StackChildSize,
@@ -348,7 +359,7 @@ namespace WertheApp.RN
             b_Timeout.Clicked += B_Timeout_Clicked;
             stackLayout.Children.Add(b_Timeout);
 
-            Button b_NewAck = new Button
+            b_NewAck = new Button
             {
                 Text = "New Ack",
 				WidthRequest = StackChildSize,

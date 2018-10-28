@@ -6,6 +6,7 @@ using System.Diagnostics; //Debug.WriteLine("");
 using System.Collections.Generic;
 namespace WertheApp.RN
 {
+    //TODO: IsStroke = false //somehow since the newest update this doesnt work anymore for ios
     public class CongestionAvoidanceDraw
     {
         //VARIABLES
@@ -13,13 +14,16 @@ namespace WertheApp.RN
         private static float xe, ye;
         private static int toggleZoom;
 
-        private static SKPaint sk_blackTextSmall, sk_TextSlowStart, sk_TextCongestionAvoidance, sk_TextFastRecovery;
+        private static SKPaint sk_blackText, sk_blackTextSmallVertical, sk_blackTextSmallHorizontal, sk_TextSlowStart, sk_TextCongestionAvoidance, sk_TextFastRecovery;
         private static SKPaint sk_PaintSlowStart, sk_PaintCongestionAvoidance, sk_FastRecovery;
         private static SKPaint sk_PaintThin, sk_PaintFat;
         private static float textSize;
         private static float strokeWidth;
+        private static float xWidth, yWidth;
+
 
         public static int stateR, stateT; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
+        public static int maxRate, numberOfSteps;
 
         //CONSTRUCTOR
         public CongestionAvoidanceDraw()
@@ -33,8 +37,14 @@ namespace WertheApp.RN
 
             AddGestureRecognizers();
 
-            stateR = 0;
-            stateT = 0;
+            stateR = CongestionAvoidance.stateR;
+            stateT = CongestionAvoidance.stateT;
+            maxRate = CongestionAvoidance.maxRate;
+            numberOfSteps = CongestionAvoidance.numberOfSteps;
+
+            xWidth = 92f / (numberOfSteps + 1);
+            yWidth = 93f / (maxRate + 1);
+            
 
         }
 
@@ -66,9 +76,17 @@ namespace WertheApp.RN
             MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
 
             /*********************HERE GOES THE DRAWING************************/
-            //draw Background (which indicates the current state)
+
+            //draw Background (which indicates the current state) . Do not draw Background if Tahoe and Reno are displayed
+            int state = 3;
+            if(CongestionAvoidance.renoOn && !CongestionAvoidance.tahoeOn){
+                state = stateR;
+            }
+            else if(CongestionAvoidance.tahoeOn && !CongestionAvoidance.renoOn){
+                state = stateT;
+            }
             SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
-            switch (stateR)
+            switch (state)
             {
                 case 0:
                     canvas.DrawRect(sk_rBackground, sk_PaintSlowStart); //left, top, right, bottom, color
@@ -82,10 +100,49 @@ namespace WertheApp.RN
                     canvas.DrawRect(sk_rBackground, sk_FastRecovery); //left, top, right, bottom, color
                     canvas.DrawText("FAST RECOVERY", 50f * xe + xe, 50f * ye, sk_TextFastRecovery);
                     break;
+                default: break;
             }
 
+            //draw Graph
+            canvas.DrawLine(new SKPoint(5 * xe, 95 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintFat);
+            canvas.DrawLine(new SKPoint(5 * xe, 95* ye), new SKPoint(97 * xe, 95 * ye), sk_PaintFat);
 
-            canvas.DrawText("HELLO WORLD", 20 * xe, 90 * ye, sk_blackTextSmall);
+            canvas.DrawLine(new SKPoint(4 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintFat);
+            canvas.DrawLine(new SKPoint(6 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintFat);
+
+            canvas.DrawLine(new SKPoint(96 * xe, 93 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintFat);
+            canvas.DrawLine(new SKPoint(96 * xe, 97 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintFat);
+
+            //zero point
+            canvas.DrawText("0", 4 * xe, 99 * ye, sk_blackText);
+
+            //numbers in Y-Achsis
+            float posY = 95f - yWidth;
+            for (int i = 1; i <= maxRate; i++)
+            {
+                canvas.DrawLine(new SKPoint(4 * xe, posY * ye), new SKPoint(5 * xe, posY * ye), sk_PaintThin);
+                if(i < 10){
+                    canvas.DrawText(i.ToString(), 3 * xe, posY * ye, sk_blackTextSmallVertical);
+                }else{
+                    canvas.DrawText("1", 2 * xe, posY * ye, sk_blackTextSmallVertical);
+                    canvas.DrawText((i % 10).ToString(), 3 * xe, posY * ye, sk_blackTextSmallVertical);
+                }
+                posY -= yWidth;
+            }
+
+            //numbers in X-Achsis
+            float posX = 5f + xWidth;
+            for (int i = 1; i <= numberOfSteps; i++)
+            {
+                canvas.DrawLine(new SKPoint(posX * xe, 96 * ye), new SKPoint(posX * xe, 94 * ye), sk_PaintThin);
+                canvas.DrawText(i.ToString(), posX * xe, 99 * ye, sk_blackTextSmallHorizontal);
+                posX += xWidth;
+            }
+
+            //rate and step
+            canvas.DrawText("rate", 2 * xe, 4 * ye, sk_blackText);
+            canvas.DrawText("step", 98 * xe, 99 * ye, sk_blackText);
+            // canvas.DrawText("HELLO WORLD", 20 * xe, 90 * ye, sk_blackTextSmall);
 
             //execute all drawing actions
             canvas.Flush();
@@ -94,16 +151,35 @@ namespace WertheApp.RN
         /**********************************************************************
         *********************************************************************/
         static private void MakeSKPaint()
-        {            
-            //black small text
-            sk_blackTextSmall = new SKPaint
+        {
+            sk_blackText = new SKPaint
             {
                 Color = SKColors.Black,
-                TextSize = ye * textSize / 2,
+                TextSize = ye * textSize/1.3f,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = false
+            };
+
+            sk_blackTextSmallVertical = new SKPaint
+            {
+                Color = SKColors.Black,
+                TextSize = ye * textSize / 1.8f,
                 IsAntialias = true,
                 IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = true
+            };
+
+            sk_blackTextSmallHorizontal = new SKPaint
+            {
+                Color = SKColors.Black,
+                TextSize = ye * textSize / 1.8f,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = false
             };
 
             sk_TextSlowStart = new SKPaint
@@ -143,6 +219,7 @@ namespace WertheApp.RN
                 //IsStroke = true, //indicates whether to paint the stroke or the fill
                 StrokeWidth = strokeWidth * xe,
                 IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
                 Color = new SKColor(0, 0, 0) //black
             };
 
@@ -152,6 +229,7 @@ namespace WertheApp.RN
                 //IsStroke = true, //indicates whether to paint the stroke or the fill
                 StrokeWidth = strokeWidth * 2 * xe,
                 IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
                 Color = new SKColor(0, 0, 0) //black
             };
 
