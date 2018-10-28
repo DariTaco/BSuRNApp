@@ -52,7 +52,7 @@ namespace WertheApp.RN
             rateT = 1;
             currentStep = 0;
             numberOfSteps = 32;
-            maxRate = 16;
+            maxRate = 14;
 
             reno = new int[numberOfSteps];
             tahoe = new int[numberOfSteps];

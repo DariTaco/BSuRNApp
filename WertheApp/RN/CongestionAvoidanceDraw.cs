@@ -16,7 +16,7 @@ namespace WertheApp.RN
 
         private static SKPaint sk_blackText, sk_blackTextSmallVertical, sk_blackTextSmallHorizontal, sk_TextSlowStart, sk_TextCongestionAvoidance, sk_TextFastRecovery;
         private static SKPaint sk_PaintSlowStart, sk_PaintCongestionAvoidance, sk_FastRecovery;
-        private static SKPaint sk_PaintThin, sk_PaintFat;
+        private static SKPaint sk_PaintVeryThin, sk_PaintThin, sk_PaintFat, sk_PaintTahoe, sk_PaintTahoeFat, sk_PaintReno, sk_PaintRenoFat, sk_PaintTreshReno, sk_PaintTreshTahoe;
         private static float textSize;
         private static float strokeWidth;
         private static float xWidth, yWidth;
@@ -116,10 +116,13 @@ namespace WertheApp.RN
             //zero point
             canvas.DrawText("0", 4 * xe, 99 * ye, sk_blackText);
 
-            //numbers in Y-Achsis
+            //numbers in Y-Achsis (rate)
             float posY = 95f - yWidth;
             for (int i = 1; i <= maxRate; i++)
             {
+                if(i % 2 == 0){
+                    canvas.DrawLine(new SKPoint(5 * xe, posY * ye), new SKPoint(97 * xe, posY * ye), sk_PaintVeryThin);
+                }
                 canvas.DrawLine(new SKPoint(4 * xe, posY * ye), new SKPoint(5 * xe, posY * ye), sk_PaintThin);
                 if(i < 10){
                     canvas.DrawText(i.ToString(), 3 * xe, posY * ye, sk_blackTextSmallVertical);
@@ -130,7 +133,7 @@ namespace WertheApp.RN
                 posY -= yWidth;
             }
 
-            //numbers in X-Achsis
+            //numbers in X-Achsis (steps)
             float posX = 5f + xWidth;
             for (int i = 1; i <= numberOfSteps; i++)
             {
@@ -139,10 +142,22 @@ namespace WertheApp.RN
                 posX += xWidth;
             }
 
-            //rate and step
+            //the words "rate" and "step"
             canvas.DrawText("rate", 2 * xe, 4 * ye, sk_blackText);
             canvas.DrawText("step", 98 * xe, 99 * ye, sk_blackText);
-            // canvas.DrawText("HELLO WORLD", 20 * xe, 90 * ye, sk_blackTextSmall);
+
+            //treshold
+
+
+            //RENO: transmission rate values
+            float posRateX = 5f;
+            float posRateY = 95f;
+            for (int i = 0; i <= CongestionAvoidance.currentStep; i++){
+                Debug.WriteLine(CongestionAvoidance.reno[i]);
+                posRateY = 95f - (yWidth * CongestionAvoidance.reno[i]); //get value from array and convert it
+                canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintRenoFat);
+                posRateX += xWidth;
+            }
 
             //execute all drawing actions
             canvas.Flush();
@@ -152,6 +167,7 @@ namespace WertheApp.RN
         *********************************************************************/
         static private void MakeSKPaint()
         {
+            //For Text
             sk_blackText = new SKPaint
             {
                 Color = SKColors.Black,
@@ -213,6 +229,17 @@ namespace WertheApp.RN
             };
 
 
+            //For Lines
+            sk_PaintVeryThin = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth / 4f * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(0, 0, 0) //black
+            };
+
             sk_PaintThin = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
@@ -233,6 +260,67 @@ namespace WertheApp.RN
                 Color = new SKColor(0, 0, 0) //black
             };
 
+            sk_PaintReno = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(235, 41, 163) //pink
+            };
+
+            sk_PaintRenoFat = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * 2 * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(235, 41, 163) //pink
+            };
+
+            sk_PaintTahoe = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(87, 87, 240) //blue
+            };
+
+            sk_PaintTahoeFat = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * 2 * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(87, 87, 240) //blue
+            };
+
+            sk_PaintTreshReno = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(204, 26, 178) //pink /purple
+            };
+
+            sk_PaintTreshTahoe = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(46, 46, 199) //dark blue
+            };
+
+            //For Background
             sk_PaintSlowStart = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
