@@ -56,8 +56,13 @@ namespace WertheApp.RN
 
             reno = new int[numberOfSteps];
             tahoe = new int[numberOfSteps];
+            reno[0] = rateR;
+            tahoe[0] = rateT;
+
             treshR = new int[numberOfSteps];
             treshT = new int[numberOfSteps];
+            treshR[0] = tresholdR;
+            treshT[0] = tresholdT;
 
             Title = "Congestion Control";
 
@@ -120,8 +125,8 @@ namespace WertheApp.RN
 
             //save in arrays 
             treshR[currentStep] = tresholdR;
-            reno[currentStep] = rateR;
             treshT[currentStep] = tresholdT;
+            reno[currentStep] = rateR;
             tahoe[currentStep] = rateT;
 
             UpdateDrawing();
@@ -167,7 +172,7 @@ namespace WertheApp.RN
                     if(dupAckCount == 3)
                     {
                         tresholdT = rateT / 2;
-                        rateT = 1;
+                        rateT = 1; //switch to Congestion Avoidance
                     }
                     break;
                 case 1:
@@ -175,7 +180,7 @@ namespace WertheApp.RN
                     {
                         tresholdT = rateT / 2;
                         rateT = 1;
-                        stateT = 0;
+                        stateT = 0; //Switch to Slow Start
                     }
                     break;
             }
