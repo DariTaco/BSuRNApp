@@ -154,15 +154,14 @@ namespace WertheApp.RN
                 float posRateYOld = 95f;
                 for (int i = 0; i <= CongestionAvoidance.currentStep; i++)
                 {
-                    Debug.WriteLine("value reno: " + CongestionAvoidance.reno[i]);
                     posRateY = 95f - (yWidth * CongestionAvoidance.reno[i]); //get value from array and convert it
                     if ((i - 1) >= 0)
                     {
                         posRateYOld = 95f - (yWidth * CongestionAvoidance.reno[i - 1]);
+                        canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintReno);
                     }
                     canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintRenoFat);
                     posRateX += xWidth;
-                    canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintReno);
                 }
 
                 //RENO: treshold
@@ -182,13 +181,19 @@ namespace WertheApp.RN
                 //TAHOE: transmission rate values dots and lines
                 float posRateX2 = 5f;
                 float posRateY2 = 95f;
+                float posRateY2Old = 95f;
                 for (int i = 0; i <= CongestionAvoidance.currentStep; i++)
                 {
-                    Debug.WriteLine("value tahoe: " + CongestionAvoidance.tahoe[i]);
                     posRateY2 = 95f - (yWidth * CongestionAvoidance.tahoe[i]); //get value from array and convert it
+                    if ((i - 1) >= 0)
+                    {
+                        posRateY2Old = 95f - (yWidth * CongestionAvoidance.tahoe[i - 1]);
+                        canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2Old * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTahoe);
+                    }
                     canvas.DrawPoint(posRateX2 * xe, posRateY2 * ye, sk_PaintTahoeFat);
                     posRateX2 += xWidth;
                 }
+
                 //TAHOE: treshold
                 float posRateX4 = 5f;
                 float posRateY4 = 95f;
@@ -330,7 +335,7 @@ namespace WertheApp.RN
                 StrokeWidth = strokeWidth * xe,
                 IsAntialias = true,
                 StrokeCap = SKStrokeCap.Round,
-                Color = new SKColor(82, 125, 0) //green
+                Color = new SKColor(2, 2, 219) //blue
             };
 
             sk_PaintTahoeFat = new SKPaint
@@ -340,7 +345,7 @@ namespace WertheApp.RN
                 StrokeWidth = strokeWidth * 4 * xe,
                 IsAntialias = true,
                 StrokeCap = SKStrokeCap.Round,
-                Color = new SKColor(82, 125, 0) //green
+                Color = new SKColor(2, 2, 219) //blue
             };
 
             sk_PaintTreshReno = new SKPaint
@@ -360,7 +365,7 @@ namespace WertheApp.RN
                 StrokeWidth = strokeWidth * xe,
                 IsAntialias = true,
                 StrokeCap = SKStrokeCap.Round,
-                Color = new SKColor(82, 125, 0) //green
+                Color = new SKColor(2, 2, 219) //blue
             };
 
             //For Background

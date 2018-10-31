@@ -98,9 +98,14 @@ namespace WertheApp.RN
 
             //RENO:
             switch (stateR){
-                case 0: 
+                case 0:
+                    int rateROld = rateR;
                     rateR = rateR + rateR; //exponential growth
-                    if (rateR >= tresholdR) { stateR = 1; rateR = tresholdR; } //switch to congestion avoidance
+                    if (rateR >= tresholdR) 
+                    { 
+                        stateR = 1; //switch to congestion avoidance
+                        if (rateROld < tresholdR) { rateR = tresholdR; } 
+                    } 
                     break;
                 case 1: 
                     rateR++; //linear growth
@@ -114,9 +119,14 @@ namespace WertheApp.RN
             //TAHOE:
             switch (stateT)
             {
-                case 0: 
+                case 0:
+                    int rateTOld = rateT;
                     rateT = rateT + rateT; //exponential growth
-                    if (rateT >= tresholdT) { stateT = 1; rateT = tresholdT; } //switch to congestion avoidance
+                    if (rateT >= tresholdT) 
+                    { 
+                        stateT = 1; //switch to congestion avoidance
+                        if(rateTOld < tresholdT){ rateT = tresholdT;}
+                    } 
                     break;
                 case 1:
                     rateT++;
@@ -256,6 +266,11 @@ namespace WertheApp.RN
             CongestionAvoidanceDraw.stateR = stateR;
             CongestionAvoidanceDraw.stateT = stateT;
             CongestionAvoidanceDraw.Paint();
+
+            Debug.WriteLine("reno:");
+            PrintArray(reno);
+            Debug.WriteLine("tresh reno:");
+            PrintArray(treshR);
         }
 
 
@@ -282,6 +297,18 @@ namespace WertheApp.RN
                 default:
                     b_DupAck.TextColor = Color.Purple;
                     break;
+            }
+
+            //enable /disable when rate to high
+            if (renoOn && !tahoeOn && rateR >= maxRate 
+                || !renoOn && tahoeOn && rateT >= maxRate
+                || renoOn && tahoeOn && (rateR >= maxRate || rateT >= maxRate) )
+            {
+                b_NewAck.IsEnabled = false;
+                b_DupAck.IsEnabled = false;
+            }else{
+                b_NewAck.IsEnabled = true;
+                b_DupAck.IsEnabled = true;
             }
 
             //enable / disbale
@@ -398,6 +425,15 @@ namespace WertheApp.RN
             {
                 this.Content.IsVisible = false;
             }
+        }
+
+        public void PrintArray(int [] a){
+            String s = "";
+            for (int i = 0; i < a.Length; i++){
+                s += a[i];
+                s += ",";
+            }
+            Debug.WriteLine(s);
         }
 
 	}
