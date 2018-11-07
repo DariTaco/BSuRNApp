@@ -110,11 +110,11 @@ namespace WertheApp.RN
             canvas.DrawLine(new SKPoint(5 * xe, 95 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
             canvas.DrawLine(new SKPoint(5 * xe, 95* ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
 
-            canvas.DrawLine(new SKPoint(4 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
-            canvas.DrawLine(new SKPoint(6 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
+            canvas.DrawLine(new SKPoint(4.3f * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
+            canvas.DrawLine(new SKPoint(5.8f * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
 
-            canvas.DrawLine(new SKPoint(96 * xe, 93 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
-            canvas.DrawLine(new SKPoint(96 * xe, 97 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
+            canvas.DrawLine(new SKPoint(96 * xe, 93.3f * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
+            canvas.DrawLine(new SKPoint(96 * xe, 96.7f * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
 
             //zero point
             canvas.DrawText("0", 4 * xe, 99 * ye, sk_blackText);
@@ -147,7 +147,7 @@ namespace WertheApp.RN
 
             //the words "cwnd" and "round"
             canvas.DrawText("cwnd", 2 * xe, 4 * ye, sk_blackText);
-            canvas.DrawText("round", 98 * xe, 99 * ye, sk_blackText);
+            canvas.DrawText("rnd", 98 * xe, 99 * ye, sk_blackText);
 
             //RENO
             if(CongestionAvoidance.renoOn){
@@ -173,7 +173,7 @@ namespace WertheApp.RN
                 for (int i = 0; i <= CongestionAvoidance.currentRoundR; i++)
                 {
                     posRateX3 += xWidth;
-                    posRateY3 = 95f - (yWidth * CongestionAvoidance.treshR[i]); //get value from array and convert it
+                    posRateY3 = 95f - (yWidth * CongestionAvoidance.sstreshR[i]); //get value from array and convert it
                     canvas.DrawLine(new SKPoint((posRateX3 - xWidth) * xe, posRateY3 * ye), new SKPoint(posRateX3 * xe, posRateY3 * ye), sk_PaintTreshReno);
 
                 }
@@ -203,7 +203,7 @@ namespace WertheApp.RN
                 for (int i = 0; i <= CongestionAvoidance.currentRoundT; i++)
                 {
                     posRateX4 += xWidth;
-                    posRateY4 = 95f - (yWidth * CongestionAvoidance.treshT[i]); //get value from array and convert it
+                    posRateY4 = 95f - (yWidth * CongestionAvoidance.sstreshT[i]); //get value from array and convert it
                     canvas.DrawLine(new SKPoint((posRateX4 - xWidth) * xe, posRateY4 * ye), new SKPoint(posRateX4 * xe, posRateY4 * ye), sk_PaintTreshTahoe);
 
                 }
@@ -243,14 +243,14 @@ namespace WertheApp.RN
                 //tresh
                 float posRateX2 = 5f - xWidth;
                 float posRateY2 = 95f;
-                int treshValT;
-                int treshValR;
-                for (int i = 0; i < CongestionAvoidance.treshT.Length; i++){
-                    treshValT = CongestionAvoidance.treshT[i];
-                    treshValR = CongestionAvoidance.treshR[i];
+                int sstreshValT;
+                int sstreshValR;
+                for (int i = 0; i < CongestionAvoidance.sstreshT.Length; i++){
+                    sstreshValT = CongestionAvoidance.sstreshT[i];
+                    sstreshValR = CongestionAvoidance.sstreshR[i];
                     posRateX2 += xWidth;
-                    if (treshValR == treshValT && treshValT != 0){
-                        posRateY2 = 95f - (yWidth * CongestionAvoidance.treshT[i]); //get value from array and convert it
+                    if (sstreshValR == sstreshValT && sstreshValT != 0){
+                        posRateY2 = 95f - (yWidth * CongestionAvoidance.sstreshT[i]); //get value from array and convert it
                         canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2 * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTreshBlack);
 
                     }
@@ -270,7 +270,7 @@ namespace WertheApp.RN
             sk_blackText = new SKPaint
             {
                 Color = SKColors.Black,
-                TextSize = ye * textSize/1.3f,
+                TextSize = ye * textSize/1.4f,
                 IsAntialias = true,
                 IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
                 TextAlign = SKTextAlign.Center,

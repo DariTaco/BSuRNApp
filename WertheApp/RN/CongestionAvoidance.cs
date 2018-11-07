@@ -27,7 +27,7 @@ namespace WertheApp.RN
         private Color orange1 = new Color(242, 115, 0);
 
         public static int stateT, stateR; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
-        public static int dupAckCount;
+        public static int dupAckCountR, dupAckCountT;
         public static int cwndR, cwndT;
         public static int currentRoundR, currentRoundT;
         public static int numberOfRounds;
@@ -35,8 +35,8 @@ namespace WertheApp.RN
         public static int tresholdR,tresholdT;
         public static int[] reno; //contains y values for reno
         public static int[] tahoe; //contains y values for tahoe
-        public static int[] treshR; //contains y values for treshold Reno
-        public static int[] treshT; //contains y values for treshold Tahoe
+        public static int[] sstreshR; //contains y values for treshold Reno
+        public static int[] sstreshT; //contains y values for treshold Tahoe
 
         //CONSTRUCTOR
         public CongestionAvoidance(int th, bool r, bool t)
@@ -47,7 +47,8 @@ namespace WertheApp.RN
             tahoeOn = t;
             stateT = 0;
             stateR = 0;
-            dupAckCount = 0;
+            dupAckCountR = 0;
+            dupAckCountT = 0;
             cwndR = 1;
             cwndT = 1;
             currentRoundR = 0;
@@ -60,10 +61,10 @@ namespace WertheApp.RN
             reno[0] = cwndR;
             tahoe[0] = cwndT;
 
-            treshR = new int[numberOfRounds];
-            treshT = new int[numberOfRounds];
-            treshR[0] = tresholdR;
-            treshT[0] = tresholdT;
+            sstreshR = new int[numberOfRounds];
+            sstreshT = new int[numberOfRounds];
+            sstreshR[0] = tresholdR;
+            sstreshT[0] = tresholdT;
 
             Title = "Congestion Control";
 
@@ -91,7 +92,8 @@ namespace WertheApp.RN
         *********************************************************************/
         void B_NewAck_Clicked(object sender, EventArgs e)
         {
-            dupAckCount = 0;
+            dupAckCountR = 0;
+            dupAckCountT = 0;
 
             //RENO:
             switch (stateR){
@@ -139,12 +141,12 @@ namespace WertheApp.RN
             //save in arrays 
             if (renoOn)
             {
-                treshR[currentRoundR] = tresholdR;
+                sstreshR[currentRoundR] = tresholdR;
                 reno[currentRoundR] = cwndR;
             }
             if (tahoeOn)
             {
-                treshT[currentRoundT] = tresholdT;
+                sstreshT[currentRoundT] = tresholdT;
                 tahoe[currentRoundT] = cwndT;
             }
 
@@ -155,7 +157,8 @@ namespace WertheApp.RN
         *********************************************************************/
         void B_DupAck_Clicked(object sender, EventArgs e)
         {
-            dupAckCount++;
+            dupAckCountR++;
+            dupAckCountT++;
 
 
             //RENO:
@@ -163,7 +166,7 @@ namespace WertheApp.RN
             {
                 case 0:
                     Debug.WriteLine("Case 0");
-                    if (dupAckCount == 3) 
+                    if (dupAckCountR == 3) 
                     {
                         currentRoundR++;
                         tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
@@ -173,7 +176,7 @@ namespace WertheApp.RN
                     break;
                 case 1:
                     Debug.WriteLine("Case 1");
-                    if (dupAckCount == 3)
+                    if (dupAckCountR == 3)
                     {
                         currentRoundR++;
                         tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
@@ -192,7 +195,7 @@ namespace WertheApp.RN
             switch (stateT)
             {
                 case 0:
-                    if(dupAckCount == 3)
+                    if(dupAckCountT == 3)
                     {
                         currentRoundT++;
                         tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
@@ -201,7 +204,7 @@ namespace WertheApp.RN
                     }
                     break;
                 case 1:
-                    if (dupAckCount == 3)
+                    if (dupAckCountT == 3)
                     {
                         currentRoundT++;
                         tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
@@ -216,12 +219,12 @@ namespace WertheApp.RN
             //save in arrays
             if (renoOn)
             {
-                treshR[currentRoundR] = tresholdR;
+                sstreshR[currentRoundR] = tresholdR;
                 reno[currentRoundR] = cwndR;
             }
             if (tahoeOn)
             {
-                treshT[currentRoundT] = tresholdT;
+                sstreshT[currentRoundT] = tresholdT;
                 tahoe[currentRoundT] = cwndT;
             }
 
@@ -235,7 +238,8 @@ namespace WertheApp.RN
         {
             currentRoundR++;
             currentRoundT++;
-            dupAckCount = 0;
+            dupAckCountR = 0;
+            dupAckCountT = 0;
 
             //RENO:
             switch (stateR)
@@ -274,11 +278,11 @@ namespace WertheApp.RN
 
             //save in arrays
             if(renoOn){
-                treshR[currentRoundR] = tresholdR;
+                sstreshR[currentRoundR] = tresholdR;
                 reno[currentRoundR] = cwndR;
             }
             if(tahoeOn){
-                treshT[currentRoundT] = tresholdT;
+                sstreshT[currentRoundT] = tresholdT;
                 tahoe[currentRoundT] = cwndT;
             }
 
@@ -300,7 +304,7 @@ namespace WertheApp.RN
             Debug.WriteLine("reno:");
             PrintArray(reno);
             Debug.WriteLine("tresh reno:");
-            PrintArray(treshR);
+            PrintArray(sstreshR);
         }
 
 
@@ -309,8 +313,8 @@ namespace WertheApp.RN
        
         void UpdateButtons(){
             //update Button Color and Text
-            b_DupAck.Text = "Dup ACK (" + dupAckCount + ")";
-            switch (dupAckCount)
+            b_DupAck.Text = "Dup ACK (" + dupAckCountR + ")";
+            switch (dupAckCountR)
             {
                 case 0:
                     b_DupAck.TextColor = Color.Green;
@@ -329,8 +333,33 @@ namespace WertheApp.RN
                     break;
             }
 
+            /*
+
+            //update Button Color and Text
+            b_DupAck.Text = "Dup ACK (" + dupAckCountR + ")";
+            switch (dupAckCountR)
+            {
+                case 0:
+                    b_DupAck.TextColor = Color.Green;
+                    break;
+                case 1:
+                    b_DupAck.TextColor = Color.DarkOrange;
+                    break;
+                case 2:
+                    b_DupAck.TextColor = Color.Crimson;
+                    break;
+                case 3:
+                    b_DupAck.TextColor = Color.Purple;
+                    break;
+                default:
+                    b_DupAck.TextColor = Color.Purple;
+                    break;
+            }
+
+            */
+
             //update Text
-            switch(stateR){
+            switch (stateR){
                 case 0:
                     b_NewAck.Text = "New Acks";
                     break;
@@ -344,6 +373,7 @@ namespace WertheApp.RN
                     break;
             }
 
+
             //enable /disable when cwnd to high
             if (renoOn && !tahoeOn && cwndR >= maxCwnd 
                 || !renoOn && tahoeOn && cwndT >= maxCwnd
@@ -354,15 +384,33 @@ namespace WertheApp.RN
             }else{
                 b_NewAck.IsEnabled = true;
                 b_DupAck.IsEnabled = true;
+
+                //enable / disable when dupack count too high
+                if(renoOn && !tahoeOn){
+                    if(dupAckCountR >= cwndR -1){
+                        b_DupAck.IsEnabled = false;
+                    }else{
+                        b_DupAck.IsEnabled = true;
+                    }
+                }else if(tahoeOn && !renoOn){
+                    if(dupAckCountT >= cwndT -1){
+                        b_DupAck.IsEnabled = false;
+                    }else{
+                        b_DupAck.IsEnabled = true;
+                    }
+                }
+
             }
 
-            //enable / disbale
+            //enable / disbale when end is reached
             if (currentRoundR == numberOfRounds-1 && renoOn || currentRoundT == numberOfRounds-1 && tahoeOn)
             {
                 b_DupAck.IsEnabled = false;
                 b_NewAck.IsEnabled = false;
                 b_Timeout.IsEnabled = false;
             }
+
+
         }
 
         /**********************************************************************
@@ -419,7 +467,21 @@ namespace WertheApp.RN
 
             b_DupAck = new Button
             {
-                Text = "Dup ACK (" + dupAckCount +")",
+                Text = "Dup ACK (" + dupAckCountR +")",
+                TextColor = Color.Green,
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = StackChildSize
+            };
+            b_DupAck.IsEnabled = false;
+            b_DupAck.Clicked += B_DupAck_Clicked;
+            stackLayout.Children.Add(b_DupAck);
+
+
+            /*
+
+            b_DupAck = new Button
+            {
+                Text = "Dup ACK (" + dupAckCountR +")",
                 TextColor = Color.Green,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = StackChildSize
@@ -427,6 +489,7 @@ namespace WertheApp.RN
             b_DupAck.Clicked += B_DupAck_Clicked;
             stackLayout.Children.Add(b_DupAck);
 
+            */
             b_Timeout = new Button
             {
                 Text = "Timeout",
