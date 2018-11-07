@@ -42,7 +42,8 @@ namespace WertheApp.RN
             //add elements to stackLayout2
             var l_Tahoe = new Label { 
                 VerticalOptions = LayoutOptions.Center,
-                Text = "TCP Tahoe"};
+                Text = "TCP Tahoe",
+                TextColor = Color.Blue};
             s_Tahoe = new Switch();
             s_Tahoe.IsToggled = true;
             s_Tahoe.Toggled += S_Tahoe_Toggled; //adds an event 
@@ -51,7 +52,8 @@ namespace WertheApp.RN
 
             var l_Reno = new Label { 
                 VerticalOptions = LayoutOptions.Center,
-                Text = "TCP Reno" };
+                Text = "TCP Reno",
+                TextColor = Color.Red};
             s_Reno = new Switch();
             s_Reno.IsToggled = true;
             s_Reno.Toggled += S_Reno_Toggled; // adds an event 

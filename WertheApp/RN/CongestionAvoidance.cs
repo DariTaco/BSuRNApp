@@ -137,10 +137,16 @@ namespace WertheApp.RN
             UpdateButtons();
 
             //save in arrays 
-            treshR[currentRoundR] = tresholdR;
-            reno[currentRoundR] = cwndR;
-            treshT[currentRoundT] = tresholdT;
-            tahoe[currentRoundT] = cwndT;
+            if (renoOn)
+            {
+                treshR[currentRoundR] = tresholdR;
+                reno[currentRoundR] = cwndR;
+            }
+            if (tahoeOn)
+            {
+                treshT[currentRoundT] = tresholdT;
+                tahoe[currentRoundT] = cwndT;
+            }
 
             UpdateDrawing();
         }
@@ -208,10 +214,16 @@ namespace WertheApp.RN
             UpdateButtons();
 
             //save in arrays
-            treshR[currentRoundR] = tresholdR;
-            reno[currentRoundR] = cwndR;
-            treshT[currentRoundT] = tresholdT;
-            tahoe[currentRoundT] = cwndT;
+            if (renoOn)
+            {
+                treshR[currentRoundR] = tresholdR;
+                reno[currentRoundR] = cwndR;
+            }
+            if (tahoeOn)
+            {
+                treshT[currentRoundT] = tresholdT;
+                tahoe[currentRoundT] = cwndT;
+            }
 
 
             UpdateDrawing();
@@ -261,10 +273,14 @@ namespace WertheApp.RN
             UpdateButtons();
 
             //save in arrays
-            treshR[currentRoundR] = tresholdR;
-            reno[currentRoundR] = cwndR;
-            treshT[currentRoundT] = tresholdT;
-            tahoe[currentRoundT] = cwndT;
+            if(renoOn){
+                treshR[currentRoundR] = tresholdR;
+                reno[currentRoundR] = cwndR;
+            }
+            if(tahoeOn){
+                treshT[currentRoundT] = tresholdT;
+                tahoe[currentRoundT] = cwndT;
+            }
 
             UpdateDrawing();
         }

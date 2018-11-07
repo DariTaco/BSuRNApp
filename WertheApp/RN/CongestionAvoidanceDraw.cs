@@ -14,9 +14,12 @@ namespace WertheApp.RN
         private static float xe, ye;
         private static int toggleZoom;
 
-        private static SKPaint sk_blackText, sk_blackTextSmallVertical, sk_blackTextSmallHorizontal, sk_TextSlowStart, sk_TextCongestionAvoidance, sk_TextFastRecovery;
+        private static SKPaint sk_blackText, sk_blackTextSmallVertical, sk_blackTextSmallHorizontal, 
+                               sk_TextSlowStart, sk_TextCongestionAvoidance, sk_TextFastRecovery;
         private static SKPaint sk_PaintSlowStart, sk_PaintCongestionAvoidance, sk_FastRecovery;
-        private static SKPaint sk_PaintVeryThin, sk_PaintThin, sk_PaintFat, sk_PaintTahoe, sk_PaintTahoeFat, sk_PaintReno, sk_PaintRenoFat, sk_PaintTreshReno, sk_PaintTreshTahoe;
+        private static SKPaint sk_PaintVeryThin, sk_PaintThin, sk_PaintFat, sk_PaintFatBlack,
+                               sk_PaintTahoe, sk_PaintTahoeFat, sk_PaintReno, sk_PaintRenoFat, 
+                               sk_PaintTreshReno, sk_PaintTreshTahoe, sk_PaintTreshBlack;
         private static float textSize;
         private static float strokeWidth;
         private static float xWidth, yWidth;
@@ -206,6 +209,54 @@ namespace WertheApp.RN
                 }
             }
 
+            //Black when both displayed and overlapping
+            if(CongestionAvoidance.tahoeOn && CongestionAvoidance.renoOn){
+                //cwnd
+                float posRateX = 5f;
+                float posRateY = 95f;
+                float posRateYOld = 95f;
+                int valT, valTOld;
+                int valR, valROld;
+                for (int i = 0; i < CongestionAvoidance.tahoe.Length; i++){
+                    posRateY = 95f - (yWidth * CongestionAvoidance.tahoe[i]); //get value from array and convert it
+                    valT = CongestionAvoidance.tahoe[i];
+                    valR = CongestionAvoidance.reno[i];
+
+                    if ((i - 1) >= 0)
+                    {
+                        valROld = CongestionAvoidance.reno[i - 1];
+                        valTOld = CongestionAvoidance.tahoe[i - 1];
+                        if(valT == valR && valT != 0 && valTOld == valROld && valTOld != 0){
+                            posRateYOld = 95f - (yWidth * CongestionAvoidance.tahoe[i - 1]);
+                            canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintThin);
+                        }
+                    }
+
+                    if (valT == valR && valT != 0){
+                        canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintFatBlack);
+                    }
+
+                    posRateX += xWidth;
+
+                }
+
+                //tresh
+                float posRateX2 = 5f - xWidth;
+                float posRateY2 = 95f;
+                int treshValT;
+                int treshValR;
+                for (int i = 0; i < CongestionAvoidance.treshT.Length; i++){
+                    treshValT = CongestionAvoidance.treshT[i];
+                    treshValR = CongestionAvoidance.treshR[i];
+                    posRateX2 += xWidth;
+                    if (treshValR == treshValT && treshValT != 0){
+                        posRateY2 = 95f - (yWidth * CongestionAvoidance.treshT[i]); //get value from array and convert it
+                        canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2 * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTreshBlack);
+
+                    }
+                }
+
+            }
 
             //execute all drawing actions
             canvas.Flush();
@@ -308,6 +359,16 @@ namespace WertheApp.RN
                 Color = new SKColor(0, 0, 0) //black
             };
 
+            sk_PaintFatBlack = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * 4 * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(0, 0, 0) //black
+            };
+
             sk_PaintReno = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
@@ -366,6 +427,16 @@ namespace WertheApp.RN
                 IsAntialias = true,
                 StrokeCap = SKStrokeCap.Round,
                 Color = new SKColor(2, 2, 219) //blue
+            };
+
+            sk_PaintTreshBlack = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(0, 0, 0) //blue
             };
 
             //For Background
