@@ -333,30 +333,6 @@ namespace WertheApp.RN
                     break;
             }
 
-            /*
-
-            //update Button Color and Text
-            b_DupAck.Text = "Dup ACK (" + dupAckCountR + ")";
-            switch (dupAckCountR)
-            {
-                case 0:
-                    b_DupAck.TextColor = Color.Green;
-                    break;
-                case 1:
-                    b_DupAck.TextColor = Color.DarkOrange;
-                    break;
-                case 2:
-                    b_DupAck.TextColor = Color.Crimson;
-                    break;
-                case 3:
-                    b_DupAck.TextColor = Color.Purple;
-                    break;
-                default:
-                    b_DupAck.TextColor = Color.Purple;
-                    break;
-            }
-
-            */
 
             //update Text
             switch (stateR){
@@ -387,13 +363,19 @@ namespace WertheApp.RN
 
                 //enable / disable when dupack count too high
                 if(renoOn && !tahoeOn){
-                    if(dupAckCountR >= cwndR -1){
+                    if(dupAckCountR >= cwndR - 1){
                         b_DupAck.IsEnabled = false;
                     }else{
                         b_DupAck.IsEnabled = true;
                     }
                 }else if(tahoeOn && !renoOn){
-                    if(dupAckCountT >= cwndT -1){
+                    if(dupAckCountT >= cwndT - 1){
+                        b_DupAck.IsEnabled = false;
+                    }else{
+                        b_DupAck.IsEnabled = true;
+                    }
+                }else if(tahoeOn && renoOn){
+                    if(dupAckCountT >= cwndT - 1 || dupAckCountR >= cwndR - 1){
                         b_DupAck.IsEnabled = false;
                     }else{
                         b_DupAck.IsEnabled = true;
@@ -476,20 +458,6 @@ namespace WertheApp.RN
             b_DupAck.Clicked += B_DupAck_Clicked;
             stackLayout.Children.Add(b_DupAck);
 
-
-            /*
-
-            b_DupAck = new Button
-            {
-                Text = "Dup ACK (" + dupAckCountR +")",
-                TextColor = Color.Green,
-                VerticalOptions = LayoutOptions.Center,
-                WidthRequest = StackChildSize
-            };
-            b_DupAck.Clicked += B_DupAck_Clicked;
-            stackLayout.Children.Add(b_DupAck);
-
-            */
             b_Timeout = new Button
             {
                 Text = "Timeout",
