@@ -82,6 +82,7 @@ namespace WertheApp.BS
             //EVENT LISTENER
 			//subscribe to Message in order to know if a new memory request was made
             MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{
+                Debug.WriteLine("MEMORY REWUEST");
                 l_Size.Text = memoryRequest.ToString();
                 l_Diff.Text = diff;
                 l_Free.Text = free;
@@ -227,6 +228,7 @@ namespace WertheApp.BS
         *********************************************************************/
         async void B_Next_Clicked(object sender, EventArgs e)
         {
+  
             switch (memoryRequestState)
 			{
                 case MyEnum.newRequest: //new request
@@ -283,8 +285,17 @@ namespace WertheApp.BS
 					l_Free.Text = free;
 					break;
                 case MyEnum.noRequestYet: //no requst yet
-                    await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
-                    break;
+
+                    if (AllocationStrategiesScene.CheckIfFull())
+                    {
+                        memoryRequestState = MyEnum.memoryFull;
+                        await DisplayAlert("Alert", "Out of memory! The app will close now", "OK");
+                        await Navigation.PopAsync();
+                        break;
+                    }else{
+                        await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
+                        break;
+                    }
                 case MyEnum.memoryFull: //memory is full
                     await DisplayAlert("Alert", "Out of memory! The app will close now", "OK");
                     await Navigation.PopAsync();

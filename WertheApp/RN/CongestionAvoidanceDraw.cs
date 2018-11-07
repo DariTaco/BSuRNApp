@@ -23,7 +23,7 @@ namespace WertheApp.RN
 
 
         public static int stateR, stateT; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
-        public static int maxRate, numberOfSteps;
+        public static int maxCwnd, numberOfRounds;
 
         //CONSTRUCTOR
         public CongestionAvoidanceDraw()
@@ -39,11 +39,11 @@ namespace WertheApp.RN
 
             stateR = CongestionAvoidance.stateR;
             stateT = CongestionAvoidance.stateT;
-            maxRate = CongestionAvoidance.maxRate;
-            numberOfSteps = CongestionAvoidance.numberOfSteps;
+            maxCwnd = CongestionAvoidance.maxCwnd;
+            numberOfRounds = CongestionAvoidance.numberOfRounds;
 
-            xWidth = 92f / (numberOfSteps + 1);
-            yWidth = 93f / (maxRate + 1);
+            xWidth = 92f / (numberOfRounds + 1);
+            yWidth = 93f / (maxCwnd + 1);
             
 
         }
@@ -104,21 +104,21 @@ namespace WertheApp.RN
             }
 
             //draw Graph
-            canvas.DrawLine(new SKPoint(5 * xe, 95 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintFat);
-            canvas.DrawLine(new SKPoint(5 * xe, 95* ye), new SKPoint(97 * xe, 95 * ye), sk_PaintFat);
+            canvas.DrawLine(new SKPoint(5 * xe, 95 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
+            canvas.DrawLine(new SKPoint(5 * xe, 95* ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
 
-            canvas.DrawLine(new SKPoint(4 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintFat);
-            canvas.DrawLine(new SKPoint(6 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintFat);
+            canvas.DrawLine(new SKPoint(4 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
+            canvas.DrawLine(new SKPoint(6 * xe, 4 * ye), new SKPoint(5 * xe, 2 * ye), sk_PaintThin);
 
-            canvas.DrawLine(new SKPoint(96 * xe, 93 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintFat);
-            canvas.DrawLine(new SKPoint(96 * xe, 97 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintFat);
+            canvas.DrawLine(new SKPoint(96 * xe, 93 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
+            canvas.DrawLine(new SKPoint(96 * xe, 97 * ye), new SKPoint(97 * xe, 95 * ye), sk_PaintThin);
 
             //zero point
             canvas.DrawText("0", 4 * xe, 99 * ye, sk_blackText);
 
             //numbers in Y-Achsis (rate)
             float posY = 95f - yWidth;
-            for (int i = 1; i <= maxRate; i++)
+            for (int i = 1; i <= maxCwnd; i++)
             {
                 if(i % 2 == 0){
                     canvas.DrawLine(new SKPoint(5 * xe, posY * ye), new SKPoint(97 * xe, posY * ye), sk_PaintVeryThin);
@@ -133,26 +133,26 @@ namespace WertheApp.RN
                 posY -= yWidth;
             }
 
-            //numbers in X-Achsis (steps)
+            //numbers in X-Achsis (rounds)
             float posX = 5f + xWidth;
-            for (int i = 1; i <= numberOfSteps; i++)
+            for (int i = 1; i <= numberOfRounds; i++)
             {
                 canvas.DrawLine(new SKPoint(posX * xe, 96 * ye), new SKPoint(posX * xe, 94 * ye), sk_PaintThin);
                 canvas.DrawText(i.ToString(), posX * xe, 99 * ye, sk_blackTextSmallHorizontal);
                 posX += xWidth;
             }
 
-            //the words "rate" and "step"
-            canvas.DrawText("rate", 2 * xe, 4 * ye, sk_blackText);
-            canvas.DrawText("step", 98 * xe, 99 * ye, sk_blackText);
+            //the words "cwnd" and "round"
+            canvas.DrawText("cwnd", 2 * xe, 4 * ye, sk_blackText);
+            canvas.DrawText("round", 98 * xe, 99 * ye, sk_blackText);
 
             //RENO
             if(CongestionAvoidance.renoOn){
-                //RENO: transmission rate values dots and lines
+                //RENO: cwnd values dots and lines
                 float posRateX = 5f;
                 float posRateY = 95f;
                 float posRateYOld = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentStep; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentRoundR; i++)
                 {
                     posRateY = 95f - (yWidth * CongestionAvoidance.reno[i]); //get value from array and convert it
                     if ((i - 1) >= 0)
@@ -165,9 +165,9 @@ namespace WertheApp.RN
                 }
 
                 //RENO: treshold
-                float posRateX3 = 5f;
+                float posRateX3 = 5f - xWidth;
                 float posRateY3 = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentStep; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentRoundR; i++)
                 {
                     posRateX3 += xWidth;
                     posRateY3 = 95f - (yWidth * CongestionAvoidance.treshR[i]); //get value from array and convert it
@@ -178,11 +178,11 @@ namespace WertheApp.RN
 
             //TAHOE
             if(CongestionAvoidance.tahoeOn){
-                //TAHOE: transmission rate values dots and lines
+                //TAHOE: cwnd values dots and lines
                 float posRateX2 = 5f;
                 float posRateY2 = 95f;
                 float posRateY2Old = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentStep; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentRoundT; i++)
                 {
                     posRateY2 = 95f - (yWidth * CongestionAvoidance.tahoe[i]); //get value from array and convert it
                     if ((i - 1) >= 0)
@@ -195,9 +195,9 @@ namespace WertheApp.RN
                 }
 
                 //TAHOE: treshold
-                float posRateX4 = 5f;
+                float posRateX4 = 5f - xWidth;
                 float posRateY4 = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentStep; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentRoundT; i++)
                 {
                     posRateX4 += xWidth;
                     posRateY4 = 95f - (yWidth * CongestionAvoidance.treshT[i]); //get value from array and convert it

@@ -28,10 +28,10 @@ namespace WertheApp.RN
 
         public static int stateT, stateR; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
         public static int dupAckCount;
-        public static int rateR, rateT;
-        public static int currentStep;
-        public static int numberOfSteps;
-        public static int maxRate;
+        public static int cwndR, cwndT;
+        public static int currentRoundR, currentRoundT;
+        public static int numberOfRounds;
+        public static int maxCwnd;
         public static int tresholdR,tresholdT;
         public static int[] reno; //contains y values for reno
         public static int[] tahoe; //contains y values for tahoe
@@ -48,19 +48,20 @@ namespace WertheApp.RN
             stateT = 0;
             stateR = 0;
             dupAckCount = 0;
-            rateR = 1;
-            rateT = 1;
-            currentStep = 0;
-            numberOfSteps = 32;
-            maxRate = 14;
+            cwndR = 1;
+            cwndT = 1;
+            currentRoundR = 0;
+            currentRoundT = 0;
+            numberOfRounds = 32;
+            maxCwnd = 14;
 
-            reno = new int[numberOfSteps];
-            tahoe = new int[numberOfSteps];
-            reno[0] = rateR;
-            tahoe[0] = rateT;
+            reno = new int[numberOfRounds];
+            tahoe = new int[numberOfRounds];
+            reno[0] = cwndR;
+            tahoe[0] = cwndT;
 
-            treshR = new int[numberOfSteps];
-            treshT = new int[numberOfSteps];
+            treshR = new int[numberOfRounds];
+            treshT = new int[numberOfRounds];
             treshR[0] = tresholdR;
             treshT[0] = tresholdT;
 
@@ -90,28 +91,26 @@ namespace WertheApp.RN
         *********************************************************************/
         void B_NewAck_Clicked(object sender, EventArgs e)
         {
-            currentStep++;
-
             dupAckCount = 0;
-
-            UpdateButtons();
 
             //RENO:
             switch (stateR){
                 case 0:
-                    int rateROld = rateR;
-                    rateR = rateR + rateR; //exponential growth
-                    if (rateR >= tresholdR) 
+                    currentRoundR++;
+                    int cwndROld = cwndR;
+                    cwndR = cwndR + cwndR; //exponential growth
+                    if (cwndR >= tresholdR) 
                     { 
                         stateR = 1; //switch to congestion avoidance
-                        if (rateROld < tresholdR) { rateR = tresholdR; } 
+                        if (cwndROld < tresholdR) { cwndR = tresholdR; } 
                     } 
                     break;
-                case 1: 
-                    rateR++; //linear growth
+                case 1:
+                    currentRoundR++;
+                    cwndR++; //linear growth
                     break;
                 case 2: 
-                    rateR = tresholdR;
+                    cwndR = tresholdR;
                     stateR = 1; //switch to congestion avoidance
                     break;
             }
@@ -120,24 +119,28 @@ namespace WertheApp.RN
             switch (stateT)
             {
                 case 0:
-                    int rateTOld = rateT;
-                    rateT = rateT + rateT; //exponential growth
-                    if (rateT >= tresholdT) 
+                    currentRoundT++;
+                    int cwndTOld = cwndT;
+                    cwndT = cwndT + cwndT; //exponential growth
+                    if (cwndT >= tresholdT) 
                     { 
                         stateT = 1; //switch to congestion avoidance
-                        if(rateTOld < tresholdT){ rateT = tresholdT;}
+                        if(cwndTOld < tresholdT){ cwndT = tresholdT;}
                     } 
                     break;
                 case 1:
-                    rateT++;
+                    currentRoundT++;
+                    cwndT++;
                     break;
             }
 
+            UpdateButtons();
+
             //save in arrays 
-            treshR[currentStep] = tresholdR;
-            treshT[currentStep] = tresholdT;
-            reno[currentStep] = rateR;
-            tahoe[currentStep] = rateT;
+            treshR[currentRoundR] = tresholdR;
+            reno[currentRoundR] = cwndR;
+            treshT[currentRoundT] = tresholdT;
+            tahoe[currentRoundT] = cwndT;
 
             UpdateDrawing();
         }
@@ -146,32 +149,36 @@ namespace WertheApp.RN
         *********************************************************************/
         void B_DupAck_Clicked(object sender, EventArgs e)
         {
-            currentStep++;
             dupAckCount++;
 
-            UpdateButtons();
 
             //RENO:
             switch (stateR)
             {
                 case 0:
+                    Debug.WriteLine("Case 0");
                     if (dupAckCount == 3) 
-                    { 
-                        tresholdR = rateR / 2; 
-                        rateR = tresholdR; 
+                    {
+                        currentRoundR++;
+                        tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
+                        cwndR = tresholdR + 3; 
                         stateR = 2; //switch to fast recovery
                     }
                     break;
                 case 1:
+                    Debug.WriteLine("Case 1");
                     if (dupAckCount == 3)
                     {
-                        tresholdR = rateR / 2;
-                        rateR = tresholdR;
+                        currentRoundR++;
+                        tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
+                        cwndR = tresholdR + 3;
                         stateR = 2; //switch to fast recovery
                     }
                     break;
                 case 2:
-                    rateR++;
+                    Debug.WriteLine("Case 2");
+                    currentRoundR++;
+                    cwndR++;
                     break;
             }
 
@@ -181,25 +188,31 @@ namespace WertheApp.RN
                 case 0:
                     if(dupAckCount == 3)
                     {
-                        tresholdT = rateT / 2;
-                        rateT = 1; //switch to Congestion Avoidance
+                        currentRoundT++;
+                        tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                        cwndT = 1;
+                        stateT = 1;//switch to Congestion Avoidance
                     }
                     break;
                 case 1:
                     if (dupAckCount == 3)
                     {
-                        tresholdT = rateT / 2;
-                        rateT = 1;
+                        currentRoundT++;
+                        tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                        cwndT = 1;
                         stateT = 0; //Switch to Slow Start
                     }
                     break;
             }
 
+            UpdateButtons();
+
             //save in arrays
-            treshR[currentStep] = tresholdR;
-            reno[currentStep] = rateR;
-            treshT[currentStep] = tresholdT;
-            tahoe[currentStep] = rateT;
+            treshR[currentRoundR] = tresholdR;
+            reno[currentRoundR] = cwndR;
+            treshT[currentRoundT] = tresholdT;
+            tahoe[currentRoundT] = cwndT;
+
 
             UpdateDrawing();
         }
@@ -208,26 +221,25 @@ namespace WertheApp.RN
         *********************************************************************/
         void B_Timeout_Clicked(object sender, EventArgs e)
         {
-            currentStep++;
+            currentRoundR++;
+            currentRoundT++;
             dupAckCount = 0;
-
-            UpdateButtons();
 
             //RENO:
             switch (stateR)
             {
                 case 0:
-                    tresholdR = rateR / 2;
-                    rateR = 1;
+                    tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
+                    cwndR = 1;
                     break;
                 case 1:
-                    tresholdR = rateR / 2;
-                    rateR = 1;
+                    tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
+                    cwndR = 1;
                     stateR = 0;
                     break;
                 case 2:
-                    tresholdR = rateR / 2;
-                    rateR = 1;
+                    tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
+                    cwndR = 1;
                     stateR = 0;
                     break;
             }
@@ -236,21 +248,23 @@ namespace WertheApp.RN
             switch (stateT)
             {
                 case 0:
-                    tresholdT = rateT / 2;
-                    rateT = 1;
+                    tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                    cwndT = 1;
                     break;
                 case 1:
-                    tresholdT = rateT / 2;
-                    rateT = 1;
+                    tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                    cwndT = 1;
                     stateT = 0;
                     break;
             }
 
+            UpdateButtons();
+
             //save in arrays
-            treshR[currentStep] = tresholdR;
-            reno[currentStep] = rateR;
-            treshT[currentStep] = tresholdT;
-            tahoe[currentStep] = rateT;
+            treshR[currentRoundR] = tresholdR;
+            reno[currentRoundR] = cwndR;
+            treshT[currentRoundT] = tresholdT;
+            tahoe[currentRoundT] = cwndT;
 
             UpdateDrawing();
         }
@@ -299,10 +313,25 @@ namespace WertheApp.RN
                     break;
             }
 
-            //enable /disable when rate to high
-            if (renoOn && !tahoeOn && rateR >= maxRate 
-                || !renoOn && tahoeOn && rateT >= maxRate
-                || renoOn && tahoeOn && (rateR >= maxRate || rateT >= maxRate) )
+            //update Text
+            switch(stateR){
+                case 0:
+                    b_NewAck.Text = "New Acks";
+                    break;
+                case 1:
+                    b_NewAck.Text = "New Acks";
+                    break;
+                case 2:
+                    if (!tahoeOn && renoOn) { b_NewAck.Text = "New Ack"; }
+                    else if (!renoOn && tahoeOn) { b_NewAck.Text = "New Acks"; }
+                    else if (renoOn && tahoeOn) { b_NewAck.Text = "New Ack(s)"; }
+                    break;
+            }
+
+            //enable /disable when cwnd to high
+            if (renoOn && !tahoeOn && cwndR >= maxCwnd 
+                || !renoOn && tahoeOn && cwndT >= maxCwnd
+                || renoOn && tahoeOn && (cwndR >= maxCwnd || cwndT >= maxCwnd) )
             {
                 b_NewAck.IsEnabled = false;
                 b_DupAck.IsEnabled = false;
@@ -312,7 +341,7 @@ namespace WertheApp.RN
             }
 
             //enable / disbale
-            if (currentStep == numberOfSteps-1)
+            if (currentRoundR == numberOfRounds-1 && renoOn || currentRoundT == numberOfRounds-1 && tahoeOn)
             {
                 b_DupAck.IsEnabled = false;
                 b_NewAck.IsEnabled = false;
@@ -393,7 +422,7 @@ namespace WertheApp.RN
 
             b_NewAck = new Button
             {
-                Text = "New Ack",
+                Text = "New Acks",
 				WidthRequest = StackChildSize,
 				VerticalOptions = LayoutOptions.Center
             };
