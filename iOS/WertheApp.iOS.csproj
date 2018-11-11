@@ -175,6 +175,7 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize120x120.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize180x180.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\resize1024x1024.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -198,6 +199,10 @@
     <BundleResource Include="Content\myRed.png" />
     <BundleResource Include="Content\myGray.png" />
     <BundleResource Include="Content\myWhite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="iTunesArtwork" />
+    <ITunesArtwork Include="iTunesArtwork%402x" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.3.0.0.561731\build\netstandard2.0\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.3.0.0.561731\build\netstandard2.0\Xamarin.Forms.targets')" />

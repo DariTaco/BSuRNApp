@@ -9,7 +9,7 @@ namespace WertheApp.RN
     public class PipelineProtocols : ContentPage
     {
         //VARIABLES
-        CCGameView cc_gameView;
+        public static CCGameView cc_gameView;
         PipelineProtocolsScene gameScene;
         PipelineProtocolsScene2 gameScene2;
 
@@ -122,14 +122,57 @@ namespace WertheApp.RN
             Debug.WriteLine(gameView.MinimumHeightRequest);
 
             //Debug.WriteLine("get heightrequest : " + gameView.GetSizeRequest());
-            gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
-            scrollview.Content = gameView;
-			grid.Children.Add(scrollview, 0, 0);
+            if (Device.RuntimePlatform == Device.Android){
+                gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
+                scrollview.Content = gameView;
+                grid.Children.Add(scrollview, 0, 0);
+            }
+            if(Device.RuntimePlatform == Device.iOS){
+                gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
+                scrollview.Content = gameView;
+                grid.Children.Add(scrollview, 0, 0);
+            }
 		}
 
-		/**********************************************************************
+        /**********************************************************************
         *********************************************************************/
-		void CreateBottomHalf(Grid grid)
+        private static void AddGestureRecognizers()
+        {
+            var tapGestureRecognizer = new TapGestureRecognizer();
+            tapGestureRecognizer.NumberOfTapsRequired = 2; // double-tap
+            tapGestureRecognizer.Tapped += (s, e) => {
+                Debug.WriteLine("TAP TAP TAP");
+
+            };
+            gameView.GestureRecognizers.Add(tapGestureRecognizer);
+
+
+            Debug.WriteLine("addgesture");
+            //add pan gesture recognizer
+            double x = 0;
+            double y = 0;
+            var panGesture = new PanGestureRecognizer();
+            panGesture.PanUpdated += (s, e) =>
+            {
+                Debug.WriteLine("helllllllooooooooo");
+                // Handle the pan (only in zoomed in state)
+                if (e.StatusType != GestureStatus.Completed)
+                {
+                    Debug.WriteLine("sthb happens");
+                    //only when within screen bounds or 20% more or less
+                    if (y + e.TotalY >= gameView.Height * 1.2f / 2 * -1
+                        && y + e.TotalY <= gameView.Height * 1.2f / 2)
+                    {
+                        y = y + e.TotalY;
+                        gameView.TranslateTo(x, y);
+                    }
+                }
+            };
+            gameView.GestureRecognizers.Add(panGesture);
+        }
+            /**********************************************************************
+            *********************************************************************/
+            void CreateBottomHalf(Grid grid)
 		{
             //set the size of the elements in such a way, that they all fit on the screen
             //Screen Width is divided by the amount of elements (2)
@@ -246,7 +289,9 @@ namespace WertheApp.RN
 				// This sets the game "world" resolution 
 				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
 				//###############################################################
+     
                 cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //CLIPPING
+      
                 //###############################################################
 
                 //choose gamescene for GoBackN or Selective Repeat

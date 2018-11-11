@@ -162,6 +162,7 @@ namespace WertheApp.BS
                 ViewCreated = HandleViewCreated
 			};
 
+            gameView.ResolutionPolicy = CocosSharpView.ViewResolutionPolicy.ExactFit; //gameview fits the screen
             grid.Children.Add(gameView, 0, 0);
 		}
 
