@@ -40,7 +40,7 @@ namespace WertheApp.RN
             strategy = s;
             timeoutTime = t;
 
-            Title = "Pipeline Protocols" + strategy;
+            Title = "Pipeline Protocols: " + strategy;
 
             //if orientation Horizontal
 			if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)

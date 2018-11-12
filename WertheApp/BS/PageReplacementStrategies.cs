@@ -73,7 +73,7 @@ namespace WertheApp.BS
 
             draw = new PageReplacementStrategiesDraw(ramSize, discSize, sequenceLength, SequenceList);
 
-			Title = "Page Replacement Strategies"; //since the name is longer than average, 
+            Title = "Page Replacement Strategies: " + strategy; //since the name is longer than average, 
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"
 
             //if orientation Horizontal

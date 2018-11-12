@@ -37,6 +37,7 @@ namespace WertheApp.RN
         public static int[] tahoe; //contains y values for tahoe
         public static int[] sstreshR; //contains y values for treshold Reno
         public static int[] sstreshT; //contains y values for treshold Tahoe
+        public static String strategy;
 
         //CONSTRUCTOR
         public CongestionAvoidance(int th, bool r, bool t)
@@ -66,7 +67,16 @@ namespace WertheApp.RN
             sstreshR[0] = tresholdR;
             sstreshT[0] = tresholdT;
 
-            Title = "Congestion Control";
+            if (tahoeOn && !renoOn)
+            {
+                strategy = "Tahoe";
+            }
+            else if (renoOn && !tahoeOn)
+            {
+                strategy = "Reno";
+            }
+            else { strategy = "Reno & Tahoe"; }
+            Title = "Congestion Control: " + strategy;
 
             draw = new CongestionAvoidanceDraw();
 
@@ -200,7 +210,7 @@ namespace WertheApp.RN
                         currentRoundT++;
                         tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
                         cwndT = 1;
-                        stateT = 1;//switch to Congestion Avoidance
+                        //stateT = 1;//switch to Congestion Avoidance
                     }
                     break;
                 case 1:
