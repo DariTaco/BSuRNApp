@@ -75,7 +75,6 @@ namespace WertheApp.RN
 
 		/**********************************************************************
         *********************************************************************/
-        /*TODO add to entsprechender List, Objekt nur zerstören wenn arrive, nicht bei timeout, timeout in der anderen Klasse, aufschrieb im Ordner*/
         private void Process(float seconds){
             if (stopEverything) { this.Dispose(); return; }
 
@@ -83,22 +82,18 @@ namespace WertheApp.RN
             if(this.PositionX <= VisibleBoundsWorldspace.MinX + 81)
             {
                 if(this.ignore){
-                    Debug.WriteLine("ignore");
                 }
                 else if(this.corrupt)
                 {
-                    Debug.WriteLine("corrupt");
                     //PipelineProtocolsScene.AckCorrupt(this);
                     //PipelineProtocolsScene2.AckCorrupt(this);
                 }
                 else if(this.lost){
-                    Debug.WriteLine("lost");
                     //PipelineProtocolsScene.AckLost(this);
                     //PipelineProtocolsScene2.AckLost(this);
                 }
                 //arrived without corruption and didn't get lost on the way
                 else{
-                    Debug.WriteLine("all good");
                     if (PipelineProtocols.strategy == "Selective Repeat")
                     {
                         PipelineProtocolsScene.AckArrived(this);

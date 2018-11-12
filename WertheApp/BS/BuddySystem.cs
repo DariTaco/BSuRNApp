@@ -117,10 +117,6 @@ namespace WertheApp.BS
                     i = buddySystem.Count;
                 }
             }
-            PrintBuddySystemList();
-            for (int i = 0; i < buddySystem.Count; i++){
-                buddySystem[i].PrintBuddyNoList();
-            }
            
             AddBuddySystemCell();
 
@@ -211,7 +207,6 @@ namespace WertheApp.BS
             //for 2 items in list
             if (buddySystem.Count == 2)
             {
-                Debug.WriteLine("merge last 2 items");
                 blockSize = buddySystem[0].GetBlockSize();
                 //and both are free (no check for other properties since they have to be buddys)
                 if (buddySystem[0].GetFree() && buddySystem[1].GetFree())
@@ -274,7 +269,6 @@ namespace WertheApp.BS
             buddySystemCells.Add(new BuddySystemViewCell()); //actually creates a new buddysystemviewcell
 
             listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
-            PrintBuddySystemList();
         }
 
 		/**********************************************************************
@@ -372,24 +366,12 @@ namespace WertheApp.BS
         *********************************************************************/
 		async void B_End_Clicked(object sender, EventArgs e)
 		{
-            Debug.WriteLine("QUIT");
             if(activeProcesses.Any()){
                 await Navigation.PushModalAsync(new BuddySystemModal2(), true); //await pop up drop down menu wegen Konsistenz nicht verwendet
             }else{
                 await DisplayAlert("Alert", "No active processes", "OK");
             }
         }
-
-        public static void PrintList(List<int> list)
-        {
-            String s = "";
-            foreach (int i in list){
-                s += i;
-            }
-            Debug.WriteLine(s);
-
-        }
-
 		/**********************************************************************
         *********************************************************************/
 		//this method is called everytime the device is rotated

@@ -175,7 +175,6 @@ namespace WertheApp.RN
             switch (stateR)
             {
                 case 0:
-                    Debug.WriteLine("Case 0");
                     if (dupAckCountR == 3) 
                     {
                         currentRoundR++;
@@ -185,7 +184,6 @@ namespace WertheApp.RN
                     }
                     break;
                 case 1:
-                    Debug.WriteLine("Case 1");
                     if (dupAckCountR == 3)
                     {
                         currentRoundR++;
@@ -195,7 +193,6 @@ namespace WertheApp.RN
                     }
                     break;
                 case 2:
-                    Debug.WriteLine("Case 2");
                     currentRoundR++;
                     cwndR++;
                     break;
@@ -310,11 +307,6 @@ namespace WertheApp.RN
             CongestionAvoidanceDraw.stateR = stateR;
             CongestionAvoidanceDraw.stateT = stateT;
             CongestionAvoidanceDraw.Paint();
-
-            Debug.WriteLine("reno:");
-            PrintArray(reno);
-            Debug.WriteLine("tresh reno:");
-            PrintArray(sstreshR);
         }
 
 
@@ -512,15 +504,5 @@ namespace WertheApp.RN
                 this.Content.IsVisible = false;
             }
         }
-
-        public void PrintArray(int [] a){
-            String s = "";
-            for (int i = 0; i < a.Length; i++){
-                s += a[i];
-                s += ",";
-            }
-            Debug.WriteLine(s);
-        }
-
 	}
 }

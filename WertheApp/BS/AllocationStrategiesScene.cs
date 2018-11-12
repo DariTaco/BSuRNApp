@@ -681,12 +681,3 @@ namespace WertheApp.BS
         }
     }
 }
-/*//if the search was unsuccessfull //||for the special case that the very first request is too big to fit in any block
-if ((pos == suc-1 && memoryRequest > memoryBlocks[pos, 0]) || (suc == 0 && pos == memoryBlocks.GetLength(0)-1 && memoryRequest > memoryBlocks[pos, 0]))
-{
-    Debug.WriteLine("End is reached");
-    AllocationStrategies.memoryRequestState = (WertheApp.BS.AllocationStrategies.myEnum)AllocationStrategies.myEnum.unsuccessfull;
-
-}
-//if the search was successfull
-else*/

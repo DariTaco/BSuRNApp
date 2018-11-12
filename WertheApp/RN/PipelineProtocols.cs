@@ -117,10 +117,7 @@ namespace WertheApp.RN
             }
 
             //TODO: Seit neuem update funktioniert das scrollen bei ios nicht mehr 
-            //und zwar für die Werte 400 und 2000. Für 1000 geht es aber dann ist die Anzwige verschoben
-            Debug.WriteLine("##### " + scaleFactor + " ### " + gameviewHeight);
-            Debug.WriteLine(gameView.MinimumHeightRequest);
-
+            //und zwar für die Werte 400 und 2000. Für 1000 geht es aber dann ist die Anzeige verschoben
             //Debug.WriteLine("get heightrequest : " + gameView.GetSizeRequest());
             if (Device.RuntimePlatform == Device.Android){
                 gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
@@ -136,29 +133,24 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        //the attempt to add a gesture recognizer to this view didnt work 
         private static void AddGestureRecognizers()
         {
             var tapGestureRecognizer = new TapGestureRecognizer();
             tapGestureRecognizer.NumberOfTapsRequired = 2; // double-tap
             tapGestureRecognizer.Tapped += (s, e) => {
-                Debug.WriteLine("TAP TAP TAP");
-
             };
             gameView.GestureRecognizers.Add(tapGestureRecognizer);
 
-
-            Debug.WriteLine("addgesture");
             //add pan gesture recognizer
             double x = 0;
             double y = 0;
             var panGesture = new PanGestureRecognizer();
             panGesture.PanUpdated += (s, e) =>
             {
-                Debug.WriteLine("helllllllooooooooo");
                 // Handle the pan (only in zoomed in state)
                 if (e.StatusType != GestureStatus.Completed)
                 {
-                    Debug.WriteLine("sthb happens");
                     //only when within screen bounds or 20% more or less
                     if (y + e.TotalY >= gameView.Height * 1.2f / 2 * -1
                         && y + e.TotalY <= gameView.Height * 1.2f / 2)

@@ -83,8 +83,6 @@ namespace WertheApp.BS
         *********************************************************************/
 		//If an exponent was picked
 		void P_Exponent_SelectedIndexChanged(object sender, EventArgs e){
-            Debug.WriteLine("############################");
-            Debug.WriteLine("     ");
             absoluteMemorySize = Math.Pow(2, Double.Parse(p_Exponent.SelectedItem.ToString())); //2ExponentX
             l_AbsoluteMemorySize.Text = "Absolute memory size : " + absoluteMemorySize;
         }

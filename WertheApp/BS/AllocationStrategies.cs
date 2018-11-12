@@ -82,7 +82,6 @@ namespace WertheApp.BS
             //EVENT LISTENER
 			//subscribe to Message in order to know if a new memory request was made
             MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{
-                Debug.WriteLine("MEMORY REWUEST");
                 l_Size.Text = memoryRequest.ToString();
                 l_Diff.Text = diff;
                 l_Free.Text = free;
@@ -151,8 +150,6 @@ namespace WertheApp.BS
         *********************************************************************/
 		void CreateTopHalf(Grid grid)
 		{
-            
-            /*TODO schwarzer Rand weg*/
             var gameView = new CocosSharpView()
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,

@@ -123,7 +123,6 @@ namespace WertheApp.BS
                     }
 
                 }
-                PrintRam(ram);
                 PageReplacementStrategiesDraw.Paint();//Update Canvas
             }
         }
@@ -136,7 +135,6 @@ namespace WertheApp.BS
                 //set m-bit of current page
                 ram[currentStep, indexCurrentPage, 2] = 1;
                 ram[currentStep, 0, 5] = 1;
-                PrintRam(ram);
             }
             PageReplacementStrategiesDraw.Paint();//Update Canvas
         }
@@ -166,7 +164,6 @@ namespace WertheApp.BS
                     RnuSecond();
                     break;
             }
-            PrintRam(ram);
             PageReplacementStrategiesDraw.Paint();//Update Canvas
             //PrintDisc(disc);
             //disable next button if the sequence was processed entirely
@@ -187,7 +184,6 @@ namespace WertheApp.BS
                 //if Pagefail, push optimal page in disc and push previous pages forward in ram
                 if (!pagesInRam.Contains(currentPage))
                 {
-                    PrintPagesInRam();
                     //find optimal page, which will be accessed the furthest in the future
                     int optimalPage = -1;
                     for (var i = 0; i < pagesInRam.Count; i++)
@@ -214,7 +210,6 @@ namespace WertheApp.BS
                     if(pagesInDisc.Contains(currentPage)){
                         pagesInDisc.Remove(currentPage);
                     }
-                    PrintPagesInDisc();
 
                     disc[currentStep, 0] = optimalPage;
                     //if there where pages in disc bevore, push previous pages forward
@@ -503,8 +498,6 @@ namespace WertheApp.BS
                 //alsopush previous pages forward in ram
                 if (!pagesInRam.Contains(currentPage))
                 {
-                    Debug.WriteLine("ram is full and page is not in ram");
-                    PrintPagesInRam();
                     //find rnu page
                     int rnuPage = -1;
                     int rnuIndex = -1;
@@ -534,12 +527,9 @@ namespace WertheApp.BS
                             rnuPage = ram[prevStep, rnuIndex, 0];
                             lowestRnuClass = rnuClass;
                         }
-                        Debug.WriteLine("Class of " + ram[prevStep, i, 0] + " is: " + rnuClass);
                     }
-                    Debug.WriteLine("rnu page: " + rnuPage);
                     pagesInRam.Remove(rnuPage);
                     pagesInDisc.Add(rnuPage);
-                    PrintPagesInRam();
 
                     //remove current page from disc if it is in disc
                     if (pagesInDisc.Contains(currentPage))
@@ -586,8 +576,6 @@ namespace WertheApp.BS
                 //if page is already in ram, leave everything as it is
                 else
                 {
-                    Debug.WriteLine("ram is full and page is already in ram");
-                    PrintPagesInRam();
                     //in ram
                     for (int j = 0; j <= ram.GetUpperBound(1); j++)
                     {
@@ -618,8 +606,6 @@ namespace WertheApp.BS
                 //if page is not already in ram, push previous pages forward in ram
                 if (!pagesInRam.Contains(currentPage))
                 {
-                    Debug.WriteLine("ram is not full and page is not in ram");
-                    PrintPagesInRam();
                     ram[currentStep, 0, 0] = currentPage;
                     ram[currentStep, 0, 1] = 1; //set r-bit by access 
                     ram[currentStep, 0, 2] = 0; //no m bit set
@@ -643,8 +629,6 @@ namespace WertheApp.BS
                 //if page is already in ram, leave everything as it is
                 else
                 {
-                    Debug.WriteLine("ram is not full and page is already in ram");
-                    PrintPagesInRam();
                     for (int j = 0; j <= ram.GetUpperBound(1); j++)
                     {
                         ram[currentStep, j, 0] = ram[prevStep, j, 0];
@@ -674,8 +658,6 @@ namespace WertheApp.BS
                 //alsopush previous pages forward in ram
                 if (!pagesInRam.Contains(currentPage))
                 {
-                    Debug.WriteLine("ram is full and page is not in ram");
-                    PrintPagesInRam();
                     //find rnu page
                     int rnuPage = -1;
                     int rnuIndex = -1;
@@ -708,12 +690,9 @@ namespace WertheApp.BS
                             rnuPage = ram[prevStep, rnuIndex, 0];
                             lowestRnuClass = rnuClass;
                         }
-                        Debug.WriteLine("Class of " + ram[prevStep, i, 0] + " is: " + rnuClass);
                     }
-                    Debug.WriteLine("rnu page: " + rnuPage);
                     pagesInRam.Remove(rnuPage);
                     pagesInDisc.Add(rnuPage);
-                    PrintPagesInRam();
 
                     //remove current page from disc if it is in disc
                     if (pagesInDisc.Contains(currentPage))
@@ -798,8 +777,6 @@ namespace WertheApp.BS
                 //if page is not already in ram, push previous pages forward in ram
                 if (!pagesInRam.Contains(currentPage))
                 {
-                    Debug.WriteLine("ram is not full and page is not in ram");
-                    PrintPagesInRam();
                     ram[currentStep, 0, 0] = currentPage;
                     ram[currentStep, 0, 1] = 1; //set r-bit by access 
                     ram[currentStep, 0, 2] = 0; //no m bit set
@@ -818,7 +795,6 @@ namespace WertheApp.BS
                     }
                     ram[currentStep, 0, 3] = 1;//mark pagefail without replacment
                 }
-///////////////
                 //if current page is already in ram, put current page at first place
                 else
                 {
@@ -830,12 +806,7 @@ namespace WertheApp.BS
                     pagesInRam.Add(currentPage); // and put it at the end of the list
                     for (int i = 0; i <= pagesInRam.Count - 1; i++)
                     {
-                        PrintPagesInRam();
-                        Debug.WriteLine("current step: " + currentStep);
-                        Debug.WriteLine("Pagesinram.count" + pagesInRam.Count);
-                        Debug.WriteLine("i:" + i);
-
-                        //TODO: Sonderfall 0,0 Sequenz am Anfang (tritt sonst nirgends auf) oder 011. immer wenn ram nicht voll
+                    
                         ram[currentStep, i, 0] = pagesInRam.ElementAt(pagesInRam.Count - 1 - i);
                         ram[currentStep, 0, 1] = 1; //set r-bit
                         indexCurrentPage = 0;
@@ -1053,23 +1024,6 @@ namespace WertheApp.BS
                 }
                 Debug.WriteLine(s);
             }
-        }
-
-        static void PrintPagesInRam(){
-            String s = "";
-            foreach(var p in pagesInRam){
-                s += ", " + p;
-            }
-            Debug.WriteLine(s);
-        }
-
-        static void PrintPagesInDisc(){
-            String s = "";
-            foreach (var p in pagesInDisc)
-            {
-                s += ", " + p;
-            }
-            Debug.WriteLine(s);
         }
         /**********************************************************************
         *********************************************************************/

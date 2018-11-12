@@ -132,12 +132,6 @@ namespace WertheApp.RN
         {
             base.OnAppearing();
             GC.Collect();
-           /* if (pipelineProtocols != null)
-            {
-                Navigation.RemovePage(pipelineProtocols);
-            }*/
-            //this.Content = null;
-            //CreateContent();
         }
 
     }

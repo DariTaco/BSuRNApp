@@ -505,30 +505,5 @@ namespace WertheApp.BS
                 Color = new SKColor(132, 112, 255).WithAlpha(80)
             };
         }
-
-        /**********************************************************************
-        *********************************************************************/
-		/*protected override void OnBindingContextChanged()
-        {
-            base.OnBindingContextChanged();
-
-            // update the canvas when the data changes
-            skiaview.InvalidateSurface();
-        }
-        */
     }
 }
-/*Random
-            //process color
-            Random random = new Random(this.GetHashCode());
-            byte red = (byte)random.Next(0, 255);
-            sk_processColor = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                //IsStroke = true,
-
-                StrokeWidth = 5,
-                IsAntialias = true,
-                Color = new SKColor(red, 200, 0).WithAlpha(80) //rgb Transparency
-            };
-*/

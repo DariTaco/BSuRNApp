@@ -57,11 +57,9 @@ namespace WertheApp.RN
             if (this.PositionX+40 >= VisibleBoundsWorldspace.MinX + 319)
             {
                 if(this.ignore){
-                    Debug.WriteLine("ignore");
                 }
                 else if (this.corrupt)
                 {
-                    Debug.WriteLine("corrupt");
                     if (PipelineProtocols.strategy == "Selective Repeat")
                     {
                         PipelineProtocolsScene.PackCorrupt(this);
@@ -71,14 +69,12 @@ namespace WertheApp.RN
                 }
                 else if (this.lost)
                 {
-                    Debug.WriteLine("lost");
                     //PipelineProtocolsScene.PackLost(this);
                     //PipelineProtocolsScene2.PackLost(this);
                 }
                 //arrived without corruption and didn't get lost on the way
                 else
-                {
-                    Debug.WriteLine("all good");
+                {;
                     if (PipelineProtocols.strategy == "Selective Repeat")
                     {
                         PipelineProtocolsScene.PackArrived(this);

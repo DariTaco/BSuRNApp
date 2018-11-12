@@ -151,7 +151,6 @@ namespace WertheApp.RN
 
         public static async void ResendPending(){
             int i = 0;
-            Debug.WriteLine("element at 0" + pendingAck.ElementAt(0).ToString());
             MyTimer(pendingAck.ElementAt(0), 0);
             while (i < pendingAck.Count){
                 SendPackageAt(pendingAck.ElementAt(i));
