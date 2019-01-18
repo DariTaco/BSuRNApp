@@ -107,6 +107,7 @@ namespace WertheApp.RN
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
+            await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
             await Navigation.PushAsync(new CongestionAvoidance(
                 Int32.Parse(p_Treshold.SelectedItem.ToString()),
                 s_Reno.IsToggled,

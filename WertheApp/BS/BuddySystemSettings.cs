@@ -76,6 +76,7 @@ namespace WertheApp.BS
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
         {
+            await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
             await Navigation.PushAsync(new BuddySystem(Int32.Parse(p_Exponent.SelectedItem.ToString())));
         }
 

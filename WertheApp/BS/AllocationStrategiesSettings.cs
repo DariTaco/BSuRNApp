@@ -113,7 +113,7 @@ namespace WertheApp.BS
             if (p_Algorithm.SelectedIndex != -1 && e_Fragmentation.Text != null && ValidateFragmentationInput())
             {
                 CreateFragmentsList();
-
+                await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
                 await Navigation.PushAsync(new AllocationStrategies(fragmentsList, p_Algorithm.SelectedItem.ToString()));
             }
             else if (e_Fragmentation.Text == null) { await DisplayAlert("Alert", "fragmentation = null", "OK"); }//actually not needed. Case should never occur

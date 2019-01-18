@@ -149,6 +149,7 @@ namespace WertheApp.BS
                         await DisplayAlert("Alert", "reference sequence is too long (has to be <= 19)", "OK");
                     }
                     else{
+                        await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
                         await Navigation.PushAsync(new PageReplacementStrategies(sequenceList,
                                                                                  p_Strategy.SelectedItem.ToString(),
                                                                                  Int32.Parse(p_RAM.SelectedItem.ToString()),

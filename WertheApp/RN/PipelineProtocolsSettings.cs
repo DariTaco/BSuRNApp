@@ -122,7 +122,7 @@ namespace WertheApp.RN
             pipelineProtocols = new PipelineProtocols(
                 Int32.Parse(p_WindowSize.SelectedItem.ToString()),
                 p_Strategy.SelectedItem.ToString(), Int32.Parse(s_Timeout.Value.ToString()));
-            
+            await DisplayAlert("Alert", "Please rotate your phone to portrait mode", "OK");
             await Navigation.PushAsync(pipelineProtocols);
 		}
 
