@@ -29,14 +29,14 @@ namespace WertheApp.RN
         public static int stateT, stateR; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
         public static int dupAckCountR, dupAckCountT;
         public static int cwndR, cwndT;
-        public static int currentRoundR, currentRoundT;
+        public static int currentRoundR, currentRoundT, currentIndex;
         public static int numberOfRounds;
         public static int maxCwnd;
         public static int tresholdR,tresholdT;
-        public static int[] reno; //contains y values for reno
-        public static int[] tahoe; //contains y values for tahoe
-        public static int[] sstreshR; //contains y values for treshold Reno
-        public static int[] sstreshT; //contains y values for treshold Tahoe
+        public static int[,] reno; //contains y values for reno [value, round]
+        public static int[,] tahoe; //contains y values for tahoe
+        public static int[,] sstreshR; //contains y values for treshold Reno
+        public static int[,] sstreshT; //contains y values for treshold Tahoe
         public static String strategy;
 
         //CONSTRUCTOR
@@ -54,18 +54,24 @@ namespace WertheApp.RN
             cwndT = 1;
             currentRoundR = 0;
             currentRoundT = 0;
+            currentIndex = 0;
             numberOfRounds = 32;
             maxCwnd = 14;
 
-            reno = new int[numberOfRounds];
-            tahoe = new int[numberOfRounds];
-            reno[0] = cwndR;
-            tahoe[0] = cwndT;
+            //note: numberOfRounds*4 is kinda arbitrary. Since there can be no arrays of unknown length, but it has to be long enough
+            reno = new int[2,numberOfRounds*4]; 
+            tahoe = new int[2,numberOfRounds*4];
+            reno[1, 0] = 0;
+            reno[0,0] = cwndR;
+            tahoe[1, 0] = 0;
+            tahoe[0,0] = cwndT;
 
-            sstreshR = new int[numberOfRounds];
-            sstreshT = new int[numberOfRounds];
-            sstreshR[0] = tresholdR;
-            sstreshT[0] = tresholdT;
+            sstreshR = new int[2,numberOfRounds*4];
+            sstreshT = new int[2,numberOfRounds*4];
+            sstreshR[1, 0] = 0;
+            sstreshR[0,0] = tresholdR;
+            sstreshT[1, 0] = 0;
+            sstreshT[0,0] = tresholdT;
 
             if (tahoeOn && !renoOn)
             {
@@ -104,6 +110,7 @@ namespace WertheApp.RN
         {
             dupAckCountR = 0;
             dupAckCountT = 0;
+            currentIndex++;
 
             //RENO:
             switch (stateR){
@@ -121,7 +128,8 @@ namespace WertheApp.RN
                     currentRoundR++;
                     cwndR++; //linear growth
                     break;
-                case 2: 
+                case 2:
+                    currentRoundR++; /*fix 18.01.19*/
                     cwndR = tresholdR;
                     stateR = 1; //switch to congestion avoidance
                     break;
@@ -151,13 +159,18 @@ namespace WertheApp.RN
             //save in arrays 
             if (renoOn)
             {
-                sstreshR[currentRoundR] = tresholdR;
-                reno[currentRoundR] = cwndR;
+                Debug.WriteLine(currentIndex);
+                sstreshR[0, currentIndex] = tresholdR;
+                sstreshR[1, currentIndex] = currentRoundR;
+                reno[0, currentIndex] = cwndR;
+                reno[1, currentIndex] = currentRoundR;
             }
             if (tahoeOn)
             {
-                sstreshT[currentRoundT] = tresholdT;
-                tahoe[currentRoundT] = cwndT;
+                sstreshT[0, currentIndex] = tresholdT;
+                sstreshT[1, currentIndex] = currentRoundT;
+                tahoe[0, currentIndex] = cwndT;
+                tahoe[1, currentIndex] = currentRoundT;
             }
 
             UpdateDrawing();
@@ -169,6 +182,7 @@ namespace WertheApp.RN
         {
             dupAckCountR++;
             dupAckCountT++;
+            currentIndex++;
 
 
             //RENO:
@@ -193,7 +207,7 @@ namespace WertheApp.RN
                     }
                     break;
                 case 2:
-                    currentRoundR++;
+                    //fix: 18.01.2019 currentRoundR++;
                     cwndR++;
                     break;
             }
@@ -226,13 +240,17 @@ namespace WertheApp.RN
             //save in arrays
             if (renoOn)
             {
-                sstreshR[currentRoundR] = tresholdR;
-                reno[currentRoundR] = cwndR;
+                sstreshR[0, currentIndex] = tresholdR;
+                sstreshR[1, currentIndex] = currentRoundR;
+                reno[0, currentIndex] = cwndR;
+                reno[1, currentIndex] = currentRoundR;
             }
             if (tahoeOn)
             {
-                sstreshT[currentRoundT] = tresholdT;
-                tahoe[currentRoundT] = cwndT;
+                sstreshT[0, currentIndex] = tresholdT;
+                sstreshT[1, currentIndex] = currentRoundT;
+                tahoe[0, currentIndex] = cwndT;
+                tahoe[1, currentIndex] = currentRoundT;
             }
 
 
@@ -245,6 +263,7 @@ namespace WertheApp.RN
         {
             currentRoundR++;
             currentRoundT++;
+            currentIndex++;
             dupAckCountR = 0;
             dupAckCountT = 0;
 
@@ -285,12 +304,16 @@ namespace WertheApp.RN
 
             //save in arrays
             if(renoOn){
-                sstreshR[currentRoundR] = tresholdR;
-                reno[currentRoundR] = cwndR;
+                sstreshR[0, currentIndex] = tresholdR;
+                sstreshR[1, currentIndex] = currentRoundR;
+                reno[0, currentIndex] = cwndR;
+                reno[1, currentIndex] = currentRoundR;
             }
             if(tahoeOn){
-                sstreshT[currentRoundT] = tresholdT;
-                tahoe[currentRoundT] = cwndT;
+                sstreshT[0, currentIndex] = tresholdT;
+                sstreshT[1, currentIndex] = currentRoundT;
+                tahoe[0, currentIndex] = cwndT;
+                tahoe[1, currentIndex] = currentRoundT;
             }
 
             UpdateDrawing();

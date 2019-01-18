@@ -155,25 +155,42 @@ namespace WertheApp.RN
                 float posRateX = 5f;
                 float posRateY = 95f;
                 float posRateYOld = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentRoundR; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++)
                 {
-                    posRateY = 95f - (yWidth * CongestionAvoidance.reno[i]); //get value from array and convert it
+                    posRateY = 95f - (yWidth * CongestionAvoidance.reno[0,i]); //get value from array and convert it
                     if ((i - 1) >= 0)
                     {
-                        posRateYOld = 95f - (yWidth * CongestionAvoidance.reno[i - 1]);
-                        canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintReno);
+                        posRateYOld = 95f - (yWidth * CongestionAvoidance.reno[0, i - 1]);
+
+                        if (CongestionAvoidance.reno[1, i] != CongestionAvoidance.reno[1, i - 1])
+                        {
+                            canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintReno);
+                        }
+                        else
+                        {
+                            canvas.DrawLine(new SKPoint(posRateX* xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintReno);
+                        }
+
                     }
                     canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintRenoFat);
-                    posRateX += xWidth;
+                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    if(CongestionAvoidance.reno[1,i] != CongestionAvoidance.reno[1, i + 1])
+                    {
+                        posRateX += xWidth;
+                    }
                 }
 
                 //RENO: treshold
                 float posRateX3 = 5f - xWidth;
                 float posRateY3 = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentRoundR; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++)
                 {
-                    posRateX3 += xWidth;
-                    posRateY3 = 95f - (yWidth * CongestionAvoidance.sstreshR[i]); //get value from array and convert it
+                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    if (CongestionAvoidance.reno[1, i] != CongestionAvoidance.reno[1, i + 1])
+                    {
+                        posRateX3 += xWidth;
+                    }
+                    posRateY3 = 95f - (yWidth * CongestionAvoidance.sstreshR[0,i]); //get value from array and convert it
                     canvas.DrawLine(new SKPoint((posRateX3 - xWidth) * xe, posRateY3 * ye), new SKPoint(posRateX3 * xe, posRateY3 * ye), sk_PaintTreshReno);
 
                 }
@@ -185,25 +202,41 @@ namespace WertheApp.RN
                 float posRateX2 = 5f;
                 float posRateY2 = 95f;
                 float posRateY2Old = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentRoundT; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++)
                 {
-                    posRateY2 = 95f - (yWidth * CongestionAvoidance.tahoe[i]); //get value from array and convert it
+                    posRateY2 = 95f - (yWidth * CongestionAvoidance.tahoe[0,i]); //get value from array and convert it
                     if ((i - 1) >= 0)
                     {
-                        posRateY2Old = 95f - (yWidth * CongestionAvoidance.tahoe[i - 1]);
-                        canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2Old * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTahoe);
+                        posRateY2Old = 95f - (yWidth * CongestionAvoidance.tahoe[0,i - 1]);
+                        if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i - 1])
+                        {
+                            canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2Old * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTahoe);
+                        }
+                        else
+                        {
+                            canvas.DrawLine(new SKPoint(posRateX2* xe, posRateY2Old * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTahoe);
+                        }
+
                     }
                     canvas.DrawPoint(posRateX2 * xe, posRateY2 * ye, sk_PaintTahoeFat);
-                    posRateX2 += xWidth;
+                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
+                    {
+                        posRateX2 += xWidth;
+                    }
                 }
 
                 //TAHOE: treshold
                 float posRateX4 = 5f - xWidth;
                 float posRateY4 = 95f;
-                for (int i = 0; i <= CongestionAvoidance.currentRoundT; i++)
+                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++)
                 {
-                    posRateX4 += xWidth;
-                    posRateY4 = 95f - (yWidth * CongestionAvoidance.sstreshT[i]); //get value from array and convert it
+                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
+                    {
+                        posRateX4 += xWidth;
+                    }
+                    posRateY4 = 95f - (yWidth * CongestionAvoidance.sstreshT[0,i]); //get value from array and convert it
                     canvas.DrawLine(new SKPoint((posRateX4 - xWidth) * xe, posRateY4 * ye), new SKPoint(posRateX4 * xe, posRateY4 * ye), sk_PaintTreshTahoe);
 
                 }
@@ -217,17 +250,17 @@ namespace WertheApp.RN
                 float posRateYOld = 95f;
                 int valT, valTOld;
                 int valR, valROld;
-                for (int i = 0; i < CongestionAvoidance.tahoe.Length; i++){
-                    posRateY = 95f - (yWidth * CongestionAvoidance.tahoe[i]); //get value from array and convert it
-                    valT = CongestionAvoidance.tahoe[i];
-                    valR = CongestionAvoidance.reno[i];
+                for (int i = 0; i < CongestionAvoidance.tahoe.GetLength(0); i++){
+                    posRateY = 95f - (yWidth * CongestionAvoidance.tahoe[0,i]); //get value from array and convert it
+                    valT = CongestionAvoidance.tahoe[0,i];
+                    valR = CongestionAvoidance.reno[0,i];
 
                     if ((i - 1) >= 0)
                     {
-                        valROld = CongestionAvoidance.reno[i - 1];
-                        valTOld = CongestionAvoidance.tahoe[i - 1];
+                        valROld = CongestionAvoidance.reno[0,i - 1];
+                        valTOld = CongestionAvoidance.tahoe[0,i - 1];
                         if(valT == valR && valT != 0 && valTOld == valROld && valTOld != 0){
-                            posRateYOld = 95f - (yWidth * CongestionAvoidance.tahoe[i - 1]);
+                            posRateYOld = 95f - (yWidth * CongestionAvoidance.tahoe[0,i - 1]);
                             canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintThin);
                         }
                     }
@@ -245,12 +278,12 @@ namespace WertheApp.RN
                 float posRateY2 = 95f;
                 int sstreshValT;
                 int sstreshValR;
-                for (int i = 0; i < CongestionAvoidance.sstreshT.Length; i++){
-                    sstreshValT = CongestionAvoidance.sstreshT[i];
-                    sstreshValR = CongestionAvoidance.sstreshR[i];
+                for (int i = 0; i < CongestionAvoidance.sstreshT.GetLength(0); i++){
+                    sstreshValT = CongestionAvoidance.sstreshT[0,i];
+                    sstreshValR = CongestionAvoidance.sstreshR[0,i];
                     posRateX2 += xWidth;
                     if (sstreshValR == sstreshValT && sstreshValT != 0){
-                        posRateY2 = 95f - (yWidth * CongestionAvoidance.sstreshT[i]); //get value from array and convert it
+                        posRateY2 = 95f - (yWidth * CongestionAvoidance.sstreshT[0,i]); //get value from array and convert it
                         canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2 * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTreshBlack);
 
                     }
