@@ -250,7 +250,8 @@ namespace WertheApp.RN
                 float posRateYOld = 95f;
                 int valT, valTOld;
                 int valR, valROld;
-                for (int i = 0; i < CongestionAvoidance.tahoe.GetLength(0); i++){
+      
+                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++){
                     posRateY = 95f - (yWidth * CongestionAvoidance.tahoe[0,i]); //get value from array and convert it
                     valT = CongestionAvoidance.tahoe[0,i];
                     valR = CongestionAvoidance.reno[0,i];
@@ -259,17 +260,32 @@ namespace WertheApp.RN
                     {
                         valROld = CongestionAvoidance.reno[0,i - 1];
                         valTOld = CongestionAvoidance.tahoe[0,i - 1];
+                        Debug.WriteLine(valROld);
+                        Debug.WriteLine(valTOld);
                         if(valT == valR && valT != 0 && valTOld == valROld && valTOld != 0){
                             posRateYOld = 95f - (yWidth * CongestionAvoidance.tahoe[0,i - 1]);
-                            canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintThin);
+
+                            /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                            if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i - 1])
+                            {
+                                canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintThin);
+                            }
+                            else
+                            {
+                                canvas.DrawLine(new SKPoint(posRateX * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintThin);
+                            }
                         }
                     }
 
                     if (valT == valR && valT != 0){
                         canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintFatBlack);
                     }
-
-                    posRateX += xWidth;
+                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    Debug.WriteLine("i+1: " + (i + 1));
+                    if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
+                    {
+                        posRateX += xWidth;
+                    }
 
                 }
 
@@ -278,10 +294,14 @@ namespace WertheApp.RN
                 float posRateY2 = 95f;
                 int sstreshValT;
                 int sstreshValR;
-                for (int i = 0; i < CongestionAvoidance.sstreshT.GetLength(0); i++){
+                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++){
                     sstreshValT = CongestionAvoidance.sstreshT[0,i];
                     sstreshValR = CongestionAvoidance.sstreshR[0,i];
-                    posRateX2 += xWidth;
+                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
+                    {
+                        posRateX2 += xWidth;
+                    }
                     if (sstreshValR == sstreshValT && sstreshValT != 0){
                         posRateY2 = 95f - (yWidth * CongestionAvoidance.sstreshT[0,i]); //get value from array and convert it
                         canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2 * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTreshBlack);

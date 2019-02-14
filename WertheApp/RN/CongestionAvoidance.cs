@@ -159,7 +159,6 @@ namespace WertheApp.RN
             //save in arrays 
             if (renoOn)
             {
-                Debug.WriteLine(currentIndex);
                 sstreshR[0, currentIndex] = tresholdR;
                 sstreshR[1, currentIndex] = currentRoundR;
                 reno[0, currentIndex] = cwndR;
@@ -330,6 +329,8 @@ namespace WertheApp.RN
             CongestionAvoidanceDraw.stateR = stateR;
             CongestionAvoidanceDraw.stateT = stateT;
             CongestionAvoidanceDraw.Paint();
+            PrintArray(reno);
+            PrintArray(tahoe);
         }
 
 
@@ -527,5 +528,21 @@ namespace WertheApp.RN
                 this.Content.IsVisible = false;
             }
         }
-	}
+
+        public static void PrintArray(int[,] array)
+        {
+            Debug.WriteLine("");
+            // Loop over 2D int array and display it.
+            for (int i = 0; i <= array.GetUpperBound(0); i++)
+            {
+                String s = "";
+                for (int j = 0; j <= array.GetUpperBound(1); j++)
+                {
+                    s += array[i, j];
+                    s += " ";
+                }
+                Debug.WriteLine(s);
+            }
+        }
+    }
 }
