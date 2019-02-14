@@ -76,7 +76,10 @@ namespace WertheApp.BS
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+            if (!IsLandscape())
+            {
+                await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+            }
             await Navigation.PushAsync(new BuddySystem(Int32.Parse(p_Exponent.SelectedItem.ToString())));
         }
 
@@ -86,6 +89,22 @@ namespace WertheApp.BS
 		void P_Exponent_SelectedIndexChanged(object sender, EventArgs e){
             absoluteMemorySize = Math.Pow(2, Double.Parse(p_Exponent.SelectedItem.ToString())); //2ExponentX
             l_AbsoluteMemorySize.Text = "Absolute memory size : " + absoluteMemorySize;
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        static bool IsLandscape()
+        {
+            bool isLandscape = false;
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                isLandscape = true;
+            }
+            else
+            {
+                isLandscape = false;
+            }
+            return isLandscape;
         }
     }
 }

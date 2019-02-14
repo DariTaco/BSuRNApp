@@ -174,7 +174,8 @@ namespace WertheApp.BS
 
                     //if fitting blocksize was found
                     if (bfound)
-                    {   
+                    {
+                    Debug.WriteLine("END PROCESS =FALSE!!");
                         BuddySystem.endProcess = false;
                         BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
                         BuddySystem.activeProcesses.Add(p_ProcessNames.SelectedItem.ToString());
@@ -182,6 +183,7 @@ namespace WertheApp.BS
                     }
                     else
                     {
+                    Debug.WriteLine("END PROCESS = TRUE?");
                         await DisplayAlert("Alert", "Process doesn't fit in memory", "OK");
                         await Navigation.PopModalAsync(); // close Modal
                     }

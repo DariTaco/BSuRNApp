@@ -46,6 +46,7 @@ namespace WertheApp.BS
             currentProcess = "first";
             buddySystem = new List<BuddySystemBlock>();
             buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize, 0));
+            endProcess = false;
 
             if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
             {

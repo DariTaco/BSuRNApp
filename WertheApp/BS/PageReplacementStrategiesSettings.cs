@@ -149,7 +149,10 @@ namespace WertheApp.BS
                         await DisplayAlert("Alert", "reference sequence is too long (has to be <= 19)", "OK");
                     }
                     else{
-                        await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+                        if (!IsLandscape())
+                        {
+                            await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+                        }
                         await Navigation.PushAsync(new PageReplacementStrategies(sequenceList,
                                                                                  p_Strategy.SelectedItem.ToString(),
                                                                                  Int32.Parse(p_RAM.SelectedItem.ToString()),
@@ -195,6 +198,22 @@ namespace WertheApp.BS
             int disc = Int32.Parse(p_DISC.SelectedItem.ToString());
 
             return ram + disc <= 8;
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        static bool IsLandscape()
+        {
+            bool isLandscape = false;
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                isLandscape = true;
+            }
+            else
+            {
+                isLandscape = false;
+            }
+            return isLandscape;
         }
     }
 }

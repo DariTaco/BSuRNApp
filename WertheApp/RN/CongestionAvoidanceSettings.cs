@@ -107,7 +107,10 @@ namespace WertheApp.RN
 		//If Button Start is clicked
 		async void B_Start_Clicked(object sender, EventArgs e)
 		{
-            await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+            if (!IsLandscape())
+            {
+                await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+            }
             await Navigation.PushAsync(new CongestionAvoidance(
                 Int32.Parse(p_Treshold.SelectedItem.ToString()),
                 s_Reno.IsToggled,
@@ -141,6 +144,22 @@ namespace WertheApp.RN
             if(!s_Reno.IsToggled){
                 s_Tahoe.IsToggled = true;
             }
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        static bool IsLandscape()
+        {
+            bool isLandscape = false;
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                isLandscape = true;
+            }
+            else
+            {
+                isLandscape = false;
+            }
+            return isLandscape;
         }
     }
 }

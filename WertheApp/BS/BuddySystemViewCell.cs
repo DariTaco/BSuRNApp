@@ -22,7 +22,6 @@ namespace WertheApp.BS
         sk_J, sk_K, sk_L, sk_M, sk_N, sk_O, sk_P, sk_Q, sk_R, sk_S, sk_T, sk_U,
         sK_V, sk_W, sk_X, sk_Y, sk_Z;
         private String processName; //added or ended process
-        private bool endProcess;
 
         private float xe, ye;
 
@@ -49,7 +48,6 @@ namespace WertheApp.BS
              }
 
             this.processName = BuddySystem.currentProcess;
-            this.endProcess = BuddySystem.endProcess;
 
             // crate the canvas
             skiaview = new SKCanvasView();
@@ -235,7 +233,7 @@ namespace WertheApp.BS
             }else if(this.processName == "first"){
                 canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe * 84, ye * 55), infoColor); 
             }else{
-                if(endProcess){
+                if(BuddySystem.endProcess){
                     canvas.DrawText("end: " + processName, new SKPoint(xe * 84, ye * 55), infoColor);
                 }else{
                     canvas.DrawText("start: " + processName, new SKPoint(xe * 84, ye * 55), infoColor);

@@ -113,12 +113,32 @@ namespace WertheApp.BS
             if (p_Algorithm.SelectedIndex != -1 && e_Fragmentation.Text != null && ValidateFragmentationInput())
             {
                 CreateFragmentsList();
-                await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+                if (!IsLandscape())
+                {
+                    await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+                }
+
                 await Navigation.PushAsync(new AllocationStrategies(fragmentsList, p_Algorithm.SelectedItem.ToString()));
             }
             else if (e_Fragmentation.Text == null) { await DisplayAlert("Alert", "fragmentation = null", "OK"); }//actually not needed. Case should never occur
             else if(!ValidateFragmentationInput()){ await DisplayAlert("Alert", "Please insert a valid fragmentation! (only digits, greater than zero, separated by a comma)", "OK");}
             else{ await DisplayAlert("Alert", "Please fill in all necessary information", "OK"); }
 		}
+
+        /**********************************************************************
+        *********************************************************************/
+        static bool IsLandscape()
+        {
+            bool isLandscape = false;
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                isLandscape = true;
+            }
+            else 
+            {
+                isLandscape = false; 
+            }
+            return isLandscape;
+        }
     }
 }

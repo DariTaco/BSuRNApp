@@ -122,7 +122,11 @@ namespace WertheApp.RN
             pipelineProtocols = new PipelineProtocols(
                 Int32.Parse(p_WindowSize.SelectedItem.ToString()),
                 p_Strategy.SelectedItem.ToString(), Int32.Parse(s_Timeout.Value.ToString()));
-            await DisplayAlert("Alert", "Please rotate your phone to portrait mode", "OK");
+            if (IsLandscape())
+            {
+                await DisplayAlert("Alert", "Please rotate your phone to portrait mode", "OK");
+            }
+
             await Navigation.PushAsync(pipelineProtocols);
 		}
 
@@ -134,5 +138,20 @@ namespace WertheApp.RN
             GC.Collect();
         }
 
+        /**********************************************************************
+        *********************************************************************/
+        static bool IsLandscape()
+        {
+            bool isLandscape = false;
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                isLandscape = true;
+            }
+            else
+            {
+                isLandscape = false;
+            }
+            return isLandscape;
+        }
     }
 }
