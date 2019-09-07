@@ -173,7 +173,7 @@ namespace WertheApp.RN
 
                     }
                     canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintRenoFat);
-                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann keine Runde weiter*/
                     if(CongestionAvoidance.reno[1,i] != CongestionAvoidance.reno[1, i + 1])
                     {
                         posRateX += xWidth;
@@ -181,17 +181,21 @@ namespace WertheApp.RN
                 }
 
                 //RENO: treshold
-                float posRateX3 = 5f - xWidth;
+                float posRateX3 = 5f;
                 float posRateY3 = 95f;
+
                 for (int i = 0; i <= CongestionAvoidance.currentIndex; i++)
                 {
-                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
-                    if (CongestionAvoidance.reno[1, i] != CongestionAvoidance.reno[1, i + 1])
+                    //if not very first round and no new round started, don't draw anything and skip an interation
+                    if(i>0 && CongestionAvoidance.reno[1, i] == CongestionAvoidance.reno[1, i - 1])
                     {
-                        posRateX3 += xWidth;
+                        continue;
                     }
-                    posRateY3 = 95f - (yWidth * CongestionAvoidance.sstreshR[0,i]); //get value from array and convert it
+
+                    //draw the new tresh for the new round 
+                    posRateY3 = 95f - (yWidth * CongestionAvoidance.sstreshR[0, i]);
                     canvas.DrawLine(new SKPoint((posRateX3 - xWidth) * xe, posRateY3 * ye), new SKPoint(posRateX3 * xe, posRateY3 * ye), sk_PaintTreshReno);
+                    posRateX3 += xWidth;
 
                 }
             }
@@ -227,18 +231,22 @@ namespace WertheApp.RN
                 }
 
                 //TAHOE: treshold
-                float posRateX4 = 5f - xWidth;
+                float posRateX4 = 5f;
                 float posRateY4 = 95f;
+
                 for (int i = 0; i <= CongestionAvoidance.currentIndex; i++)
                 {
-                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
-                    if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
+
+                    //if not very first round and no new round started, don't draw anything and skip an interation
+                    if (i > 0 && CongestionAvoidance.tahoe[1, i] == CongestionAvoidance.tahoe[1, i - 1])
                     {
-                        posRateX4 += xWidth;
+                        continue;
                     }
+
+                    //draw the new tresh for the new round 
                     posRateY4 = 95f - (yWidth * CongestionAvoidance.sstreshT[0,i]); //get value from array and convert it
                     canvas.DrawLine(new SKPoint((posRateX4 - xWidth) * xe, posRateY4 * ye), new SKPoint(posRateX4 * xe, posRateY4 * ye), sk_PaintTreshTahoe);
-
+                    posRateX4 += xWidth;
                 }
             }
 
@@ -290,23 +298,30 @@ namespace WertheApp.RN
                 }
 
                 //tresh
-                float posRateX2 = 5f - xWidth;
+                float posRateX2 = 5f;
                 float posRateY2 = 95f;
                 int sstreshValT;
                 int sstreshValR;
-                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++){
-                    sstreshValT = CongestionAvoidance.sstreshT[0,i];
-                    sstreshValR = CongestionAvoidance.sstreshR[0,i];
-                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
-                    if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
+
+                //since the rounds of tahoe and reno will always be the same, use tahoe
+                for (int i = 0; i <= CongestionAvoidance.currentIndex; i++)
+                {
+                    sstreshValT = CongestionAvoidance.sstreshT[0, i];
+                    sstreshValR = CongestionAvoidance.sstreshR[0, i];
+                    //if not very first round and no new round started, don't draw anything and skip an interation
+                    if (i > 0 && CongestionAvoidance.tahoe[1, i] == CongestionAvoidance.tahoe[1, i - 1])
                     {
+                        continue;
+                    }
+
+                    //draw the new tresh for the new round in black if reno and tahoe overlap
+                    if (sstreshValR == sstreshValT)
+                    {
+                        posRateY2 = 95f - (yWidth * CongestionAvoidance.sstreshT[0, i]); //get value from array and convert it
+                        canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2 * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTreshBlack);
                         posRateX2 += xWidth;
                     }
-                    if (sstreshValR == sstreshValT && sstreshValT != 0){
-                        posRateY2 = 95f - (yWidth * CongestionAvoidance.sstreshT[0,i]); //get value from array and convert it
-                        canvas.DrawLine(new SKPoint((posRateX2 - xWidth) * xe, posRateY2 * ye), new SKPoint(posRateX2 * xe, posRateY2 * ye), sk_PaintTreshBlack);
 
-                    }
                 }
 
             }

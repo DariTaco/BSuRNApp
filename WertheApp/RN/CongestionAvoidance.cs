@@ -13,6 +13,7 @@ namespace WertheApp.RN
         //VARIABLES
         public static bool renoOn;
         public static bool tahoeOn;
+        private static bool flag1; //indicates that state was changed from 1 to 0 because of 3dupACK
 
         bool landscape = false; //indicates device orientation
         double StackChildSize;
@@ -30,7 +31,7 @@ namespace WertheApp.RN
         public static int dupAckCountR, dupAckCountT;
         public static int cwndR, cwndT;
         public static int currentRoundR, currentRoundT, currentIndex;
-        public static int numberOfRounds;
+        public const int numberOfRounds = 32;
         public static int maxCwnd;
         public static int tresholdR,tresholdT;
         public static int[,] reno; //contains y values for reno [value, round]
@@ -46,6 +47,7 @@ namespace WertheApp.RN
             tresholdT = th;
             renoOn = r;
             tahoeOn = t;
+            flag1 = false;
             stateT = 0;
             stateR = 0;
             dupAckCountR = 0;
@@ -55,7 +57,6 @@ namespace WertheApp.RN
             currentRoundR = 0;
             currentRoundT = 0;
             currentIndex = 0;
-            numberOfRounds = 32;
             maxCwnd = 14;
 
             //note: numberOfRounds*4 is kinda arbitrary. Since there can be no arrays of unknown length, but it has to be long enough
@@ -129,7 +130,7 @@ namespace WertheApp.RN
                     cwndR++; //linear growth
                     break;
                 case 2:
-                    currentRoundR++; /*fix 18.01.19*/
+                    currentRoundR++; 
                     cwndR = tresholdR;
                     stateR = 1; //switch to congestion avoidance
                     break;
@@ -190,7 +191,7 @@ namespace WertheApp.RN
                 case 0:
                     if (dupAckCountR == 3) 
                     {
-                        currentRoundR++;
+                        //*geändert*/currentRoundR++;
                         tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
                         cwndR = tresholdR + 3; 
                         stateR = 2; //switch to fast recovery
@@ -199,14 +200,13 @@ namespace WertheApp.RN
                 case 1:
                     if (dupAckCountR == 3)
                     {
-                        currentRoundR++;
+                        //*geändert*/currentRoundR++;
                         tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
                         cwndR = tresholdR + 3;
                         stateR = 2; //switch to fast recovery
                     }
                     break;
                 case 2:
-                    //fix: 18.01.2019 currentRoundR++;
                     cwndR++;
                     break;
             }
@@ -215,21 +215,23 @@ namespace WertheApp.RN
             switch (stateT)
             {
                 case 0:
-                    if(dupAckCountT == 3)
+                    if(dupAckCountT == 3 && !flag1)
                     {
-                        currentRoundT++;
+                        //*geändert*/currentRoundT++;
                         tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
                         cwndT = 1;
-                        //stateT = 1;//switch to Congestion Avoidance
                     }
+                    dupAckCountT++;
+                    flag1 = false;
                     break;
                 case 1:
                     if (dupAckCountT == 3)
                     {
-                        currentRoundT++;
+                        //*geändert*/currentRoundT++;
                         tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
                         cwndT = 1;
                         stateT = 0; //Switch to Slow Start
+                        flag1 = true;
                     }
                     break;
             }
@@ -330,7 +332,8 @@ namespace WertheApp.RN
             CongestionAvoidanceDraw.stateT = stateT;
             CongestionAvoidanceDraw.Paint();
             PrintArray(reno);
-            PrintArray(tahoe);
+            PrintArray(sstreshR);
+            //PrintArray(tahoe);
         }
 
 
@@ -387,7 +390,7 @@ namespace WertheApp.RN
                 b_NewAck.IsEnabled = true;
                 b_DupAck.IsEnabled = true;
 
-                //enable / disable when dupack count too high
+                /*//enable / disable when dupack count too high
                 if(renoOn && !tahoeOn){
                     if(dupAckCountR >= cwndR - 1){
                         b_DupAck.IsEnabled = false;
@@ -406,7 +409,7 @@ namespace WertheApp.RN
                     }else{
                         b_DupAck.IsEnabled = true;
                     }
-                }
+                }*/
 
             }
 
