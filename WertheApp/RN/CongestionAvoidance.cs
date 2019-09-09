@@ -13,7 +13,7 @@ namespace WertheApp.RN
         //VARIABLES
         public static bool renoOn;
         public static bool tahoeOn;
-        private static bool flag1; //indicates that state was changed from 1 to 0 because of 3dupACK
+        private static bool flag1; //indicates that state was changed from 1 to 0 because of 3 dupACK
 
         bool landscape = false; //indicates device orientation
         double StackChildSize;
