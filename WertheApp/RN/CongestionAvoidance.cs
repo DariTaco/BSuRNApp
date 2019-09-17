@@ -13,8 +13,8 @@ namespace WertheApp.RN
         //VARIABLES
         public static bool renoOn;
         public static bool tahoeOn;
-        private static bool flag1; //indicates that state was changed from 1 to 0 because of 3 dupACK
-
+        private static bool flag1; //indicates that state was changed from 1 to 0 because of 3 dupACK, so that 3 dupACK doesn't trigger an action twice
+        private static bool flagDupAckAndNoNewRound; // indicates if currently stuck waiting and no new round has begun yet. Maybe solve this problem in future by creating a new state instead
         bool landscape = false; //indicates device orientation
         double StackChildSize;
 
@@ -29,7 +29,7 @@ namespace WertheApp.RN
 
         public static int stateT, stateR; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
         public static int dupAckCountR, dupAckCountT;
-        public static int cwndR, cwndT;
+        public static int cwndR, cwndT, cwndTBeforeDupAck, cwndRBeforeDupAck;
         public static int currentRoundR, currentRoundT, currentIndex;
         public const int numberOfRounds = 32;
         public static int maxCwnd;
@@ -48,6 +48,7 @@ namespace WertheApp.RN
             renoOn = r;
             tahoeOn = t;
             flag1 = false;
+            flagDupAckAndNoNewRound = false;
             stateT = 0;
             stateR = 0;
             dupAckCountR = 0;
@@ -112,6 +113,7 @@ namespace WertheApp.RN
             dupAckCountR = 0;
             dupAckCountT = 0;
             currentIndex++;
+            flagDupAckAndNoNewRound = false;
 
             //RENO:
             switch (stateR){
@@ -156,23 +158,7 @@ namespace WertheApp.RN
             }
 
             UpdateButtons();
-
-            //save in arrays 
-            if (renoOn)
-            {
-                sstreshR[0, currentIndex] = tresholdR;
-                sstreshR[1, currentIndex] = currentRoundR;
-                reno[0, currentIndex] = cwndR;
-                reno[1, currentIndex] = currentRoundR;
-            }
-            if (tahoeOn)
-            {
-                sstreshT[0, currentIndex] = tresholdT;
-                sstreshT[1, currentIndex] = currentRoundT;
-                tahoe[0, currentIndex] = cwndT;
-                tahoe[1, currentIndex] = currentRoundT;
-            }
-
+            SaveState();
             UpdateDrawing();
         }
 
@@ -183,6 +169,13 @@ namespace WertheApp.RN
             dupAckCountR++;
             dupAckCountT++;
             currentIndex++;
+
+            if (!flagDupAckAndNoNewRound)
+            {
+                cwndTBeforeDupAck = cwndT; //save cwnd before the first dupAck was sent
+                cwndRBeforeDupAck = cwndR;
+            }
+            flagDupAckAndNoNewRound = true;
 
 
             //RENO:
@@ -200,8 +193,7 @@ namespace WertheApp.RN
                 case 1:
                     if (dupAckCountR == 3)
                     {
-                        //*geändert*/currentRoundR++;
-                        tresholdR = (cwndR / 2 >= 1 ? cwndR / 2 : 1); //cannot be smaller than 1
+                        tresholdR = ((cwndR / 2) >= 1 ? (cwndR / 2) : 1); //cannot be smaller than 1
                         cwndR = tresholdR + 3;
                         stateR = 2; //switch to fast recovery
                     }
@@ -217,17 +209,14 @@ namespace WertheApp.RN
                 case 0:
                     if(dupAckCountT == 3 && !flag1)
                     {
-                        //*geändert*/currentRoundT++;
                         tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
                         cwndT = 1;
                     }
-                    dupAckCountT++;
                     flag1 = false;
                     break;
                 case 1:
                     if (dupAckCountT == 3)
                     {
-                        //*geändert*/currentRoundT++;
                         tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
                         cwndT = 1;
                         stateT = 0; //Switch to Slow Start
@@ -237,24 +226,7 @@ namespace WertheApp.RN
             }
 
             UpdateButtons();
-
-            //save in arrays
-            if (renoOn)
-            {
-                sstreshR[0, currentIndex] = tresholdR;
-                sstreshR[1, currentIndex] = currentRoundR;
-                reno[0, currentIndex] = cwndR;
-                reno[1, currentIndex] = currentRoundR;
-            }
-            if (tahoeOn)
-            {
-                sstreshT[0, currentIndex] = tresholdT;
-                sstreshT[1, currentIndex] = currentRoundT;
-                tahoe[0, currentIndex] = cwndT;
-                tahoe[1, currentIndex] = currentRoundT;
-            }
-
-
+            SaveState();
             UpdateDrawing();
         }
 
@@ -265,8 +237,10 @@ namespace WertheApp.RN
             currentRoundR++;
             currentRoundT++;
             currentIndex++;
+            int dupAckCountTOld = dupAckCountT;
             dupAckCountR = 0;
             dupAckCountT = 0;
+            flagDupAckAndNoNewRound = false;
 
             //RENO:
             switch (stateR)
@@ -291,32 +265,39 @@ namespace WertheApp.RN
             switch (stateT)
             {
                 case 0:
-                    tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                  
+                    if(dupAckCountTOld >= 3)
+                    {
+                        //use old trshold since no new round has begun
+                        int dummy = tahoe[0, currentIndex - dupAckCountTOld];
+                        tresholdT = (dummy / 2 >= 1 ? dummy / 2 : 1); //cannot be smaller than 1
+                    }
+                    else
+                    {
+                        tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                    }
+                    
                     cwndT = 1;
                     break;
                 case 1:
-                    tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                    
+                    if (dupAckCountTOld >= 3)
+                    {
+                        //use old trshold since no new round has begun
+                        int dummy = tahoe[0, currentIndex - dupAckCountTOld];
+                        tresholdT = (dummy / 2 >= 1 ? dummy / 2 : 1); //cannot be smaller than 1
+                    }
+                    else
+                    {
+                        tresholdT = (cwndT / 2 >= 1 ? cwndT / 2 : 1); //cannot be smaller than 1
+                    }
                     cwndT = 1;
                     stateT = 0;
                     break;
             }
 
             UpdateButtons();
-
-            //save in arrays
-            if(renoOn){
-                sstreshR[0, currentIndex] = tresholdR;
-                sstreshR[1, currentIndex] = currentRoundR;
-                reno[0, currentIndex] = cwndR;
-                reno[1, currentIndex] = currentRoundR;
-            }
-            if(tahoeOn){
-                sstreshT[0, currentIndex] = tresholdT;
-                sstreshT[1, currentIndex] = currentRoundT;
-                tahoe[0, currentIndex] = cwndT;
-                tahoe[1, currentIndex] = currentRoundT;
-            }
-
+            SaveState();
             UpdateDrawing();
         }
 
@@ -331,18 +312,40 @@ namespace WertheApp.RN
             CongestionAvoidanceDraw.stateR = stateR;
             CongestionAvoidanceDraw.stateT = stateT;
             CongestionAvoidanceDraw.Paint();
-            PrintArray(reno);
-            PrintArray(sstreshR);
-            //PrintArray(tahoe);
-        }
+            //PrintArray(reno);
+            //PrintArray(sstreshR)
+            Debug.WriteLine("tahoe");
+            PrintArray(tahoe);
+            Debug.WriteLine("tresh");
+            PrintArray(sstreshT);
 
+        }
 
         /***************************************************************
         *********************************************************************/
-       
-        void UpdateButtons(){
-            //update Button Color and Text
-            b_DupAck.Text = "Dup ACK (" + dupAckCountR + ")";
+        void SaveState()
+        {
+            if (renoOn)
+            {
+                sstreshR[0, currentIndex] = tresholdR;
+                sstreshR[1, currentIndex] = currentRoundR;
+                reno[0, currentIndex] = cwndR;
+                reno[1, currentIndex] = currentRoundR;
+            }
+            if (tahoeOn)
+            {
+                sstreshT[0, currentIndex] = tresholdT;
+                sstreshT[1, currentIndex] = currentRoundT;
+                tahoe[0, currentIndex] = cwndT;
+                tahoe[1, currentIndex] = currentRoundT;
+            }
+        }
+
+        /***************************************************************
+        *********************************************************************/
+
+        void UpdateButtonColor()
+        {
             switch (dupAckCountR)
             {
                 case 0:
@@ -361,10 +364,13 @@ namespace WertheApp.RN
                     b_DupAck.TextColor = Color.Purple;
                     break;
             }
+        }
 
-
-            //update Text
-            switch (stateR){
+        void UpdateButtonText()
+        {
+            b_DupAck.Text = "Dup ACK (" + dupAckCountR + ")";
+            switch (stateR)
+            {
                 case 0:
                     b_NewAck.Text = "New Acks";
                     break;
@@ -377,50 +383,101 @@ namespace WertheApp.RN
                     else if (renoOn && tahoeOn) { b_NewAck.Text = "New Ack(s)"; }
                     break;
             }
+        }
 
+        void EnableDisableButtons()
+        {
+            b_NewAck.IsEnabled = true;
+            b_DupAck.IsEnabled = true;
 
-            //enable /disable when cwnd to high
-            if (renoOn && !tahoeOn && cwndR >= maxCwnd 
-                || !renoOn && tahoeOn && cwndT >= maxCwnd
-                || renoOn && tahoeOn && (cwndR >= maxCwnd || cwndT >= maxCwnd) )
+            //diable buttons according to the follwowing situations
+            if (renoOn && !tahoeOn)
             {
-                b_NewAck.IsEnabled = false;
-                b_DupAck.IsEnabled = false;
-            }else{
-                b_NewAck.IsEnabled = true;
-                b_DupAck.IsEnabled = true;
+                //if window is too big for screen
+                if (cwndR >= maxCwnd)
+                {
+                    b_DupAck.IsEnabled = false;
+                    //new ack only disabled when reno not in fast recovery
+                    if (stateR != 2) { b_NewAck.IsEnabled = false; }
+                }
 
-                /*//enable / disable when dupack count too high
-                if(renoOn && !tahoeOn){
-                    if(dupAckCountR >= cwndR - 1){
-                        b_DupAck.IsEnabled = false;
-                    }else{
-                        b_DupAck.IsEnabled = true;
-                    }
-                }else if(tahoeOn && !renoOn){
-                    if(dupAckCountT >= cwndT - 1){
-                        b_DupAck.IsEnabled = false;
-                    }else{
-                        b_DupAck.IsEnabled = true;
-                    }
-                }else if(tahoeOn && renoOn){
-                    if(dupAckCountT >= cwndT - 1 || dupAckCountR >= cwndR - 1){
-                        b_DupAck.IsEnabled = false;
-                    }else{
-                        b_DupAck.IsEnabled = true;
-                    }
-                }*/
-
+                int window = cwndR;
+                if (flagDupAckAndNoNewRound)
+                {
+                    window = cwndRBeforeDupAck;//if dupacks have already been sent, the cwnd might have changed during the current round, but we need to compare to the value at the beginning
+                }
+                if (dupAckCountR >= window - 1)
+                {
+                    b_DupAck.IsEnabled = false;
+                }
             }
 
-            //enable / disbale when end is reached
-            if (currentRoundR == numberOfRounds-1 && renoOn || currentRoundT == numberOfRounds-1 && tahoeOn)
+            else if (tahoeOn && !renoOn)
+            {
+                //if window is too big for screen
+                if (cwndT >= maxCwnd)
+                {
+                    b_DupAck.IsEnabled = false;
+                    b_NewAck.IsEnabled = false;
+                }
+                int window = cwndT;
+                //check if more dupAcks can be sent
+                if (flagDupAckAndNoNewRound)
+                {
+                    window = cwndTBeforeDupAck;//if dupacks have already been sent, the cwnd might have changed during the current round, but we need to compare to the value at the beginning
+                }
+                if (dupAckCountT >= window - 1)
+                {
+                    b_DupAck.IsEnabled = false;
+                }
+            }
+
+            else if(renoOn && tahoeOn)
+            {
+                //if window is too big for screen
+                if (cwndR >= maxCwnd)
+                {
+                    b_DupAck.IsEnabled = false;
+                    //new ack only disabled when reno not in fast recovery
+                    if (stateR != 2) { b_NewAck.IsEnabled = false; }
+                }
+                if(cwndT >= maxCwnd)
+                {
+                    b_DupAck.IsEnabled = false;
+                    b_NewAck.IsEnabled = false;
+                }
+                int windowR = cwndR;
+                int windowT = cwndT;
+                if (flagDupAckAndNoNewRound)
+                {
+                    //if dupacks have already been sent, the cwnd might have changed during the current round, but we need to compare to the value at the beginning
+                    windowR = cwndRBeforeDupAck;
+                    windowT = cwndTBeforeDupAck;
+                }
+                //if no dup Acks can be send anymore
+                if (dupAckCountT >= windowT - 1 || dupAckCountR >= windowR - 1)
+                {
+                    b_DupAck.IsEnabled = false;
+                }
+            }
+        }
+
+        void CheckIfMaxRoundsReached()
+        {
+            if (currentRoundR >= numberOfRounds && renoOn || currentRoundT >= numberOfRounds && tahoeOn)
             {
                 b_DupAck.IsEnabled = false;
                 b_NewAck.IsEnabled = false;
                 b_Timeout.IsEnabled = false;
             }
+        }
 
+        void UpdateButtons(){
+
+            UpdateButtonColor();
+            UpdateButtonText();
+            EnableDisableButtons();
+            CheckIfMaxRoundsReached();
 
         }
 

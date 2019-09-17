@@ -32,7 +32,7 @@ namespace WertheApp
 			var listView = new ListView();
 			listView.ItemsSource = new string[]
 			{
-				"Congestion Control", "Pipeline Protocols"
+				"Congestion Control", "Pipeline Protocols", "Reno Fast Retransmit/Recovery"
 			};
             //after an item was clicked, open the respective app 
 			listView.ItemTapped += async (sender, e) =>
