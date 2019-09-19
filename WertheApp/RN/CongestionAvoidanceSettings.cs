@@ -28,7 +28,7 @@ namespace WertheApp.RN
 			{
 				Margin = new Thickness(10)
 			};
-			var stackLayout = new StackLayout();
+            var stackLayout = new StackLayout();
 
 			var stackLayout2 = new StackLayout
 			{
@@ -109,7 +109,7 @@ namespace WertheApp.RN
 		{
             if (!IsLandscape())
             {
-                await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+                await DisplayAlert("Alert", "Please hold your phone horizontally for landscape mode", "OK");
             }
             await Navigation.PushAsync(new CongestionAvoidance(
                 Int32.Parse(p_Treshold.SelectedItem.ToString()),

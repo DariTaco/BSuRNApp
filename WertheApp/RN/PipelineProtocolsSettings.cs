@@ -124,7 +124,7 @@ namespace WertheApp.RN
                 p_Strategy.SelectedItem.ToString(), Int32.Parse(s_Timeout.Value.ToString()));
             if (IsLandscape())
             {
-                await DisplayAlert("Alert", "Please rotate your phone to portrait mode", "OK");
+                await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
             }
 
             await Navigation.PushAsync(pipelineProtocols);

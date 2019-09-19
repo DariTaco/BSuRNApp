@@ -115,7 +115,7 @@ namespace WertheApp.BS
                 CreateFragmentsList();
                 if (!IsLandscape())
                 {
-                    await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+                    await DisplayAlert("Alert", "Please hold your phone horizontally for landscape mode", "OK");
                 }
 
                 await Navigation.PushAsync(new AllocationStrategies(fragmentsList, p_Algorithm.SelectedItem.ToString()));

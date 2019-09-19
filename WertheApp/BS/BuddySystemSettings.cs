@@ -78,7 +78,7 @@ namespace WertheApp.BS
         {
             if (!IsLandscape())
             {
-                await DisplayAlert("Alert", "Please rotate your phone to landscape", "OK");
+                await DisplayAlert("Alert", "Please hold your phone horizontally for landscape mode", "OK");
             }
             await Navigation.PushAsync(new BuddySystem(Int32.Parse(p_Exponent.SelectedItem.ToString())));
         }

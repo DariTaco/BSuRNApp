@@ -32,7 +32,8 @@ namespace WertheApp
 			var listView = new ListView();
 			listView.ItemsSource = new string[]
 			{
-				"Congestion Control", "Pipeline Protocols", "Reno Fast Retransmit/Recovery"
+                //Reno Fast Retransmit/Recovery
+				"Congestion Control", "Pipeline Protocols", "TCP"
 			};
             //after an item was clicked, open the respective app 
 			listView.ItemTapped += async (sender, e) =>
@@ -46,6 +47,9 @@ namespace WertheApp
                         break;
                     case "Pipeline Protocols":
                         await Navigation.PushAsync(new PipelineProtocolsSettings());
+                        break;
+                    case "TCP":
+                        await Navigation.PushAsync(new TCPSettings());
                         break;
                 }
 

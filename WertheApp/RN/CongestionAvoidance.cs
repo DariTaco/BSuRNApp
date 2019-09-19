@@ -1,9 +1,6 @@
 ﻿using System;
 using Xamarin.Forms;
-using System.Collections.Generic;
-using System.Linq; //fragmentList.ElementAt(i);
 using SkiaSharp.Views.Forms;
-using SkiaSharp;
 using System.Diagnostics;
 
 namespace WertheApp.RN
