@@ -18,6 +18,9 @@ namespace WertheApp.RN
         private static float textSize, strokeWidth;
         private static float yWidthStep;
         private static int numberOfSteps;
+        private static int currentStep;
+
+        private static int [,] renoFastRecovery;
 
         //CONSTRUCTOR
         public TCPDraw()
@@ -30,6 +33,17 @@ namespace WertheApp.RN
             strokeWidth = 0.2f;
 
             numberOfSteps = 30;
+            currentStep = -1;
+
+            /*rows:
+             0:action 0->none 1->ack 2->pack 3->pause sender 4->pause receiver
+             1:dupAck count
+             2:cwnd
+             3:state 0->none 1->slow start 2->congestion avoidance 3->fast recovery
+             4:treshold
+             5:number of ack/pack/etc
+             */
+            renoFastRecovery = new int[6, numberOfSteps];
         }
 
         //METHODS
@@ -58,13 +72,35 @@ namespace WertheApp.RN
 
             //draw pkt
             DrawPktArrow(canvas, 2);
-            DrawAckArrow(canvas, 2);
+            DrawAckArrow(canvas, 3);
 
+            //TODO: draw arrows 
+            for(int i = 0; i <= currentStep; i++)
+            {
+                
+            }
             //execute all drawing actions
             canvas.Flush();
 
         }
-
+        /**********************************************************************
+        *********************************************************************/
+        static String getActionString(int action, int number)
+        {
+            String s = "";
+            switch (action)
+            {
+                case 0: s = " ";
+                    break;
+                case 1: s = "Ack " + number.ToString();
+                    break;
+                case 2: s = "Pkt " + number.ToString();
+                    break;
+                case 3: s = number.ToString() + "ms";
+                    break;
+            }
+            return s;
+        }
         /**********************************************************************
         *********************************************************************/
         static void CalculateNeededNumbers(SKCanvas canvas)
@@ -78,8 +114,8 @@ namespace WertheApp.RN
             xe = rborder / 100; //using the variable surfacewidth instead would mess everything up
             ye = bborder / 100;
 
-            xStart = 20; //
-            xEnd = 80;
+            xStart = 30; //
+            xEnd = 70;
             yStart = 5;
             yEnd = 98;
             float yLength = yEnd - yStart;
@@ -114,20 +150,31 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        // draws an arrow from sender to receiver for the given round
         static void DrawPktArrow(SKCanvas canvas, int round)
         {
+            // arrow line
             SKPoint arrowBegin = new SKPoint(xStart * xe, (yStart + yWidthStep * round) * ye);
             SKPoint arrowEnd = new SKPoint(xEnd * xe, (yStart + yWidthStep * (round + 1)) * ye);
             canvas.DrawLine(arrowBegin, arrowEnd, sk_PaintThin);
 
+            // arrow head
+            //calculate stuff
+            double a = Math.Abs(arrowBegin.Y - arrowEnd.Y);
+            double b = Math.Abs(arrowBegin.X - arrowEnd.X);
+
+            //arrow head: calculate rotation degree
+            double cos = a / b;
+            double arcCos = Math.Acos(cos);
+            double degree = arcCos * (180.0 / Math.PI);
+            float rotationDegree = (float)degree - 45f;
+
             SKPath head = new SKPath();
             head.MoveTo(arrowEnd);
-            head.RLineTo(0, -50);
-            //head.MoveTo(arrowEnd);
-            head.RLineTo(-50, +50);
+            head.RLineTo(-5, -20);
+            head.RLineTo(-15, 15);
             head.Close();
-
-            var rotate = SKMatrix.MakeRotationDegrees(33f, arrowEnd.X, arrowEnd.Y);
+            var rotate = SKMatrix.MakeRotationDegrees(-rotationDegree, arrowEnd.X, arrowEnd.Y);
             head.Transform(rotate);
             canvas.DrawPath(head, sk_PaintThin);
 
@@ -135,13 +182,34 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        // draws an arrow from receiver to sender for the given round
         static void DrawAckArrow(SKCanvas canvas, int round)
         {
+            // arrow line
+            SKPoint arrowBegin = new SKPoint(xEnd * xe, (yStart + yWidthStep * round) * ye);
+            SKPoint arrowEnd= new SKPoint(xStart * xe, (yStart + yWidthStep * (round + 1)) * ye);
+            canvas.DrawLine(arrowBegin, arrowEnd, sk_PaintThin);
 
-            canvas.DrawLine(new SKPoint(xStart * xe, (yStart + yWidthStep * (round + 1)) * ye),
-                new SKPoint(xEnd * xe, (yStart + yWidthStep * round) * ye),
-                sk_PaintThin);
+            // arrow head
+            //calculate stuff
+            double a = Math.Abs(arrowBegin.Y - arrowEnd.Y);
+            double b = Math.Abs(arrowBegin.X - arrowEnd.X);
 
+            //arrow head: calculate rotation degree
+            double cos = a/b;
+            double arcCos = Math.Acos(cos);
+            double degree = arcCos * (180.0 / Math.PI);
+            float rotationDegree = (float) degree-45f;
+
+            //arrow head: draw 
+            SKPath head = new SKPath();
+            head.MoveTo(arrowEnd);
+            head.RLineTo(5, -20);
+            head.RLineTo(15, 15);
+            head.Close();
+            var rotate = SKMatrix.MakeRotationDegrees(rotationDegree, arrowEnd.X, arrowEnd.Y);
+            head.Transform(rotate);
+            canvas.DrawPath(head, sk_PaintThin);
         }
 
         /**********************************************************************
@@ -205,6 +273,13 @@ namespace WertheApp.RN
             };
 
 
+        }
+        /**********************************************************************
+        *********************************************************************/
+        public static void nextStep()
+        {
+            currentStep++;
+       
         }
     }
 }

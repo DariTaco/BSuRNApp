@@ -140,7 +140,7 @@ namespace WertheApp.RN
         *********************************************************************/
         async void B_Next_Clicked(object sender, EventArgs e)
         {
-           
+            TCPDraw.nextStep();
            UpdateDrawing();
         }
 
