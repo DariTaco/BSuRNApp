@@ -33,7 +33,7 @@ namespace WertheApp.RN
             var l_Choose = new Label { Text = "Choose an example:" };
             p_Example = new Picker();
             p_Example.Items.Add("Reno Fast Recovery");
-            p_Example.Items.Add("xyz");
+            p_Example.Items.Add("Ack Generation");
             p_Example.SelectedIndex = 0;
             var l_Space2 = new Label { Text = "  " };
             var b_Start = new Button { Text = "Start" };

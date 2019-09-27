@@ -20,7 +20,7 @@ namespace WertheApp.RN
         {
             Title = "TCP: " + example;
 
-            draw = new TCPDraw();
+            draw = new TCPDraw(example);
 
             //if orientation Horizontal
             if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)

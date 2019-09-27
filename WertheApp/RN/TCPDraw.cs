@@ -14,16 +14,26 @@ namespace WertheApp.RN
         private static float xe, ye;
         private static int xStart, xEnd, yStart, yEnd;
 
-        private static SKPaint sk_blackText, sk_PaintThin, sk_PaintVeryThin, sk_FastRecovery;
+        private static SKPaint sk_blackText, sk_PaintThin, sk_PaintVeryThin, sk_FastRecovery,
+            sk_PaintArrowPkt, sk_PaintArrowAck, sk_TextArrowPkt, sk_TextArrowAck,
+            sk_TextArrowRed, sk_PaintArrowRed;
         private static float textSize, strokeWidth;
         private static float yWidthStep;
         private static int numberOfSteps;
         private static int currentStep;
 
-        private static int [,] renoFastRecovery;
+        private static String [] senderText, receiverText;
+        private static int[] senderAction, receiverAction;
+        private static String[] state;
+        private static int[] action;
+        private static int [] dupAckCount;
+        private static int [] cwnd;
+        private static int [] tresh;
 
+        //TODO: andere Farben Pfeile
+        //TODO: Pfeil der nicht ankommt zb rot einzeichnen
         //CONSTRUCTOR
-        public TCPDraw()
+        public TCPDraw(String s)
         {
             // crate the canvas
             skiaview = new SKCanvasView();
@@ -32,18 +42,17 @@ namespace WertheApp.RN
             textSize = 5;
             strokeWidth = 0.2f;
 
-            numberOfSteps = 30;
+            numberOfSteps = 28;
             currentStep = -1;
 
-            /*rows:
-             0:action 0->none 1->ack 2->pack 3->pause sender 4->pause receiver
-             1:dupAck count
-             2:cwnd
-             3:state 0->none 1->slow start 2->congestion avoidance 3->fast recovery
-             4:treshold
-             5:number of ack/pack/etc
-             */
-            renoFastRecovery = new int[6, numberOfSteps];
+            switch (s)
+            {
+                case "Reno Fast Recovery": fillRenoFastRecovery();
+                    break;
+                case "Ack Generation":
+                    break;
+            }
+            
         }
 
         //METHODS
@@ -70,37 +79,92 @@ namespace WertheApp.RN
 
             DrawBackground(canvas);
 
-            //draw pkt
-            DrawPktArrow(canvas, 2);
-            DrawAckArrow(canvas, 3);
+            //draw pkt and ack
+            /*DrawPktArrow(canvas, 1);
+            DrawAckArrow(canvas, 2);
+            DrawPktArrow(canvas, 7);
+            DrawAckArrow(canvas, 8);
+            DrawPktArrow(canvas, 13);
+            DrawAckArrow(canvas, 14);
+            DrawPktArrow(canvas, 19);
+            DrawAckArrow(canvas, 20);
+            DrawPktArrow(canvas, 25);
+            DrawAckArrow(canvas, 26);*/
+
 
             //TODO: draw arrows 
-            for(int i = 0; i <= currentStep; i++)
+            for (int i = 0; i < senderText.Length; i++)
             {
-                
+                if(senderText[i] != "")
+                {
+                    if(senderAction[i] == 2)
+                    {
+                        DrawPktArrow(canvas, i + 1, sk_PaintArrowRed);
+                        DrawTextNextToPktArrow(canvas, i + 1, senderText[i], sk_TextArrowRed);
+                    }
+                    else
+                    {
+                        DrawPktArrow(canvas, i + 1, sk_PaintArrowPkt);
+                        DrawTextNextToPktArrow(canvas, i + 1, senderText[i], sk_TextArrowPkt);
+                    }
+                }
+
+                if(receiverText[i] != "")
+                {
+                    DrawAckArrow(canvas, i+1, sk_PaintArrowAck);
+                    DrawTextNextToAckArrow(canvas, i + 1, receiverText[i], sk_TextArrowAck);
+                }
             }
+
+     
+
+
+
+
+
             //execute all drawing actions
             canvas.Flush();
 
         }
         /**********************************************************************
         *********************************************************************/
-        static String getActionString(int action, int number)
+        static void fillRenoFastRecovery()
         {
-            String s = "";
-            switch (action)
-            {
-                case 0: s = " ";
-                    break;
-                case 1: s = "Ack " + number.ToString();
-                    break;
-                case 2: s = "Pkt " + number.ToString();
-                    break;
-                case 3: s = number.ToString() + "ms";
-                    break;
-            }
-            return s;
+            senderAction = new int[]
+            {   1, 0, 0, 0, 0,
+                1, 1, 0, 0, 0,
+                1, 1, 2, 1, 0,
+                1, 1, 1, 1, 0,
+                0, 3, 1, 1, 0
+            };
+
+            senderText = new string[]
+            {   "Pkt 0", "", "", "", "",
+                "Pkt 1", "Pkt 2","", "", "",
+                "Pkt 3", "Pkt 4", "Pkt 5", "Pkt 6", "",
+                "Pkt 7", "Pkt 8", "Pkt 9", "Pkt 10", "",
+                "", "Re-Pkt 5", "Pkt 11", "Pkt 12", ""};
+
+            receiverAction = new int[]
+            {   0, 1, 0, 0, 0,
+                0, 1, 1, 0, 0,
+                0, 1, 1, 0, 1,
+                1, 1, 1, 1, 0,
+                1, 0, 0, 0, 0
+
+            };
+
+            receiverText = new string[]
+            {   "", "Ack 1", "", "", "",
+                "", "Ack 2", "Ack 3", "", "",
+                "", "Ack 4", "Ack 5", "", "Ack 5", "",
+                "Ack 5","Ack 5","Ack 5", "Ack 5","","",
+                "Ack 11","","","","","","",""
+
+            };
         }
+
+
         /**********************************************************************
         *********************************************************************/
         static void CalculateNeededNumbers(SKCanvas canvas)
@@ -150,13 +214,27 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        static void DrawTextNextToPktArrow(SKCanvas canvas, int round, String txt, SKPaint paint)
+        {
+            canvas.DrawText(txt, (xStart - xStart/3) * xe, (yStart + yWidthStep * round) * ye, paint);
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        static void DrawTextNextToAckArrow(SKCanvas canvas, int round, String txt, SKPaint paint)
+        {
+            canvas.DrawText(txt, (xEnd + xStart/3) * xe, (yStart + yWidthStep * round) * ye, paint);
+        }
+
+        /**********************************************************************
+        *********************************************************************/
         // draws an arrow from sender to receiver for the given round
-        static void DrawPktArrow(SKCanvas canvas, int round)
+        static void DrawPktArrow(SKCanvas canvas, int round, SKPaint paint)
         {
             // arrow line
             SKPoint arrowBegin = new SKPoint(xStart * xe, (yStart + yWidthStep * round) * ye);
             SKPoint arrowEnd = new SKPoint(xEnd * xe, (yStart + yWidthStep * (round + 1)) * ye);
-            canvas.DrawLine(arrowBegin, arrowEnd, sk_PaintThin);
+            canvas.DrawLine(arrowBegin, arrowEnd, paint);
 
             // arrow head
             //calculate stuff
@@ -169,6 +247,7 @@ namespace WertheApp.RN
             double degree = arcCos * (180.0 / Math.PI);
             float rotationDegree = (float)degree - 45f;
 
+            //arrow head: draw 
             SKPath head = new SKPath();
             head.MoveTo(arrowEnd);
             head.RLineTo(-5, -20);
@@ -176,19 +255,19 @@ namespace WertheApp.RN
             head.Close();
             var rotate = SKMatrix.MakeRotationDegrees(-rotationDegree, arrowEnd.X, arrowEnd.Y);
             head.Transform(rotate);
-            canvas.DrawPath(head, sk_PaintThin);
+            canvas.DrawPath(head, paint);
 
         }
 
         /**********************************************************************
         *********************************************************************/
         // draws an arrow from receiver to sender for the given round
-        static void DrawAckArrow(SKCanvas canvas, int round)
+        static void DrawAckArrow(SKCanvas canvas, int round, SKPaint paint)
         {
             // arrow line
             SKPoint arrowBegin = new SKPoint(xEnd * xe, (yStart + yWidthStep * round) * ye);
-            SKPoint arrowEnd= new SKPoint(xStart * xe, (yStart + yWidthStep * (round + 1)) * ye);
-            canvas.DrawLine(arrowBegin, arrowEnd, sk_PaintThin);
+            SKPoint arrowEnd= new SKPoint(xStart * xe, (yStart + yWidthStep * (round + 4)) * ye);
+            canvas.DrawLine(arrowBegin, arrowEnd, paint);
 
             // arrow head
             //calculate stuff
@@ -209,7 +288,7 @@ namespace WertheApp.RN
             head.Close();
             var rotate = SKMatrix.MakeRotationDegrees(rotationDegree, arrowEnd.X, arrowEnd.Y);
             head.Transform(rotate);
-            canvas.DrawPath(head, sk_PaintThin);
+            canvas.DrawPath(head, paint);
         }
 
         /**********************************************************************
@@ -244,6 +323,36 @@ namespace WertheApp.RN
                 IsVerticalText = false
             };
 
+            sk_TextArrowPkt = new SKPaint
+            {
+                Color = new SKColor(0, 100, 0), //green
+                TextSize = ye * textSize / 2f,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = false
+            };
+
+            sk_TextArrowAck = new SKPaint
+            {
+                Color = new SKColor(0, 0, 100), //blue
+                TextSize = ye * textSize / 2f,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = false
+            };
+
+            sk_TextArrowRed = new SKPaint
+            {
+                Color = new SKColor(100, 0, 0), //red
+                TextSize = ye * textSize / 2f,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = false
+            };
+
             sk_PaintVeryThin = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
@@ -252,6 +361,36 @@ namespace WertheApp.RN
                 IsAntialias = true,
                 StrokeCap = SKStrokeCap.Round,
                 Color = new SKColor(0, 0, 0) //black
+            };
+
+            sk_PaintArrowAck = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(0, 0, 100) //blue
+            };
+
+            sk_PaintArrowPkt = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(0, 100, 0) //green
+            };
+
+            sk_PaintArrowRed = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(100, 0, 0) //red
             };
 
             sk_PaintThin = new SKPaint
