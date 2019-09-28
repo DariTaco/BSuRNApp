@@ -21,17 +21,10 @@ namespace WertheApp.RN
         private static float yWidthStep;
         private static int numberOfSteps;
         private static int currentStep;
+        private static int maxStep;
 
-        private static String [] senderText, receiverText;
-        private static int[] senderAction, receiverAction;
-        private static String[] state;
-        private static int[] action;
-        private static int [] dupAckCount;
-        private static int [] cwnd;
-        private static int [] tresh;
+        private static String[,] action;
 
-        //TODO: andere Farben Pfeile
-        //TODO: Pfeil der nicht ankommt zb rot einzeichnen
         //CONSTRUCTOR
         public TCPDraw(String s)
         {
@@ -43,13 +36,15 @@ namespace WertheApp.RN
             strokeWidth = 0.2f;
 
             numberOfSteps = 28;
-            currentStep = -1;
+            currentStep = 0;
 
             switch (s)
             {
                 case "Reno Fast Recovery": fillRenoFastRecovery();
+                    maxStep = 24;
                     break;
                 case "Ack Generation":
+                    maxStep = 30;
                     break;
             }
             
@@ -79,40 +74,32 @@ namespace WertheApp.RN
 
             DrawBackground(canvas);
 
-            //draw pkt and ack
-            /*DrawPktArrow(canvas, 1);
-            DrawAckArrow(canvas, 2);
-            DrawPktArrow(canvas, 7);
-            DrawAckArrow(canvas, 8);
-            DrawPktArrow(canvas, 13);
-            DrawAckArrow(canvas, 14);
-            DrawPktArrow(canvas, 19);
-            DrawAckArrow(canvas, 20);
-            DrawPktArrow(canvas, 25);
-            DrawAckArrow(canvas, 26);*/
-
-
-            //TODO: draw arrows 
-            for (int i = 0; i < senderText.Length; i++)
+            //TODO: background ändern je nach state
+            //draw fast recovery reno
+            for (int i = 0; i <= currentStep; i++)
             {
-                if(senderText[i] != "")
-                {
-                    if(senderAction[i] == 2)
-                    {
-                        DrawPktArrow(canvas, i + 1, sk_PaintArrowRed);
-                        DrawTextNextToPktArrow(canvas, i + 1, senderText[i], sk_TextArrowRed);
-                    }
-                    else
-                    {
-                        DrawPktArrow(canvas, i + 1, sk_PaintArrowPkt);
-                        DrawTextNextToPktArrow(canvas, i + 1, senderText[i], sk_TextArrowPkt);
-                    }
-                }
+                int round = Int32.Parse(action[i, 0]);
+                String txt = action[i, 1] + action[i, 2];
+                String kind = action[i, 1];
 
-                if(receiverText[i] != "")
+                switch(kind)
                 {
-                    DrawAckArrow(canvas, i+1, sk_PaintArrowAck);
-                    DrawTextNextToAckArrow(canvas, i + 1, receiverText[i], sk_TextArrowAck);
+                    case "Ack":
+                    DrawAckArrow(canvas, round, sk_PaintArrowAck);
+                    DrawTextNextToAckArrow(canvas, round, txt, sk_TextArrowAck);
+                        break;
+                    case "Pkt":
+                        DrawPktArrow(canvas, round , sk_PaintArrowPkt);
+                        DrawTextNextToPktArrow(canvas, round, txt, sk_TextArrowPkt);
+                        break;
+                    case "!Pkt":
+                        DrawPktArrow(canvas, round, sk_PaintArrowRed);
+                        DrawTextNextToPktArrow(canvas, round, txt, sk_TextArrowRed);
+                        break;
+                    case "Re-Pkt":
+                        DrawPktArrow(canvas, round, sk_PaintArrowPkt);
+                        DrawTextNextToPktArrow(canvas, round, txt, sk_TextArrowPkt);
+                        break;
                 }
             }
 
@@ -130,38 +117,25 @@ namespace WertheApp.RN
         *********************************************************************/
         static void fillRenoFastRecovery()
         {
-            senderAction = new int[]
-            {   1, 0, 0, 0, 0,
-                1, 1, 0, 0, 0,
-                1, 1, 2, 1, 0,
-                1, 1, 1, 1, 0,
-                0, 3, 1, 1, 0
+            // round, kind, nr., dup Ack count, cwnd, tresh, state
+            action = new String[,]
+            {
+            {"1","Pkt", "0", "0", "1", "-", "-"},
+            {"2", "Ack", "1", "0", "2", "-", "-"},
+
+            {"6", "Pkt", "1", "0", "2", "-", "-"}, {"7", "Pkt", "2", "0", "2", "-", "-"},
+            {"7", "Ack", "2", "0", "3", "-", "-"}, {"8", "Ack",  "3", "0", "4", "-", "-"},
+
+            {"11", "Pkt", "3", "0", "4", "-", "-"}, {"12", "Pkt", "4", "0", "4", "-", "-"}, {"13", "!Pkt", "5", "0", "4", "-", "-"}, {"14", "Pkt", "6", "0", "4", "-", "-"},
+            {"12", "Ack", "4", "0", "5", "-", "-"}, {"13", "Ack", "5", "0", "6", "-", "-"}, {"15", "Ack",  "5", "1", "6", "-", "-"},
+
+            {"16", "Pkt", "7", "1", "6", "-", "-"}, {"17", "Pkt", "8", "1", "6", "-", "-"}, {"18", "Pkt", "9", "1", "6", "-", "-"}, {"19", "Pkt", "10", "1", "6", "-", "-"},
+            {"17", "Ack", "5", "2", "6", "-", "-"}, {"18", "Ack", "5", "3", "6", "-", "-"}, {"19", "Ack", "5", "4", "7", "-", "-"}, {"20", "Ack", "5", "5", "8", "-", "-"},
+
+            {"22", "Re-Pkt", "5", "5", "8", "-", "-"}, {"23", "Pkt", "11", "0", "8", "-", "-"}, {"24", "Pkt", "12", "0", "8", "-", "-"},
+            {"23", "Ack", "11", "0", "3", "-", "-"}
             };
 
-            senderText = new string[]
-            {   "Pkt 0", "", "", "", "",
-                "Pkt 1", "Pkt 2","", "", "",
-                "Pkt 3", "Pkt 4", "Pkt 5", "Pkt 6", "",
-                "Pkt 7", "Pkt 8", "Pkt 9", "Pkt 10", "",
-                "", "Re-Pkt 5", "Pkt 11", "Pkt 12", ""};
-
-            receiverAction = new int[]
-            {   0, 1, 0, 0, 0,
-                0, 1, 1, 0, 0,
-                0, 1, 1, 0, 1,
-                1, 1, 1, 1, 0,
-                1, 0, 0, 0, 0
-
-            };
-
-            receiverText = new string[]
-            {   "", "Ack 1", "", "", "",
-                "", "Ack 2", "Ack 3", "", "",
-                "", "Ack 4", "Ack 5", "", "Ack 5", "",
-                "Ack 5","Ack 5","Ack 5", "Ack 5","","",
-                "Ack 11","","","","","","",""
-
-            };
         }
 
 
@@ -415,10 +389,57 @@ namespace WertheApp.RN
         }
         /**********************************************************************
         *********************************************************************/
-        public static void nextStep()
+        public static bool NextStep()
         {
             currentStep++;
+
+            if (currentStep >= maxStep)
+            {
+                return false;
+            }
+            return true;
        
+        }
+
+        /**********************************************************************
+         *********************************************************************/
+        public static bool PreviousStep()
+        {
+            currentStep--;
+            if (currentStep <= 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+        /**********************************************************************
+         *********************************************************************/
+         public static int GetCurrentStep()
+        {
+            return currentStep;
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static String GetCwnd()
+        {
+            return action[currentStep, 4];
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static String GetDupAckCount()
+        {
+            return action[currentStep, 3];
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static String GetTresh()
+        {
+            return action[currentStep, 5];
         }
     }
 }

@@ -15,6 +15,10 @@ namespace WertheApp.RN
         private SKCanvasView skiaview;
         private TCPDraw draw;
 
+        private Button b_Next, b_Back;
+        private Label l_Cwnd,l_DupAck;
+
+
         //CONSTRUCTOR
         public TCP(String example)
         {
@@ -95,7 +99,7 @@ namespace WertheApp.RN
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            Label l_label2 = new Label()
+            l_Cwnd = new Label()
             {
                 Text = "-",
                 WidthRequest = StackChildSize,
@@ -107,30 +111,31 @@ namespace WertheApp.RN
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            Label l_label4 = new Label()
+            l_DupAck = new Label()
             {
                 Text = "0",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            Button b_Next = new Button
+            b_Next = new Button
             {
                 Text = "Next",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
             b_Next.Clicked += B_Next_Clicked;
-            Button b_Back = new Button
+            b_Back = new Button
             {
                 Text = "Back",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            b_Next.Clicked += B_Back_Clicked;
+            b_Back.Clicked += B_Back_Clicked;
+            b_Back.IsEnabled = false;
             stackLayout.Children.Add(l_label1);
-            stackLayout.Children.Add(l_label2);
+            stackLayout.Children.Add(l_Cwnd);
             stackLayout.Children.Add(l_label3);
-            stackLayout.Children.Add(l_label4);
+            stackLayout.Children.Add(l_DupAck);
             stackLayout.Children.Add(b_Back);
             stackLayout.Children.Add(b_Next);
             grid.Children.Add(stackLayout, 0, 1);
@@ -140,15 +145,25 @@ namespace WertheApp.RN
         *********************************************************************/
         async void B_Next_Clicked(object sender, EventArgs e)
         {
-            TCPDraw.nextStep();
-           UpdateDrawing();
+            Debug.WriteLine("next clicked");
+            bool disableOrEnable = TCPDraw.NextStep();
+            b_Next.IsEnabled = disableOrEnable;
+            Debug.WriteLine(TCPDraw.GetCurrentStep());
+            b_Back.IsEnabled = true;
+            UpdateInfo();
+            UpdateDrawing();
         }
 
         /**********************************************************************
         *********************************************************************/
         async void B_Back_Clicked(object sender, EventArgs e)
         {
-
+            Debug.WriteLine("back cklicked");
+            bool disableOrEnable = TCPDraw.PreviousStep();
+            b_Back.IsEnabled = disableOrEnable;
+            Debug.WriteLine(TCPDraw.GetCurrentStep());
+            b_Next.IsEnabled = true;
+            UpdateInfo();
             UpdateDrawing();
         }
 
@@ -157,6 +172,19 @@ namespace WertheApp.RN
         void UpdateDrawing()
         {
             TCPDraw.Paint();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        void UpdateInfo()
+        {
+            String textCwnd = TCPDraw.GetCwnd();
+            String textDupAck = TCPDraw.GetDupAckCount();
+            String textTresh = TCPDraw.GetTresh();
+
+            Debug.WriteLine(textCwnd + " " + textDupAck);
+            l_Cwnd.Text = textCwnd;
+            l_DupAck.Text = textDupAck;
         }
 
         /**********************************************************************
