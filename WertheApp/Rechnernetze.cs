@@ -33,8 +33,8 @@ namespace WertheApp
 			listView.ItemsSource = new string[]
 			{
                 //Reno Fast Retransmit/Recovery
-				"Congestion Control", "Pipeline Protocols", "TCP"
-			};
+				"Congestion Control", "Pipeline Protocols", "Reno Fast Recovery", "Ack Generation"
+            };
             //after an item was clicked, open the respective app 
 			listView.ItemTapped += async (sender, e) =>
             {
@@ -48,8 +48,11 @@ namespace WertheApp
                     case "Pipeline Protocols":
                         await Navigation.PushAsync(new PipelineProtocolsSettings());
                         break;
-                    case "TCP":
-                        await Navigation.PushAsync(new TCPSettings());
+                    case "Reno Fast Recovery":
+                        await Navigation.PushAsync(new RenoFastRecovery());
+                        break;
+                    case "Ack Generation":
+                        await Navigation.PushAsync(new AckGeneration());
                         break;
                 }
 

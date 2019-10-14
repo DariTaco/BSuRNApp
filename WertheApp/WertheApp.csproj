@@ -74,6 +74,10 @@
     <Compile Include="RN\TCPDraw.cs" />
     <Compile Include="RN\TCPSettings.cs" />
     <Compile Include="RN\TCP.cs" />
+    <Compile Include="RN\RenoFastRecovery.cs" />
+    <Compile Include="RN\RenoFastRecoveryDraw.cs" />
+    <Compile Include="RN\AckGeneration.cs" />
+    <Compile Include="RN\AckGenerationDraw.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">
