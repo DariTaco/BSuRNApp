@@ -15,15 +15,19 @@ namespace WertheApp.RN
         private SKCanvasView skiaview;
         private RenoFastRecoveryDraw draw;
 
-        private Button b_Next, b_Back;
-        private Label l_Cwnd, l_DupAck;
+        private Button b_Next, b_Back, b_Restart;
+        private Label l_Tresh;
+
+        private bool toggleRestart;
 
 
         //CONSTRUCTOR
         public RenoFastRecovery()
         {
-            Title = "Reno Fast Recovery: ";
+            Title = "Reno Fast Recovery";
             draw = new RenoFastRecoveryDraw();
+
+            toggleRestart = false;
 
             //if orientation Horizontal
             if (Application.Current.MainPage.Width < Application.Current.MainPage.Height)
@@ -77,11 +81,11 @@ namespace WertheApp.RN
             double StackChildSize;
             if (landscape)
             {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 6;
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
             }
             else
             {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 6;
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
             }
 
             //Using a Stacklayout to organize elements
@@ -92,30 +96,18 @@ namespace WertheApp.RN
                 Margin = new Thickness(10),
 
             };
-            Label l_label1 = new Label()
+            /*Label l_label1 = new Label()
             {
-                Text = "cwnd:",
+                Text = "tresh:",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            l_Cwnd = new Label()
+            l_Tresh = new Label()
             {
                 Text = "-",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
-            };
-            Label l_label3 = new Label()
-            {
-                Text = "dup ACK:",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
-            };
-            l_DupAck = new Label()
-            {
-                Text = "0",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
-            };
+            };*/
             b_Next = new Button
             {
                 Text = "Next",
@@ -123,6 +115,13 @@ namespace WertheApp.RN
                 VerticalOptions = LayoutOptions.Center
             };
             b_Next.Clicked += B_Next_Clicked;
+            b_Restart = new Button
+            {
+                Text = "Go to End",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Restart.Clicked += B_Restart_Clicked;
             b_Back = new Button
             {
                 Text = "Back",
@@ -131,11 +130,10 @@ namespace WertheApp.RN
             };
             b_Back.Clicked += B_Back_Clicked;
             b_Back.IsEnabled = false;
-            stackLayout.Children.Add(l_label1);
-            stackLayout.Children.Add(l_Cwnd);
-            stackLayout.Children.Add(l_label3);
-            stackLayout.Children.Add(l_DupAck);
+            //stackLayout.Children.Add(l_label1);
+            //stackLayout.Children.Add(l_Tresh);
             stackLayout.Children.Add(b_Back);
+            stackLayout.Children.Add(b_Restart);
             stackLayout.Children.Add(b_Next);
             grid.Children.Add(stackLayout, 0, 1);
         }
@@ -144,11 +142,36 @@ namespace WertheApp.RN
         *********************************************************************/
         async void B_Next_Clicked(object sender, EventArgs e)
         {
-            Debug.WriteLine("next clicked");
             bool disableOrEnable = RenoFastRecoveryDraw.NextStep();
             b_Next.IsEnabled = disableOrEnable;
-            Debug.WriteLine(RenoFastRecoveryDraw.GetCurrentStep());
+            toggleRestart = true;
+            b_Restart.Text = "Restart";
             b_Back.IsEnabled = true;
+            UpdateInfo();
+            UpdateDrawing();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Restart_Clicked(object sender, EventArgs e)
+        {
+            if (toggleRestart)
+            {
+                RenoFastRecoveryDraw.Restart();
+                b_Restart.Text = "Go to End";
+                toggleRestart = false;
+                b_Back.IsEnabled = false;
+                b_Next.IsEnabled = true;
+            }
+            else
+            {
+                RenoFastRecoveryDraw.GoToEnd();
+                b_Restart.Text = "Restart";
+                toggleRestart = true;
+                b_Back.IsEnabled = true;
+                b_Next.IsEnabled = false;
+            }
+
             UpdateInfo();
             UpdateDrawing();
         }
@@ -157,10 +180,19 @@ namespace WertheApp.RN
         *********************************************************************/
         async void B_Back_Clicked(object sender, EventArgs e)
         {
-            Debug.WriteLine("back cklicked");
+
             bool disableOrEnable = RenoFastRecoveryDraw.PreviousStep();
             b_Back.IsEnabled = disableOrEnable;
-            Debug.WriteLine(RenoFastRecoveryDraw.GetCurrentStep());
+            if (disableOrEnable)
+            {
+                toggleRestart = true;
+                b_Restart.Text = "Restart";
+            }
+            else
+            {
+                toggleRestart = false;
+                b_Restart.Text = "Go to End";
+            }
             b_Next.IsEnabled = true;
             UpdateInfo();
             UpdateDrawing();
@@ -177,13 +209,9 @@ namespace WertheApp.RN
         *********************************************************************/
         void UpdateInfo()
         {
-            String textCwnd = RenoFastRecoveryDraw.GetCwnd();
-            String textDupAck = RenoFastRecoveryDraw.GetDupAckCount();
             String textTresh = RenoFastRecoveryDraw.GetTresh();
 
-            Debug.WriteLine(textCwnd + " " + textDupAck);
-            l_Cwnd.Text = textCwnd;
-            l_DupAck.Text = textDupAck;
+            //TODO
         }
 
         /**********************************************************************
