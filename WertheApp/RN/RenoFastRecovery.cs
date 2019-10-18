@@ -76,7 +76,7 @@ namespace WertheApp.RN
         void CreateBottomHalf(Grid grid)
         {
             //set the size of the elements in such a way, that they all fit on the screen
-            //Screen Width is divided by the amount of elements (2)
+            //Screen Width is divided by the amount of elements (3)
             //Screen Width -20 because Margin is 10
             double StackChildSize;
             if (landscape)
@@ -147,7 +147,6 @@ namespace WertheApp.RN
             toggleRestart = true;
             b_Restart.Text = "Restart";
             b_Back.IsEnabled = true;
-            UpdateInfo();
             UpdateDrawing();
         }
 
@@ -172,7 +171,6 @@ namespace WertheApp.RN
                 b_Next.IsEnabled = false;
             }
 
-            UpdateInfo();
             UpdateDrawing();
         }
 
@@ -194,7 +192,6 @@ namespace WertheApp.RN
                 b_Restart.Text = "Go to End";
             }
             b_Next.IsEnabled = true;
-            UpdateInfo();
             UpdateDrawing();
         }
 
@@ -203,15 +200,6 @@ namespace WertheApp.RN
         void UpdateDrawing()
         {
             RenoFastRecoveryDraw.Paint();
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        void UpdateInfo()
-        {
-            String textTresh = RenoFastRecoveryDraw.GetTresh();
-
-            //TODO
         }
 
         /**********************************************************************

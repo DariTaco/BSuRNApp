@@ -41,7 +41,7 @@ namespace WertheApp.RN
 
             numberOfSteps = 37;
             currentStep = 0;
-            fillRenoFastRecovery();
+            FillRenoFastRecovery();
             maxStep = 71;
 
         }
@@ -117,7 +117,7 @@ namespace WertheApp.RN
         }
         /**********************************************************************
         *********************************************************************/
-        static void fillRenoFastRecovery()
+        static void FillRenoFastRecovery()
         {
             //TODO: correct cwnd and dupack
             //state: 0 = slow start, 1 = congestion avoidance, 2 = fast recovery
