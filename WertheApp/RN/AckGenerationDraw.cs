@@ -22,7 +22,8 @@ namespace WertheApp.RN
             sk_FastRecovery, sk_CongestionAvoidance, sk_SlowStart,
             sk_PaintArrowPkt, sk_PaintArrowAck, sk_TextArrowPkt, sk_TextArrowAck,
             sk_TextArrowRed, sk_PaintArrowRed, sk_TextSender, sk_TextReceiver,
-            sk_blackTextSmall, sk_TextCongestionAvoidance, sk_TextFastRecovery,
+            sk_blackTextSmall, sk_blackTextSmallVertical, sk_TextCongestionAvoidance,
+            sk_TextFastRecovery,
             sk_TextSlowStart;
         private static String[,] action;
         private static int arrowLength;
@@ -37,7 +38,7 @@ namespace WertheApp.RN
             textSize = 5;
             strokeWidth = 0.2f;
 
-            numberOfSteps = 11;
+            numberOfSteps = 12;
             currentStep = 0;
             maxStep = 19;
 
@@ -68,6 +69,7 @@ namespace WertheApp.RN
             /*********************HERE GOES THE DRAWING************************/
             int state = Int32.Parse(action[currentStep, 6]);
             DrawBackground(canvas, state);
+            DrawTimeout(canvas, 6, 11);
 
             //draw fast recovery reno
             for (int i = 0; i <= currentStep; i++)
@@ -137,26 +139,14 @@ namespace WertheApp.RN
             {"7",   "ack", "100", "0", "5", "64k", "0", "start"},
             {"8",   "ack", "100", "0", "5", "64k", "0", "start"},
             {"9",   "ack", "100", "0", "5", "64k", "0", "start"},
-            {"6",   "ack", "100", "0", "5", "64k", "0", "arrive"},
-            {"7",   "ack", "100", "1", "5", "64k", "0", "arrive"},
-            {"8",   "ack", "100", "2", "5", "64k", "0", "arrive"},
-            {"9",   "ack", "100", "3", "6", "???", "2", "arrive"},
+            {"6",   "ack", "100", "0", "6", "64k", "0", "arrive"},
+            {"7",   "ack", "100", "1", "6", "64k", "0", "arrive"},
+            {"8",   "ack", "100", "2", "6", "64k", "0", "arrive"},
+            {"9",   "ack", "100", "3", "6", "3", "2", "arrive"},
 
-            {"10",   "pkt", "100", "4", "5", "???", "2", "start"},
-            {"10",   "pkt", "100", "4", "5", "???", "2", "arrive"}
+            {"10",   "pkt", "100", "4", "5", "3", "2", "start"},
+            {"10",   "pkt", "100", "4", "5", "3", "2", "arrive"}
             };
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        static void DrawTimeout(SKCanvas canvas, int roundBegin, int roundEnd)
-        {
-            //TODO timeout vertikal
-            //TODO Timeout linie neben tresh
-            //TODO timeout start runde und end runde punkt
-            canvas.DrawText("Timeout", xStart * xe, yStart / 1.5f * ye, sk_TextSender);
-            canvas.DrawLine(new SKPoint(xStart * xe, yEnd * ye), new SKPoint(xStart * xe, yStart * ye), sk_PaintThin);
-
         }
 
         /**********************************************************************
@@ -210,6 +200,20 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        static void DrawTimeout(SKCanvas canvas, int roundBegin, int roundEnd)
+        {
+            int roundText = roundBegin + (roundEnd - roundBegin) / 2;
+            canvas.DrawText("timeout", (xEnd + (xStart / 4) * 3.5f) * xe, (yStart + yWidthStep * roundText) * ye, sk_blackTextSmallVertical);
+            SKPoint timeoutBegin = new SKPoint((xEnd + (xStart / 4) * 3) * xe, (yStart + yWidthStep * roundBegin) * ye);
+            SKPoint timeoutEnd = new SKPoint((xEnd + (xStart / 4) * 3) * xe, (yStart + yWidthStep * roundEnd) * ye);
+            canvas.DrawLine(timeoutBegin, timeoutEnd, sk_PaintThin);
+            canvas.DrawLine(timeoutBegin, new SKPoint((xEnd + (xStart / 4) * 2.5f) * xe, (yStart + yWidthStep * roundBegin) * ye), sk_PaintVeryThin);
+            canvas.DrawLine(timeoutEnd, new SKPoint((xEnd + (xStart / 4) * 2.5f) * xe, (yStart + yWidthStep * roundEnd) * ye), sk_PaintVeryThin);
+
+        }
+
+        /**********************************************************************
+        *********************************************************************/
         static void DrawTextDupAck(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
             canvas.DrawText(txt, (xStart - xStart / 3) * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
@@ -244,7 +248,7 @@ namespace WertheApp.RN
         }
 
         /**********************************************************************
-*********************************************************************/
+        *********************************************************************/
         // draws an arrow from sender to receiver for the given round
         static void DrawPktArrow(SKCanvas canvas, int round, SKPaint paint, String part)
         {
@@ -415,6 +419,16 @@ namespace WertheApp.RN
                 IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
+            };
+
+            sk_blackTextSmallVertical = new SKPaint
+            {
+                Color = SKColors.Black,
+                TextSize = ye * textSize / 2f,
+                IsAntialias = true,
+                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = true
             };
 
             sk_TextArrowPkt = new SKPaint

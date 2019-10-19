@@ -49,9 +49,17 @@ namespace WertheApp
                         await Navigation.PushAsync(new PipelineProtocolsSettings());
                         break;
                     case "Reno Fast Recovery":
+                        if (IsLandscape())
+                        {
+                            await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
+                        }
                         await Navigation.PushAsync(new RenoFastRecovery());
                         break;
                     case "Ack Generation":
+                        if (IsLandscape())
+                        {
+                            await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
+                        }
                         await Navigation.PushAsync(new AckGeneration());
                         break;
                 }
@@ -60,5 +68,21 @@ namespace WertheApp
 
 			stackLayout.Children.Add(listView);
 		}
+
+        /**********************************************************************
+        *********************************************************************/
+        static bool IsLandscape()
+        {
+            bool isLandscape = false;
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                isLandscape = true;
+            }
+            else
+            {
+                isLandscape = false;
+            }
+            return isLandscape;
+        }
     }
 }
