@@ -83,19 +83,19 @@ namespace WertheApp.RN
 
                 switch (kind)
                 {
-                    case "ack":
+                    case "Ack ":
                         DrawAckArrow(canvas, round, sk_PaintArrowAck, part, dupAck, cwnd, tresh);
                         DrawTextNextToAckArrow(canvas, round, txt, sk_TextArrowAck);
                         break;
-                    case "pkt":
+                    case "Pkt ":
                         DrawPktArrow(canvas, round, sk_PaintArrowPkt, part);
                         DrawTextNextToPktArrow(canvas, round, txt, sk_TextArrowPkt);
                         break;
-                    case "!pkt":
+                    case "!Pkt ":
                         DrawPktArrow(canvas, round, sk_PaintArrowRed, part);
                         DrawTextNextToPktArrow(canvas, round, txt.Substring(1), sk_TextArrowRed);
                         break;
-                    case "re-pkt":
+                    case "Re-Pkt ":
                         DrawPktArrow(canvas, round, sk_PaintArrowPkt, part);
                         DrawTextNextToPktArrow(canvas, round, txt, sk_TextArrowPkt);
                         break;
@@ -121,59 +121,61 @@ namespace WertheApp.RN
         {
             //TODO: correct cwnd and dupack
             //state: 0 = slow start, 1 = congestion avoidance, 2 = fast recovery
-            
+
+            String pkt = "Pkt ";
+            String ack = "Ack ";
 
             // 0,     1,    2,   3,             4,    5,     6      7
             // round, kind, nr., dup Ack count, cwnd, tresh, state  part
             action = new String[,]
             {
-            {"1",   "pkt", "0", "0", "1", "64k", "0", "start"},
-            {"1",   "pkt", "0", "0", "1", "64k", "0", "arrive"},
-            {"2",   "ack", "1", "0", "2", "64k", "0", "start"},
-            {"2",   "ack", "1", "0", "2", "64k", "0", "arrive"},
+            {"1",   pkt, "0", "0", "1", "64k", "0", "start"},
+            {"1",   pkt, "0", "0", "1", "64k", "0", "arrive"},
+            {"2",   ack, "1", "0", "2", "64k", "0", "start"},
+            {"2",   ack, "1", "0", "2", "64k", "0", "arrive"},
 
-            {"3", "pkt", "1", "0", "2", "64k", "0", "start"},   {"4", "pkt",  "2", "0", "2", "64k", "0", "start"},
-            {"3", "pkt", "1", "0", "2", "64k", "0", "arrive"},  {"4", "pkt",  "2", "0", "2", "64k", "0", "arrive"},
-            {"5", "ack", "2", "0", "3", "64k", "0", "start"},   {"6", "ack",  "3", "0", "4", "64k", "0", "start"},
-            {"5", "ack", "2", "0", "3", "64k", "0", "arrive"},  {"6", "ack",  "3", "0", "4", "64k", "0", "arrive"},
+            {"3", pkt, "1", "0", "2", "64k", "0", "start"},   {"4", pkt,  "2", "0", "2", "64k", "0", "start"},
+            {"3", pkt, "1", "0", "2", "64k", "0", "arrive"},  {"4", pkt,  "2", "0", "2", "64k", "0", "arrive"},
+            {"5", ack, "2", "0", "3", "64k", "0", "start"},   {"6", ack,  "3", "0", "4", "64k", "0", "start"},
+            {"5", ack, "2", "0", "3", "64k", "0", "arrive"},  {"6", ack,  "3", "0", "4", "64k", "0", "arrive"},
 
-            {"7", "pkt", "3", "0", "4", "64k", "0", "start"},   {"8",   "pkt", "4", "0", "4", "64k", "0", "start"},
-            {"9", "pkt", "5", "0", "4", "64k", "0", "start"},   {"10",  "pkt", "6", "0", "4", "64k", "0", "start"},
-            {"7", "pkt", "3", "0", "4", "64k", "0", "arrive"},  {"8",   "pkt", "4", "0", "4", "64k", "0", "arrive"},
-            {"9", "!pkt", "5", "0", "4", "64k", "0", "arrive"}, {"10",  "pkt", "6", "0", "4", "64k", "0", "arrive"},
+            {"7", pkt, "3", "0", "4", "64k", "0", "start"},   {"8",   pkt, "4", "0", "4", "64k", "0", "start"},
+            {"9", pkt, "5", "0", "4", "64k", "0", "start"},   {"10",  pkt, "6", "0", "4", "64k", "0", "start"},
+            {"7", pkt, "3", "0", "4", "64k", "0", "arrive"},  {"8",   pkt, "4", "0", "4", "64k", "0", "arrive"},
+            {"9", "!Pkt ", "5", "0", "4", "64k", "0", "arrive"}, {"10",  pkt, "6", "0", "4", "64k", "0", "arrive"},
 
-            {"11", "ack", "4", "0", "5", "64k", "0", "start"},  {"12", "ack", "5", "0", "6", "64k", "0", "start"},
-            {"13", "ack",  "5", "0", "6", "64k", "0", "start"},
-            {"11", "ack", "4", "0", "5", "64k", "0", "arrive"}, {"12", "ack", "5", "0", "6", "64k", "0", "arrive"},
-            {"13", "ack",  "5", "1", "6", "64k", "0", "arrive"},
+            {"11", ack, "4", "0", "5", "64k", "0", "start"},  {"12", ack, "5", "0", "6", "64k", "0", "start"},
+            {"13", ack,  "5", "0", "6", "64k", "0", "start"},
+            {"11", ack, "4", "0", "5", "64k", "0", "arrive"}, {"12", ack, "5", "0", "6", "64k", "0", "arrive"},
+            {"13", ack,  "5", "1", "6", "64k", "0", "arrive"},
 
-            {"14", "pkt", "7", "1", "6", "64k", "0", "start"},  {"15", "pkt", "8",  "1", "6", "64k", "0", "start"},
-            {"16", "pkt", "9", "1", "6", "64k", "0", "start"},  {"17", "pkt", "10", "1", "6", "64k", "0", "start"},
-            {"18", "pkt", "11", "1", "6", "64k", "0", "start"}, {"19", "pkt", "12", "1", "6", "64k", "0", "start"},
-            {"14", "pkt", "7", "1", "6", "64k", "0", "arrive"}, {"15", "pkt", "8",  "1", "6", "64k", "0", "arrive"},
-            {"16", "pkt", "9", "1", "6", "64k", "0", "arrive"}, {"17", "pkt", "10", "1", "6", "64k", "0", "arrive"},
-            {"18", "pkt", "11", "1", "6", "64k", "0", "arrive"},{"19", "pkt", "12", "1", "6", "64k", "0", "arrive"},
+            {"14", pkt, "7", "1", "6", "64k", "0", "start"},  {"15", pkt, "8",  "1", "6", "64k", "0", "start"},
+            {"16", pkt, "9", "1", "6", "64k", "0", "start"},  {"17", pkt, "10", "1", "6", "64k", "0", "start"},
+            {"18", pkt, "11", "1", "6", "64k", "0", "start"}, {"19", pkt, "12", "1", "6", "64k", "0", "start"},
+            {"14", pkt, "7", "1", "6", "64k", "0", "arrive"}, {"15", pkt, "8",  "1", "6", "64k", "0", "arrive"},
+            {"16", pkt, "9", "1", "6", "64k", "0", "arrive"}, {"17", pkt, "10", "1", "6", "64k", "0", "arrive"},
+            {"18", pkt, "11", "1", "6", "64k", "0", "arrive"},{"19", pkt, "12", "1", "6", "64k", "0", "arrive"},
 
-            {"20", "ack", "5", "1", "6", "64k", "0", "start"},  {"21", "ack", "5", "1", "6", "64k", "0", "start"},
-            {"22", "ack", "5", "1", "6", "64k", "0", "start"},  {"23", "ack", "5", "1", "6", "64k", "0", "start"},
-            {"24", "ack", "5", "1", "6", "64k", "0", "start"},  {"25", "ack", "5", "1", "6", "64k", "0", "start"},
-            {"20", "ack", "5", "2", "6", "64k", "0", "arrive"}, {"21", "ack", "5", "3", "6", "3", "2", "arrive"},
-            {"22", "ack", "5", "4", "7", "3", "2", "arrive"}, {"23", "ack", "5", "5", "8", "3", "2", "arrive"},
-            {"24", "ack", "5", "6", "9", "3", "2", "arrive"}, {"25", "ack", "5", "7", "10", "3", "2", "arrive"},
+            {"20", ack, "5", "1", "6", "64k", "0", "start"},  {"21", ack, "5", "1", "6", "64k", "0", "start"},
+            {"22", ack, "5", "1", "6", "64k", "0", "start"},  {"23", ack, "5", "1", "6", "64k", "0", "start"},
+            {"24", ack, "5", "1", "6", "64k", "0", "start"},  {"25", ack, "5", "1", "6", "64k", "0", "start"},
+            {"20", ack, "5", "2", "6", "64k", "0", "arrive"}, {"21", ack, "5", "3", "6", "3", "2", "arrive"},
+            {"22", ack, "5", "4", "7", "3", "2", "arrive"}, {"23", ack, "5", "5", "8", "3", "2", "arrive"},
+            {"24", ack, "5", "6", "9", "3", "2", "arrive"}, {"25", ack, "5", "7", "10", "3", "2", "arrive"},
 
-            {"26", "re-pkt", "5", "7", "8", "3", "2", "start"},   {"27", "pkt", "13", "7", "8", "3", "2", "start"},
-            {"28", "pkt", "14", "7", "8", "3", "2", "start"},       {"29", "pkt", "15", "7", "8", "3", "2", "start"},
-            {"30", "pkt", "16", "7", "8", "3", "2", "start"},       {"31", "pkt", "17", "7", "8", "3", "2", "start"},
-            {"32", "pkt", "18", "7", "8", "3", "2", "start"},       {"33", "pkt", "19", "7", "8", "3", "2", "start"},
-            {"34", "pkt", "20", "7", "8", "3", "2", "start"},       {"35", "pkt", "21", "7", "8", "3", "2", "start"},
-            {"26", "re-pkt", "5", "0", "8", "3", "2", "arrive"},  {"27", "pkt", "13", "0", "8", "3", "2", "arrive"},
-            {"28", "pkt", "14", "0", "8", "3", "2", "arrive"},      {"29", "pkt", "15", "0", "8", "3", "2", "arrive"},
-            {"30", "pkt", "16", "0", "8", "3", "2", "arrive"},      {"31", "pkt", "17", "0", "8", "3", "2", "arrive"},
-            {"32", "pkt", "18", "0", "8", "3", "2", "arrive"},      {"33", "pkt", "19", "0", "8", "3", "2", "arrive"},
-            {"34", "pkt", "20", "0", "8", "3", "2", "arrive"},      {"35", "pkt", "21", "0", "8", "3", "2", "arrive"},
+            {"26", "Re-Pkt ", "5", "7", "8", "3", "2", "start"},   {"27", pkt, "13", "7", "8", "3", "2", "start"},
+            {"28", pkt, "14", "7", "8", "3", "2", "start"},       {"29", pkt, "15", "7", "8", "3", "2", "start"},
+            {"30", pkt, "16", "7", "8", "3", "2", "start"},       {"31", pkt, "17", "7", "8", "3", "2", "start"},
+            {"32", pkt, "18", "7", "8", "3", "2", "start"},       {"33", pkt, "19", "7", "8", "3", "2", "start"},
+            {"34", pkt, "20", "7", "8", "3", "2", "start"},       {"35", pkt, "21", "7", "8", "3", "2", "start"},
+            {"26", "Re-Pkt ", "5", "0", "8", "3", "2", "arrive"},  {"27", pkt, "13", "0", "8", "3", "2", "arrive"},
+            {"28", pkt, "14", "0", "8", "3", "2", "arrive"},      {"29", pkt, "15", "0", "8", "3", "2", "arrive"},
+            {"30", pkt, "16", "0", "8", "3", "2", "arrive"},      {"31", pkt, "17", "0", "8", "3", "2", "arrive"},
+            {"32", pkt, "18", "0", "8", "3", "2", "arrive"},      {"33", pkt, "19", "0", "8", "3", "2", "arrive"},
+            {"34", pkt, "20", "0", "8", "3", "2", "arrive"},      {"35", pkt, "21", "0", "8", "3", "2", "arrive"},
 
-            {"36", "ack", "13", "0", "3", "3", "2", "start"},
-            {"36", "ack", "13", "0", "3", "3", "1", "arrive"}
+            {"36", ack, "13", "0", "3", "3", "2", "start"},
+            {"36", ack, "13", "0", "3", "3", "1", "arrive"}
             };
 
         }
@@ -192,8 +194,8 @@ namespace WertheApp.RN
             xe = rborder / 100; //using the variable surfacewidth instead would mess everything up
             ye = bborder / 100;
 
-            xStart = 30; //
-            xEnd = 70;
+            xStart = 50; //
+            xEnd = 90;
             arrowLength = (xEnd - xStart) / 4;
             yStart = 5;
             yEnd = 98;
@@ -228,11 +230,11 @@ namespace WertheApp.RN
             }
 
             //draw "cwnd"
-            canvas.DrawText("cwnd", (xStart - (xStart/ 4)*3) * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("cwnd", 10 * xe, yStart / 1f * ye, sk_blackText);
             //draw "Dup Ack"
-            canvas.DrawText("dack", (xStart - xStart / 3) * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("dAck", 25 * xe, yStart / 1f * ye, sk_blackText);
             //draw tresh
-            canvas.DrawText("tresh", (xEnd + xStart / 3) * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("sstresh", 40 * xe, yStart / 1f * ye, sk_blackText);
             //draw "sender" and line for sender (left)
             canvas.DrawText("S", xStart * xe, yStart / 1.5f * ye, sk_TextSender);
             canvas.DrawLine(new SKPoint(xStart * xe, yEnd * ye), new SKPoint(xStart * xe, yStart * ye), sk_PaintThin);
@@ -255,21 +257,21 @@ namespace WertheApp.RN
          *********************************************************************/
         static void DrawTextDupAck(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, (xStart - xStart / 3) * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 25 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************
          *********************************************************************/
         static void DrawTextCwnd(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, (xStart - (xStart / 4) * 3) * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 10 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************
         *********************************************************************/
         static void DrawTextTresh(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, (xEnd + xStart / 3) * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 40 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************

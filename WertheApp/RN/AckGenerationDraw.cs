@@ -38,9 +38,9 @@ namespace WertheApp.RN
             textSize = 5;
             strokeWidth = 0.2f;
 
-            numberOfSteps = 12;
+            numberOfSteps = 13;
             currentStep = 0;
-            maxStep = 19;
+            maxStep = 20;
 
             FillAckGeneration();
 
@@ -67,9 +67,8 @@ namespace WertheApp.RN
             MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
 
             /*********************HERE GOES THE DRAWING************************/
-            int state = Int32.Parse(action[currentStep, 6]);
+            int state = Int32.Parse(action[currentStep, 5]);
             DrawBackground(canvas, state);
-            DrawTimeout(canvas, 6, 11);
 
             //draw fast recovery reno
             for (int i = 0; i <= currentStep; i++)
@@ -78,36 +77,41 @@ namespace WertheApp.RN
                 String txt = action[i, 1] + action[i, 2];
                 String kind = action[i, 1];
                 String dupAck = action[i, 3];
-                String cwnd = action[i, 4];
-                String tresh = action[i, 5];
-                String part = action[i, 7];
+                String data = action[i, 4];
+                String part = action[i, 6];
 
                 switch (kind)
                 {
-                    case "ack":
-                        DrawAckArrow(canvas, round, sk_PaintArrowAck, part, dupAck, cwnd, tresh);
+                    case "Ack ":
+                        DrawAckArrow(canvas, round, sk_PaintArrowAck, part, dupAck);
                         DrawTextNextToAckArrow(canvas, round, txt, sk_TextArrowAck);
                         break;
-                    case "pkt":
-                        DrawPktArrow(canvas, round, sk_PaintArrowPkt, part);
+                    case "Pkt ":
+                        DrawPktArrow(canvas, round, sk_PaintArrowPkt, part, data);
                         DrawTextNextToPktArrow(canvas, round, txt, sk_TextArrowPkt);
                         break;
-                    case "!pkt":
-                        DrawPktArrow(canvas, round, sk_PaintArrowRed, part);
+                    case "!Pkt ":
+                        DrawPktArrow(canvas, round, sk_PaintArrowRed, part, data);
                         DrawTextNextToPktArrow(canvas, round, txt.Substring(1), sk_TextArrowRed);
                         break;
-                    case "re-pkt":
-                        DrawPktArrow(canvas, round, sk_PaintArrowPkt, part);
+                    case "Re-Pkt ":
+                        DrawPktArrow(canvas, round, sk_PaintArrowPkt, part, data);
                         DrawTextNextToPktArrow(canvas, round, txt, sk_TextArrowPkt);
                         break;
                 }
                 //show cwnd and dupAck count in very first round
                 if (i == 0)
                 {
-                    DrawTextTresh(canvas, round, tresh, sk_blackTextSmall);
                     DrawTextDupAck(canvas, round, dupAck, sk_blackTextSmall);
-                    DrawTextCwnd(canvas, round, cwnd, sk_blackTextSmall);
+                    DrawTextData(canvas, round, data, sk_blackTextSmall);
                 }
+
+                //change timeout
+                if(currentStep >= 14)
+                {
+                    DrawTimeout(canvas, 6, 12);
+                }else
+                { DrawTimeout(canvas, 1, 7); }
 
             }
 
@@ -120,32 +124,36 @@ namespace WertheApp.RN
         *********************************************************************/
         static void FillAckGeneration()
         {
-            // 0,     1,    2,   3,             4,    5,     6      7
-            // round, kind, nr., dup Ack count, cwnd, tresh, state  part
+            String pkt = "Pkt ";
+            String ack = "Ack ";
+            // 0,     1,    2,   3,             4,    5,      7
+            // round, kind, nr., dup Ack count, data, state  part
             action = new String[,]
             {
-            {"1",   "pkt", "92", "0", "5", "64k", "0", "start"},
-            {"2",   "pkt", "100", "0", "5", "64k", "0", "start"},
-            {"3",   "pkt", "120", "0", "5", "64k", "0", "start"},
-            {"4",   "pkt", "135", "0", "5", "64k", "0", "start"},
-            {"5",   "pkt", "141", "0", "5", "64k", "0", "start"},
-            {"1",   "pkt", "92", "0", "5", "64k", "0", "arrive"},
-            {"2",   "!pkt", "100", "0", "5", "64k", "0", "arrive"},
-            {"3",   "pkt", "120", "0", "5", "64k", "0", "arrive"},
-            {"4",   "pkt", "135", "0", "5", "64k", "0", "arrive"},
-            {"5",   "pkt", "141", "0", "5", "64k", "0", "arrive"},
+            {"1",   pkt, "92", "0", "8", "0", "start"},
+            {"2",   pkt, "100", "0", "20", "0", "start"},
+            {"3",   pkt, "120", "0", "15", "0", "start"},
+            {"4",   pkt, "135", "0", "6", "0", "start"},
+            {"5",   pkt, "141", "0", "16", "0", "start"},
+            {"1",   pkt, "92", "0", "8", "0", "arrive"},
+            {"2",   "!Pkt ", "100", "20", "5", "0", "arrive"},
+            {"3",   pkt, "120", "0", "15", "0", "arrive"},
+            {"4",   pkt, "135", "0", "6", "0", "arrive"},
+            {"5",   pkt, "141", "0", "16", "0", "arrive"},
 
-            {"6",   "ack", "100", "0", "5", "64k", "0", "start"},
-            {"7",   "ack", "100", "0", "5", "64k", "0", "start"},
-            {"8",   "ack", "100", "0", "5", "64k", "0", "start"},
-            {"9",   "ack", "100", "0", "5", "64k", "0", "start"},
-            {"6",   "ack", "100", "0", "6", "64k", "0", "arrive"},
-            {"7",   "ack", "100", "1", "6", "64k", "0", "arrive"},
-            {"8",   "ack", "100", "2", "6", "64k", "0", "arrive"},
-            {"9",   "ack", "100", "3", "6", "3", "2", "arrive"},
+            {"6",   ack, "100", "0", "-", "0", "start"},
+            {"7",   ack, "100", "0", "-", "0", "start"},
+            {"8",   ack, "100", "0", "-", "0", "start"},
+            {"9",   ack, "100", "0", "-", "0", "start"},
+            {"6",   ack, "100", "0", "-", "0", "arrive"},
+            {"7",   ack, "100", "1", "-", "0", "arrive"},
+            {"8",   ack, "100", "2", "-", "0", "arrive"},
+            {"9",   ack, "100", "3", "-", "2", "arrive"},
 
-            {"10",   "pkt", "100", "4", "5", "3", "2", "start"},
-            {"10",   "pkt", "100", "4", "5", "3", "2", "arrive"}
+            {"10",   pkt, "100", "4", "20", "2", "start"},
+            {"10",   pkt, "100", "4", "20", "2", "arrive"},
+
+            {"11",   ack, "141", "2", "-", "0", "start"}
             };
         }
 
@@ -174,12 +182,12 @@ namespace WertheApp.RN
                 default: break;
             }
 
-            //draw "cwnd"
-            canvas.DrawText("cwnd", (xStart - (xStart / 4) * 3) * xe, yStart / 1f * ye, sk_blackText);
             //draw "Dup Ack"
-            canvas.DrawText("dack", (xStart - xStart / 3) * xe, yStart / 1f * ye, sk_blackText);
-            //draw tresh
-            canvas.DrawText("tresh", (xEnd + xStart / 3) * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("dAck", 10 * xe, yStart / 1f * ye, sk_blackText);
+            //draw "data"
+            canvas.DrawText("data", 25 * xe, yStart / 1f * ye, sk_blackText);
+            //draw timeout
+            canvas.DrawText("to", 40 * xe, yStart / 1f * ye, sk_blackText);
             //draw "sender" and line for sender (left)
             canvas.DrawText("S", xStart * xe, yStart / 1.5f * ye, sk_TextSender);
             canvas.DrawLine(new SKPoint(xStart * xe, yEnd * ye), new SKPoint(xStart * xe, yStart * ye), sk_PaintThin);
@@ -203,12 +211,11 @@ namespace WertheApp.RN
         static void DrawTimeout(SKCanvas canvas, int roundBegin, int roundEnd)
         {
             int roundText = roundBegin + (roundEnd - roundBegin) / 2;
-            canvas.DrawText("timeout", (xEnd + (xStart / 4) * 3.5f) * xe, (yStart + yWidthStep * roundText) * ye, sk_blackTextSmallVertical);
-            SKPoint timeoutBegin = new SKPoint((xEnd + (xStart / 4) * 3) * xe, (yStart + yWidthStep * roundBegin) * ye);
-            SKPoint timeoutEnd = new SKPoint((xEnd + (xStart / 4) * 3) * xe, (yStart + yWidthStep * roundEnd) * ye);
+            SKPoint timeoutBegin = new SKPoint(40 * xe, (yStart + yWidthStep * roundBegin) * ye);
+            SKPoint timeoutEnd = new SKPoint(40 * xe, (yStart + yWidthStep * roundEnd) * ye);
             canvas.DrawLine(timeoutBegin, timeoutEnd, sk_PaintThin);
-            canvas.DrawLine(timeoutBegin, new SKPoint((xEnd + (xStart / 4) * 2.5f) * xe, (yStart + yWidthStep * roundBegin) * ye), sk_PaintVeryThin);
-            canvas.DrawLine(timeoutEnd, new SKPoint((xEnd + (xStart / 4) * 2.5f) * xe, (yStart + yWidthStep * roundEnd) * ye), sk_PaintVeryThin);
+            canvas.DrawLine(timeoutBegin, new SKPoint(45 * xe, (yStart + yWidthStep * roundBegin) * ye), sk_PaintVeryThin);
+            canvas.DrawLine(timeoutEnd, new SKPoint(45 * xe, (yStart + yWidthStep * roundEnd) * ye), sk_PaintVeryThin);
 
         }
 
@@ -216,21 +223,14 @@ namespace WertheApp.RN
         *********************************************************************/
         static void DrawTextDupAck(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, (xStart - xStart / 3) * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 10 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************
          *********************************************************************/
-        static void DrawTextCwnd(SKCanvas canvas, int round, String txt, SKPaint paint)
+        static void DrawTextData(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, (xStart - (xStart / 4) * 3) * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        static void DrawTextTresh(SKCanvas canvas, int round, String txt, SKPaint paint)
-        {
-            canvas.DrawText(txt, (xEnd + xStart / 3) * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 25 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************
@@ -250,7 +250,7 @@ namespace WertheApp.RN
         /**********************************************************************
         *********************************************************************/
         // draws an arrow from sender to receiver for the given round
-        static void DrawPktArrow(SKCanvas canvas, int round, SKPaint paint, String part)
+        static void DrawPktArrow(SKCanvas canvas, int round, SKPaint paint, String part, String data)
         {
             SKPoint arrowBegin, arrowEnd;
             switch (part)
@@ -259,6 +259,7 @@ namespace WertheApp.RN
                     // arrow start
                     arrowBegin = new SKPoint(xStart * xe, (yStart + yWidthStep * round) * ye);
                     arrowEnd = new SKPoint((xStart + arrowLength) * xe, (yStart + yWidthStep * round) * ye);
+                    DrawTextData(canvas, round, data, sk_blackTextSmall);
                     break;
                 case "arrive":
                     // arrow arrive
@@ -313,7 +314,7 @@ namespace WertheApp.RN
         /**********************************************************************
         *********************************************************************/
         // draws an arrow from receiver to sender for the given round
-        static void DrawAckArrow(SKCanvas canvas, int round, SKPaint paint, String part, String dupAck, String cwnd, String tresh)
+        static void DrawAckArrow(SKCanvas canvas, int round, SKPaint paint, String part, String dupAck)
         {
             Debug.WriteLine("ARROWLENGTH: " + arrowLength);
             SKPoint arrowBegin, arrowEnd;
@@ -329,8 +330,6 @@ namespace WertheApp.RN
                     arrowBegin = new SKPoint((xStart + arrowLength) * xe, (yStart + yWidthStep * round) * ye);
                     arrowEnd = new SKPoint(xStart * xe, (yStart + yWidthStep * round) * ye);
                     DrawTextDupAck(canvas, round, dupAck, sk_blackTextSmall);
-                    DrawTextCwnd(canvas, round, cwnd, sk_blackTextSmall);
-                    DrawTextTresh(canvas, round, tresh, sk_blackTextSmall);
                     break;
             }
             canvas.DrawLine(arrowBegin, arrowEnd, paint);
@@ -370,8 +369,8 @@ namespace WertheApp.RN
             xe = rborder / 100; //using the variable surfacewidth instead would mess everything up
             ye = bborder / 100;
 
-            xStart = 30; //
-            xEnd = 70;
+            xStart = 50; //
+            xEnd = 90;
             arrowLength = (xEnd - xStart) / 4;
             yStart = 5;
             yEnd = 98;
