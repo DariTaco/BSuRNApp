@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Icon made by https://www.flaticon.com/authors/freepik, Freepik, https://www.flaticon.com/
+using System;
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
@@ -14,7 +15,7 @@ namespace WertheApp.RN
         private static float xe, ye;
         private static int xStart, xEnd, yStart, yEnd;
         private static float yWidthStep;
-        private static int numberOfSteps;
+        private static int numberOfLines;
         private static int currentStep;
         private static int maxStep;
         private static float textSize, strokeWidth;
@@ -23,7 +24,7 @@ namespace WertheApp.RN
             sk_PaintArrowPkt, sk_PaintArrowAck, sk_TextArrowPkt, sk_TextArrowAck,
             sk_TextArrowRed, sk_PaintArrowRed, sk_TextSender, sk_TextReceiver,
             sk_blackTextSmall, sk_blackTextSmallVertical, sk_TextCongestionAvoidance,
-            sk_TextFastRecovery,
+            sk_TextFastRecovery, sk_PaintClock,
             sk_TextSlowStart;
         private static String[,] action;
         private static int arrowLength;
@@ -38,9 +39,9 @@ namespace WertheApp.RN
             textSize = 5;
             strokeWidth = 0.2f;
 
-            numberOfSteps = 13;
+            numberOfLines = 13;
             currentStep = 0;
-            maxStep = 20;
+            maxStep = 21;
 
             FillAckGeneration();
 
@@ -107,11 +108,17 @@ namespace WertheApp.RN
                 }
 
                 //change timeout
-                if(currentStep >= 14)
+                if(currentStep < 14)
+                {
+                    DrawTimeout(canvas, 1, 7);
+                }else if(currentStep >= 14 && currentStep < 21)
                 {
                     DrawTimeout(canvas, 6, 12);
-                }else
-                { DrawTimeout(canvas, 1, 7); }
+                }else if(currentStep >= 21)
+                {
+                    //DrawTimeout(canvas, 11, 17);
+                }
+               
 
             }
 
@@ -153,13 +160,27 @@ namespace WertheApp.RN
             {"10",   pkt, "100", "4", "20", "2", "start"},
             {"10",   pkt, "100", "4", "20", "2", "arrive"},
 
-            {"11",   ack, "141", "2", "-", "0", "start"}
+            {"11",   ack, "141", "0", "-", "0", "start"},
+            {"11",   ack, "141", "0", "-", "0", "arrive"}
             };
+        }
+        /**********************************************************************
+        *********************************************************************/
+        static void DrawAnalogClock(SKCanvas canvas)
+        {
+            canvas.Translate(38 * xe, 2.5f * ye);
+            //canvas.Scale(0.5f);
+            var clockPath1 = SKPath.ParseSvgPathData("M46.907,20.12c-0.163-0.347-0.511-0.569-0.896-0.569h-2.927C41.223,9.452,32.355,1.775,21.726,1.775C9.747,1.775,0,11.522,0,23.501C0,35.48,9.746,45.226,21.726,45.226c7.731,0,14.941-4.161,18.816-10.857 c0.546-0.945,0.224-2.152-0.722-2.699c-0.944-0.547-2.152-0.225-2.697,0.72c-3.172,5.481-9.072,8.887-15.397,8.887c-9.801,0-17.776-7.974-17.776-17.774c0-9.802,7.975-17.776,17.776-17.776c8.442,0,15.515,5.921,17.317,13.825h-2.904c-0.385,0-0.732,0.222-0.896,0.569c-0.163,0.347-0.11,0.756,0.136,1.051l4.938,5.925c0.188,0.225,0.465,0.355,0.759,0.355c0.293,0,0.571-0.131,0.758-0.355l4.938-5.925C47.018,20.876,47.07,20.467,46.907,20.12z");
+            var clockPath2 = SKPath.ParseSvgPathData("M21.726,6.713c-1.091,0-1.975,0.884-1.975,1.975v11.984c-0.893,0.626-1.481,1.658-1.481,2.83c0,1.906,1.551,3.457,3.457,3.457c0.522,0,1.014-0.125,1.458-0.334l6.87,3.965c0.312,0.181,0.65,0.266,0.986,0.266c0.682,0,1.346-0.354,1.712-0.988c0.545-0.943,0.222-2.152-0.724-2.697l-6.877-3.971c-0.092-1.044-0.635-1.956-1.449-2.526V8.688C23.701,7.598,22.816,6.713,21.726,6.713z M21.726,24.982c-0.817,0-1.481-0.665-1.481-1.48c0-0.816,0.665-1.481,1.481-1.481s1.481,0.665,1.481,1.481C23.207,24.317,22.542,24.982,21.726,24.982z");
+            canvas.DrawPath(clockPath1, sk_PaintThin);
+            canvas.DrawPath(clockPath2, sk_PaintThin);
+            //canvas.Scale(2f);
+            canvas.Translate(-38 * xe, 2.5f * ye);
         }
 
         /**********************************************************************
         *********************************************************************/
-        static void DrawBackground(SKCanvas canvas, int state)
+        static async void DrawBackground(SKCanvas canvas, int state)
         {
             SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
             switch (state)
@@ -182,12 +203,12 @@ namespace WertheApp.RN
                 default: break;
             }
 
-            //draw "Dup Ack"
+            //draw captions
             canvas.DrawText("dAck", 10 * xe, yStart / 1f * ye, sk_blackText);
-            //draw "data"
-            canvas.DrawText("data", 25 * xe, yStart / 1f * ye, sk_blackText);
-            //draw timeout
-            canvas.DrawText("to", 40 * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("data", 22.5f * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("T/O", 35 * xe, yStart / 1f * ye, sk_blackText);
+            //DrawAnalogClock(canvas);
+
             //draw "sender" and line for sender (left)
             canvas.DrawText("S", xStart * xe, yStart / 1.5f * ye, sk_TextSender);
             canvas.DrawLine(new SKPoint(xStart * xe, yEnd * ye), new SKPoint(xStart * xe, yStart * ye), sk_PaintThin);
@@ -198,7 +219,7 @@ namespace WertheApp.RN
 
             //draw horizontal lines
             float posY = yStart;
-            for (int i = 0; i <= numberOfSteps; i++)
+            for (int i = 0; i <= numberOfLines; i++)
             {
                 canvas.DrawLine(new SKPoint(xStart * xe, posY * ye), new SKPoint(xEnd * xe, posY * ye), sk_PaintVeryThin);
                 posY += yWidthStep;
@@ -211,11 +232,11 @@ namespace WertheApp.RN
         static void DrawTimeout(SKCanvas canvas, int roundBegin, int roundEnd)
         {
             int roundText = roundBegin + (roundEnd - roundBegin) / 2;
-            SKPoint timeoutBegin = new SKPoint(40 * xe, (yStart + yWidthStep * roundBegin) * ye);
-            SKPoint timeoutEnd = new SKPoint(40 * xe, (yStart + yWidthStep * roundEnd) * ye);
+            SKPoint timeoutBegin = new SKPoint(35 * xe, (yStart + yWidthStep * roundBegin) * ye);
+            SKPoint timeoutEnd = new SKPoint(35 * xe, (yStart + yWidthStep * roundEnd) * ye);
             canvas.DrawLine(timeoutBegin, timeoutEnd, sk_PaintThin);
-            canvas.DrawLine(timeoutBegin, new SKPoint(45 * xe, (yStart + yWidthStep * roundBegin) * ye), sk_PaintVeryThin);
-            canvas.DrawLine(timeoutEnd, new SKPoint(45 * xe, (yStart + yWidthStep * roundEnd) * ye), sk_PaintVeryThin);
+            canvas.DrawLine(timeoutBegin, new SKPoint(40 * xe, (yStart + yWidthStep * roundBegin) * ye), sk_PaintVeryThin);
+            canvas.DrawLine(timeoutEnd, new SKPoint(40 * xe, (yStart + yWidthStep * roundEnd) * ye), sk_PaintVeryThin);
 
         }
 
@@ -230,7 +251,7 @@ namespace WertheApp.RN
          *********************************************************************/
         static void DrawTextData(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, 25 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 22.5f * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************
@@ -369,13 +390,13 @@ namespace WertheApp.RN
             xe = rborder / 100; //using the variable surfacewidth instead would mess everything up
             ye = bborder / 100;
 
-            xStart = 50; //
+            xStart = 45; //
             xEnd = 90;
             arrowLength = (xEnd - xStart) / 4;
             yStart = 5;
             yEnd = 98;
             float yLength = yEnd - yStart;
-            yWidthStep = yLength / numberOfSteps;
+            yWidthStep = yLength / numberOfLines;
         }
 
         /**********************************************************************
@@ -485,6 +506,16 @@ namespace WertheApp.RN
                 Style = SKPaintStyle.StrokeAndFill,
                 //IsStroke = true, //indicates whether to paint the stroke or the fill
                 StrokeWidth = strokeWidth / 4f * xe,
+                IsAntialias = true,
+                StrokeCap = SKStrokeCap.Round,
+                Color = new SKColor(0, 0, 0) //black
+            };
+
+            sk_PaintClock = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                //IsStroke = true, //indicates whether to paint the stroke or the fill
+                StrokeWidth = strokeWidth / 5f * xe,
                 IsAntialias = true,
                 StrokeCap = SKStrokeCap.Round,
                 Color = new SKColor(0, 0, 0) //black

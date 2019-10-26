@@ -119,7 +119,7 @@ namespace WertheApp.RN
         *********************************************************************/
         static void FillRenoFastRecovery()
         {
-            //TODO: correct cwnd and dupack
+            //TODO: correct values
             //state: 0 = slow start, 1 = congestion avoidance, 2 = fast recovery
 
             String pkt = "Pkt ";
@@ -194,7 +194,7 @@ namespace WertheApp.RN
             xe = rborder / 100; //using the variable surfacewidth instead would mess everything up
             ye = bborder / 100;
 
-            xStart = 50; //
+            xStart = 45; //
             xEnd = 90;
             arrowLength = (xEnd - xStart) / 4;
             yStart = 5;
@@ -232,9 +232,9 @@ namespace WertheApp.RN
             //draw "cwnd"
             canvas.DrawText("cwnd", 10 * xe, yStart / 1f * ye, sk_blackText);
             //draw "Dup Ack"
-            canvas.DrawText("dAck", 25 * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("dAck", 21.5f * xe, yStart / 1f * ye, sk_blackText);
             //draw tresh
-            canvas.DrawText("sstresh", 40 * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("sstresh", 35 * xe, yStart / 1f * ye, sk_blackText);
             //draw "sender" and line for sender (left)
             canvas.DrawText("S", xStart * xe, yStart / 1.5f * ye, sk_TextSender);
             canvas.DrawLine(new SKPoint(xStart * xe, yEnd * ye), new SKPoint(xStart * xe, yStart * ye), sk_PaintThin);
@@ -257,7 +257,7 @@ namespace WertheApp.RN
          *********************************************************************/
         static void DrawTextDupAck(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, 25 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 21.5f * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************
@@ -271,7 +271,7 @@ namespace WertheApp.RN
         *********************************************************************/
         static void DrawTextTresh(SKCanvas canvas, int round, String txt, SKPaint paint)
         {
-            canvas.DrawText(txt, 40 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
+            canvas.DrawText(txt, 35 * xe, ((yStart + yWidthStep * round) + (textSize / 2f) / 3) * ye, paint);
         }
 
         /**********************************************************************
