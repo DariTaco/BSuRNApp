@@ -160,8 +160,8 @@ namespace WertheApp.RN
             {"10",   pkt, "100", "4", "20", "2", "start"},
             {"10",   pkt, "100", "4", "20", "2", "arrive"},
 
-            {"11",   ack, "141", "0", "-", "0", "start"},
-            {"11",   ack, "141", "0", "-", "0", "arrive"}
+            {"11",   ack, "141", "0", "-", "2", "start"},
+            {"11",   ack, "141", "0", "-", "1", "arrive"}
             };
         }
         /**********************************************************************
@@ -206,7 +206,7 @@ namespace WertheApp.RN
             //draw captions
             canvas.DrawText("dAck", 10 * xe, yStart / 1f * ye, sk_blackText);
             canvas.DrawText("data", 22.5f * xe, yStart / 1f * ye, sk_blackText);
-            canvas.DrawText("T/O", 35 * xe, yStart / 1f * ye, sk_blackText);
+            canvas.DrawText("t/o", 35 * xe, yStart / 1f * ye, sk_blackText);
             //DrawAnalogClock(canvas);
 
             //draw "sender" and line for sender (left)
