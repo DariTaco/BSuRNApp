@@ -16,8 +16,6 @@ namespace WertheApp.RN
         private RenoFastRecoveryDraw draw;
 
         private Button b_Next, b_Back, b_Restart;
-        private Label l_Tresh;
-
         private bool toggleRestart;
 
 

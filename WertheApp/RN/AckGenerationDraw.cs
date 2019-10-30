@@ -1,5 +1,4 @@
-﻿//Icon made by https://www.flaticon.com/authors/freepik, Freepik, https://www.flaticon.com/
-using System;
+﻿using System;
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;

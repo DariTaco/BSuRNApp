@@ -9,6 +9,7 @@ namespace WertheApp.RN
     public class PipelineProtocols : ContentPage
     {
         //VARIABLES
+        private static ScrollView scrollView;
         public static CCGameView cc_gameView;
         PipelineProtocolsScene gameScene;
         PipelineProtocolsScene2 gameScene2;
@@ -99,8 +100,7 @@ namespace WertheApp.RN
         *********************************************************************/
 		void CreateTopHalf(Grid grid)
 		{
-            var scrollview = new ScrollView();
-
+            scrollView = new ScrollView();
 			gameView = new CocosSharpView()
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -121,13 +121,18 @@ namespace WertheApp.RN
             //Debug.WriteLine("get heightrequest : " + gameView.GetSizeRequest());
             if (Device.RuntimePlatform == Device.Android){
                 gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
-                scrollview.Content = gameView;
-                grid.Children.Add(scrollview, 0, 0);
+                scrollView.Content = gameView;
+                grid.Children.Add(scrollView, 0, 0);
             }
             if(Device.RuntimePlatform == Device.iOS){
-                gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
-                scrollview.Content = gameView;
-                grid.Children.Add(scrollview, 0, 0);
+              
+                Debug.WriteLine("##########IOS######");
+                Debug.WriteLine(gameviewHeight * scaleFactor);
+                Debug.WriteLine(Application.Current.MainPage.Height);
+                gameView.HeightRequest = Application.Current.MainPage.Height;
+                //gameView.HeightRequest = (int)(gameviewHeight * scaleFactor); // SCROLLING!!!!!!!!!!!!!!!!
+                scrollView.Content = gameView;
+                grid.Children.Add(scrollView, 0, 0);
             }
 		}
 
@@ -278,21 +283,42 @@ namespace WertheApp.RN
 			cc_gameView = sender as CCGameView;
 			if (cc_gameView != null)
 			{
-				// This sets the game "world" resolution 
-				//Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
-				//###############################################################
-     
-                cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //CLIPPING
-      
+                // This sets the game "world" resolution 
+                //Attention: all drawn elements in the scene strongly depend ont he resolution! Better don't change it
+                //##############################################################
+                if (Device.RuntimePlatform == Device.Android) { 
+                    cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //CLIPPING
+                }
+
+
+                    //TODO: temporary ios fix
+                    if (Device.RuntimePlatform == Device.iOS)
+                {
+
+                    cc_gameView.DesignResolution = new CCSizeI((int)(Application.Current.MainPage.Width), (gameviewHeight)); //CLIPPING
+               
+                    //cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //damit würde es bei ipad gestreched werden
+                    //double scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
+                    //cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, (int)(gameviewHeight * scaleFactor));
+                    cc_gameView.ResolutionPolicy = CCViewResolutionPolicy.ExactFit;
+
+
+                    //cc_gameView.ViewportRectRatio = new CCRect(0, 0, (float)scrollView.Height, (float)scrollView.Width);
+                    //cc_gameView.ViewportRectRatio = new CCRect(0, 0, gameviewWidth, gameviewHeight);
+
+                }
+
                 //###############################################################
 
                 //choose gamescene for GoBackN or Selective Repeat
-                if(strategy == "Selective Repeat"){
-                    gameScene = new PipelineProtocolsScene(cc_gameView); 
+                if (strategy == "Selective Repeat"){
+                    gameScene = new PipelineProtocolsScene(cc_gameView);
                     // Starts CocosSharp:
                     cc_gameView.RunWithScene(gameScene);
                 }else{
-                    gameScene2 = new PipelineProtocolsScene2(cc_gameView); 
+                    gameScene2 = new PipelineProtocolsScene2(cc_gameView);
+                    //gameScene2.PositionY = -1100; //reagiert nicht mehr auf touch
+
                     // Starts CocosSharp:
                     cc_gameView.RunWithScene(gameScene2);
                 }

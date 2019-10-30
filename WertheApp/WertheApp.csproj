@@ -78,6 +78,11 @@
     <Compile Include="RN\RenoFastRecoveryDraw.cs" />
     <Compile Include="RN\AckGeneration.cs" />
     <Compile Include="RN\AckGenerationDraw.cs" />
+    <Compile Include="RN\Dijkstra.cs" />
+    <Compile Include="RN\DijkstraSettings.cs" />
+    <Compile Include="RN\DijkstraDraw.cs" />
+    <Compile Include="RN\DijkstraSettingsScene.cs" />
+    <Compile Include="RN\DijkstraSettingsChild1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="box2d">

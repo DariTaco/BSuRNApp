@@ -16,8 +16,6 @@ namespace WertheApp.RN
         private AckGenerationDraw draw;
 
         private Button b_Next, b_Back, b_Restart;
-        private Label l_Cwnd, l_DupAck;
-
         private bool toggleRestart;
 
         public AckGeneration()

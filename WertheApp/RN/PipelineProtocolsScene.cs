@@ -411,7 +411,6 @@ namespace WertheApp.RN
         //draw everything. Begginging from the Bottom
 		void DrawLabelsAndBoxes()
 		{
-
             ///////draw 29 lines of boxes and labels
             float yPos = 15;
             for (int i = 0; i < 29; i++)

@@ -33,7 +33,7 @@ namespace WertheApp
 			listView.ItemsSource = new string[]
 			{
                 //Reno Fast Retransmit/Recovery
-				"Congestion Control", "Pipeline Protocols", "Reno Fast Recovery", "Ack Generation"
+				"Congestion Control", "Pipeline Protocols", "Reno Fast Recovery", "Ack Generation", "Dijkstra"
             };
             //after an item was clicked, open the respective app 
 			listView.ItemTapped += async (sender, e) =>
@@ -61,6 +61,9 @@ namespace WertheApp
                             await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
                         }
                         await Navigation.PushAsync(new AckGeneration());
+                        break;
+                    case "Dijkstra":
+                        await Navigation.PushAsync(new DijkstraSettings());
                         break;
                 }
 
