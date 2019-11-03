@@ -174,7 +174,6 @@ namespace WertheApp.RN
 
                     }
                     canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintRenoFat);
-                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann keine Runde weiter*/
                     if(CongestionAvoidance.reno[1,i] != CongestionAvoidance.reno[1, i + 1])
                     {
                         posRateX += xWidth;
@@ -219,7 +218,6 @@ namespace WertheApp.RN
 
                     }
                     canvas.DrawPoint(posRateX2 * xe, posRateY2 * ye, sk_PaintTahoeFat);
-                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
                     if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
                     {
                         posRateX2 += xWidth;
@@ -261,7 +259,7 @@ namespace WertheApp.RN
                         if(valT == valR && valT != 0 && valTOld == valROld && valTOld != 0){
                             posRateYOld = 95f - (yWidth * CongestionAvoidance.tahoe[0,i - 1]);
 
-                            /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                        
                             if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i - 1])
                             {
                                 canvas.DrawLine(new SKPoint((posRateX - xWidth) * xe, posRateYOld * ye), new SKPoint(posRateX * xe, posRateY * ye), sk_PaintThin);
@@ -276,7 +274,7 @@ namespace WertheApp.RN
                     if (valT == valR && valT != 0){
                         canvas.DrawPoint(posRateX * xe, posRateY * ye, sk_PaintFatBlack);
                     }
-                    /*TODO: hier abfragen wenn i und i+1 index gleiche Zahl dann nicht*/
+                    
                     if (CongestionAvoidance.tahoe[1, i] != CongestionAvoidance.tahoe[1, i + 1])
                     {
                         posRateX += xWidth;

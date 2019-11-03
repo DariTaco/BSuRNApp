@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 //It always refers to the values that were set when the original object was first definded.
 //and not some altered value after some action that happended before the current one
 
-/*TODO
+/*TODO:
 slow down anders implementieren??(wird teilweise zu langsam/ zu schnell -> beachten wie früh geklickt wird/ bzw wie weit das Packet ist)
 */
 namespace WertheApp.RN

@@ -87,7 +87,6 @@ namespace WertheApp.RN
 			var grid = new Grid();
 			this.Content = grid;
 			grid.RowDefinitions = new RowDefinitionCollection {
-                    // Each half will be the same size:
                     new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
 					new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
 				};
@@ -174,14 +173,14 @@ namespace WertheApp.RN
             //set the size of the elements in such a way, that they all fit on the screen
             //Screen Width is divided by the amount of elements (2)
             //Screen Width -20 because Margin is 10
-            double StackChildSize;
+            double stackChildSize;
             if (landscape)
             {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 2;
+                stackChildSize = (Application.Current.MainPage.Height - 20) / 2;
             }
             else
             {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+                stackChildSize = (Application.Current.MainPage.Width - 20) / 2;
             }
 
 			//Using a Stacklayout to organize elements
@@ -197,7 +196,7 @@ namespace WertheApp.RN
             Button b_Send = new Button
             {
                 Text = "Send Package",
-                WidthRequest = StackChildSize,
+                WidthRequest = stackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
             b_Send.Clicked += B_Send_Clicked;
@@ -206,7 +205,7 @@ namespace WertheApp.RN
             b_Pause = new Button
             {
                 Text = "Pause",
-                WidthRequest = StackChildSize,
+                WidthRequest = stackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
             b_Pause.Clicked += B_Stop_Clicked;

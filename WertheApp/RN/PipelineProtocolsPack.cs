@@ -47,7 +47,6 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        /*TODO add to entsprechender List, Objekt nur zerstören wenn arrive, nicht bei timeout, timeout in der anderen Klasse, aufschrieb im Ordner*/
         private void Process(float seconds)
         {
             //stop code from running in the background

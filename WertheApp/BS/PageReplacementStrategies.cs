@@ -8,7 +8,6 @@ using System.Diagnostics;
 namespace WertheApp.BS
 {
 
-    //TODO: Pagefails in ram array
     public class PageReplacementStrategies : ContentPage
     {
         //VARIABLES

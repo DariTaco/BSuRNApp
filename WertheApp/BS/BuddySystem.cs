@@ -155,9 +155,9 @@ namespace WertheApp.BS
                 {
                     if (blockSizeL == blockSize && buddyNoL == 1 && freeL)
                     {
-                        Debug.WriteLine("mergeblock with index " + i + " and size "  + buddySystem[i].GetBlockSize() + " with left buddy");
-                        Debug.WriteLine(buddySystem.Last().GetFree());
-                        /*TODO*/
+                        //Debug.WriteLine("mergeblock with index " + i + " and size "  + buddySystem[i].GetBlockSize() + " with left buddy");
+                        //Debug.WriteLine(buddySystem.Last().GetFree());
+                       
                         PrintBuddySystemList();
                         buddyNoListCopy.RemoveAt(buddyNoListCopy.Count - 1); //remove last in List, which is the buddyNo of the child
                         buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
@@ -186,9 +186,9 @@ namespace WertheApp.BS
                 {
                     if (blockSizeR == blockSize && buddyNoR == 2 && freeR)
                     {
-                        Debug.WriteLine("merge block with index " + i + " and size " + buddySystem[i].GetBlockSize() + " with right buddy");
-                        Debug.WriteLine(buddySystem.Last().GetFree());
-                        /*TODO*/
+                        //Debug.WriteLine("merge block with index " + i + " and size " + buddySystem[i].GetBlockSize() + " with right buddy");
+                        //Debug.WriteLine(buddySystem.Last().GetFree());
+                       
                         PrintBuddySystemList();
                         buddyNoListCopy.RemoveAt(buddyNoListCopy.Count-1); //remove last in List, which is the buddyNo of the child
                         buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
