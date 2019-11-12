@@ -25,16 +25,18 @@ namespace WertheApp.RN
         //METHODS
         /**********************************************************************
         *********************************************************************/
+        #region
         void CreateContent()
         {
             //split grid in two parts (7:1)
             RowDefinitionCollection rowDefinition = new RowDefinitionCollection {
-                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(4, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
 
-            for (int i = 0; i < numberOfTabs; i++)
+            for (int i = 1; i <= numberOfTabs; i++)
             {
+                int id = i;
                 //button
                 Button b_Start = new Button
                 {
@@ -63,7 +65,7 @@ namespace WertheApp.RN
                 stackLayout.Children.Add(b_Start);
 
                 //get canvas to draw on
-                DijkstraSettingsDraw skiaview = new DijkstraSettingsDraw();
+                DijkstraSettingsDraw skiaview = new DijkstraSettingsDraw(id);
                 SKCanvasView canvas = skiaview.ReturnCanvas();
 
                 //Grid for canvas and buttons
@@ -81,6 +83,7 @@ namespace WertheApp.RN
             }
 
         }
+        #endregion
         /**********************************************************************
         *********************************************************************/
         async void B_Default_Clicked(object sender, EventArgs e)
