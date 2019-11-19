@@ -1,0 +1,14 @@
+﻿{
+  "dependencies": {
+    "CocosSharp.Forms": "1.7.1",
+    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+    "NETStandard.Library": "2.0.3",
+    "SkiaSharp.Views.Forms": "1.68.0",
+    "Xamarin.Forms": "4.3.0.991211"
+  },
+  "frameworks": {
+    "netstandard1.5": {
+      "imports": "portable-net45+win8+wpa81"
+    }
+  }
+}

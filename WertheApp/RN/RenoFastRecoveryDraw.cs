@@ -294,6 +294,8 @@ namespace WertheApp.RN
         static void DrawPktArrow(SKCanvas canvas, int round, SKPaint paint, String part)
         {
             SKPoint arrowBegin, arrowEnd;
+            arrowBegin = new SKPoint();
+            arrowEnd = new SKPoint();
             switch (part)
             {
                 case "start":
@@ -358,6 +360,9 @@ namespace WertheApp.RN
         {
             Debug.WriteLine("ARROWLENGTH: " + arrowLength);
             SKPoint arrowBegin, arrowEnd;
+            arrowBegin = new SKPoint();
+            arrowEnd = new SKPoint();
+
             switch (part)
             {
                 case "start":

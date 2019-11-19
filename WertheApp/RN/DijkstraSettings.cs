@@ -77,7 +77,7 @@ namespace WertheApp.RN
                 //Child Page (Tab)
                 var child = new ContentPage();
                 child.Content = grid;
-                child.Title = "network " + i;
+                child.Title = "Network " + i;
                 Children.Add(child);
 
             }
@@ -86,7 +86,7 @@ namespace WertheApp.RN
         #endregion
         /**********************************************************************
         *********************************************************************/
-        async void B_Default_Clicked(object sender, EventArgs e)
+        void B_Default_Clicked(object sender, EventArgs e)
         {
             //TODO: set default values
         }

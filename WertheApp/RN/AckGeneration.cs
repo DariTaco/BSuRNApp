@@ -126,7 +126,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        async void B_Next_Clicked(object sender, EventArgs e)
+        void B_Next_Clicked(object sender, EventArgs e)
         {
             bool disableOrEnable = AckGenerationDraw.NextStep();
             b_Next.IsEnabled = disableOrEnable;
@@ -138,7 +138,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        async void B_Restart_Clicked(object sender, EventArgs e)
+        void B_Restart_Clicked(object sender, EventArgs e)
         {
             if (toggleRestart)
             {
@@ -162,7 +162,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        async void B_Back_Clicked(object sender, EventArgs e)
+        void B_Back_Clicked(object sender, EventArgs e)
         {
 
             bool disableOrEnable = AckGenerationDraw.PreviousStep();

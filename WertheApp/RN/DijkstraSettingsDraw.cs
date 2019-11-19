@@ -17,7 +17,7 @@ namespace WertheApp.RN
         private static float xe, ye;
 
         private static SKPaint sk_blackText, sk_RouterText, sk_RouterContour, sk_RouterFill, sk_test;
-        private static float textSize, strokeWidth;
+        private static float textSize;
         private SKPoint routerZ, routerU, routerV, routerX, routerW, routerY;
 
         //CONSTRUCTOR
@@ -33,7 +33,7 @@ namespace WertheApp.RN
             this.skiaview.PaintSurface += PaintSurface;
 
             textSize = 5;
-            strokeWidth = 0.2f;
+            //strokeWidth = 0.2f;
         }
 
         //METHODS
@@ -313,12 +313,14 @@ namespace WertheApp.RN
             sk_RouterText = new SKPaint
             {
                 Color = SKColors.Black,
+                Style = SKPaintStyle.Fill,
                 TextSize = 45,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                //IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
+            
 
             sk_RouterFill = new SKPaint
             {

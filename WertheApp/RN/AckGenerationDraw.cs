@@ -179,7 +179,7 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        static async void DrawBackground(SKCanvas canvas, int state)
+        static void DrawBackground(SKCanvas canvas, int state)
         {
             SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
             switch (state)
@@ -273,6 +273,8 @@ namespace WertheApp.RN
         static void DrawPktArrow(SKCanvas canvas, int round, SKPaint paint, String part, String data)
         {
             SKPoint arrowBegin, arrowEnd;
+            arrowBegin = new SKPoint();
+            arrowEnd = new SKPoint();
             switch (part)
             {
                 case "start":
@@ -338,6 +340,9 @@ namespace WertheApp.RN
         {
             Debug.WriteLine("ARROWLENGTH: " + arrowLength);
             SKPoint arrowBegin, arrowEnd;
+            arrowBegin = new SKPoint();
+            arrowEnd = new SKPoint();
+
             switch (part)
             {
                 case "start":
