@@ -63,6 +63,10 @@ namespace WertheApp
                         await Navigation.PushAsync(new AckGeneration());
                         break;
                     case "Dijkstra":
+                        if (IsLandscape())
+                        {
+                            await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
+                        }
                         await Navigation.PushAsync(new DijkstraSettings());
                         break;
                 }

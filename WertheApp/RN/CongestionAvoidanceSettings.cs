@@ -14,7 +14,7 @@ namespace WertheApp.RN
 		//CONSTRUCTOR
 		public CongestionAvoidanceSettings()
 		{
-			Title = "Congestion Avoidance";
+			Title = "Congestion Control";
 			CreateContent();
 		}
 

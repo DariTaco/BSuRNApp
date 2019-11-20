@@ -2,6 +2,8 @@
 using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
+using System.Collections.Generic;
+
 namespace WertheApp.RN
 {
     public class DijkstraSettings: TabbedPage
@@ -12,6 +14,8 @@ namespace WertheApp.RN
         private double width = 0;
         private double height = 0;
 
+        private static int currentTab;
+
 
         //CONSTRUCTOR
         public DijkstraSettings()
@@ -19,18 +23,33 @@ namespace WertheApp.RN
             Title = "Dijkstra";
             numberOfTabs = 4;
             CreateContent();
-            //navigationPage.IconImageSource = "schedule.png";
+            currentTab = 1;
+
+            // keep track of which tab is currently selected
+            this.CurrentPageChanged += (object sender, EventArgs e) => {
+                currentTab = this.Children.IndexOf(this.CurrentPage) + 1;
+                Debug.WriteLine(currentTab);
+                
+            };
         }
 
         //METHODS
         /**********************************************************************
         *********************************************************************/
-        #region
+        public async void OpenPickerPopUp()
+        {
+            string action = await DisplayActionSheet("", "Cancel", null, "1", "2", "3", "4", "5", "6", "7", "8", "9");
+            Debug.WriteLine("Action: " + action);
+            
+        }
+
+        /**********************************************************************
+        *********************************************************************/
         void CreateContent()
         {
             //split grid in two parts (7:1)
             RowDefinitionCollection rowDefinition = new RowDefinitionCollection {
-                    new RowDefinition{ Height = new GridLength(4, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
 
@@ -83,12 +102,15 @@ namespace WertheApp.RN
             }
 
         }
-        #endregion
         /**********************************************************************
         *********************************************************************/
         void B_Default_Clicked(object sender, EventArgs e)
         {
             //TODO: set default values
+            OpenPickerPopUp();
+            DijkstraSettingsDraw network = DijkstraSettingsDraw.GetNetworkByID(currentTab);
+            //network.SetDefaultWeights();
+           
         }
 
         /**********************************************************************
@@ -129,6 +151,19 @@ namespace WertheApp.RN
             {
                 this.width = width;
                 this.height = height;
+            }
+
+            //reconfigure layout
+            if (width > height)
+            {
+                this.IsVisible = false;
+                this.CurrentPage.IsVisible = false;
+                
+            }
+            else if (height > width)
+            {
+                this.IsVisible = true;
+                this.CurrentPage.IsVisible = true;
             }
         }
 

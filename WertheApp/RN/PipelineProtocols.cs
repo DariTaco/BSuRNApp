@@ -124,7 +124,11 @@ namespace WertheApp.RN
                 grid.Children.Add(scrollView, 0, 0);
             }
             if(Device.RuntimePlatform == Device.iOS){
-              
+                /*
+                gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
+                scrollView.Content = gameView;
+                grid.Children.Add(scrollView, 0, 0);
+                */
                 Debug.WriteLine("##########IOS######");
                 Debug.WriteLine(gameviewHeight * scaleFactor);
                 Debug.WriteLine(Application.Current.MainPage.Height);
@@ -132,6 +136,7 @@ namespace WertheApp.RN
                 //gameView.HeightRequest = (int)(gameviewHeight * scaleFactor); // SCROLLING!!!!!!!!!!!!!!!!
                 scrollView.Content = gameView;
                 grid.Children.Add(scrollView, 0, 0);
+                
             }
 		}
 
@@ -290,22 +295,24 @@ namespace WertheApp.RN
                 }
 
 
-                    //TODO: temporary ios fix
-                    if (Device.RuntimePlatform == Device.iOS)
-                {
-
+                //TODO: temporary ios fix
+            if (Device.RuntimePlatform == Device.iOS)
+             {
+                    /*
+                 cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //CLIPPING
+                  */
                     cc_gameView.DesignResolution = new CCSizeI((int)(Application.Current.MainPage.Width), (gameviewHeight)); //CLIPPING
-               
-                    //cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //damit würde es bei ipad gestreched werden
-                    //double scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
-                    //cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, (int)(gameviewHeight * scaleFactor));
-                    cc_gameView.ResolutionPolicy = CCViewResolutionPolicy.ExactFit;
+
+                 //cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight); //damit würde es bei ipad gestreched werden
+                 //double scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
+                 //cc_gameView.DesignResolution = new CCSizeI(gameviewWidth, (int)(gameviewHeight * scaleFactor));
+                 cc_gameView.ResolutionPolicy = CCViewResolutionPolicy.ExactFit;
 
 
-                    //cc_gameView.ViewportRectRatio = new CCRect(0, 0, (float)scrollView.Height, (float)scrollView.Width);
-                    //cc_gameView.ViewportRectRatio = new CCRect(0, 0, gameviewWidth, gameviewHeight);
-
-                }
+                 //cc_gameView.ViewportRectRatio = new CCRect(0, 0, (float)scrollView.Height, (float)scrollView.Width);
+                 //cc_gameView.ViewportRectRatio = new CCRect(0, 0, gameviewWidth, gameviewHeight);
+                 
+             }
 
                 //###############################################################
 

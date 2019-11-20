@@ -147,7 +147,7 @@ namespace WertheApp.RN
                 Color = SKColors.Black,
                 TextSize = ye * textSize / 1.8f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };

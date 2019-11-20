@@ -15,7 +15,6 @@ using System.Collections.Generic;
 
 namespace WertheApp.BS
 {
-    //TODO: IsStroke = false //somehow since the newest update this doesnt work anymore for ios
     public class PageReplacementStrategiesDraw
     {
 
@@ -300,7 +299,7 @@ namespace WertheApp.BS
                 Color = SKColors.Black,
                 TextSize = ye * textSize,
                 IsAntialias =true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center
                 
             };
@@ -311,7 +310,7 @@ namespace WertheApp.BS
                 Color = SKColors.Black,
                 TextSize = ye * textSize/2,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText =true
             };
@@ -322,7 +321,7 @@ namespace WertheApp.BS
                 Color = SKColors.OrangeRed,
                 TextSize = ye * textSize / 2,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false,
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = true
             };

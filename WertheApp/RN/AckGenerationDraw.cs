@@ -430,7 +430,7 @@ namespace WertheApp.RN
                 Color = SKColors.Black,
                 TextSize = ye * textSize / 1.8f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
@@ -440,7 +440,7 @@ namespace WertheApp.RN
                 Color = SKColors.Black,
                 TextSize = ye * textSize / 2f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
@@ -450,7 +450,7 @@ namespace WertheApp.RN
                 Color = SKColors.Black,
                 TextSize = ye * textSize / 2f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false,
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = true
             };
@@ -460,7 +460,7 @@ namespace WertheApp.RN
                 Color = new SKColor(0, 100, 0), //green
                 TextSize = ye * textSize / 2f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false,
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
@@ -470,7 +470,7 @@ namespace WertheApp.RN
                 Color = new SKColor(0, 0, 100), //blue
                 TextSize = ye * textSize / 2f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
@@ -480,7 +480,7 @@ namespace WertheApp.RN
                 Color = new SKColor(200, 0, 0), //red
                 TextSize = ye * textSize / 2f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
@@ -490,7 +490,7 @@ namespace WertheApp.RN
                 Color = new SKColor(0, 100, 0), //green
                 TextSize = ye * textSize / 1.5f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false,
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
@@ -500,7 +500,7 @@ namespace WertheApp.RN
                 Color = new SKColor(0, 0, 100), //blue
                 TextSize = ye * textSize / 1.5f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false
             };
@@ -595,7 +595,7 @@ namespace WertheApp.RN
                 Color = new SKColor(147, 230, 22).WithAlpha(50),
                 TextSize = ye * textSize * 1.7f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 FakeBoldText = true
             };
@@ -605,7 +605,7 @@ namespace WertheApp.RN
                 Color = new SKColor(238, 130, 238).WithAlpha(40),
                 TextSize = ye * textSize * 1.7f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 FakeBoldText = true
             };
@@ -615,7 +615,7 @@ namespace WertheApp.RN
                 Color = new SKColor(67, 110, 238).WithAlpha(30),
                 TextSize = ye * textSize * 1.7f,
                 IsAntialias = true,
-                IsStroke = false, //TODO: somehow since the newest update this doesnt work anymore for ios
+                IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
                 FakeBoldText = true
             };
