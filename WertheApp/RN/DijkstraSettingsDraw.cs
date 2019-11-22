@@ -10,36 +10,74 @@ namespace WertheApp.RN
     public class DijkstraSettingsDraw
     {
         //VARIABLES
+        private SKPoint _touchPoint;
         private SKCanvasView skiaview;
         private SKCanvas canvas;
-        private readonly int id;
+        private int id;
+        private static DijkstraSettings dS;
+        private String weightUV, weightUX, weightUW,
+        weightUY, weightZW, weightZY,
+        weightZV, weightZX, weightVX,
+        weightVY, weightVW, weightXW,
+        weightXY, weightYW;
 
-        private static List<DijkstraSettingsDraw> networkList;
+        private static List<DijkstraSettingsDraw> networkList = new List<DijkstraSettingsDraw>();
         private static float xe, ye;
-
         private static SKPaint sk_blackText, sk_WeightsText,
             sk_RouterText, sk_RouterContour, sk_RouterFill, sk_test;
         private static float textSize;
         private static SKPoint routerZ, routerU, routerV, routerX, routerW, routerY;
-        private static SKPoint wUV, wUX, wUW, wUY, wZW, wZY, wZV, wZX, wVX, wVY, wVW, wXW, wXY, wYW;
+        private static SKPoint wUV, wUX, wUW,
+            wUY, wZW, wZY,
+            wZV, wZX, wVX,
+            wVY, wVW, wXW,
+            wXY, wYW;
 
         //CONSTRUCTOR
-        public DijkstraSettingsDraw(int id)
+        public DijkstraSettingsDraw(int id, DijkstraSettings dijkstraSettings)
         {
             this.id = id;
-            networkList = new List<DijkstraSettingsDraw>();
             networkList.Add(this);
-
+            dS = dijkstraSettings; //TODO
 
             // crate the canvas
             this.skiaview = new SKCanvasView();
             this.skiaview.PaintSurface += PaintSurface;
+            this.skiaview.Touch += OnTouch;
+            skiaview.EnableTouchEvents = true;
 
             textSize = 5;
             //strokeWidth = 0.2f;
+
+            SetDefaultWeights();
+
+           
         }
 
         //METHODS
+        /**********************************************************************
+        *********************************************************************/
+        private void OnTouch(object sender, SKTouchEventArgs e)
+        {
+            SKRect rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
+            switch (e.ActionType)
+            {
+                case SKTouchAction.Pressed:
+                    if (rect_wUV.Contains(e.Location))
+                    {
+                        Debug.WriteLine("Pressed");
+                        dS.OpenPickerPopUp();
+                    }
+                    
+                    break;
+            }
+
+            e.Handled = true;
+
+            // update the UI on the screen
+            ((SKCanvasView)sender).InvalidateSurface();
+        }
+
         /**********************************************************************
         *********************************************************************/
         // do the drawing
@@ -60,32 +98,28 @@ namespace WertheApp.RN
             SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground, sk_test); //left, top, right, bottom, color
 
-            //draw connections
-            switch (this.id)
-            {
-                case 1: DrawNetwork1();
-                    break;
-                case 2: DrawNetwork2();
-                    break;
-                case 3: DrawNetwork3();
-                    break;
-                case 4: DrawNetwork4();
-                    break;
-            }
-       
-            //draw routers
-            DrawRouter(routerZ, "z");
-            DrawRouter(routerU, "u");
-            DrawRouter(routerV, "v");
-            DrawRouter(routerW, "w");
-            DrawRouter(routerX, "x");
-            DrawRouter(routerY, "y");
+            //draw Network
+            DrawConnections();
+            DrawRouters();
+            DrawWeights();
+            SKRect rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
+            canvas.DrawRect(rect_wUV, sk_RouterContour);
+            //TODO: Think of Default Values
+            //TODO: Values anpassen depending on wie die Gewichte eingegeben wurden
+            //TODO: Add click event to weight locations
 
-            //draw values (weights)
+            //execute all drawing actions
+            canvas.Flush();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public void DrawWeights()
+        {
             switch (this.id)
             {
                 case 1:
-                    DrawWeightsNetwork1("1", "2", "3", "4", "5", "6", "7", "8");
+                    DrawWeightsNetwork1();
                     break;
                 case 2:
                     DrawWeightsNetwork2();
@@ -97,26 +131,102 @@ namespace WertheApp.RN
                     DrawWeightsNetwork4();
                     break;
             }
-            //TODO: Think of Default Values
-            //TODO: Values anpassen depending on wie die Gewichte eingegeben wurden
-            //TODO: Add click event to weight locations
+        }
 
-            //execute all drawing actions
-            canvas.Flush();
+        /**********************************************************************
+        *********************************************************************/
+        public void DrawRouters()
+        {
+            DrawRouter(routerZ, "z");
+            DrawRouter(routerU, "u");
+            DrawRouter(routerV, "v");
+            DrawRouter(routerW, "w");
+            DrawRouter(routerX, "x");
+            DrawRouter(routerY, "y");
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public void DrawConnections()
+        {
+            switch (this.id)
+            {
+                case 1:
+                    DrawConnectionsNetwork1();
+                    break;
+                case 2:
+                    DrawConnectionsNetwork2();
+                    break;
+                case 3:
+                    DrawConnectionsNetwork3();
+                    break;
+                case 4:
+                    DrawConnectionsNetwork4();
+                    break;
+            }
         }
 
         /**********************************************************************
         *********************************************************************/
         public void SetDefaultWeights()
         {
-
+            switch (this.id)
+            {
+                case 1:
+                    weightUV = "1";
+                    weightUX = "2";
+                    weightZW = "3";
+                    weightZY = "4";
+                    weightXY = "5";
+                    weightVW = "6";
+                    weightVY = "7";
+                    weightXW = "8";
+                    break;
+                case 2:
+                    weightUV = "1";
+                    weightUX = "2";
+                    weightZW = "3";
+                    weightZY = "4";
+                    weightXY = "5";
+                    weightVW = "6";
+                    weightXW = "7";
+                    weightVX = "8";
+                    weightYW = "9";
+                    weightUW = "10";
+                    break;
+                case 3:
+                    weightUV = "1";
+                    weightUX = "2";
+                    weightZW = "3";
+                    weightZY = "4";
+                    weightXY = "5";
+                    weightVW = "6";
+                    weightXW = "7";
+                    weightVX = "8";
+                    weightYW = "9";
+                    weightUY = "10";
+                    break;
+                case 4:
+                    weightUV = "1";
+                    weightUX = "2";
+                    weightZW = "3";
+                    weightZY = "4";
+                    weightXY = "5";
+                    weightVW = "6";
+                    weightVX = "7";
+                    weightYW = "8";
+                    weightUW = "9";
+                    weightUY = "10";
+                    weightZV = "11";
+                    weightZX = "12";
+                    break;
+            }
+            this.Paint();
         }
 
         /**********************************************************************
         *********************************************************************/
-        void DrawWeightsNetwork1(String weightUV, String weightUX, String weightZW,
-            String weightZY, String weightXY, String weightVW,
-            String weightVY, String weightXW)
+        void DrawWeightsNetwork1()
         {
             this.canvas.DrawText(weightUV, wUV, sk_WeightsText);
             this.canvas.DrawText(weightUX, wUX, sk_WeightsText);
@@ -133,86 +243,83 @@ namespace WertheApp.RN
         *********************************************************************/
         void DrawWeightsNetwork2()
         {
-            String weight = "0";
-            this.canvas.DrawText(weight, wUV, sk_WeightsText);
-            this.canvas.DrawText(weight, wUX, sk_WeightsText);
-            this.canvas.DrawText(weight, wZW, sk_WeightsText);
-            this.canvas.DrawText(weight, wZY, sk_WeightsText);
-            this.canvas.DrawText(weight, wXY, sk_WeightsText);
-            this.canvas.DrawText(weight, wVW, sk_WeightsText);
-            this.canvas.DrawText(weight, wXW, sk_WeightsText);
-            this.canvas.DrawText(weight, wVX, sk_WeightsText);
-            this.canvas.DrawText(weight, wYW, sk_WeightsText);
-            this.canvas.DrawText(weight, wUW, sk_WeightsText);
+            this.canvas.DrawText(weightUV, wUV, sk_WeightsText);
+            this.canvas.DrawText(weightUX, wUX, sk_WeightsText);
+            this.canvas.DrawText(weightZW, wZW, sk_WeightsText);
+            this.canvas.DrawText(weightZY, wZY, sk_WeightsText);
+            this.canvas.DrawText(weightXY, wXY, sk_WeightsText);
+            this.canvas.DrawText(weightVW, wVW, sk_WeightsText);
+            this.canvas.DrawText(weightXW, wXW, sk_WeightsText);
+            this.canvas.DrawText(weightVX, wVX, sk_WeightsText);
+            this.canvas.DrawText(weightYW, wYW, sk_WeightsText);
+            this.canvas.DrawText(weightUW, wUW, sk_WeightsText);
         }
 
         /**********************************************************************
         *********************************************************************/
         void DrawWeightsNetwork3()
         {
-            String weight = "0";
-            this.canvas.DrawText(weight, wUV, sk_WeightsText);
-            this.canvas.DrawText(weight, wUX, sk_WeightsText);
-            this.canvas.DrawText(weight, wZW, sk_WeightsText);
-            this.canvas.DrawText(weight, wZY, sk_WeightsText);
-            this.canvas.DrawText(weight, wXY, sk_WeightsText);
-            this.canvas.DrawText(weight, wVW, sk_WeightsText);
-            this.canvas.DrawText(weight, wXW, sk_WeightsText);
-            this.canvas.DrawText(weight, wVX, sk_WeightsText);
-            this.canvas.DrawText(weight, wYW, sk_WeightsText);
-            this.canvas.DrawText(weight, wUY, sk_WeightsText);
+            this.canvas.DrawText(weightUV, wUV, sk_WeightsText);
+            this.canvas.DrawText(weightUX, wUX, sk_WeightsText);
+            this.canvas.DrawText(weightZW, wZW, sk_WeightsText);
+            this.canvas.DrawText(weightZY, wZY, sk_WeightsText);
+            this.canvas.DrawText(weightXY, wXY, sk_WeightsText);
+            this.canvas.DrawText(weightVW, wVW, sk_WeightsText);
+            this.canvas.DrawText(weightXW, wXW, sk_WeightsText);
+            this.canvas.DrawText(weightVX, wVX, sk_WeightsText);
+            this.canvas.DrawText(weightYW, wYW, sk_WeightsText);
+            this.canvas.DrawText(weightUY, wUY, sk_WeightsText);
         }
 
         /**********************************************************************
         *********************************************************************/
         void DrawWeightsNetwork4()
         {
-            String weight = "0";
-            this.canvas.DrawText(weight, wUV, sk_WeightsText);
-            this.canvas.DrawText(weight, wUX, sk_WeightsText);
-            this.canvas.DrawText(weight, wZW, sk_WeightsText);
-            this.canvas.DrawText(weight, wZY, sk_WeightsText);
-            this.canvas.DrawText(weight, wXY, sk_WeightsText);
-            this.canvas.DrawText(weight, wVW, sk_WeightsText);
-            this.canvas.DrawText(weight, wVX, sk_WeightsText);
-            this.canvas.DrawText(weight, wYW, sk_WeightsText);
-            this.canvas.DrawText(weight, wUW, sk_WeightsText);
-            this.canvas.DrawText(weight, wUY, sk_WeightsText);
-            this.canvas.DrawText(weight, wZV, sk_WeightsText);
-            this.canvas.DrawText(weight, wZX, sk_WeightsText);
+            this.canvas.DrawText(weightUV, wUV, sk_WeightsText);
+            this.canvas.DrawText(weightUX, wUX, sk_WeightsText);
+            this.canvas.DrawText(weightZW, wZW, sk_WeightsText);
+            this.canvas.DrawText(weightZY, wZY, sk_WeightsText);
+            this.canvas.DrawText(weightXY, wXY, sk_WeightsText);
+            this.canvas.DrawText(weightVW, wVW, sk_WeightsText);
+            this.canvas.DrawText(weightVX, wVX, sk_WeightsText);
+            this.canvas.DrawText(weightYW, wYW, sk_WeightsText);
+            this.canvas.DrawText(weightUW, wUW, sk_WeightsText);
+            this.canvas.DrawText(weightUY, wUY, sk_WeightsText);
+            this.canvas.DrawText(weightZV, wZV, sk_WeightsText);
+            this.canvas.DrawText(weightZX, wZX, sk_WeightsText);
 
         }
 
         /**********************************************************************
         *********************************************************************/
-        void DrawNetwork1()
+        void DrawConnectionsNetwork1()
         {
-            DrawConnections(routerX, routerU);
-            DrawConnections(routerX, routerW);
-            DrawConnections(routerX, routerY);
-            DrawConnections(routerU, routerV);
+            DrawConnection(routerX, routerU);
+            DrawConnection(routerX, routerW);
+            DrawConnection(routerX, routerY);
+            DrawConnection(routerU, routerV);
             //DrawConnections(canvas, routerV, routerX);
-            DrawConnections(routerV, routerW);
-            DrawConnections(routerV, routerY);
+            DrawConnection(routerV, routerW);
+            DrawConnection(routerV, routerY);
             //DrawConnections(canvas, routerW, routerY);
-            DrawConnections(routerW, routerZ);
-            DrawConnections(routerZ, routerY);
+            DrawConnection(routerW, routerZ);
+            DrawConnection(routerZ, routerY);
         }
 
         /**********************************************************************
         *********************************************************************/
-        void DrawNetwork2()
+        void DrawConnectionsNetwork2()
         {
-            DrawConnections(routerX, routerU);
-            DrawConnections(routerX, routerW);
-            DrawConnections(routerX, routerY);
-            DrawConnections(routerU, routerV);
-            DrawConnections(routerV, routerX);
-            DrawConnections(routerV, routerW);
+            DrawConnection(routerX, routerU);
+            DrawConnection(routerX, routerW);
+            DrawConnection(routerX, routerY);
+            DrawConnection(routerU, routerV);
+            DrawConnection(routerV, routerX);
+            DrawConnection(routerV, routerW);
             //DrawConnections(canvas, routerV, routerY);
-            DrawConnections(routerW, routerY);
-            DrawConnections(routerW, routerZ);
-            DrawConnections(routerZ, routerY);
+            DrawConnection(routerW, routerY);
+            DrawConnection(routerW, routerZ);
+            DrawConnection(routerZ, routerY);
             SKPoint p = new SKPoint(15 * xe, -15 * ye);
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
@@ -222,18 +329,18 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        void DrawNetwork3()
+        void DrawConnectionsNetwork3()
         {
-            DrawConnections(routerX, routerU);
-            DrawConnections(routerX, routerW);
-            DrawConnections(routerX, routerY);
-            DrawConnections(routerU, routerV);
-            DrawConnections(routerV, routerX);
-            DrawConnections(routerV, routerW);
+            DrawConnection(routerX, routerU);
+            DrawConnection(routerX, routerW);
+            DrawConnection(routerX, routerY);
+            DrawConnection(routerU, routerV);
+            DrawConnection(routerV, routerX);
+            DrawConnection(routerV, routerW);
             //DrawConnections(canvas, routerV, routerY);
-            DrawConnections(routerW, routerY);
-            DrawConnections(routerW, routerZ);
-            DrawConnections(routerZ, routerY);
+            DrawConnection(routerW, routerY);
+            DrawConnection(routerW, routerZ);
+            DrawConnection(routerZ, routerY);
             SKPoint p = new SKPoint(15 * xe, 115 * ye);
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
@@ -243,18 +350,18 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        void DrawNetwork4()
+        void DrawConnectionsNetwork4()
         {
-            DrawConnections(routerX, routerU);
+            DrawConnection(routerX, routerU);
             //DrawConnections(canvas, routerX, routerW);
-            DrawConnections(routerX, routerY);
-            DrawConnections(routerU, routerV);
-            DrawConnections(routerV, routerX);
-            DrawConnections(routerV, routerW);
+            DrawConnection(routerX, routerY);
+            DrawConnection(routerU, routerV);
+            DrawConnection(routerV, routerX);
+            DrawConnection(routerV, routerW);
             //DrawConnections(canvas, routerV, routerY);
-            DrawConnections(routerW, routerY);
-            DrawConnections(routerW, routerZ);
-            DrawConnections(routerZ, routerY);
+            DrawConnection(routerW, routerY);
+            DrawConnection(routerW, routerZ);
+            DrawConnection(routerZ, routerY);
 
             SKPoint p = new SKPoint(15 * xe, -15 * ye);
             SKPath curveUW = new SKPath();
@@ -317,14 +424,17 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        void DrawConnections(SKPoint a, SKPoint b)
+        void DrawConnection(SKPoint a, SKPoint b)
         {
             this.canvas.DrawLine(a, b, sk_RouterContour);
-            //make all connections and parameters will be connections for special networks
-            //connection v - x
+        }
 
-            //connection w - y
-
+        /**********************************************************************
+        *********************************************************************/
+        public void SetWeightUV(String w)
+        {
+            this.weightUV = w;
+            this.Paint();
         }
 
         /**********************************************************************
@@ -391,8 +501,10 @@ namespace WertheApp.RN
         *********************************************************************/
         public static DijkstraSettingsDraw GetNetworkByID(int id)
         {
+            int count = 0;
             foreach (DijkstraSettingsDraw network in networkList)
             {
+                count++;
                 Debug.WriteLine("thi.id: " + network.GetId());
                 int networkId = network.GetId();
                 if (networkId == id)
@@ -402,7 +514,7 @@ namespace WertheApp.RN
                 }
             }
             
-            Debug.WriteLine("ID NOT FOUND");
+            Debug.WriteLine("ID NOT FOUND count: " + count);
             return null; //not found
         }
 
@@ -422,7 +534,6 @@ namespace WertheApp.RN
             this.skiaview.InvalidateSurface();
 
         }
-
         /**********************************************************************
         *********************************************************************/
         static private void MakeSKPaint()

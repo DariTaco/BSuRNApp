@@ -28,7 +28,7 @@ namespace WertheApp.RN
             // keep track of which tab is currently selected
             this.CurrentPageChanged += (object sender, EventArgs e) => {
                 currentTab = this.Children.IndexOf(this.CurrentPage) + 1;
-                Debug.WriteLine(currentTab);
+                Debug.WriteLine("Current tab is #" + currentTab);
                 
             };
         }
@@ -38,9 +38,12 @@ namespace WertheApp.RN
         *********************************************************************/
         public async void OpenPickerPopUp()
         {
-            string action = await DisplayActionSheet("", "Cancel", null, "1", "2", "3", "4", "5", "6", "7", "8", "9");
+            String action = await DisplayActionSheet("", "Cancel", null, "1", "2", "3", "4", "5", "6", "7", "8", "9");
             Debug.WriteLine("Action: " + action);
-            
+            DijkstraSettingsDraw.GetNetworkByID(currentTab).SetWeightUV(action);
+
+
+
         }
 
         /**********************************************************************
@@ -84,7 +87,7 @@ namespace WertheApp.RN
                 stackLayout.Children.Add(b_Start);
 
                 //get canvas to draw on
-                DijkstraSettingsDraw skiaview = new DijkstraSettingsDraw(id);
+                DijkstraSettingsDraw skiaview = new DijkstraSettingsDraw(id, this);
                 SKCanvasView canvas = skiaview.ReturnCanvas();
 
                 //Grid for canvas and buttons
@@ -106,11 +109,7 @@ namespace WertheApp.RN
         *********************************************************************/
         void B_Default_Clicked(object sender, EventArgs e)
         {
-            //TODO: set default values
-            OpenPickerPopUp();
-            DijkstraSettingsDraw network = DijkstraSettingsDraw.GetNetworkByID(currentTab);
-            //network.SetDefaultWeights();
-           
+            DijkstraSettingsDraw.GetNetworkByID(currentTab).SetDefaultWeights();
         }
 
         /**********************************************************************
