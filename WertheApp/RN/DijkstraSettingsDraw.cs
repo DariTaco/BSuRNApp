@@ -4,6 +4,7 @@ using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System.Diagnostics; //Debug.WriteLine("");
 using System.Collections.Generic;
+using System.Text.RegularExpressions; //Regex.IsMatch
 
 namespace WertheApp.RN
 {
@@ -20,10 +21,16 @@ namespace WertheApp.RN
         weightZV, weightZX, weightVX,
         weightVY, weightVW, weightXW,
         weightXY, weightYW;
+        private SKRect rect_wUV, rect_wUX, rect_wUW,
+        rect_wUY, rect_wZW, rect_wZY,
+        rect_wZV, rect_wZX, rect_wVX,
+        rect_wVY, rect_wVW, rect_wXW,
+        rect_wXY, rect_wYW;
+        private String action;
 
         private static List<DijkstraSettingsDraw> networkList = new List<DijkstraSettingsDraw>();
         private static float xe, ye;
-        private static SKPaint sk_blackText, sk_WeightsText,
+        private static SKPaint sk_WeightsText,
             sk_RouterText, sk_RouterContour, sk_RouterFill, sk_test;
         private static float textSize;
         private static SKPoint routerZ, routerU, routerV, routerX, routerW, routerY;
@@ -32,6 +39,7 @@ namespace WertheApp.RN
             wZV, wZX, wVX,
             wVY, wVW, wXW,
             wXY, wYW;
+
 
         //CONSTRUCTOR
         public DijkstraSettingsDraw(int id, DijkstraSettings dijkstraSettings)
@@ -57,25 +65,105 @@ namespace WertheApp.RN
         //METHODS
         /**********************************************************************
         *********************************************************************/
-        private void OnTouch(object sender, SKTouchEventArgs e)
+        private async void OnTouch(object sender, SKTouchEventArgs e)
         {
-            SKRect rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
+            rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
+            rect_wUX = new SKRect(wUX.X - 50, wUX.Y - 70, wUX.X + 50, wUX.Y + 30);
+            rect_wUW = new SKRect(wUW.X - 50, wUW.Y - 70, wUW.X + 50, wUW.Y + 30);
+            rect_wUY = new SKRect(wUY.X - 50, wUY.Y - 70, wUY.X + 50, wUY.Y + 30);
+            rect_wZW = new SKRect(wZW.X - 50, wZW.Y - 70, wZW.X + 50, wZW.Y + 30);
+            rect_wZY = new SKRect(wZY.X - 50, wZY.Y - 70, wZY.X + 50, wZY.Y + 30);
+            rect_wZV = new SKRect(wZV.X - 50, wZV.Y - 70, wZV.X + 50, wZV.Y + 30);
+            rect_wZX = new SKRect(wZX.X - 50, wZX.Y - 70, wZX.X + 50, wZX.Y + 30);
+            rect_wVX = new SKRect(wVX.X - 50, wVX.Y - 70, wVX.X + 50, wVX.Y + 30);
+            rect_wVY = new SKRect(wVY.X - 50, wVY.Y - 70, wVY.X + 50, wVY.Y + 30);
+            rect_wVW = new SKRect(wVW.X - 50, wVW.Y - 70, wVW.X + 50, wVW.Y + 30);
+            rect_wXW = new SKRect(wXW.X - 50, wXW.Y - 70, wXW.X + 50, wXW.Y + 30);
+            rect_wXY = new SKRect(wXY.X - 50, wXY.Y - 70, wXY.X + 50, wXY.Y + 30);
+            rect_wYW = new SKRect(wYW.X - 50, wYW.Y - 70, wYW.X + 50, wYW.Y + 30);
             switch (e.ActionType)
             {
                 case SKTouchAction.Pressed:
+                    
                     if (rect_wUV.Contains(e.Location))
                     {
-                        Debug.WriteLine("Pressed");
-                        dS.OpenPickerPopUp();
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightUV, action);
                     }
-                    
+                    else if (rect_wUX.Contains(e.Location))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightUX, action);
+                    }
+                    else if (rect_wUW.Contains(e.Location)
+                        && ( this.id == 2 || this.id == 4))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightUW, action);
+                    }
+                    else if (rect_wUY.Contains(e.Location)
+                        && (this.id == 3 || this.id == 4))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightUY, action);
+                    }
+                    else if (rect_wZW.Contains(e.Location))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightZW, action);
+                    }
+                    else if (rect_wZY.Contains(e.Location))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightZY, action);
+                    }
+                    else if (rect_wZV.Contains(e.Location) && this.id == 4)
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightZV, action);
+                    }
+                    else if (rect_wZX.Contains(e.Location) && this.id == 4)
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightZX, action);
+                    }
+                    else if (rect_wVX.Contains(e.Location)
+                        && (this.id == 2 || this.id == 3 || this.id == 4))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightVX, action);
+                    }
+                    else if (rect_wVY.Contains(e.Location) && this.id == 1)
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightVY, action);
+                    }
+                    else if (rect_wVW.Contains(e.Location))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightVW, action);
+                    }
+                    else if (rect_wXW.Contains(e.Location)
+                        && (this.id == 1 || this.id == 2 || this.id == 3))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightXW, action);
+                    }
+                    else if (rect_wXY.Contains(e.Location))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightXY, action);
+                    }
+                    else if (rect_wYW.Contains(e.Location)
+                        && (this.id == 2 || this.id == 3 || this.id == 4))
+                    {
+                        await dS.OpenPickerPopUp();
+                        SetWeight(ref weightYW, action);
+                    }
                     break;
             }
 
             e.Handled = true;
-
-            // update the UI on the screen
-            ((SKCanvasView)sender).InvalidateSurface();
         }
 
         /**********************************************************************
@@ -102,8 +190,7 @@ namespace WertheApp.RN
             DrawConnections();
             DrawRouters();
             DrawWeights();
-            SKRect rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
-            canvas.DrawRect(rect_wUV, sk_RouterContour);
+
             //TODO: Think of Default Values
             //TODO: Values anpassen depending on wie die Gewichte eingegeben wurden
             //TODO: Add click event to weight locations
@@ -174,51 +261,51 @@ namespace WertheApp.RN
             {
                 case 1:
                     weightUV = "1";
-                    weightUX = "2";
-                    weightZW = "3";
-                    weightZY = "4";
-                    weightXY = "5";
-                    weightVW = "6";
-                    weightVY = "7";
-                    weightXW = "8";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+                    weightVY = "1";
+                    weightXW = "1";
                     break;
                 case 2:
                     weightUV = "1";
-                    weightUX = "2";
-                    weightZW = "3";
-                    weightZY = "4";
-                    weightXY = "5";
-                    weightVW = "6";
-                    weightXW = "7";
-                    weightVX = "8";
-                    weightYW = "9";
-                    weightUW = "10";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+                    weightXW = "1";
+                    weightVX = "1";
+                    weightYW = "1";
+                    weightUW = "1";
                     break;
                 case 3:
                     weightUV = "1";
-                    weightUX = "2";
-                    weightZW = "3";
-                    weightZY = "4";
-                    weightXY = "5";
-                    weightVW = "6";
-                    weightXW = "7";
-                    weightVX = "8";
-                    weightYW = "9";
-                    weightUY = "10";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+                    weightXW = "1";
+                    weightVX = "1";
+                    weightYW = "1";
+                    weightUY = "1";
                     break;
                 case 4:
                     weightUV = "1";
-                    weightUX = "2";
-                    weightZW = "3";
-                    weightZY = "4";
-                    weightXY = "5";
-                    weightVW = "6";
-                    weightVX = "7";
-                    weightYW = "8";
-                    weightUW = "9";
-                    weightUY = "10";
-                    weightZV = "11";
-                    weightZX = "12";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+                    weightVX = "1";
+                    weightYW = "1";
+                    weightUW = "1";
+                    weightUY = "1";
+                    weightZV = "1";
+                    weightZX = "1";
                     break;
             }
             this.Paint();
@@ -431,12 +518,24 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
-        public void SetWeightUV(String w)
+        private void SetWeight(ref String o, String w)
         {
-            this.weightUV = w;
-            this.Paint();
+
+            if (Regex.IsMatch(w, "[1-9]"))
+            {
+                Debug.WriteLine("IS MATCH");
+                o = w;
+                this.Paint();
+            }
+
         }
 
+        /**********************************************************************
+        *********************************************************************/
+        public void SetAction(String a)
+        {
+            this.action = a;
+        }
         /**********************************************************************
         *********************************************************************/
         static void CalculateNeededNumbers(SKCanvas canvas)
@@ -473,6 +572,8 @@ namespace WertheApp.RN
             wUY = new SKPoint(15 * xe, 80 * ye);
             wZX = new SKPoint(85 * xe, 80 * ye);
             wZV = new SKPoint(85 * xe, 23.5f * ye);
+
+            //define rectangles for touch
         }
 
         /**********************************************************************
@@ -538,17 +639,6 @@ namespace WertheApp.RN
         *********************************************************************/
         static private void MakeSKPaint()
         {
-            //For Text
-            sk_blackText = new SKPaint
-            {
-                Color = SKColors.Black,
-                TextSize = ye * textSize / 1.8f,
-                IsAntialias = true,
-                IsStroke = false,
-                TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
-            };
-
             sk_test = new SKPaint
             {
                 Style = SKPaintStyle.Fill,

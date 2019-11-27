@@ -3,6 +3,7 @@ using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WertheApp.RN
 {
@@ -36,14 +37,10 @@ namespace WertheApp.RN
         //METHODS
         /**********************************************************************
         *********************************************************************/
-        public async void OpenPickerPopUp()
+        public async Task OpenPickerPopUp()
         {
             String action = await DisplayActionSheet("", "Cancel", null, "1", "2", "3", "4", "5", "6", "7", "8", "9");
-            Debug.WriteLine("Action: " + action);
-            DijkstraSettingsDraw.GetNetworkByID(currentTab).SetWeightUV(action);
-
-
-
+            DijkstraSettingsDraw.GetNetworkByID(currentTab).SetAction(action);
         }
 
         /**********************************************************************
