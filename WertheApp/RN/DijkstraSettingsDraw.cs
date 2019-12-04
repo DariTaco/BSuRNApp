@@ -21,11 +21,6 @@ namespace WertheApp.RN
         weightZV, weightZX, weightVX,
         weightVY, weightVW, weightXW,
         weightXY, weightYW;
-        private SKRect rect_wUV, rect_wUX, rect_wUW,
-        rect_wUY, rect_wZW, rect_wZY,
-        rect_wZV, rect_wZX, rect_wVX,
-        rect_wVY, rect_wVW, rect_wXW,
-        rect_wXY, rect_wYW;
         private String action;
 
         private static List<DijkstraSettingsDraw> networkList = new List<DijkstraSettingsDraw>();
@@ -39,6 +34,11 @@ namespace WertheApp.RN
             wZV, wZX, wVX,
             wVY, wVW, wXW,
             wXY, wYW;
+        private static SKRect rect_wUV, rect_wUX, rect_wUW,
+        rect_wUY, rect_wZW, rect_wZY,
+        rect_wZV, rect_wZX, rect_wVX,
+        rect_wVY, rect_wVW, rect_wXW,
+        rect_wXY, rect_wYW;
 
 
         //CONSTRUCTOR
@@ -55,108 +55,117 @@ namespace WertheApp.RN
             skiaview.EnableTouchEvents = true;
 
             textSize = 5;
-            //strokeWidth = 0.2f;
 
             SetDefaultWeights();
-
            
         }
 
         //METHODS
+        public String[] GetAllWeights()
+        {
+            String[] a = {weightUV, weightUX, weightUW,
+        weightUY, weightZW, weightZY,
+        weightZV, weightZX, weightVX,
+        weightVY, weightVW, weightXW,
+        weightXY, weightYW };
+
+            return a;
+        }
+
         /**********************************************************************
         *********************************************************************/
         private async void OnTouch(object sender, SKTouchEventArgs e)
         {
-            rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
-            rect_wUX = new SKRect(wUX.X - 50, wUX.Y - 70, wUX.X + 50, wUX.Y + 30);
-            rect_wUW = new SKRect(wUW.X - 50, wUW.Y - 70, wUW.X + 50, wUW.Y + 30);
-            rect_wUY = new SKRect(wUY.X - 50, wUY.Y - 70, wUY.X + 50, wUY.Y + 30);
-            rect_wZW = new SKRect(wZW.X - 50, wZW.Y - 70, wZW.X + 50, wZW.Y + 30);
-            rect_wZY = new SKRect(wZY.X - 50, wZY.Y - 70, wZY.X + 50, wZY.Y + 30);
-            rect_wZV = new SKRect(wZV.X - 50, wZV.Y - 70, wZV.X + 50, wZV.Y + 30);
-            rect_wZX = new SKRect(wZX.X - 50, wZX.Y - 70, wZX.X + 50, wZX.Y + 30);
-            rect_wVX = new SKRect(wVX.X - 50, wVX.Y - 70, wVX.X + 50, wVX.Y + 30);
-            rect_wVY = new SKRect(wVY.X - 50, wVY.Y - 70, wVY.X + 50, wVY.Y + 30);
-            rect_wVW = new SKRect(wVW.X - 50, wVW.Y - 70, wVW.X + 50, wVW.Y + 30);
-            rect_wXW = new SKRect(wXW.X - 50, wXW.Y - 70, wXW.X + 50, wXW.Y + 30);
-            rect_wXY = new SKRect(wXY.X - 50, wXY.Y - 70, wXY.X + 50, wXY.Y + 30);
-            rect_wYW = new SKRect(wYW.X - 50, wYW.Y - 70, wYW.X + 50, wYW.Y + 30);
             switch (e.ActionType)
             {
                 case SKTouchAction.Pressed:
                     
                     if (rect_wUV.Contains(e.Location))
                     {
+                        //Debug.WriteLine("UV clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightUV, action);
                     }
                     else if (rect_wUX.Contains(e.Location))
                     {
+                        //Debug.WriteLine("UX clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightUX, action);
                     }
                     else if (rect_wUW.Contains(e.Location)
                         && ( this.id == 2 || this.id == 4))
                     {
+                        //Debug.WriteLine("UW clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightUW, action);
                     }
                     else if (rect_wUY.Contains(e.Location)
                         && (this.id == 3 || this.id == 4))
                     {
+                        //Debug.WriteLine("UY clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightUY, action);
                     }
                     else if (rect_wZW.Contains(e.Location))
                     {
+                        //Debug.WriteLine("ZW clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightZW, action);
                     }
                     else if (rect_wZY.Contains(e.Location))
                     {
+                        //Debug.WriteLine("ZY clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightZY, action);
                     }
                     else if (rect_wZV.Contains(e.Location) && this.id == 4)
                     {
+                        //Debug.WriteLine("ZV clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightZV, action);
                     }
                     else if (rect_wZX.Contains(e.Location) && this.id == 4)
                     {
+                        //Debug.WriteLine("ZX clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightZX, action);
                     }
                     else if (rect_wVX.Contains(e.Location)
                         && (this.id == 2 || this.id == 3 || this.id == 4))
                     {
+                        //Debug.WriteLine("VX clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightVX, action);
                     }
                     else if (rect_wVY.Contains(e.Location) && this.id == 1)
                     {
+                        //Debug.WriteLine("VY clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightVY, action);
                     }
                     else if (rect_wVW.Contains(e.Location))
                     {
+                        //Debug.WriteLine("VW clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightVW, action);
                     }
                     else if (rect_wXW.Contains(e.Location)
                         && (this.id == 1 || this.id == 2 || this.id == 3))
                     {
+                        //Debug.WriteLine("XW clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightXW, action);
                     }
                     else if (rect_wXY.Contains(e.Location))
                     {
+                        //Debug.WriteLine("XY clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightXY, action);
                     }
                     else if (rect_wYW.Contains(e.Location)
                         && (this.id == 2 || this.id == 3 || this.id == 4))
                     {
+                        //Debug.WriteLine("YW clicked");
                         await dS.OpenPickerPopUp();
                         SetWeight(ref weightYW, action);
                     }
@@ -191,10 +200,6 @@ namespace WertheApp.RN
             DrawRouters();
             DrawWeights();
 
-            //TODO: Think of Default Values
-            //TODO: Values anpassen depending on wie die Gewichte eingegeben wurden
-            //TODO: Add click event to weight locations
-
             //execute all drawing actions
             canvas.Flush();
         }
@@ -224,12 +229,12 @@ namespace WertheApp.RN
         *********************************************************************/
         public void DrawRouters()
         {
-            DrawRouter(routerZ, "z");
-            DrawRouter(routerU, "u");
-            DrawRouter(routerV, "v");
-            DrawRouter(routerW, "w");
-            DrawRouter(routerX, "x");
-            DrawRouter(routerY, "y");
+            DrawRouter(routerZ, "Z");
+            DrawRouter(routerU, "U");
+            DrawRouter(routerV, "V");
+            DrawRouter(routerW, "W");
+            DrawRouter(routerX, "X");
+            DrawRouter(routerY, "Y");
         }
 
         /**********************************************************************
@@ -251,64 +256,6 @@ namespace WertheApp.RN
                     DrawConnectionsNetwork4();
                     break;
             }
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        public void SetDefaultWeights()
-        {
-            switch (this.id)
-            {
-                case 1:
-                    weightUV = "1";
-                    weightUX = "1";
-                    weightZW = "1";
-                    weightZY = "1";
-                    weightXY = "1";
-                    weightVW = "1";
-                    weightVY = "1";
-                    weightXW = "1";
-                    break;
-                case 2:
-                    weightUV = "1";
-                    weightUX = "1";
-                    weightZW = "1";
-                    weightZY = "1";
-                    weightXY = "1";
-                    weightVW = "1";
-                    weightXW = "1";
-                    weightVX = "1";
-                    weightYW = "1";
-                    weightUW = "1";
-                    break;
-                case 3:
-                    weightUV = "1";
-                    weightUX = "1";
-                    weightZW = "1";
-                    weightZY = "1";
-                    weightXY = "1";
-                    weightVW = "1";
-                    weightXW = "1";
-                    weightVX = "1";
-                    weightYW = "1";
-                    weightUY = "1";
-                    break;
-                case 4:
-                    weightUV = "1";
-                    weightUX = "1";
-                    weightZW = "1";
-                    weightZY = "1";
-                    weightXY = "1";
-                    weightVW = "1";
-                    weightVX = "1";
-                    weightYW = "1";
-                    weightUW = "1";
-                    weightUY = "1";
-                    weightZV = "1";
-                    weightZX = "1";
-                    break;
-            }
-            this.Paint();
         }
 
         /**********************************************************************
@@ -407,7 +354,7 @@ namespace WertheApp.RN
             DrawConnection(routerW, routerY);
             DrawConnection(routerW, routerZ);
             DrawConnection(routerZ, routerY);
-            SKPoint p = new SKPoint(15 * xe, -15 * ye);
+            SKPoint p = new SKPoint(15 * xe, -30 * ye);
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
@@ -428,7 +375,7 @@ namespace WertheApp.RN
             DrawConnection(routerW, routerY);
             DrawConnection(routerW, routerZ);
             DrawConnection(routerZ, routerY);
-            SKPoint p = new SKPoint(15 * xe, 115 * ye);
+            SKPoint p = new SKPoint(15 * xe, 130 * ye);
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p, routerY);
@@ -450,25 +397,25 @@ namespace WertheApp.RN
             DrawConnection(routerW, routerZ);
             DrawConnection(routerZ, routerY);
 
-            SKPoint p = new SKPoint(15 * xe, -15 * ye);
+            SKPoint p = new SKPoint(15 * xe, -30 * ye);
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
             canvas.DrawPath(curveUW, sk_RouterContour);
 
-            SKPoint p2 = new SKPoint(15 * xe, 115 * ye);
+            SKPoint p2 = new SKPoint(15 * xe, 130 * ye);
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p2, routerY);
             canvas.DrawPath(curveUY, sk_RouterContour);
 
-            SKPoint p3 = new SKPoint(85 * xe, -15 * ye);
+            SKPoint p3 = new SKPoint(85 * xe, -30 * ye);
             SKPath curveZV = new SKPath();
             curveZV.MoveTo(routerZ);
             curveZV.CubicTo(routerZ, p3, routerV);
             canvas.DrawPath(curveZV, sk_RouterContour);
 
-            SKPoint p4 = new SKPoint(85 * xe, 115 * ye);
+            SKPoint p4 = new SKPoint(85 * xe, 130 * ye);
             SKPath curveZX = new SKPath();
             curveZX.MoveTo(routerZ);
             curveZX.CubicTo(routerZ, p4, routerX);
@@ -505,7 +452,28 @@ namespace WertheApp.RN
             canvas.DrawPath(cross, sk_RouterContour);
 
             //letter on router
-            this.canvas.DrawText(name, router.X, router.Y + 50, sk_RouterText);
+            switch (name)
+            {
+                case "U": this.canvas.DrawText(name, router.X + 90, router.Y + 20, sk_RouterText);
+                    break;
+                case "V":
+                    this.canvas.DrawText(name, router.X, router.Y - 75, sk_RouterText);
+                    break;
+                case "W":
+                    this.canvas.DrawText(name, router.X, router.Y - 75, sk_RouterText);
+                    break;
+                case "X":
+                    this.canvas.DrawText(name, router.X, router.Y + 115, sk_RouterText);
+                    break;
+                case "Y":
+                    this.canvas.DrawText(name, router.X, router.Y + 115, sk_RouterText);
+                    break;
+                case "Z":
+                    this.canvas.DrawText(name, router.X - 90, router.Y + 20, sk_RouterText);
+                    break;
+
+            }
+            
 
         }
 
@@ -521,9 +489,9 @@ namespace WertheApp.RN
         private void SetWeight(ref String o, String w)
         {
 
-            if (Regex.IsMatch(w, "[1-9]"))
+            if (w !=  null && Regex.IsMatch(w, "[1-9]"))
             {
-                Debug.WriteLine("IS MATCH");
+               
                 o = w;
                 this.Paint();
             }
@@ -559,21 +527,35 @@ namespace WertheApp.RN
 
             //define points for weights
             wUV = new SKPoint(20 * xe, 37.5f * ye);
-            wUX = new SKPoint(20 * xe, 65.5f * ye);
+            wUX = new SKPoint(20 * xe, 67.5f * ye);
             wZW = new SKPoint(80 * xe, 37.5f * ye);
-            wZY = new SKPoint(80 * xe, 65.5f * ye);
-            wXY = new SKPoint(50 * xe, 23.5f * ye);
-            wVW = new SKPoint(50 * xe, 80 * ye);
+            wZY = new SKPoint(80 * xe, 67.5f * ye);
+            wVW = new SKPoint(50 * xe, 23.5f * ye);
+            wXY = new SKPoint(50 * xe, 80.5f * ye);
             wVY = new SKPoint(41.5f * xe, 43.5f * ye);
             wXW = new SKPoint(58.5f * xe, 43.5f * ye);
             wVX = new SKPoint(31.5f * xe, 50 * ye);
             wYW = new SKPoint(68.5f * xe, 50 * ye);
-            wUW = new SKPoint(15 * xe, 23.5f * ye);
-            wUY = new SKPoint(15 * xe, 80 * ye);
-            wZX = new SKPoint(85 * xe, 80 * ye);
-            wZV = new SKPoint(85 * xe, 23.5f * ye);
+            wUW = new SKPoint(10 * xe, 23.5f * ye);
+            wUY = new SKPoint(10 * xe, 80 * ye);
+            wZX = new SKPoint(90 * xe, 80 * ye);
+            wZV = new SKPoint(90 * xe, 23.5f * ye);
 
             //define rectangles for touch
+            rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
+            rect_wUX = new SKRect(wUX.X - 50, wUX.Y - 70, wUX.X + 50, wUX.Y + 30);
+            rect_wUW = new SKRect(wUW.X - 50, wUW.Y - 70, wUW.X + 50, wUW.Y + 30);
+            rect_wUY = new SKRect(wUY.X - 50, wUY.Y - 70, wUY.X + 50, wUY.Y + 30);
+            rect_wZW = new SKRect(wZW.X - 50, wZW.Y - 70, wZW.X + 50, wZW.Y + 30);
+            rect_wZY = new SKRect(wZY.X - 50, wZY.Y - 70, wZY.X + 50, wZY.Y + 30);
+            rect_wZV = new SKRect(wZV.X - 50, wZV.Y - 70, wZV.X + 50, wZV.Y + 30);
+            rect_wZX = new SKRect(wZX.X - 50, wZX.Y - 70, wZX.X + 50, wZX.Y + 30);
+            rect_wVX = new SKRect(wVX.X - 50, wVX.Y - 70, wVX.X + 50, wVX.Y + 30);
+            rect_wVY = new SKRect(wVY.X - 50, wVY.Y - 70, wVY.X + 50, wVY.Y + 30);
+            rect_wVW = new SKRect(wVW.X - 50, wVW.Y - 70, wVW.X + 50, wVW.Y + 30);
+            rect_wXW = new SKRect(wXW.X - 50, wXW.Y - 70, wXW.X + 50, wXW.Y + 30);
+            rect_wXY = new SKRect(wXY.X - 50, wXY.Y - 70, wXY.X + 50, wXY.Y + 30);
+            rect_wYW = new SKRect(wYW.X - 50, wYW.Y - 70, wYW.X + 50, wYW.Y + 30);
         }
 
         /**********************************************************************
@@ -600,22 +582,28 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        public static void ClearNetworkList()
+        {
+            networkList.Clear();
+        }
+        /**********************************************************************
+        *********************************************************************/
         public static DijkstraSettingsDraw GetNetworkByID(int id)
         {
             int count = 0;
             foreach (DijkstraSettingsDraw network in networkList)
             {
                 count++;
-                Debug.WriteLine("thi.id: " + network.GetId());
+          
                 int networkId = network.GetId();
                 if (networkId == id)
                 {
-                    Debug.WriteLine("ID FOUND");
+                    
                     return network;
                 }
             }
             
-            Debug.WriteLine("ID NOT FOUND count: " + count);
+            
             return null; //not found
         }
 
@@ -635,6 +623,207 @@ namespace WertheApp.RN
             this.skiaview.InvalidateSurface();
 
         }
+
+        /**********************************************************************
+        *********************************************************************/
+        public void SetDefaultWeights()
+        {
+            switch (this.id)
+            {
+                case 1:
+                    weightUV = "1";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+
+                    weightVY = "1";
+                    weightXW = "1";
+                    weightVX = "0";
+                    weightYW = "0";
+                    weightUW = "0";
+                    weightUY = "0";
+
+                    weightZV = "0";
+                    weightZX = "0";
+                    break;
+                case 2:
+                    weightUV = "1";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+
+                    weightVY = "0";
+                    weightXW = "1";
+                    weightVX = "1";
+                    weightYW = "1";
+                    weightUW = "1";
+                    weightUY = "0";
+
+                    weightZV = "0";
+                    weightZX = "0";
+                    break;
+                case 3:
+                    weightUV = "1";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+
+                    weightVY = "0";
+                    weightXW = "1";
+                    weightVX = "1";
+                    weightYW = "1";
+                    weightUW = "0";
+                    weightUY = "1";
+
+                    weightZV = "0";
+                    weightZX = "0";
+                    break;
+                case 4:
+                    weightUV = "1";
+                    weightUX = "1";
+                    weightZW = "1";
+                    weightZY = "1";
+                    weightXY = "1";
+                    weightVW = "1";
+
+                    weightVY = "0";
+                    weightXW = "0";
+                    weightVX = "1";
+                    weightYW = "1";
+                    weightUW = "1";
+                    weightUY = "1";
+
+                    weightZV = "1";
+                    weightZX = "1";
+                    break;
+            }
+            this.Paint();
+        }
+
+
+        /**********************************************************************
+        *********************************************************************/
+        public void SetRandomWeights()
+        {
+            Random rnd = new Random();
+            switch (this.id)
+            {
+                case 1:
+                    weightUV = rnd.Next(1,9).ToString();
+                    weightUX = rnd.Next(1, 9).ToString();
+                    weightZW = rnd.Next(1, 9).ToString();
+                    weightZY = rnd.Next(1, 9).ToString();
+                    weightXY = rnd.Next(1, 9).ToString();
+                    weightVW = rnd.Next(1, 9).ToString();
+                    weightVY = rnd.Next(1, 9).ToString();
+                    weightXW = rnd.Next(1, 9).ToString();
+                    break;
+                case 2:
+                    weightUV = rnd.Next(1, 9).ToString();
+                    weightUX = rnd.Next(1, 9).ToString();
+                    weightZW = rnd.Next(1, 9).ToString();
+                    weightZY = rnd.Next(1, 9).ToString();
+                    weightXY = rnd.Next(1, 9).ToString();
+                    weightVW = rnd.Next(1, 9).ToString();
+                    weightXW = rnd.Next(1, 9).ToString();
+                    weightVX = rnd.Next(1, 9).ToString();
+                    weightYW = rnd.Next(1, 9).ToString();
+                    weightUW = rnd.Next(1, 9).ToString();
+                    break;
+                case 3:
+                    weightUV = rnd.Next(1, 9).ToString();
+                    weightUX = rnd.Next(1, 9).ToString();
+                    weightZW = rnd.Next(1, 9).ToString();
+                    weightZY = rnd.Next(1, 9).ToString();
+                    weightXY = rnd.Next(1, 9).ToString();
+                    weightVW = rnd.Next(1, 9).ToString();
+                    weightXW = rnd.Next(1, 9).ToString();
+                    weightVX = rnd.Next(1, 9).ToString();
+                    weightYW = rnd.Next(1, 9).ToString();
+                    weightUY = rnd.Next(1, 9).ToString();
+                    break;
+                case 4:
+                    weightUV = rnd.Next(1, 9).ToString();
+                    weightUX = rnd.Next(1, 9).ToString();
+                    weightZW = rnd.Next(1, 9).ToString();
+                    weightZY = rnd.Next(1, 9).ToString();
+                    weightXY = rnd.Next(1, 9).ToString();
+                    weightVW = rnd.Next(1, 9).ToString();
+                    weightVX = rnd.Next(1, 9).ToString();
+                    weightYW = rnd.Next(1, 9).ToString();
+                    weightUW = rnd.Next(1, 9).ToString();
+                    weightUY = rnd.Next(1, 9).ToString();
+                    weightZV = rnd.Next(1, 9).ToString();
+                    weightZX = rnd.Next(1, 9).ToString();
+                    break;
+            }
+            this.Paint();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public void SetPresetsWeights()
+        {
+            switch (this.id)
+            {
+                case 1:
+                    weightUV = "2";
+                    weightUX = "1";
+                    weightZW = "3";
+                    weightZY = "5";
+                    weightXY = "2";
+                    weightVW = "7";
+                    weightVY = "1";
+                    weightXW = "9";
+                    break;
+                case 2:
+                    weightUV = "7";
+                    weightUX = "6";
+                    weightZW = "1";
+                    weightZY = "5";
+                    weightXY = "8";
+                    weightVW = "7";
+                    weightXW = "2";
+                    weightVX = "3";
+                    weightYW = "2";
+                    weightUW = "4";
+                    break;
+                case 3:
+                    weightUV = "1";
+                    weightUX = "1";
+                    weightZW = "2";
+                    weightZY = "1";
+                    weightXY = "2";
+                    weightVW = "1";
+                    weightXW = "1";
+                    weightVX = "6";
+                    weightYW = "1";
+                    weightUY = "3";
+                    break;
+                case 4:
+                    weightUV = "7";
+                    weightUX = "4";
+                    weightZW = "7";
+                    weightZY = "8";
+                    weightXY = "3";
+                    weightVW = "2";
+                    weightVX = "1";
+                    weightYW = "6";
+                    weightUW = "6";
+                    weightUY = "5";
+                    weightZV = "5";
+                    weightZX = "5";
+                    break;
+            }
+            this.Paint();
+        }
+
         /**********************************************************************
         *********************************************************************/
         static private void MakeSKPaint()
@@ -651,7 +840,7 @@ namespace WertheApp.RN
             {
                 Color = SKColors.Black,
                 Style = SKPaintStyle.StrokeAndFill,
-                TextSize = 35,
+                TextSize = 55,
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
                 IsVerticalText = false

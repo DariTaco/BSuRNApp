@@ -67,6 +67,7 @@ namespace WertheApp
                         {
                             await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
                         }
+                        DijkstraSettings.ClearNetworkList();
                         await Navigation.PushAsync(new DijkstraSettings());
                         break;
                 }

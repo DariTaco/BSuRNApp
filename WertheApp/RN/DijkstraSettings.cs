@@ -29,14 +29,20 @@ namespace WertheApp.RN
             // keep track of which tab is currently selected
             this.CurrentPageChanged += (object sender, EventArgs e) => {
                 currentTab = this.Children.IndexOf(this.CurrentPage) + 1;
-                Debug.WriteLine("Current tab is #" + currentTab);
+                
                 
             };
+            ShowMyHint();
         }
 
         //METHODS
         /**********************************************************************
         *********************************************************************/
+        public async void ShowMyHint()
+        {
+            await DisplayAlert("Hint", "You can change the weights by tapping on them", "OK");
+        }
+
         public async Task OpenPickerPopUp()
         {
             String action = await DisplayActionSheet("", "Cancel", null, "1", "2", "3", "4", "5", "6", "7", "8", "9");
@@ -49,7 +55,7 @@ namespace WertheApp.RN
         {
             //split grid in two parts (7:1)
             RowDefinitionCollection rowDefinition = new RowDefinitionCollection {
-                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(9, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
 
@@ -67,12 +73,20 @@ namespace WertheApp.RN
                 b_Start.Clicked += B_Start_Clicked;
                 Button b_Default = new Button
                 {
-                    Text = "Set Default Values",
+                    Text = "Default",
                     //WidthRequest = GetStackChildSize(),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.FillAndExpand
                 };
                 b_Default.Clicked += B_Default_Clicked;
+                Button b_Presets = new Button
+                {
+                    Text = "Random",
+                    //WidthRequest = GetStackChildSize(),
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.FillAndExpand
+                };
+                b_Presets.Clicked += B_Presets_Clicked;
                 //stacklayout
                 var stackLayout = new StackLayout
                 {
@@ -81,6 +95,7 @@ namespace WertheApp.RN
 
                 };
                 stackLayout.Children.Add(b_Default);
+                stackLayout.Children.Add(b_Presets);
                 stackLayout.Children.Add(b_Start);
 
                 //get canvas to draw on
@@ -111,14 +126,22 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        void B_Presets_Clicked(object sender, EventArgs e)
+        {
+            //DijkstraSettingsDraw.GetNetworkByID(currentTab).SetPresetsWeights();
+            DijkstraSettingsDraw.GetNetworkByID(currentTab).SetRandomWeights();
+
+        }
+        /**********************************************************************
+        *********************************************************************/
         async void B_Start_Clicked(object sender, EventArgs e)
         {
             if (IsLandscape())
             {
                 await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
             }
-
-            await Navigation.PushAsync(new Dijkstra());
+            String[] a = DijkstraSettingsDraw.GetNetworkByID(currentTab).GetAllWeights();
+            await Navigation.PushAsync(new Dijkstra(a, currentTab));
         }
 
         /**********************************************************************
@@ -161,6 +184,13 @@ namespace WertheApp.RN
                 this.IsVisible = true;
                 this.CurrentPage.IsVisible = true;
             }
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void ClearNetworkList()
+        {
+            DijkstraSettingsDraw.ClearNetworkList();
         }
 
         /**********************************************************************

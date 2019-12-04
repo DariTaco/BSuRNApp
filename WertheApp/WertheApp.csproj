@@ -79,6 +79,7 @@
     <Compile Include="RN\DijkstraSettings.cs" />
     <Compile Include="RN\DijkstraDraw.cs" />
     <Compile Include="RN\DijkstraSettingsDraw.cs" />
+    <Compile Include="RN\DijkstraAlgorithm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

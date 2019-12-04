@@ -10,21 +10,27 @@ namespace WertheApp.RN
         //VARIABLES
         private double width = 0;
         private double height = 0;
-        private SKCanvasView skiaview;
-        private DijkstraDraw draw;
-        private bool toggleRestart;
-        private Button b_Next, b_Back, b_Restart;
+
+        private static SKCanvasView skiaview;
+        private static DijkstraDraw draw;
+        private static bool toggleRestart;
+        private static Button b_Next, b_Back, b_Restart;
+        private static int currentStep;
+        private static int maxStep;
+
 
         //CONSTRUCTOR
-        public Dijkstra()
+        public Dijkstra(String[] a, int n)
         {
             Title = "Dijkstra";
             toggleRestart = false;
+            currentStep = 0;
+            maxStep = 20;
 
-            draw = new DijkstraDraw();
+            draw = new DijkstraDraw(a, n);
             CreateContent();
 
-            
+
 
         }
 
@@ -38,7 +44,7 @@ namespace WertheApp.RN
             this.Content = grid;
             grid.RowDefinitions = new RowDefinitionCollection {
                     // Each half will be the same size:
-                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(9, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
             CreateTopHalf(grid);
@@ -51,6 +57,7 @@ namespace WertheApp.RN
         {
 
             skiaview = new SKCanvasView();
+      
             skiaview = DijkstraDraw.ReturnCanvas();
             grid.Children.Add(skiaview, 0, 0);
         }
@@ -97,7 +104,7 @@ namespace WertheApp.RN
         *********************************************************************/
         void B_Next_Clicked(object sender, EventArgs e)
         {
-            bool disableOrEnable = DijkstraDraw.NextStep();
+            bool disableOrEnable = NextStep();
             b_Next.IsEnabled = disableOrEnable;
             toggleRestart = true;
             b_Restart.Text = "Restart";
@@ -111,7 +118,7 @@ namespace WertheApp.RN
         {
             if (toggleRestart)
             {
-                DijkstraDraw.Restart();
+                Restart();
                 b_Restart.Text = "Go to End";
                 toggleRestart = false;
                 b_Back.IsEnabled = false;
@@ -119,7 +126,7 @@ namespace WertheApp.RN
             }
             else
             {
-                DijkstraDraw.GoToEnd();
+                GoToEnd();
                 b_Restart.Text = "Restart";
                 toggleRestart = true;
                 b_Back.IsEnabled = true;
@@ -133,7 +140,7 @@ namespace WertheApp.RN
         void B_Back_Clicked(object sender, EventArgs e)
         {
 
-            bool disableOrEnable = DijkstraDraw.PreviousStep();
+            bool disableOrEnable = PreviousStep();
             b_Back.IsEnabled = disableOrEnable;
             if (disableOrEnable)
             {
@@ -148,6 +155,14 @@ namespace WertheApp.RN
             b_Next.IsEnabled = true;
             DijkstraDraw.Paint();
         }
+
+        /**********************************************************************
+        *********************************************************************/
+        public DijkstraDraw GetDraw()
+        {
+            return draw;
+        }
+
         /**********************************************************************
         *********************************************************************/
         //this method is called everytime the device is rotated
@@ -169,6 +184,56 @@ namespace WertheApp.RN
             {
                 this.Content.IsVisible = true;
             }
+        }
+
+        /**********************************************************************
+      *********************************************************************/
+        public static bool NextStep()
+        {
+            currentStep++;
+            UpdateDijkstraDraw();
+            if (currentStep >= maxStep)
+            {
+                return false;
+            }
+           
+            return true;
+
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static bool PreviousStep()
+        {
+            currentStep--;
+            UpdateDijkstraDraw();
+            if (currentStep <= 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void Restart()
+        {
+            currentStep = 0;
+            UpdateDijkstraDraw();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void GoToEnd()
+        {
+            currentStep = maxStep;
+            UpdateDijkstraDraw();
+        }
+
+        public static void UpdateDijkstraDraw()
+        {
+            DijkstraDraw.SetCurrentStep(currentStep);
+            DijkstraDraw.Paint();
         }
     }
 
