@@ -6,11 +6,18 @@ using System.Linq;
 namespace WertheApp.RN
 {
 
+    /**********************************************************************
+    *********************************************************************/
     public class DijkstraAlgorithm
     {
         //VARIABLES
         private static String[,] tableValues;
+        private static bool[,] visitedEdges;
         private static DNetwork network;
+        private static String[] n;
+        private static bool[] uv, ux, uw, uy, zw, zy, zv, zx, vx, vy, vw, xw, xy, yw; 
+
+        private static String[] dv, dw, dx, dy, dz;
 
         //CONSTRUCTOR
         public DijkstraAlgorithm(String[] a)
@@ -19,40 +26,277 @@ namespace WertheApp.RN
         }
 
         //METHODS
-        public static void Initialize()
+        public static void CreateVisitedEdges()
         {
-            //visit very first node (start node)
-            network.VisitNode(network.nodesList.First());
+            /* 0weightUV
+             * 1weightUX,
+             * 2weightUW,
+             * 3weightUY,
+             * 4weightZW,
+             * 5weightZY,
+             * 6weightZV,
+             * 7weightZX,
+             * 8weightVX,
+             * 9weightVY,
+             * 10weightVW,
+             * 11weightXW,
+             * 12weightXY,
+             * 13weightYW */
 
-            //find neighbors
-            foreach (DNode neighbor in network.visitedNodesList.Last().GetNeighbors())
+           visitedEdges = new bool[31, 14];
+
+            for(int i = 0; i < 31; i++)
             {
-                //assign weight of connecting edge to neighbor
-                int weight = GetWeightFromEdge(network.visitedNodesList.Last(), neighbor);
-                neighbor.SetWeight(weight);
+                int j = 0;
+                if (i > 5){ j = 1; }
+                if (i > 11) { j = 2; }
+                if (i > 17) { j = 3; }
+                if (i > 23) { j = 4; }
+                if (i > 29) { j = 5; }
+                visitedEdges[i, 0] = uv[j];
+                visitedEdges[i, 1] = ux[j];
+                visitedEdges[i, 2] = uw[j];
+                visitedEdges[i, 3] = uy[j];
+                visitedEdges[i, 4] = zw[j];
+                visitedEdges[i, 5] = zy[j];
+                visitedEdges[i, 6] = zv[j];
+                visitedEdges[i, 7] = zx[j];
+                visitedEdges[i, 8] = vx[j];
+                visitedEdges[i, 9] = vy[j];
+                visitedEdges[i, 10] = vw[j];
+                visitedEdges[i, 11] = xw[j];
+                visitedEdges[i, 12] = xy[j];
+                visitedEdges[i, 13] = yw[j];
             }
 
-            FindMinimalWeight(network.visitedNodesList.Last());
         }
 
-        public static void FindMinimalWeight(DNode node)
+        public static bool[,] GetVisistedEdges()
         {
-            //network.visitedNodesList.Last()
-            //find neighbor of start node with the minimal edge cost
-            int minimalWeight = 999999999;
-            DNode minimalNeighbor = null;
+            return visitedEdges;
+        }
+
+        public static void CreateTableValuesArray()
+        {
+            //make N'
+            n = new string[6];
+            int index = 0;
+            string s = "";
+            foreach (DNode node in network.visitedNodesList)
+            {
+                String name = node.GetNodeName();
+                s = s + name;
+                n[index] = s;
+                index++;
+            }
+
+            //∞
+            //step, round(Dijkstra step), N', D(v), D(w), D(x), D(y), D(z)
+            tableValues = new String[,] {
+            { "0", "0", n[0] ,  "",        "",     "",     "",     "" , n[0]},
+            { "1", "0", "",     dv[0] ,    "",     "",     "",     "" , n[0]},
+            { "2", "0", "",     "",        dw[0],  "",     "",     "" , n[0]},
+            { "3", "0", "",     "",        "",     dx[0],  "",     "" , n[0]},
+            { "4", "0", "",     "",        "",     "",     dy[0],  "" , n[0]},
+            { "5", "0", "",     "",        "",     "",     "",     dz[0] , n[0]},
+
+            { "6",  "1", n[1],  "",        "",     "",     "",     "" , n[1]},
+            { "7",  "1", "",    dv[1],     "",     "",     "",     "" , n[1]},
+            { "8",  "1", "",    "",        dw[1],  "",     "",     "" , n[1]},
+            { "9",  "1", "",    "",        "",     dx[1],  "",     "" , n[1]},
+            { "10", "1", "",    "",        "",     "",     dy[1],  "" , n[1]},
+            { "11", "1", "",    "",        "",     "",     "",     dz[1] , n[1]},
+
+            { "12", "2", n[2],  "",        "",     "",     "",     "" , n[2]},
+            { "13", "2", "",    dv[2],     "",     "",     "",     "" , n[2]},
+            { "14", "2", "",    "",        dw[2],  "",     "",     "" , n[2]},
+            { "15", "2", "",    "",        "",     dx[2],  "",     "" , n[2]},
+            { "16", "2", "",    "",        "",     "",     dy[2],  "" , n[2]},
+            { "17", "2", "",    "",        "",     "",     "",     dz[2] , n[2]},
+
+            { "18", "3", n[3],  "",        "",     "",     "",     "" , n[3]},
+            { "19", "3", "",    dv[3],     "",     "",     "",     "" , n[3]},
+            { "20", "3", "",    "",        dw[3],  "",     "",     "" , n[3]},
+            { "21", "3", "",    "",        "",     dx[3],  "",     "" , n[3]},
+            { "22", "3", "",    "",        "",     "",     dy[3],  "" , n[3]},
+            { "23", "3", "",    "",        "",     "",     "",     dz[3] , n[3]},
+
+            { "24", "4", n[4],  "",        "",     "",     "",     "" , n[4]},
+            { "25", "4", "",    dv[4],     "",     "",     "",     "" , n[4]},
+            { "26", "4", "",    "",        dw[4],  "",     "",     "" , n[4]},
+            { "27", "4", "",    "",        "",     dx[4],  "",     "" , n[4] },
+            { "28", "4", "",    "",        "",     "",     dy[4],  "" , n[4] },
+            { "29", "4", "",    "",        "",     "",     "",     dz[4] , n[4]},
+
+            { "30", "5", n[5],  "",        "",     "",     "",     "" , n[5]}
+
+            };
+        }
+
+        public static void Initialize()
+        {
+            //nodes
+            dv = new String[5] { "-", "-", "-", "-", "-" };
+            dw = new String[5] { "-", "-", "-", "-", "-" };
+            dx = new String[5] { "-", "-", "-", "-", "-" };
+            dy = new String[5] { "-", "-", "-", "-", "-" };
+            dz = new String[5] { "-", "-", "-", "-", "-" };
+
+            //edges
+            uv = new bool[6];
+            ux = new bool[6];
+            uw = new bool[6];
+            uy = new bool[6];
+            zw = new bool[6];
+            zy = new bool[6];
+            zv = new bool[6];
+            zx = new bool[6];
+            vx = new bool[6];
+            vy = new bool[6];
+            vw = new bool[6];
+            xw = new bool[6];
+            xy = new bool[6];
+            yw = new bool[6];
+
+            int discovery = 0;
+            //visit very first node (start node)
+            network.VisitNode(network.nodesList.First(), discovery);
+
+            //until all nodes are visited
+            while(network.unvisitedNodesList.Count != 0)
+            {
+                AssignNewWeightsToNeighbors(network.visitedNodesList.Last());
+                MakeArraysForTable(network.visitedNodesList.Last(), discovery);
+                
+                DNode nodeToVisitNext = FindUnvisitedNodeWithMinWeight();
+                discovery++;
+                network.VisitEdge(nodeToVisitNext.GetPreviousNode(), nodeToVisitNext);
+                network.VisitNode(nodeToVisitNext, discovery);
+                MakeArrayForGraph(discovery);
+
+            }
+        }
+
+        public static void MakeArrayForGraph(int discovery)
+        {
+            foreach(DEdge edge in network.visitedEdgesList)
+            {
+
+                if (edge.Check("u", "v")) { uv[discovery] = true; };
+                if (edge.Check("u", "x")) { ux[discovery] = true; };
+                if (edge.Check("u", "w")) { uw[discovery] = true; };
+                if (edge.Check("u", "y")) { uy[discovery] = true; };
+                if (edge.Check("z", "w")) { zw[discovery] = true; };
+                if (edge.Check("z", "y")) { zy[discovery] = true; };
+                if (edge.Check("z", "v")) { zv[discovery] = true; };
+                if (edge.Check("z", "x")) { zx[discovery] = true; };
+                if (edge.Check("v", "x")) { vx[discovery] = true; };
+                if (edge.Check("v", "y")) { vy[discovery] = true; };
+                if (edge.Check("v", "w")) { vw[discovery] = true; };
+                if (edge.Check("x", "w")) { xw[discovery] = true; };
+                if (edge.Check("x", "y")) { xy[discovery] = true; };
+                if (edge.Check("y", "w")) { yw[discovery] = true; };    
+            }
+
+
+        }
+
+        public static void MakeArraysForTable(DNode node, int discovery)
+        {
+            //∞
+            foreach(DNode nd in network.nodesList)
+            {
+                String name = nd.GetNodeName();
+                String weight = nd.GetWeight().ToString();
+                if (weight == "999999999")
+                {
+                    weight = "∞";
+                    switch (name)
+                    {
+                        //case "u": break;
+                        case "v": dv[discovery] = weight; break;
+                        case "w": dw[discovery] = weight; break;
+                        case "x": dx[discovery] = weight; break;
+                        case "y": dy[discovery] = weight; break;
+                        case "z": dz[discovery] = weight; break;
+                    }
+                }
+
+            }
+
+            //D(v), D(w), D(x), D(y), D(z)
             foreach (DNode neighbor in node.GetNeighbors())
             {
-              
-                Debug.WriteLine("neighbors " + neighbor.GetNodeName() + " weight " + neighbor.GetWeight());
-                //find neighbor with minimal weight
-                if (neighbor.GetWeight() <= minimalWeight)
+
+                String name = neighbor.GetNodeName();
+                String weight = neighbor.GetWeight().ToString();
+                if (neighbor.IsVisited())
                 {
-                    minimalWeight = neighbor.GetWeight();
-                    minimalNeighbor = neighbor;
+                    weight = "vis";
+                }
+                else {
+                    String prev = neighbor.GetPreviousNode().GetNodeName();
+                    weight = weight + ", " + prev;
+                }
+
+                switch (name)
+                {
+                    //case "u": break;
+                    case "v": dv[discovery] = weight; break;
+                    case "w": dw[discovery] = weight; break;
+                    case "x": dx[discovery] = weight; break;
+                    case "y": dy[discovery] = weight; break;
+                    case "z": dz[discovery] = weight; break;
                 }
             }
-            Debug.WriteLine("final minimal weight " + minimalWeight);
+        }
+
+        public static void AssignNewWeightsToNeighbors(DNode node)
+        {
+            //network.visitedNodesList.Last()
+            //find neighbors
+            Debug.WriteLine("Checking out node " + node.GetNodeName());
+            foreach (DNode neighbor in node.GetNeighbors())
+            {
+                if (!neighbor.IsVisited())
+                {
+                    Debug.WriteLine("neighbor " + neighbor.GetNodeName());
+                    //assign combined weight of connecting edge and previous node
+                    //to neighbor if it's smaller than the current weight of neighbor
+                    int edgeWeight = GetWeightFromEdge(node, neighbor);
+                    int prevWeight = node.GetWeight();
+                    int weight = neighbor.GetWeight();
+                    if ((edgeWeight + prevWeight) < weight)
+                    {
+                        Debug.WriteLine("add previous node: " + node.GetNodeName());
+                        weight = (edgeWeight + prevWeight);
+                        neighbor.AddPreviousNode(ref node);
+                    }
+                    neighbor.SetWeight(weight);
+                }
+            }
+        }
+
+        public static DNode FindUnvisitedNodeWithMinWeight()
+        {
+       
+            //find unvisited neighbor of node with the minimal edge cost
+            int minWeight = 999999999;
+            DNode minNode = null;
+            foreach (DNode node in network.unvisitedNodesList)
+            {
+              
+                Debug.WriteLine("node " + node.GetNodeName() + " weight " + node.GetWeight());
+                //find neighbor with minimal weight
+                if (node.GetWeight() <= minWeight)
+                {
+                    minWeight = node.GetWeight();
+                    minNode = node;
+                }
+            }
+            Debug.WriteLine("final minimal node and weight " + minNode.GetNodeName() + ", " + minWeight);
+            Debug.WriteLine("");
+            return minNode;
 
         }
 
@@ -73,12 +317,12 @@ namespace WertheApp.RN
         public static void BuildNetwork1(String[] a)
         {
             //define nodes with U as start node
-            DNode nodeU = new DNode("U");
-            DNode nodeV = new DNode("V");
-            DNode nodeW = new DNode("W");
-            DNode nodeX = new DNode("X");
-            DNode nodeY = new DNode("Y");
-            DNode nodeZ = new DNode("Z");
+            DNode nodeU = new DNode("u");
+            DNode nodeV = new DNode("v");
+            DNode nodeW = new DNode("w");
+            DNode nodeX = new DNode("x");
+            DNode nodeY = new DNode("y");
+            DNode nodeZ = new DNode("z");
             nodeU.SetStartNode();
 
             //define network and add nodes to network
@@ -115,12 +359,12 @@ namespace WertheApp.RN
         public static void BuildNetwork2(String[] a)
         {
             //define nodes with U as start node
-            DNode nodeU = new DNode("U");
-            DNode nodeV = new DNode("V");
-            DNode nodeW = new DNode("W");
-            DNode nodeX = new DNode("X");
-            DNode nodeY = new DNode("Y");
-            DNode nodeZ = new DNode("Z");
+            DNode nodeU = new DNode("u");
+            DNode nodeV = new DNode("v");
+            DNode nodeW = new DNode("w");
+            DNode nodeX = new DNode("x");
+            DNode nodeY = new DNode("y");
+            DNode nodeZ = new DNode("z");
 
             //define network and add nodes to network
             network = new DNetwork(2);
@@ -158,12 +402,12 @@ namespace WertheApp.RN
         public static void BuildNetwork3(String[] a)
         {
             //define nodes with U as start node
-            DNode nodeU = new DNode("U");
-            DNode nodeV = new DNode("V");
-            DNode nodeW = new DNode("W");
-            DNode nodeX = new DNode("X");
-            DNode nodeY = new DNode("Y");
-            DNode nodeZ = new DNode("Z");
+            DNode nodeU = new DNode("u");
+            DNode nodeV = new DNode("v");
+            DNode nodeW = new DNode("w");
+            DNode nodeX = new DNode("x");
+            DNode nodeY = new DNode("y");
+            DNode nodeZ = new DNode("z");
 
             //define network and add nodes to network
             network = new DNetwork(3);
@@ -201,12 +445,12 @@ namespace WertheApp.RN
         public static void BuildNetwork4(String[] a)
         {
             //define nodes with U as start node
-            DNode nodeU = new DNode("U");
-            DNode nodeV = new DNode("V");
-            DNode nodeW = new DNode("W");
-            DNode nodeX = new DNode("X");
-            DNode nodeY = new DNode("Y");
-            DNode nodeZ = new DNode("Z");
+            DNode nodeU = new DNode("u");
+            DNode nodeV = new DNode("v");
+            DNode nodeW = new DNode("w");
+            DNode nodeX = new DNode("x");
+            DNode nodeY = new DNode("y");
+            DNode nodeZ = new DNode("z");
 
             //define network and add nodes to network
             network = new DNetwork(4);
@@ -243,42 +487,11 @@ namespace WertheApp.RN
             network.AddEdge(ref edgeUY);
             network.AddEdge(ref edgeZV);
             network.AddEdge(ref edgeZX);
-
-            PrintArray(a);
         }
 
         public static String[,] GetTableValues()
         {
             return tableValues;
-        }
-
-        public static void CreateTableValuesArray()
-        {
-            //∞
-            //step, round(Dijkstra step), N', D(v), D(w), D(x), D(y), D(z)
-            tableValues = new String[,] {
-            { "0", "0", "u", "",        "",     "",     "",     "" },
-            { "1", "0", "", "here",    "",     "",     "",     "" },
-            { "2", "0", "", "",        "here", "",     "",     "" },
-            { "3", "0", "", "",        "",     "here", "",     "" },
-            { "4", "0", "", "",        "",     "",     "here", "" },
-            { "5", "0", "", "",        "",     "",     "",     "here" },
-
-            { "6",  "1", "u", "",        "",     "",     "",     "" },
-            { "7",  "1", "", "x",        "",     "",     "",     "" },
-            { "8",  "1", "", "",        "x",     "",     "",     "" },
-            { "9",  "1", "", "",        "",     "x",     "",     "" },
-            { "10", "1", "", "",        "",     "",     "x",     "" },
-            { "11", "1", "", "",        "",     "",     "",     "x" },
-
-            { "12", "2", "u", "",        "",     "",     "",     "" },
-            { "13", "2", "", "x",        "",     "",     "",     "" },
-            { "14", "2", "", "",        "x",     "",     "",     "" },
-            { "15", "2", "", "",        "",     "x",     "",     "" },
-            { "16", "2", "", "",        "",     "",     "x",     "" },
-            { "17", "2", "", "",        "",     "",     "",     "x" }
-
-            };
         }
 
         public static void PrintArray(String[] a)
@@ -294,6 +507,9 @@ namespace WertheApp.RN
         }
     }
 
+
+    /**********************************************************************
+    *********************************************************************/
     //Networks
     public class DNetwork
     {
@@ -303,6 +519,8 @@ namespace WertheApp.RN
         public List<DEdge> edgesList;
         public List<DNode> visitedNodesList;
         public List<DNode> unvisitedNodesList;
+        public List<DEdge> visitedEdgesList;
+        public List<DEdge> unvisitedEdgesList;
 
         //CONSTRUCTOR
         public DNetwork(int id)
@@ -312,6 +530,8 @@ namespace WertheApp.RN
             this.edgesList = new List<DEdge>();
             this.visitedNodesList = new List<DNode>();
             this.unvisitedNodesList = new List<DNode>();
+            this.visitedEdgesList = new List<DEdge>();
+            this.unvisitedEdgesList = new List<DEdge>();
         }
 
         //METHODS
@@ -329,10 +549,11 @@ namespace WertheApp.RN
             if (!this.edgesList.Contains(edge))
             {
                 this.edgesList.Add(edge);
+                this.unvisitedEdgesList.Add(edge);
             }
         }
 
-        public void VisitNode(DNode node)
+        public void VisitNode(DNode node, int discovery)
         {
             if (this.nodesList.Contains(node)
                 && !this.visitedNodesList.Contains(node)
@@ -340,18 +561,52 @@ namespace WertheApp.RN
             {
                 this.visitedNodesList.Add(node);
                 this.unvisitedNodesList.Remove(node);
-                Debug.WriteLine("Node " + node.GetNodeName() + " visited");
+                node.SetDiscovery(discovery);
+                Debug.WriteLine("Node " + node.GetNodeName() + " VISITED");
             }
+        }
+
+        public void VisitEdge(DNode a, DNode b)
+        {
+            DEdge edge = FindEdge(a, b);
+            if (this.edgesList.Contains(edge)
+            && !this.visitedEdgesList.Contains(edge)
+            && this.unvisitedEdgesList.Contains(edge))
+            {
+                this.visitedEdgesList.Add(edge);
+                this.unvisitedEdgesList.Remove(edge);
+                edge.Visit();
+                Debug.WriteLine("Edge " + edge.GetNodeA().GetNodeName() +  ", " + edge.GetNodeB().GetNodeName() + " VISITED");
+            }
+        }
+
+        public DEdge FindEdge(DNode a, DNode b)
+        {
+            foreach(DEdge edge in this.edgesList)
+            {
+                DNode nodeA = edge.GetNodeA();
+                DNode nodeB = edge.GetNodeB();
+
+                if((nodeA == a && nodeB == b) || (nodeA == b && nodeB == a))
+                {
+                    return edge;
+                }
+            }
+            return null;
         }
 
     }
 
+
+    /**********************************************************************
+    *********************************************************************/
     //Edges
     public class DEdge
     {
         //VARIABLES
         private DNode nodeA, nodeB;
         private int weight;
+        private bool visited;
 
         //CONSTRUCTOR
         public DEdge(ref DNode a, ref DNode b, int w)
@@ -361,6 +616,7 @@ namespace WertheApp.RN
             this.nodeA = a;
             this.nodeB = b;
             this.weight = w;
+            this.visited = false;
         }
 
         //METHODS
@@ -378,8 +634,25 @@ namespace WertheApp.RN
         {
             return this.weight;
         }
+
+        public void Visit()
+        {
+            this.visited = true;
+        }
+
+        public bool Check(String a, String b)
+        {
+            if((this.nodeA.GetNodeName() == a && this.nodeB.GetNodeName() == b)
+                || (this.nodeA.GetNodeName() == b && this.nodeB.GetNodeName() == a)){
+                return true;
+            }
+            return false;
+        }
     }
 
+
+    /**********************************************************************
+    *********************************************************************/
     //Nodes
     public class DNode
     {
@@ -389,6 +662,7 @@ namespace WertheApp.RN
         private int discovery;
         private bool isStartNode;
         private List<DNode> neighborsList;
+        private DNode previousNode;
 
         //CONSTRUCTOR
         public DNode(String name)
@@ -397,9 +671,20 @@ namespace WertheApp.RN
             this.isStartNode = false;
             this.discovery = -1;
             neighborsList = new List<DNode>();
+            this.weight = 999999999;
         }
 
         //METHODS
+        public void AddPreviousNode(ref DNode prev)
+        {
+            this.previousNode = prev;
+        }
+
+        public DNode GetPreviousNode()
+        {
+            return this.previousNode;
+        }
+
         public String GetNodeName()
         {
             return this.name;
@@ -425,6 +710,15 @@ namespace WertheApp.RN
             this.discovery = discovery;
         }
 
+        public bool IsVisited()
+        {
+            if(discovery == -1)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool GetIsStartNode()
         {
             return this.isStartNode;
@@ -433,7 +727,9 @@ namespace WertheApp.RN
         public void SetStartNode()
         {
             this.isStartNode = true;
+            this.previousNode = this;
             this.discovery = 0;
+            this.weight = 0;
         }
 
         public void AddNeighbor(ref DNode neighbor)
@@ -455,4 +751,6 @@ namespace WertheApp.RN
         }
 
     }
+    /**********************************************************************
+    *********************************************************************/
 }

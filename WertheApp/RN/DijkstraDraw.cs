@@ -4,6 +4,7 @@ using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System.Diagnostics; //Debug.WriteLine("");
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WertheApp.RN
 {
@@ -35,7 +36,8 @@ namespace WertheApp.RN
         private static int currentStep;
 
         private static SKPaint sk_Background, sk_PaintBlack, sk_RouterText,
-        sk_RouterContour, sk_RouterFill, sk_WeightsText, sk_TableCaption,
+        sk_RouterContour, sk_RouterFill, sk_RouterFillRed, sk_WeightsText,
+            sk_TableCaption, sk_EdgeVisited,
             sk_PaintBlackThin, sk_Background2;
         private static float textSize, strokeWidth;
 
@@ -56,6 +58,7 @@ namespace WertheApp.RN
             
             DijkstraAlgorithm.Initialize();
             DijkstraAlgorithm.CreateTableValuesArray();
+            DijkstraAlgorithm.CreateVisitedEdges();
 
             // crate the canvas
             skiaview = new SKCanvasView();
@@ -63,6 +66,8 @@ namespace WertheApp.RN
 
             textSize = 5;
             strokeWidth = 0.2f;
+
+            currentStep = 0;
 
 
             
@@ -94,31 +99,11 @@ namespace WertheApp.RN
             DrawRouters();
             DrawWeights();
 
-            String[,] tableContents = DijkstraAlgorithm.GetTableValues();
-            for (int i = 0; i <= currentStep; i++) {
-                int round = Int32.Parse(tableContents[i, 1]);
+            DrawTableContents();
 
-                float yValueContent = 0;
-                switch (round)
-                {
-                    case 0: yValueContent = 119.2f; break;
-                    case 1: yValueContent = 129.2f; break;
-                    case 2: yValueContent = 139.2f; break;
-                    case 3: yValueContent = 149.2f; break;
-                    case 4: yValueContent = 159.2f; break;
-                    case 5: yValueContent = 169.2f; break;
-                }
-                canvas.DrawText(tableContents[i, 2], new SKPoint(15 * xe, yValueContent * ye2), sk_TableCaption);
-                canvas.DrawText(tableContents[i, 3], new SKPoint(35 * xe, yValueContent * ye2), sk_TableCaption);
-                canvas.DrawText(tableContents[i, 4], new SKPoint(47.5f * xe, yValueContent * ye2), sk_TableCaption);
-                canvas.DrawText(tableContents[i, 5], new SKPoint(60 * xe, yValueContent * ye2), sk_TableCaption);
-                canvas.DrawText(tableContents[i, 6], new SKPoint(72.5f * xe, yValueContent * ye2), sk_TableCaption);
-                canvas.DrawText(tableContents[i, 7], new SKPoint(85 * xe, yValueContent * ye2), sk_TableCaption);
-
-            }
-
-            //execute all drawing actions
-            canvas.Flush();
+        
+                //execute all drawing actions
+                canvas.Flush();
         }
 
         /**********************************************************************
@@ -139,18 +124,49 @@ namespace WertheApp.RN
             canvas.DrawLine(new SKPoint(0 * xe, 100 * ye2), new SKPoint(100 * xe, 100 * ye2), sk_PaintBlack);
 
         }
+
+        /**********************************************************************
+        *********************************************************************/
+        public static void DrawTableContents()
+        {
+            String[,] tableContents = DijkstraAlgorithm.GetTableValues();
+            for (int i = 0; i <= currentStep; i++)
+            {
+                int round = Int32.Parse(tableContents[i, 1]);
+
+                float yValueContent = 0;
+                switch (round)
+                {
+                    case 0: yValueContent = 119.2f; break;
+                    case 1: yValueContent = 129.2f; break;
+                    case 2: yValueContent = 139.2f; break;
+                    case 3: yValueContent = 149.2f; break;
+                    case 4: yValueContent = 159.2f; break;
+                    case 5: yValueContent = 169.2f; break;
+                }
+                canvas.DrawText(tableContents[i, 2], new SKPoint(20 * xe, yValueContent * ye2), sk_TableCaption);
+                canvas.DrawText(tableContents[i, 3], new SKPoint(34 * xe, yValueContent * ye2), sk_TableCaption);
+                canvas.DrawText(tableContents[i, 4], new SKPoint(48 * xe, yValueContent * ye2), sk_TableCaption);
+                canvas.DrawText(tableContents[i, 5], new SKPoint(62 * xe, yValueContent * ye2), sk_TableCaption);
+                canvas.DrawText(tableContents[i, 6], new SKPoint(76 * xe, yValueContent * ye2), sk_TableCaption);
+                canvas.DrawText(tableContents[i, 7], new SKPoint(90 * xe, yValueContent * ye2), sk_TableCaption);
+
+            }
+        }
+
         /**********************************************************************
         *********************************************************************/
         public static void DrawTable()
         {
+
             float cap = 109.2f;
             canvas.DrawText("Step", new SKPoint(5 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("N'", new SKPoint(15 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(v)", new SKPoint(35 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(w)", new SKPoint(47.5f * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(x)", new SKPoint(60 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(x)", new SKPoint(72.5f * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(x)", new SKPoint(85 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("N'", new SKPoint(20 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("D(v)", new SKPoint(34 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("D(w)", new SKPoint(48 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("D(x)", new SKPoint(62 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("D(y)", new SKPoint(76 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("D(z)", new SKPoint(90 * xe, cap * ye2), sk_TableCaption);
 
             canvas.DrawLine(new SKPoint(1 * xe, 112 * ye2), new SKPoint(99 * xe, 112 * ye2), sk_PaintBlackThin);
             canvas.DrawLine(new SKPoint(1 * xe, 122 * ye2), new SKPoint(99 * xe, 122 * ye2), sk_PaintBlackThin);
@@ -162,11 +178,11 @@ namespace WertheApp.RN
 
 
             canvas.DrawText("Destination", new SKPoint(9.5f * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("v", new SKPoint(35 * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("w", new SKPoint(47.5f * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("x", new SKPoint(60 * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("y", new SKPoint(72.5f * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("z", new SKPoint(85 * xe, 182.2f * ye2), sk_TableCaption);
+            canvas.DrawText("v", new SKPoint(34 * xe, 182.2f * ye2), sk_TableCaption);
+            canvas.DrawText("w", new SKPoint(48 * xe, 182.2f * ye2), sk_TableCaption);
+            canvas.DrawText("x", new SKPoint(62 * xe, 182.2f * ye2), sk_TableCaption);
+            canvas.DrawText("y", new SKPoint(76 * xe, 182.2f * ye2), sk_TableCaption);
+            canvas.DrawText("z", new SKPoint(90 * xe, 182.2f * ye2), sk_TableCaption);
             canvas.DrawText("Link", new SKPoint(5 * xe, 191.2f * ye2), sk_TableCaption);
             canvas.DrawLine(new SKPoint(1 * xe, 185 * ye2), new SKPoint(99 * xe, 185 * ye2), sk_PaintBlackThin);
 
@@ -223,22 +239,33 @@ namespace WertheApp.RN
         *********************************************************************/
         public void DrawRouters()
         {
-            DrawRouter(routerZ, "Z");
-            DrawRouter(routerU, "U");
-            DrawRouter(routerV, "V");
-            DrawRouter(routerW, "W");
-            DrawRouter(routerX, "X");
-            DrawRouter(routerY, "Y");
+            String[,] tableContents = DijkstraAlgorithm.GetTableValues();
+            String visitedNodes = tableContents[currentStep, 8];
+
+            DrawRouter(routerZ, "Z", visitedNodes.Contains('z'));
+            DrawRouter(routerU, "U", visitedNodes.Contains('u'));
+            DrawRouter(routerV, "V", visitedNodes.Contains('v'));
+            DrawRouter(routerW, "W", visitedNodes.Contains('w'));
+            DrawRouter(routerX, "X", visitedNodes.Contains('x'));
+            DrawRouter(routerY, "Y", visitedNodes.Contains('y'));
         }
 
         /**********************************************************************
         *********************************************************************/
-        void DrawRouter(SKPoint router, String name)
+        void DrawRouter(SKPoint router, String name, bool visited)
         {
             float radius = 40;
 
             //router
-            canvas.DrawCircle(router, radius, sk_RouterFill);
+
+            if (visited)
+            {
+                canvas.DrawCircle(router, radius, sk_RouterFillRed);
+            }
+            else
+            {
+                canvas.DrawCircle(router, radius, sk_RouterFill);
+            }
             canvas.DrawCircle(router, radius, sk_RouterContour);
 
             //letter on router
@@ -271,105 +298,125 @@ namespace WertheApp.RN
         *********************************************************************/
         void DrawConnectionsNetwork1()
         {
-            DrawConnection(routerX, routerU);
-            DrawConnection(routerX, routerW);
-            DrawConnection(routerX, routerY);
-            DrawConnection(routerU, routerV);
+            bool[,] visitedEgdes = DijkstraAlgorithm.GetVisistedEdges();
+            DrawConnection(routerX, routerU, visitedEgdes[currentStep, 1]);
+            DrawConnection(routerX, routerW, visitedEgdes[currentStep, 11]);
+            DrawConnection(routerX, routerY, visitedEgdes[currentStep, 12]);
+            DrawConnection(routerU, routerV, visitedEgdes[currentStep, 0]);
             //DrawConnections(canvas, routerV, routerX);
-            DrawConnection(routerV, routerW);
-            DrawConnection(routerV, routerY);
+            DrawConnection(routerV, routerW, visitedEgdes[currentStep, 10]);
+            DrawConnection(routerV, routerY, visitedEgdes[currentStep, 9]);
             //DrawConnections(canvas, routerW, routerY);
-            DrawConnection(routerW, routerZ);
-            DrawConnection(routerZ, routerY);
+            DrawConnection(routerW, routerZ, visitedEgdes[currentStep, 4]);
+            DrawConnection(routerZ, routerY, visitedEgdes[currentStep, 5]);
         }
 
         /**********************************************************************
         *********************************************************************/
         void DrawConnectionsNetwork2()
         {
-            DrawConnection(routerX, routerU);
-            DrawConnection(routerX, routerW);
-            DrawConnection(routerX, routerY);
-            DrawConnection(routerU, routerV);
-            DrawConnection(routerV, routerX);
-            DrawConnection(routerV, routerW);
+            bool[,] visitedEgdes = DijkstraAlgorithm.GetVisistedEdges();
+            DrawConnection(routerX, routerU, visitedEgdes[currentStep, 1]);
+            DrawConnection(routerX, routerW, visitedEgdes[currentStep, 11]);
+            DrawConnection(routerX, routerY, visitedEgdes[currentStep, 12]);
+            DrawConnection(routerU, routerV, visitedEgdes[currentStep, 0]);
+            DrawConnection(routerV, routerX, visitedEgdes[currentStep, 8]);
+            DrawConnection(routerV, routerW, visitedEgdes[currentStep, 10]);
             //DrawConnections(canvas, routerV, routerY);
-            DrawConnection(routerW, routerY);
-            DrawConnection(routerW, routerZ);
-            DrawConnection(routerZ, routerY);
+            DrawConnection(routerW, routerY, visitedEgdes[currentStep, 13]);
+            DrawConnection(routerW, routerZ, visitedEgdes[currentStep, 4]);
+            DrawConnection(routerZ, routerY, visitedEgdes[currentStep, 5]);
             SKPoint p = new SKPoint(15 * xe, -15 * ye2);
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
-            canvas.DrawPath(curveUW, sk_RouterContour);
+            if(visitedEgdes[currentStep, 2]){ canvas.DrawPath(curveUW, sk_EdgeVisited); }
+            else{ canvas.DrawPath(curveUW, sk_RouterContour); }
+
         }
 
         /**********************************************************************
         *********************************************************************/
         void DrawConnectionsNetwork3()
         {
-            DrawConnection(routerX, routerU);
-            DrawConnection(routerX, routerW);
-            DrawConnection(routerX, routerY);
-            DrawConnection(routerU, routerV);
-            DrawConnection(routerV, routerX);
-            DrawConnection(routerV, routerW);
+            bool[,] visitedEgdes = DijkstraAlgorithm.GetVisistedEdges();
+            DrawConnection(routerX, routerU, visitedEgdes[currentStep, 1]);
+            DrawConnection(routerX, routerW, visitedEgdes[currentStep, 11]);
+            DrawConnection(routerX, routerY, visitedEgdes[currentStep, 12]);
+            DrawConnection(routerU, routerV, visitedEgdes[currentStep, 0]);
+            DrawConnection(routerV, routerX, visitedEgdes[currentStep, 8]);
+            DrawConnection(routerV, routerW, visitedEgdes[currentStep, 10]);
             //DrawConnections(canvas, routerV, routerY);
-            DrawConnection(routerW, routerY);
-            DrawConnection(routerW, routerZ);
-            DrawConnection(routerZ, routerY);
+            DrawConnection(routerW, routerY, visitedEgdes[currentStep, 13]);
+            DrawConnection(routerW, routerZ, visitedEgdes[currentStep, 4]);
+            DrawConnection(routerZ, routerY, visitedEgdes[currentStep, 5]);
             SKPoint p = new SKPoint(15 * xe, 115 * ye2);
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p, routerY);
-            canvas.DrawPath(curveUY, sk_RouterContour);
+            if(visitedEgdes[currentStep, 3]) { canvas.DrawPath(curveUY, sk_EdgeVisited); }
+            else{ canvas.DrawPath(curveUY, sk_RouterContour); }
         }
 
         /**********************************************************************
         *********************************************************************/
         void DrawConnectionsNetwork4()
         {
-            DrawConnection(routerX, routerU);
+            bool[,] visitedEgdes = DijkstraAlgorithm.GetVisistedEdges();
+            DrawConnection(routerX, routerU, visitedEgdes[currentStep, 1]);
             //DrawConnections(canvas, routerX, routerW);
-            DrawConnection(routerX, routerY);
-            DrawConnection(routerU, routerV);
-            DrawConnection(routerV, routerX);
-            DrawConnection(routerV, routerW);
+            DrawConnection(routerX, routerY, visitedEgdes[currentStep, 12]);
+            DrawConnection(routerU, routerV, visitedEgdes[currentStep, 0]);
+            DrawConnection(routerV, routerX, visitedEgdes[currentStep, 8]);
+            DrawConnection(routerV, routerW, visitedEgdes[currentStep, 10]);
             //DrawConnections(canvas, routerV, routerY);
-            DrawConnection(routerW, routerY);
-            DrawConnection(routerW, routerZ);
-            DrawConnection(routerZ, routerY);
+            DrawConnection(routerW, routerY, visitedEgdes[currentStep, 13]);
+            DrawConnection(routerW, routerZ, visitedEgdes[currentStep, 4]);
+            DrawConnection(routerZ, routerY, visitedEgdes[currentStep, 5]);
 
             SKPoint p = new SKPoint(15 * xe, -15 * ye2);
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
-            canvas.DrawPath(curveUW, sk_RouterContour);
+            if (visitedEgdes[currentStep, 2]) { canvas.DrawPath(curveUW, sk_EdgeVisited); }
+            else { canvas.DrawPath(curveUW, sk_RouterContour); }
 
             SKPoint p2 = new SKPoint(15 * xe, 115 * ye2);
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p2, routerY);
-            canvas.DrawPath(curveUY, sk_RouterContour);
+            if (visitedEgdes[currentStep, 3]) { canvas.DrawPath(curveUY, sk_EdgeVisited); }
+            else { canvas.DrawPath(curveUY, sk_RouterContour); }
 
             SKPoint p3 = new SKPoint(85 * xe, -15 * ye2);
             SKPath curveZV = new SKPath();
             curveZV.MoveTo(routerZ);
             curveZV.CubicTo(routerZ, p3, routerV);
-            canvas.DrawPath(curveZV, sk_RouterContour);
+            if (visitedEgdes[currentStep, 6]) { canvas.DrawPath(curveZV, sk_EdgeVisited); }
+            else { canvas.DrawPath(curveZV, sk_RouterContour); }
+                
 
             SKPoint p4 = new SKPoint(85 * xe, 115 * ye2);
             SKPath curveZX = new SKPath();
             curveZX.MoveTo(routerZ);
             curveZX.CubicTo(routerZ, p4, routerX);
-            canvas.DrawPath(curveZX, sk_RouterContour);
+            if (visitedEgdes[currentStep, 7]) { canvas.DrawPath(curveZX, sk_EdgeVisited); }
+            else { canvas.DrawPath(curveZX, sk_RouterContour); }   
         }
 
         /**********************************************************************
         *********************************************************************/
-        void DrawConnection(SKPoint a, SKPoint b)
+        void DrawConnection(SKPoint a, SKPoint b, bool visited)
         {
-            canvas.DrawLine(a, b, sk_RouterContour);
+            if (visited)
+            {
+                canvas.DrawLine(a, b, sk_EdgeVisited);
+            }
+            else
+            {
+                canvas.DrawLine(a, b, sk_RouterContour);
+            }
+            
         }
 
         /**********************************************************************
@@ -574,12 +621,28 @@ namespace WertheApp.RN
                 Color = new SKColor(170, 170, 170)
             };
 
+            sk_RouterFillRed = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(238, 130, 138)
+            };
+
             sk_RouterContour = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
                 StrokeWidth = 5,
                 IsAntialias = true,
                 Color = new SKColor(100, 100, 100)
+            };
+
+            sk_EdgeVisited = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = new SKColor(200, 100, 100)
             };
 
             sk_WeightsText = new SKPaint

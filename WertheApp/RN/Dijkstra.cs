@@ -25,7 +25,7 @@ namespace WertheApp.RN
             Title = "Dijkstra";
             toggleRestart = false;
             currentStep = 0;
-            maxStep = 20;
+            maxStep = 30;
 
             draw = new DijkstraDraw(a, n);
             CreateContent();
