@@ -25,7 +25,7 @@ namespace WertheApp.RN
             Title = "Dijkstra";
             toggleRestart = false;
             currentStep = 0;
-            maxStep = 30;
+            maxStep = 31;
 
             draw = new DijkstraDraw(a, n);
             CreateContent();
@@ -44,7 +44,7 @@ namespace WertheApp.RN
             this.Content = grid;
             grid.RowDefinitions = new RowDefinitionCollection {
                     // Each half will be the same size:
-                    new RowDefinition{ Height = new GridLength(9, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
             CreateTopHalf(grid);

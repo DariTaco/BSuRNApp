@@ -15,7 +15,8 @@ namespace WertheApp.RN
         private static bool[,] visitedEdges;
         private static DNetwork network;
         private static String[] n;
-        private static bool[] uv, ux, uw, uy, zw, zy, zv, zx, vx, vy, vw, xw, xy, yw; 
+        private static bool[] uv, ux, uw, uy, zw, zy, zv, zx, vx, vy, vw, xw, xy, yw;
+        private static String[] forwarding;
 
         private static String[] dv, dw, dx, dy, dz;
 
@@ -26,26 +27,33 @@ namespace WertheApp.RN
         }
 
         //METHODS
+        private static void CreateForwardingTable()
+        {
+            forwarding = new String[5];
+            int count = -1; 
+            foreach(DNode node in network.nodesList)
+            {
+              
+                if(count >= 0)
+                {
+                   forwarding[count] = GetForwarding(node, network.nodesList.First());
+                }
+                count++;
+            }
+            
+        }
+
+        public static String[] GetForwardingTable()
+        {
+            return forwarding;
+        }
+
         public static void CreateVisitedEdges()
         {
-            /* 0weightUV
-             * 1weightUX,
-             * 2weightUW,
-             * 3weightUY,
-             * 4weightZW,
-             * 5weightZY,
-             * 6weightZV,
-             * 7weightZX,
-             * 8weightVX,
-             * 9weightVY,
-             * 10weightVW,
-             * 11weightXW,
-             * 12weightXY,
-             * 13weightYW */
 
-           visitedEdges = new bool[31, 14];
+           visitedEdges = new bool[32, 14];
 
-            for(int i = 0; i < 31; i++)
+            for(int i = 0; i < 32; i++)
             {
                 int j = 0;
                 if (i > 5){ j = 1; }
@@ -128,7 +136,8 @@ namespace WertheApp.RN
             { "28", "4", "",    "",        "",     "",     dy[4],  "" , n[4] },
             { "29", "4", "",    "",        "",     "",     "",     dz[4] , n[4]},
 
-            { "30", "5", n[5],  "",        "",     "",     "",     "" , n[5]}
+            { "30", "5", n[5],  "",        "",     "",     "",     "" , n[5]},
+            { "31", "5", "",  "-",        "-",     "-",     "-",     "-" , n[5]}
 
             };
         }
@@ -175,6 +184,8 @@ namespace WertheApp.RN
                 MakeArrayForGraph(discovery);
 
             }
+
+            CreateForwardingTable();
         }
 
         public static void MakeArrayForGraph(int discovery)
@@ -232,7 +243,7 @@ namespace WertheApp.RN
                 String weight = neighbor.GetWeight().ToString();
                 if (neighbor.IsVisited())
                 {
-                    weight = "vis";
+                    weight = "-";
                 }
                 else {
                     String prev = neighbor.GetPreviousNode().GetNodeName();
@@ -255,20 +266,19 @@ namespace WertheApp.RN
         {
             //network.visitedNodesList.Last()
             //find neighbors
-            Debug.WriteLine("Checking out node " + node.GetNodeName());
             foreach (DNode neighbor in node.GetNeighbors())
             {
                 if (!neighbor.IsVisited())
                 {
-                    Debug.WriteLine("neighbor " + neighbor.GetNodeName());
+                    
                     //assign combined weight of connecting edge and previous node
                     //to neighbor if it's smaller than the current weight of neighbor
                     int edgeWeight = GetWeightFromEdge(node, neighbor);
                     int prevWeight = node.GetWeight();
                     int weight = neighbor.GetWeight();
+                    
                     if ((edgeWeight + prevWeight) < weight)
                     {
-                        Debug.WriteLine("add previous node: " + node.GetNodeName());
                         weight = (edgeWeight + prevWeight);
                         neighbor.AddPreviousNode(ref node);
                     }
@@ -285,17 +295,13 @@ namespace WertheApp.RN
             DNode minNode = null;
             foreach (DNode node in network.unvisitedNodesList)
             {
-              
-                Debug.WriteLine("node " + node.GetNodeName() + " weight " + node.GetWeight());
                 //find neighbor with minimal weight
-                if (node.GetWeight() <= minWeight)
+                if (node.GetWeight() < minWeight)
                 {
                     minWeight = node.GetWeight();
                     minNode = node;
                 }
             }
-            Debug.WriteLine("final minimal node and weight " + minNode.GetNodeName() + ", " + minWeight);
-            Debug.WriteLine("");
             return minNode;
 
         }
@@ -313,6 +319,28 @@ namespace WertheApp.RN
             }
             return 0;
         }
+
+        private static String GetForwarding(DNode endNode, DNode node)
+        {
+            String tracedDvpv = "";
+            DNode curr = endNode;
+            DNode prev = endNode.GetPreviousNode();
+
+            if (node.GetIsStartNode())
+            {
+                while (prev != node)
+                {
+                    
+                    curr = prev;
+                    prev = curr.GetPreviousNode();
+
+
+                }
+                tracedDvpv = "(" + prev.GetNodeName() + "," + curr.GetNodeName() +")";
+            }
+            return tracedDvpv;
+        }
+
 
         public static void BuildNetwork1(String[] a)
         {
@@ -365,6 +393,7 @@ namespace WertheApp.RN
             DNode nodeX = new DNode("x");
             DNode nodeY = new DNode("y");
             DNode nodeZ = new DNode("z");
+            nodeU.SetStartNode();
 
             //define network and add nodes to network
             network = new DNetwork(2);
@@ -408,6 +437,7 @@ namespace WertheApp.RN
             DNode nodeX = new DNode("x");
             DNode nodeY = new DNode("y");
             DNode nodeZ = new DNode("z");
+            nodeU.SetStartNode();
 
             //define network and add nodes to network
             network = new DNetwork(3);
@@ -451,6 +481,7 @@ namespace WertheApp.RN
             DNode nodeX = new DNode("x");
             DNode nodeY = new DNode("y");
             DNode nodeZ = new DNode("z");
+            nodeU.SetStartNode();
 
             //define network and add nodes to network
             network = new DNetwork(4);
@@ -494,17 +525,6 @@ namespace WertheApp.RN
             return tableValues;
         }
 
-        public static void PrintArray(String[] a)
-        { 
-            String[] b = {"weightUV ", "weightUX ", "weightZW ", "weightZY ",
-                "weightXY ", "weightVW ", "weightVY ", "weightXW ", "weightVX ",
-                "weightYW ", "weightUW ", "weightUY ", "weightZV ", "weightZX " };
-
-            for(int i = 0; i < a.Length; i++)
-            {
-                Debug.WriteLine(b[i] + a[i]);
-            }
-        }
     }
 
 
@@ -562,7 +582,6 @@ namespace WertheApp.RN
                 this.visitedNodesList.Add(node);
                 this.unvisitedNodesList.Remove(node);
                 node.SetDiscovery(discovery);
-                Debug.WriteLine("Node " + node.GetNodeName() + " VISITED");
             }
         }
 
@@ -576,7 +595,6 @@ namespace WertheApp.RN
                 this.visitedEdgesList.Add(edge);
                 this.unvisitedEdgesList.Remove(edge);
                 edge.Visit();
-                Debug.WriteLine("Edge " + edge.GetNodeA().GetNodeName() +  ", " + edge.GetNodeB().GetNodeName() + " VISITED");
             }
         }
 
@@ -638,6 +656,11 @@ namespace WertheApp.RN
         public void Visit()
         {
             this.visited = true;
+        }
+
+        public bool IsVisited()
+        {
+            return this.visited;
         }
 
         public bool Check(String a, String b)

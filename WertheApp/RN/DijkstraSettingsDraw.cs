@@ -11,7 +11,6 @@ namespace WertheApp.RN
     public class DijkstraSettingsDraw
     {
         //VARIABLES
-        private SKPoint _touchPoint;
         private SKCanvasView skiaview;
         private SKCanvas canvas;
         private int id;
@@ -27,7 +26,7 @@ namespace WertheApp.RN
         private static float xe, ye;
         private static SKPaint sk_WeightsText,
             sk_RouterText, sk_RouterContour, sk_RouterFill, sk_test;
-        private static float textSize;
+
         private static SKPoint routerZ, routerU, routerV, routerX, routerW, routerY;
         private static SKPoint wUV, wUX, wUW,
             wUY, wZW, wZY,
@@ -54,7 +53,7 @@ namespace WertheApp.RN
             this.skiaview.Touch += OnTouch;
             skiaview.EnableTouchEvents = true;
 
-            textSize = 5;
+           
 
             SetDefaultWeights();
            
@@ -775,50 +774,74 @@ namespace WertheApp.RN
                 case 1:
                     weightUV = "2";
                     weightUX = "1";
-                    weightZW = "3";
-                    weightZY = "5";
-                    weightXY = "2";
-                    weightVW = "7";
+                    weightZW = "5";
+                    weightZY = "2";
+                    weightXY = "1";
+                    weightVW = "3";
+
                     weightVY = "1";
-                    weightXW = "9";
+                    weightXW = "3";
+                    weightVX = "0";
+                    weightYW = "0";
+                    weightUW = "0";
+                    weightUY = "0";
+
+                    weightZV = "0";
+                    weightZX = "0";
                     break;
                 case 2:
-                    weightUV = "7";
-                    weightUX = "6";
-                    weightZW = "1";
-                    weightZY = "5";
-                    weightXY = "8";
-                    weightVW = "7";
-                    weightXW = "2";
-                    weightVX = "3";
-                    weightYW = "2";
-                    weightUW = "4";
+                    weightUV = "2";
+                    weightUX = "1";
+                    weightZW = "5";
+                    weightZY = "2";
+                    weightXY = "1";
+                    weightVW = "3";
+
+                    weightVY = "0";
+                    weightXW = "3";
+                    weightVX = "2";
+                    weightYW = "1";
+                    weightUW = "5";
+                    weightUY = "0";
+
+                    weightZV = "0";
+                    weightZX = "0";
                     break;
                 case 3:
-                    weightUV = "1";
+                    weightUV = "2";
                     weightUX = "1";
-                    weightZW = "2";
-                    weightZY = "1";
-                    weightXY = "2";
-                    weightVW = "1";
-                    weightXW = "1";
-                    weightVX = "6";
+                    weightZW = "5";
+                    weightZY = "2";
+                    weightXY = "1";
+                    weightVW = "3";
+
+                    weightVY = "0";
+                    weightXW = "3";
+                    weightVX = "2";
                     weightYW = "1";
-                    weightUY = "3";
+                    weightUW = "0";
+                    weightUY = "1";
+
+                    weightZV = "0";
+                    weightZX = "0";
                     break;
                 case 4:
-                    weightUV = "7";
-                    weightUX = "4";
-                    weightZW = "7";
-                    weightZY = "8";
-                    weightXY = "3";
-                    weightVW = "2";
-                    weightVX = "1";
-                    weightYW = "6";
-                    weightUW = "6";
-                    weightUY = "5";
-                    weightZV = "5";
-                    weightZX = "5";
+                    weightUV = "2";
+                    weightUX = "1";
+                    weightZW = "5";
+                    weightZY = "2";
+                    weightXY = "1";
+                    weightVW = "3";
+
+                    weightVY = "0";
+                    weightXW = "0";
+                    weightVX = "2";
+                    weightYW = "1";
+                    weightUW = "5";
+                    weightUY = "1";
+
+                    weightZV = "1";
+                    weightZX = "1";
                     break;
             }
             this.Paint();

@@ -34,12 +34,13 @@ namespace WertheApp.RN
         private static SKCanvasView skiaview;
         private static float xe, ye, ye2;
         private static int currentStep;
+        private static int maxStep;
 
         private static SKPaint sk_Background, sk_PaintBlack, sk_RouterText,
         sk_RouterContour, sk_RouterFill, sk_RouterFillRed, sk_WeightsText,
-            sk_TableCaption, sk_EdgeVisited,
+            sk_TableCaption, sk_Visited,
             sk_PaintBlackThin, sk_Background2;
-        private static float textSize, strokeWidth;
+        private static float strokeWidth;
 
 
         //CONSTRUCTOR
@@ -64,12 +65,11 @@ namespace WertheApp.RN
             skiaview = new SKCanvasView();
             skiaview.PaintSurface += PaintSurface;
 
-            textSize = 5;
+            
             strokeWidth = 0.2f;
 
             currentStep = 0;
-
-
+            maxStep = 31;
             
            
         }
@@ -100,6 +100,10 @@ namespace WertheApp.RN
             DrawWeights();
 
             DrawTableContents();
+            if(currentStep == maxStep)
+            {
+                DrawForwardingTable();
+            }
 
         
                 //execute all drawing actions
@@ -119,10 +123,21 @@ namespace WertheApp.RN
         {
             SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye2, 100 * xe, 100 * ye2); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground, sk_Background); //left, top, right, bottom, color
-            SKRect sk_rBackground2 = new SKRect(00 * xe, 174 * ye2, 100 * xe, 200 * ye2); //left , top, right, bottom
+            SKRect sk_rBackground2 = new SKRect(00 * xe, 178 * ye2, 100 * xe, 200 * ye2); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground2, sk_Background2); //left, top, right, bottom, color
             canvas.DrawLine(new SKPoint(0 * xe, 100 * ye2), new SKPoint(100 * xe, 100 * ye2), sk_PaintBlack);
 
+        }
+        /**********************************************************************
+        *********************************************************************/
+        public static void DrawForwardingTable()
+        {
+            String[] a = DijkstraAlgorithm.GetForwardingTable();
+            canvas.DrawText(a[0], new SKPoint(34 * xe, 195.2f * ye2), sk_TableCaption);
+            canvas.DrawText(a[1], new SKPoint(48 * xe, 195.2f * ye2), sk_TableCaption);
+            canvas.DrawText(a[2], new SKPoint(62 * xe, 195.2f * ye2), sk_TableCaption);
+            canvas.DrawText(a[3], new SKPoint(76 * xe, 195.2f * ye2), sk_TableCaption);
+            canvas.DrawText(a[4], new SKPoint(90 * xe, 195.2f * ye2), sk_TableCaption);
         }
 
         /**********************************************************************
@@ -137,12 +152,12 @@ namespace WertheApp.RN
                 float yValueContent = 0;
                 switch (round)
                 {
-                    case 0: yValueContent = 119.2f; break;
-                    case 1: yValueContent = 129.2f; break;
-                    case 2: yValueContent = 139.2f; break;
-                    case 3: yValueContent = 149.2f; break;
-                    case 4: yValueContent = 159.2f; break;
-                    case 5: yValueContent = 169.2f; break;
+                    case 0: yValueContent = 123.2f; break;
+                    case 1: yValueContent = 133.2f; break;
+                    case 2: yValueContent = 143.2f; break;
+                    case 3: yValueContent = 153.2f; break;
+                    case 4: yValueContent = 163.2f; break;
+                    case 5: yValueContent = 173.2f; break;
                 }
                 canvas.DrawText(tableContents[i, 2], new SKPoint(20 * xe, yValueContent * ye2), sk_TableCaption);
                 canvas.DrawText(tableContents[i, 3], new SKPoint(34 * xe, yValueContent * ye2), sk_TableCaption);
@@ -159,39 +174,45 @@ namespace WertheApp.RN
         public static void DrawTable()
         {
 
-            float cap = 109.2f;
+            float cap = 113f;
+            float cap2 = 107.5f;
             canvas.DrawText("Step", new SKPoint(5 * xe, cap * ye2), sk_TableCaption);
             canvas.DrawText("N'", new SKPoint(20 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(v)", new SKPoint(34 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(w)", new SKPoint(48 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(x)", new SKPoint(62 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(y)", new SKPoint(76 * xe, cap * ye2), sk_TableCaption);
-            canvas.DrawText("D(z)", new SKPoint(90 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("D(v),", new SKPoint(34 * xe, cap2 * ye2), sk_TableCaption);
+            canvas.DrawText("D(w),", new SKPoint(48 * xe, cap2 * ye2), sk_TableCaption);
+            canvas.DrawText("D(x),", new SKPoint(62 * xe, cap2 * ye2), sk_TableCaption);
+            canvas.DrawText("D(y),", new SKPoint(76 * xe, cap2 * ye2), sk_TableCaption);
+            canvas.DrawText("D(z),", new SKPoint(90 * xe, cap2 * ye2), sk_TableCaption);
+            canvas.DrawText("p(v)", new SKPoint(34 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("p(w)", new SKPoint(48 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("p(x)", new SKPoint(62 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("p(y)", new SKPoint(76 * xe, cap * ye2), sk_TableCaption);
+            canvas.DrawText("p(z)", new SKPoint(90 * xe, cap * ye2), sk_TableCaption);
 
-            canvas.DrawLine(new SKPoint(1 * xe, 112 * ye2), new SKPoint(99 * xe, 112 * ye2), sk_PaintBlackThin);
-            canvas.DrawLine(new SKPoint(1 * xe, 122 * ye2), new SKPoint(99 * xe, 122 * ye2), sk_PaintBlackThin);
-            canvas.DrawLine(new SKPoint(1 * xe, 132 * ye2), new SKPoint(99 * xe, 132 * ye2), sk_PaintBlackThin);
-            canvas.DrawLine(new SKPoint(1 * xe, 142 * ye2), new SKPoint(99 * xe, 142 * ye2), sk_PaintBlackThin);
-            canvas.DrawLine(new SKPoint(1 * xe, 152 * ye2), new SKPoint(99 * xe, 152 * ye2), sk_PaintBlackThin);
-            canvas.DrawLine(new SKPoint(1 * xe, 162 * ye2), new SKPoint(99 * xe, 162 * ye2), sk_PaintBlackThin);
-            canvas.DrawLine(new SKPoint(0 * xe, 174 * ye2), new SKPoint(100 * xe, 174 * ye2), sk_PaintBlack);
+            canvas.DrawLine(new SKPoint(1 * xe, 116 * ye2), new SKPoint(99 * xe, 116 * ye2), sk_PaintBlackThin);
+            canvas.DrawLine(new SKPoint(1 * xe, 126 * ye2), new SKPoint(99 * xe, 126 * ye2), sk_PaintBlackThin);
+            canvas.DrawLine(new SKPoint(1 * xe, 136 * ye2), new SKPoint(99 * xe, 136 * ye2), sk_PaintBlackThin);
+            canvas.DrawLine(new SKPoint(1 * xe, 146 * ye2), new SKPoint(99 * xe, 146 * ye2), sk_PaintBlackThin);
+            canvas.DrawLine(new SKPoint(1 * xe, 156 * ye2), new SKPoint(99 * xe, 156 * ye2), sk_PaintBlackThin);
+            canvas.DrawLine(new SKPoint(1 * xe, 166 * ye2), new SKPoint(99 * xe, 166 * ye2), sk_PaintBlackThin);
+            canvas.DrawLine(new SKPoint(0 * xe, 178 * ye2), new SKPoint(100 * xe, 178 * ye2), sk_PaintBlack);
 
 
-            canvas.DrawText("Destination", new SKPoint(9.5f * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("v", new SKPoint(34 * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("w", new SKPoint(48 * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("x", new SKPoint(62 * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("y", new SKPoint(76 * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("z", new SKPoint(90 * xe, 182.2f * ye2), sk_TableCaption);
-            canvas.DrawText("Link", new SKPoint(5 * xe, 191.2f * ye2), sk_TableCaption);
-            canvas.DrawLine(new SKPoint(1 * xe, 185 * ye2), new SKPoint(99 * xe, 185 * ye2), sk_PaintBlackThin);
+            canvas.DrawText("Destination", new SKPoint(9.5f * xe, 186.2f * ye2), sk_TableCaption);
+            canvas.DrawText("v", new SKPoint(34 * xe, 186.2f * ye2), sk_TableCaption);
+            canvas.DrawText("w", new SKPoint(48 * xe, 186.2f * ye2), sk_TableCaption);
+            canvas.DrawText("x", new SKPoint(62 * xe, 186.2f * ye2), sk_TableCaption);
+            canvas.DrawText("y", new SKPoint(76 * xe, 186.2f * ye2), sk_TableCaption);
+            canvas.DrawText("z", new SKPoint(90 * xe, 186.2f * ye2), sk_TableCaption);
+            canvas.DrawText("Link", new SKPoint(5 * xe, 195.2f * ye2), sk_TableCaption);
+            canvas.DrawLine(new SKPoint(1 * xe, 189 * ye2), new SKPoint(99 * xe, 189 * ye2), sk_PaintBlackThin);
 
-            canvas.DrawText("0", new SKPoint(5 * xe, 119.2f * ye2), sk_TableCaption);
-            canvas.DrawText("1", new SKPoint(5 * xe, 129.2f * ye2), sk_TableCaption);
-            canvas.DrawText("2", new SKPoint(5 * xe, 139.2f * ye2), sk_TableCaption);
-            canvas.DrawText("3", new SKPoint(5 * xe, 149.2f * ye2), sk_TableCaption);
-            canvas.DrawText("4", new SKPoint(5 * xe, 159.2f * ye2), sk_TableCaption);
-            canvas.DrawText("5", new SKPoint(5 * xe, 169.2f * ye2), sk_TableCaption);
+            canvas.DrawText("0", new SKPoint(5 * xe, 123.2f * ye2), sk_TableCaption);
+            canvas.DrawText("1", new SKPoint(5 * xe, 133.2f * ye2), sk_TableCaption);
+            canvas.DrawText("2", new SKPoint(5 * xe, 143.2f * ye2), sk_TableCaption);
+            canvas.DrawText("3", new SKPoint(5 * xe, 153.2f * ye2), sk_TableCaption);
+            canvas.DrawText("4", new SKPoint(5 * xe, 163.2f * ye2), sk_TableCaption);
+            canvas.DrawText("5", new SKPoint(5 * xe, 173.2f * ye2), sk_TableCaption);
 
         }
 
@@ -261,12 +282,14 @@ namespace WertheApp.RN
             if (visited)
             {
                 canvas.DrawCircle(router, radius, sk_RouterFillRed);
+                canvas.DrawCircle(router, radius, sk_Visited);
             }
             else
             {
                 canvas.DrawCircle(router, radius, sk_RouterFill);
+                canvas.DrawCircle(router, radius, sk_RouterContour);
             }
-            canvas.DrawCircle(router, radius, sk_RouterContour);
+           
 
             //letter on router
             canvas.DrawText(name, router.X, router.Y + 20, sk_RouterText);
@@ -330,8 +353,8 @@ namespace WertheApp.RN
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
-            if(visitedEgdes[currentStep, 2]){ canvas.DrawPath(curveUW, sk_EdgeVisited); }
-            else{ canvas.DrawPath(curveUW, sk_RouterContour); }
+            if(visitedEgdes[currentStep, 2]){ canvas.DrawPath(curveUW, sk_Visited); }
+            else{ if (currentStep != maxStep) { canvas.DrawPath(curveUW, sk_RouterContour); } }
 
         }
 
@@ -354,8 +377,8 @@ namespace WertheApp.RN
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p, routerY);
-            if(visitedEgdes[currentStep, 3]) { canvas.DrawPath(curveUY, sk_EdgeVisited); }
-            else{ canvas.DrawPath(curveUY, sk_RouterContour); }
+            if(visitedEgdes[currentStep, 3]) { canvas.DrawPath(curveUY, sk_Visited); }
+            else{ if (currentStep != maxStep) { canvas.DrawPath(curveUY, sk_RouterContour); } }
         }
 
         /**********************************************************************
@@ -378,30 +401,30 @@ namespace WertheApp.RN
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
-            if (visitedEgdes[currentStep, 2]) { canvas.DrawPath(curveUW, sk_EdgeVisited); }
-            else { canvas.DrawPath(curveUW, sk_RouterContour); }
+            if (visitedEgdes[currentStep, 2]) { canvas.DrawPath(curveUW, sk_Visited); }
+            else { if (currentStep != maxStep) { canvas.DrawPath(curveUW, sk_RouterContour); } }
 
             SKPoint p2 = new SKPoint(15 * xe, 115 * ye2);
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p2, routerY);
-            if (visitedEgdes[currentStep, 3]) { canvas.DrawPath(curveUY, sk_EdgeVisited); }
-            else { canvas.DrawPath(curveUY, sk_RouterContour); }
+            if (visitedEgdes[currentStep, 3]) { canvas.DrawPath(curveUY, sk_Visited); }
+            else { if (currentStep != maxStep) { canvas.DrawPath(curveUY, sk_RouterContour); } }
 
             SKPoint p3 = new SKPoint(85 * xe, -15 * ye2);
             SKPath curveZV = new SKPath();
             curveZV.MoveTo(routerZ);
             curveZV.CubicTo(routerZ, p3, routerV);
-            if (visitedEgdes[currentStep, 6]) { canvas.DrawPath(curveZV, sk_EdgeVisited); }
-            else { canvas.DrawPath(curveZV, sk_RouterContour); }
+            if (visitedEgdes[currentStep, 6]) { canvas.DrawPath(curveZV, sk_Visited); }
+            else { if (currentStep != maxStep) { canvas.DrawPath(curveZV, sk_RouterContour); } }
                 
 
             SKPoint p4 = new SKPoint(85 * xe, 115 * ye2);
             SKPath curveZX = new SKPath();
             curveZX.MoveTo(routerZ);
             curveZX.CubicTo(routerZ, p4, routerX);
-            if (visitedEgdes[currentStep, 7]) { canvas.DrawPath(curveZX, sk_EdgeVisited); }
-            else { canvas.DrawPath(curveZX, sk_RouterContour); }   
+            if (visitedEgdes[currentStep, 7]) { canvas.DrawPath(curveZX, sk_Visited); }
+            else { if (currentStep != maxStep) { canvas.DrawPath(curveZX, sk_RouterContour); } }   
         }
 
         /**********************************************************************
@@ -410,11 +433,15 @@ namespace WertheApp.RN
         {
             if (visited)
             {
-                canvas.DrawLine(a, b, sk_EdgeVisited);
+                canvas.DrawLine(a, b, sk_Visited);
             }
             else
             {
-                canvas.DrawLine(a, b, sk_RouterContour);
+                if (currentStep != maxStep)
+                {
+                    canvas.DrawLine(a, b, sk_RouterContour);
+                }
+                
             }
             
         }
@@ -447,21 +474,25 @@ namespace WertheApp.RN
         *********************************************************************/
         public void DrawWeights()
         {
-            switch (networkNumber)
+            if (currentStep != maxStep)
             {
-                case 1:
-                    DrawWeightsNetwork1();
-                    break;
-                case 2:
-                    DrawWeightsNetwork2();
-                    break;
-                case 3:
-                    DrawWeightsNetwork3();
-                    break;
-                case 4:
-                    DrawWeightsNetwork4();
-                    break;
+                switch (networkNumber)
+                {
+                    case 1:
+                        DrawWeightsNetwork1();
+                        break;
+                    case 2:
+                        DrawWeightsNetwork2();
+                        break;
+                    case 3:
+                        DrawWeightsNetwork3();
+                        break;
+                    case 4:
+                        DrawWeightsNetwork4();
+                        break;
+                }
             }
+
         }
 
         /**********************************************************************
@@ -626,7 +657,7 @@ namespace WertheApp.RN
                 Style = SKPaintStyle.Fill,
                 StrokeWidth = 5,
                 IsAntialias = true,
-                Color = new SKColor(238, 130, 138)
+                Color = new SKColor(238, 170, 170)
             };
 
             sk_RouterContour = new SKPaint
@@ -637,12 +668,12 @@ namespace WertheApp.RN
                 Color = new SKColor(100, 100, 100)
             };
 
-            sk_EdgeVisited = new SKPaint
+            sk_Visited = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
                 StrokeWidth = 5,
                 IsAntialias = true,
-                Color = new SKColor(200, 100, 100)
+                Color = new SKColor(240, 10, 50)
             };
 
             sk_WeightsText = new SKPaint

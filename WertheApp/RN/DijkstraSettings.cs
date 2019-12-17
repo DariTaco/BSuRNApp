@@ -55,7 +55,7 @@ namespace WertheApp.RN
         {
             //split grid in two parts (7:1)
             RowDefinitionCollection rowDefinition = new RowDefinitionCollection {
-                    new RowDefinition{ Height = new GridLength(9, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
 
@@ -71,6 +71,7 @@ namespace WertheApp.RN
                     HorizontalOptions = LayoutOptions.FillAndExpand
                 };
                 b_Start.Clicked += B_Start_Clicked;
+
                 Button b_Default = new Button
                 {
                     Text = "Default",
@@ -79,14 +80,25 @@ namespace WertheApp.RN
                     HorizontalOptions = LayoutOptions.FillAndExpand
                 };
                 b_Default.Clicked += B_Default_Clicked;
-                Button b_Presets = new Button
+
+                Button b_Random = new Button
                 {
                     Text = "Random",
                     //WidthRequest = GetStackChildSize(),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.FillAndExpand
                 };
+                b_Random.Clicked += B_Random_Clicked;
+
+                Button b_Presets = new Button
+                {
+                    Text = "Preset",
+                    //WidthRequest = GetStackChildSize(),
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.FillAndExpand
+                };
                 b_Presets.Clicked += B_Presets_Clicked;
+
                 //stacklayout
                 var stackLayout = new StackLayout
                 {
@@ -96,6 +108,7 @@ namespace WertheApp.RN
                 };
                 stackLayout.Children.Add(b_Default);
                 stackLayout.Children.Add(b_Presets);
+                stackLayout.Children.Add(b_Random);
                 stackLayout.Children.Add(b_Start);
 
                 //get canvas to draw on
@@ -126,10 +139,17 @@ namespace WertheApp.RN
 
         /**********************************************************************
         *********************************************************************/
+        void B_Random_Clicked(object sender, EventArgs e)
+        {
+            
+            DijkstraSettingsDraw.GetNetworkByID(currentTab).SetRandomWeights();
+
+        }
+        /**********************************************************************
+        *********************************************************************/
         void B_Presets_Clicked(object sender, EventArgs e)
         {
-            //DijkstraSettingsDraw.GetNetworkByID(currentTab).SetPresetsWeights();
-            DijkstraSettingsDraw.GetNetworkByID(currentTab).SetRandomWeights();
+           DijkstraSettingsDraw.GetNetworkByID(currentTab).SetPresetsWeights();
 
         }
         /**********************************************************************
