@@ -1,7 +1,6 @@
 ﻿using System;
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
-using System.Diagnostics; //Debug.WriteLine("");
 
 namespace WertheApp.RN
 {
