@@ -48,11 +48,11 @@ namespace WertheApp
 				//reconfigure layout
 				if (width < height)
 				{
-					i_hsLogo.Source = ImageSource.FromResource("hsLogo.png");
+					i_hsLogo.Source = ImageSource.FromResource("AalenHS2.png");
 				}
 				else
 				{
-					i_hsLogo.Source = ImageSource.FromResource("hsLogo2.png");
+					i_hsLogo.Source = ImageSource.FromResource("AalenHS1.png");
 				}
 			}
 		}
@@ -80,7 +80,7 @@ namespace WertheApp
 
 			var b_bs = new Button
 			{
-				Text = "Betriebssysteme"
+				Text = "Operating Systems"
 			};
             b_bs.Clicked += B_Bs_Clicked;
 
@@ -88,7 +88,7 @@ namespace WertheApp
 
 			var b_rn = new Button
 			{
-				Text = "Rechnernetze"
+				Text = "Computer Networks"
 			};
             b_rn.Clicked += B_Rn_Clicked;
 			stackLayout.Children.Add(b_rn);

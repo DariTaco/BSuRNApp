@@ -132,6 +132,9 @@ namespace WertheApp.RN
                 Debug.WriteLine("##########IOS######");
                 Debug.WriteLine(gameviewHeight * scaleFactor);
                 Debug.WriteLine(Application.Current.MainPage.Height);
+                //gameView.HorizontalOptions = LayoutOptions.CenterAndExpand;
+               // gameView.VerticalOptions = LayoutOptions.FillAndExpand;
+               // gameView.HorizontalOptions = LayoutOptions.FillAndExpand;
                 gameView.HeightRequest = Application.Current.MainPage.Height;
                 //gameView.HeightRequest = (int)(gameviewHeight * scaleFactor); // SCROLLING!!!!!!!!!!!!!!!!
                 scrollView.Content = gameView;

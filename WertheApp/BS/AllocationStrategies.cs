@@ -54,9 +54,9 @@ namespace WertheApp.BS
         //CONSTRUCTOR
         public AllocationStrategies(List<int> l, String s)
         {
-            ToolbarItem i = new ToolbarItem();
-            i.Text = "Help";
-            this.ToolbarItems.Add(i);
+            //ToolbarItem i = new ToolbarItem();
+            //i.Text = "Help";
+            //this.ToolbarItems.Add(i);
 
             fragmentList = l;
             strategy = s;

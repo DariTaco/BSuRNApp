@@ -198,13 +198,13 @@ namespace WertheApp.RN
             canvas.DrawLine(new SKPoint(0 * xe, 178 * ye2), new SKPoint(100 * xe, 178 * ye2), sk_PaintBlack);
 
 
-            canvas.DrawText("Destination", new SKPoint(9.5f * xe, 186.2f * ye2), sk_TableCaption);
+            canvas.DrawText("Destination", new SKPoint(6f * xe + 50, 186.2f * ye2), sk_TableCaption);
             canvas.DrawText("v", new SKPoint(34 * xe, 186.2f * ye2), sk_TableCaption);
             canvas.DrawText("w", new SKPoint(48 * xe, 186.2f * ye2), sk_TableCaption);
             canvas.DrawText("x", new SKPoint(62 * xe, 186.2f * ye2), sk_TableCaption);
             canvas.DrawText("y", new SKPoint(76 * xe, 186.2f * ye2), sk_TableCaption);
             canvas.DrawText("z", new SKPoint(90 * xe, 186.2f * ye2), sk_TableCaption);
-            canvas.DrawText("Link", new SKPoint(5 * xe, 195.2f * ye2), sk_TableCaption);
+            canvas.DrawText("Link", new SKPoint(5 * xe + 30, 195.2f * ye2), sk_TableCaption);
             canvas.DrawLine(new SKPoint(1 * xe, 189 * ye2), new SKPoint(99 * xe, 189 * ye2), sk_PaintBlackThin);
 
             canvas.DrawText("0", new SKPoint(5 * xe, 123.2f * ye2), sk_TableCaption);

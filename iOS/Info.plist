@@ -6,8 +6,6 @@
 	<string>WertheApp</string>
 	<key>CFBundleName</key>
 	<string>WertheApp</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.hsaalen.wertheapp</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
@@ -42,5 +40,9 @@
 	<string>WertheLaunchScreen</string>
 	<key>UILaunchStoryboardName</key>
 	<string>WertheLaunchScreen</string>
+	<key>CFBundleIdentifier</key>
+	<string>de.dariakern.wertheapp</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
 </dict>
 </plist>

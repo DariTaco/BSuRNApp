@@ -196,13 +196,13 @@ namespace WertheApp.RN
             if (width > height)
             {
                 this.IsVisible = false;
-                this.CurrentPage.IsVisible = false;
+                //this.CurrentPage.IsVisible = false;
                 
             }
             else if (height > width)
             {
                 this.IsVisible = true;
-                this.CurrentPage.IsVisible = true;
+                //this.CurrentPage.IsVisible = true;
             }
         }
 

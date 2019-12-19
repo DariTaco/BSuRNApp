@@ -67,18 +67,16 @@
     <DefineConstants>DEBUG;ENABLE_TEST_CLOUD;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <CodesignKey>iPhone Distribution</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-    <MtouchFastDev>true</MtouchFastDev>
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <IOSDebuggerPort>57999</IOSDebuggerPort>
-    <MtouchLink>SdkOnly</MtouchLink>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <PlatformTarget>x86</PlatformTarget>
+    <CodesignProvision>Dari</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -175,6 +173,10 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\512x512.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\512x512-1.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\1024x1024-2.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\werthe.pdf" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\werthe-1.pdf" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\werthe-2.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -184,6 +186,7 @@
     <Folder Include="Assets.xcassets\LaunchImage.imageset\" />
     <Folder Include="Assets.xcassets\LaunchImage.imageset\" />
     <Folder Include="Assets.xcassets\LaunchImage.appiconset\" />
+    <Folder Include="Assets.xcassets\LaunchImage.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="WertheLaunchScreen.storyboard" />
