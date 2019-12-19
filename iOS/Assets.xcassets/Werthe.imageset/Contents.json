@@ -1,311 +1,353 @@
 {
   "images": [
     {
-      "filename": "werthe-2.pdf",
-      "idiom": "universal"
-    },
-    {
-      "scale": "1x",
-      "idiom": "universal"
-    },
-    {
-      "scale": "2x",
-      "idiom": "universal"
-    },
-    {
-      "scale": "3x",
-      "idiom": "universal"
-    },
-    {
-      "idiom": "iphone"
-    },
-    {
-      "scale": "1x",
-      "idiom": "iphone"
-    },
-    {
-      "scale": "2x",
-      "idiom": "iphone"
-    },
-    {
-      "subtype": "retina4",
-      "scale": "2x",
-      "idiom": "iphone"
-    },
-    {
-      "scale": "3x",
-      "idiom": "iphone"
-    },
-    {
-      "idiom": "ipad"
-    },
-    {
-      "scale": "1x",
-      "idiom": "ipad"
-    },
-    {
-      "scale": "2x",
-      "idiom": "ipad"
-    },
-    {
-      "idiom": "watch"
-    },
-    {
-      "scale": "2x",
-      "idiom": "watch"
-    },
-    {
-      "screenWidth": "{130,145}",
-      "scale": "2x",
-      "idiom": "watch"
-    },
-    {
-      "screenWidth": "{146,165}",
-      "scale": "2x",
-      "idiom": "watch"
-    },
-    {
-      "idiom": "mac"
-    },
-    {
-      "scale": "1x",
-      "idiom": "mac"
-    },
-    {
-      "scale": "2x",
-      "idiom": "mac"
-    },
-    {
-      "idiom": "car"
-    },
-    {
-      "scale": "2x",
-      "idiom": "car"
-    },
-    {
-      "scale": "3x",
-      "idiom": "car"
-    },
-    {
       "filename": "werthe.pdf",
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
       "idiom": "universal"
     },
     {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
+      "filename": "1024x1024-2.png",
       "scale": "1x",
       "idiom": "universal"
     },
     {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
+      "filename": "1024x1024-3.png",
       "scale": "2x",
       "idiom": "universal"
     },
     {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
+      "filename": "1024x1024-4.png",
       "scale": "3x",
       "idiom": "universal"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "idiom": "iphone"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "1x",
-      "idiom": "iphone"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "iphone"
-    },
-    {
-      "subtype": "retina4",
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "iphone"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "3x",
-      "idiom": "iphone"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "idiom": "ipad"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "1x",
-      "idiom": "ipad"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "ipad"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "idiom": "watch"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "watch"
-    },
-    {
-      "screenWidth": "{130,145}",
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "watch"
-    },
-    {
-      "screenWidth": "{146,165}",
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "watch"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "idiom": "mac"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "1x",
-      "idiom": "mac"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "mac"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "idiom": "car"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x",
-      "idiom": "car"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "3x",
-      "idiom": "car"
     },
     {
       "filename": "werthe-1.pdf",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-5.png",
+      "scale": "1x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-6.png",
+      "scale": "2x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-7.png",
+      "subtype": "retina4",
+      "scale": "2x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-8.png",
+      "scale": "3x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "werthe-2.pdf",
+      "idiom": "ipad"
+    },
+    {
+      "filename": "1024x1024-9.png",
+      "scale": "1x",
+      "idiom": "ipad"
+    },
+    {
+      "filename": "1024x1024-10.png",
+      "scale": "2x",
+      "idiom": "ipad"
+    },
+    {
+      "filename": "werthe-3.pdf",
+      "idiom": "watch"
+    },
+    {
+      "filename": "1024x1024-11.png",
+      "scale": "2x",
+      "idiom": "watch"
+    },
+    {
+      "filename": "1024x1024-12.png",
+      "screenWidth": "{130,145}",
+      "scale": "2x",
+      "idiom": "watch"
+    },
+    {
+      "filename": "1024x1024-13.png",
+      "screenWidth": "{146,165}",
+      "scale": "2x",
+      "idiom": "watch"
+    },
+    {
+      "filename": "werthe-4.pdf",
+      "idiom": "mac"
+    },
+    {
+      "filename": "1024x1024-14.png",
+      "scale": "1x",
+      "idiom": "mac"
+    },
+    {
+      "filename": "1024x1024-15.png",
+      "scale": "2x",
+      "idiom": "mac"
+    },
+    {
+      "filename": "werthe-5.pdf",
+      "idiom": "car"
+    },
+    {
+      "filename": "1024x1024-16.png",
+      "scale": "2x",
+      "idiom": "car"
+    },
+    {
+      "filename": "1024x1024-17.png",
+      "scale": "3x",
+      "idiom": "car"
+    },
+    {
+      "filename": "werthe-6.pdf",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "idiom": "universal"
+    },
+    {
+      "filename": "1024x1024.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "1x",
+      "idiom": "universal"
+    },
+    {
+      "filename": "1024x1024-1.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "universal"
+    },
+    {
+      "filename": "1024x1024-18.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "3x",
+      "idiom": "universal"
+    },
+    {
+      "filename": "werthe-7.pdf",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-19.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "1x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-20.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-21.png",
+      "subtype": "retina4",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "1024x1024-22.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "3x",
+      "idiom": "iphone"
+    },
+    {
+      "filename": "werthe-8.pdf",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "idiom": "ipad"
+    },
+    {
+      "filename": "1024x1024-23.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "1x",
+      "idiom": "ipad"
+    },
+    {
+      "filename": "1024x1024-24.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "ipad"
+    },
+    {
+      "filename": "werthe-9.pdf",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "idiom": "watch"
+    },
+    {
+      "filename": "1024x1024-25.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "watch"
+    },
+    {
+      "filename": "1024x1024-26.png",
+      "screenWidth": "{130,145}",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "watch"
+    },
+    {
+      "filename": "1024x1024-27.png",
+      "screenWidth": "{146,165}",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "watch"
+    },
+    {
+      "filename": "werthe-10.pdf",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "idiom": "mac"
+    },
+    {
+      "filename": "1024x1024-28.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "1x",
+      "idiom": "mac"
+    },
+    {
+      "filename": "1024x1024-29.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "mac"
+    },
+    {
+      "filename": "werthe-11.pdf",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "idiom": "car"
+    },
+    {
+      "filename": "1024x1024-30.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "2x",
+      "idiom": "car"
+    },
+    {
+      "filename": "1024x1024-31.png",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "scale": "3x",
+      "idiom": "car"
+    },
+    {
+      "filename": "werthe-12.pdf",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -315,6 +357,7 @@
       "idiom": "universal"
     },
     {
+      "filename": "1024x1024-32.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -325,6 +368,7 @@
       "idiom": "universal"
     },
     {
+      "filename": "1024x1024-33.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -335,6 +379,7 @@
       "idiom": "universal"
     },
     {
+      "filename": "1024x1024-34.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -345,6 +390,7 @@
       "idiom": "universal"
     },
     {
+      "filename": "werthe-13.pdf",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -354,6 +400,7 @@
       "idiom": "iphone"
     },
     {
+      "filename": "1024x1024-35.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -364,6 +411,7 @@
       "idiom": "iphone"
     },
     {
+      "filename": "1024x1024-36.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -374,6 +422,7 @@
       "idiom": "iphone"
     },
     {
+      "filename": "1024x1024-37.png",
       "subtype": "retina4",
       "appearances": [
         {
@@ -385,6 +434,7 @@
       "idiom": "iphone"
     },
     {
+      "filename": "1024x1024-38.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -395,6 +445,7 @@
       "idiom": "iphone"
     },
     {
+      "filename": "werthe-14.pdf",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -404,6 +455,7 @@
       "idiom": "ipad"
     },
     {
+      "filename": "1024x1024-39.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -414,6 +466,7 @@
       "idiom": "ipad"
     },
     {
+      "filename": "1024x1024-40.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -424,6 +477,7 @@
       "idiom": "ipad"
     },
     {
+      "filename": "werthe-15.pdf",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -433,6 +487,7 @@
       "idiom": "watch"
     },
     {
+      "filename": "1024x1024-41.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -443,6 +498,7 @@
       "idiom": "watch"
     },
     {
+      "filename": "1024x1024-42.png",
       "screenWidth": "{130,145}",
       "appearances": [
         {
@@ -454,6 +510,7 @@
       "idiom": "watch"
     },
     {
+      "filename": "1024x1024-43.png",
       "screenWidth": "{146,165}",
       "appearances": [
         {
@@ -465,6 +522,7 @@
       "idiom": "watch"
     },
     {
+      "filename": "werthe-17.pdf",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -474,6 +532,7 @@
       "idiom": "mac"
     },
     {
+      "filename": "1024x1024-44.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -484,6 +543,7 @@
       "idiom": "mac"
     },
     {
+      "filename": "1024x1024-45.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -494,6 +554,7 @@
       "idiom": "mac"
     },
     {
+      "filename": "werthe-16.pdf",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -503,6 +564,7 @@
       "idiom": "car"
     },
     {
+      "filename": "1024x1024-46.png",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -513,6 +575,7 @@
       "idiom": "car"
     },
     {
+      "filename": "1024x1024-47.png",
       "appearances": [
         {
           "appearance": "luminosity",

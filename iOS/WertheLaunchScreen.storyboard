@@ -15,18 +15,18 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="399" translatesAutoresizingMaskIntoConstraints="NO" image="LaunchImage">
-                                <rect key="frame" x="16" y="132.5" width="288" height="128"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="399" translatesAutoresizingMaskIntoConstraints="NO" image="Werthe">
+                                <rect key="frame" x="20" y="273.5" width="374" height="128"/>
                                 <constraints>
                                     <constraint id="431" firstAttribute="height" constant="128"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WertheApp" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="400" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="16" y="264" width="288" height="33"/>
+                                <rect key="frame" x="20" y="405" width="374" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -35,7 +35,7 @@
                                 </constraints>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="made by Dari" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="401" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="16" y="456" width="288" height="14"/>
+                                <rect key="frame" x="20" y="712" width="374" height="14"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -63,6 +63,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LaunchImage" width="114" height="114"/>
+        <image name="Werthe" width="1024" height="1024"/>
     </resources>
 </document>

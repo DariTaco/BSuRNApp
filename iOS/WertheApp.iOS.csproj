@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Xamarin.Forms.4.3.0.991211\build\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.4.3.0.991211\build\Xamarin.Forms.props')" />
+  <Import Project="..\packages\Xamarin.Forms.4.4.0.991265\build\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.4.4.0.991265\build\Xamarin.Forms.props')" />
   <Import Project="..\packages\Xamarin.Forms.3.0.0.561731\build\netstandard2.0\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.3.0.0.561731\build\netstandard2.0\Xamarin.Forms.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -37,10 +37,10 @@
     <OutputPath>bin\iPhone\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution</CodesignKey>
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchLink>None</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <PlatformTarget>x86</PlatformTarget>
@@ -102,25 +102,25 @@
       <HintPath>..\packages\CocosSharp.Forms.1.7.1.0\lib\Xamarin.iOS10\CocosSharp.Forms.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Core">
-      <HintPath>..\packages\Xamarin.Forms.4.3.0.991211\lib\Xamarin.iOS10\Xamarin.Forms.Core.dll</HintPath>
+      <HintPath>..\packages\Xamarin.Forms.4.4.0.991265\lib\Xamarin.iOS10\Xamarin.Forms.Core.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Platform">
-      <HintPath>..\packages\Xamarin.Forms.4.3.0.991211\lib\Xamarin.iOS10\Xamarin.Forms.Platform.dll</HintPath>
+      <HintPath>..\packages\Xamarin.Forms.4.4.0.991265\lib\Xamarin.iOS10\Xamarin.Forms.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Platform.iOS">
-      <HintPath>..\packages\Xamarin.Forms.4.3.0.991211\lib\Xamarin.iOS10\Xamarin.Forms.Platform.iOS.dll</HintPath>
+      <HintPath>..\packages\Xamarin.Forms.4.4.0.991265\lib\Xamarin.iOS10\Xamarin.Forms.Platform.iOS.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Xaml">
-      <HintPath>..\packages\Xamarin.Forms.4.3.0.991211\lib\Xamarin.iOS10\Xamarin.Forms.Xaml.dll</HintPath>
+      <HintPath>..\packages\Xamarin.Forms.4.4.0.991265\lib\Xamarin.iOS10\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
     <Reference Include="SkiaSharp">
-      <HintPath>..\packages\SkiaSharp.1.68.0\lib\Xamarin.iOS\SkiaSharp.dll</HintPath>
+      <HintPath>..\packages\SkiaSharp.1.68.1\lib\Xamarin.iOS\SkiaSharp.dll</HintPath>
     </Reference>
     <Reference Include="SkiaSharp.Views.iOS">
-      <HintPath>..\packages\SkiaSharp.Views.1.68.0\lib\Xamarin.iOS\SkiaSharp.Views.iOS.dll</HintPath>
+      <HintPath>..\packages\SkiaSharp.Views.1.68.1\lib\Xamarin.iOS\SkiaSharp.Views.iOS.dll</HintPath>
     </Reference>
     <Reference Include="SkiaSharp.Views.Forms">
-      <HintPath>..\packages\SkiaSharp.Views.Forms.1.68.0\lib\Xamarin.iOS\SkiaSharp.Views.Forms.dll</HintPath>
+      <HintPath>..\packages\SkiaSharp.Views.Forms.1.68.1\lib\Xamarin.iOS\SkiaSharp.Views.Forms.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -173,10 +173,73 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\512x512.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\512x512-1.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\1024x1024-2.png" />
-    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\werthe.pdf" />
-    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\werthe-1.pdf" />
-    <ImageAsset Include="Assets.xcassets\LaunchImage.imageset\werthe-2.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-2.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-3.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-4.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-5.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-6.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-7.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-8.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-9.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-10.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-11.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-12.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-13.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-14.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-15.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-16.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-17.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-1.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-2.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-3.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-4.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-5.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-6.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-7.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-8.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-9.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-10.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-11.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-1.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-18.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-19.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-20.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-21.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-22.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-23.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-24.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-25.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-26.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-27.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-28.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-29.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-30.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-31.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-12.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-13.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-14.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-15.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-17.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\werthe-16.pdf" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-32.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-33.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-34.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-35.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-36.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-37.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-38.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-39.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-40.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-41.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-42.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-43.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-44.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-45.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-46.png" />
+    <ImageAsset Include="Assets.xcassets\Werthe.imageset\1024x1024-47.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -187,6 +250,7 @@
     <Folder Include="Assets.xcassets\LaunchImage.imageset\" />
     <Folder Include="Assets.xcassets\LaunchImage.appiconset\" />
     <Folder Include="Assets.xcassets\LaunchImage.imageset\" />
+    <Folder Include="Assets.xcassets\Werthe.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="WertheLaunchScreen.storyboard" />
@@ -209,5 +273,5 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.3.0.0.561731\build\netstandard2.0\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.3.0.0.561731\build\netstandard2.0\Xamarin.Forms.targets')" />
-  <Import Project="..\packages\Xamarin.Forms.4.3.0.991211\build\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.4.3.0.991211\build\Xamarin.Forms.targets')" />
+  <Import Project="..\packages\Xamarin.Forms.4.4.0.991265\build\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.4.4.0.991265\build\Xamarin.Forms.targets')" />
 </Project>

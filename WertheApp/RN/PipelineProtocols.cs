@@ -354,7 +354,8 @@ namespace WertheApp.RN
 			else if (height > width)
 			{
                 this.Content.IsVisible = true;
-			}
+                gameView.HeightRequest = Application.Current.MainPage.Height;
+            }
 		}
 	}
 }
