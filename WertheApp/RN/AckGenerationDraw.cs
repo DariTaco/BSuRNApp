@@ -1,9 +1,6 @@
 ﻿using System;
-using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
-using System.Diagnostics; //Debug.WriteLine("");
-using System.Collections.Generic;
 
 namespace WertheApp.RN
 {
@@ -338,7 +335,7 @@ namespace WertheApp.RN
         // draws an arrow from receiver to sender for the given round
         static void DrawAckArrow(SKCanvas canvas, int round, SKPaint paint, String part, String dupAck)
         {
-            Debug.WriteLine("ARROWLENGTH: " + arrowLength);
+            
             SKPoint arrowBegin, arrowEnd;
             arrowBegin = new SKPoint();
             arrowEnd = new SKPoint();

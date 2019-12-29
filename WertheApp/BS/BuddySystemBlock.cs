@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace WertheApp.BS
 {
@@ -73,14 +72,14 @@ namespace WertheApp.BS
 
         public void PrintBuddyNoList()
         {
-            Debug.WriteLine("############## Buddy No List");
+            //Debug.WriteLine("############## Buddy No List");
             String s = "";
             for (int i = 0; i < this.buddyNoList.Count; i++)
             {
                 String value = this.buddyNoList[i].ToString();
                 s += value + " ";
             }
-            Debug.WriteLine(s);
+            //Debug.WriteLine(s);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿/**********************CLASS FOR END PROCESS POP UP****************************/
 
 using System;
-using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace WertheApp.BS
@@ -37,7 +36,7 @@ namespace WertheApp.BS
                 Orientation = StackOrientation.Horizontal 
             };
 
-			var b_End = new Button { Text = "End process" };
+			var b_End = new Button { Text = "End Process" };
 			b_End.Clicked += B_End_Clicked;
             var l_Space = new Label { Text = "  " };
 			var b_Cancel = new Button { Text = "Cancel" };
@@ -47,7 +46,7 @@ namespace WertheApp.BS
             stackLayout2.Children.Add(l_Space);
             stackLayout2.Children.Add(b_Cancel);
 
-			var l_Active = new Label { Text = "Active processes:" };
+			var l_Active = new Label { Text = "Active Processes:" };
 			p_ProcessNames = new Picker();
             p_ProcessNames.ItemsSource = BuddySystem.activeProcesses;
 			p_ProcessNames.SelectedIndex = 0;

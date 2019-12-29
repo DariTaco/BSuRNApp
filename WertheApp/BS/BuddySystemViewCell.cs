@@ -2,7 +2,6 @@
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
-using System.Diagnostics; //Debug.WriteLine("");
 using System.Collections.Generic;
 
 namespace WertheApp.BS

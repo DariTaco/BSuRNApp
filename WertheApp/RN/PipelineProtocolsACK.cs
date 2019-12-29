@@ -1,7 +1,5 @@
 ﻿/************************CLASS FOR SELECTIVE REPEAT****************************/
 using CocosSharp;
-using System.Linq;
-using System.Diagnostics;
 namespace WertheApp.RN
 {
     //CLASS FOR SPRITE OBJECT

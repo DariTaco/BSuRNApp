@@ -1,5 +1,4 @@
-﻿using System;
-using WertheApp.BS;
+﻿using WertheApp.BS;
 using Xamarin.Forms;
 
 namespace WertheApp

@@ -1,11 +1,9 @@
 ﻿/************************CLASS FOR SELECTIVE REPEAT****************************/
 using CocosSharp;
-using System.Linq;
-using System.Diagnostics;
 namespace WertheApp.RN
 {
-	//CLASS FOR SPRITE OBJECT
-	public class PipelineProtocolsPack : CCNode
+    //CLASS FOR SPRITE OBJECT
+    public class PipelineProtocolsPack : CCNode
 	{
         //VARIABLES
         public static bool stopEverything; //code is still running when page is not displayed anymore. Therefore there has to be a variable to stop everything

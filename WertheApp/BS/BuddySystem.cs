@@ -1,11 +1,8 @@
 ﻿using System;
-using SkiaSharp;
-using SkiaSharp.Views.Forms;
 using System.Linq; //list.Any()
 using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics; //Debug.WriteLine("");
 
 namespace WertheApp.BS
 {
@@ -155,10 +152,7 @@ namespace WertheApp.BS
                 {
                     if (blockSizeL == blockSize && buddyNoL == 1 && freeL)
                     {
-                        //Debug.WriteLine("mergeblock with index " + i + " and size "  + buddySystem[i].GetBlockSize() + " with left buddy");
-                        //Debug.WriteLine(buddySystem.Last().GetFree());
-                       
-                        PrintBuddySystemList();
+                      
                         buddyNoListCopy.RemoveAt(buddyNoListCopy.Count - 1); //remove last in List, which is the buddyNo of the child
                         buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
                         buddyNoListCopy.RemoveAt(buddyNoListCopy.Count - 1); //remove the last item since it will be attached again when using setbuddynolist
@@ -186,10 +180,7 @@ namespace WertheApp.BS
                 {
                     if (blockSizeR == blockSize && buddyNoR == 2 && freeR)
                     {
-                        //Debug.WriteLine("merge block with index " + i + " and size " + buddySystem[i].GetBlockSize() + " with right buddy");
-                        //Debug.WriteLine(buddySystem.Last().GetFree());
-                       
-                        PrintBuddySystemList();
+                      
                         buddyNoListCopy.RemoveAt(buddyNoListCopy.Count-1); //remove last in List, which is the buddyNo of the child
                         buddyNoMergedBlock = buddyNoListCopy.Last(); //now the last element in the list is the buddyno
                         buddyNoListCopy.RemoveAt(buddyNoListCopy.Count - 1); //remove the last item since it will be attached again when using setbuddynolist
@@ -221,8 +212,7 @@ namespace WertheApp.BS
                 //and both are free (no check for other properties since they have to be buddys)
                 if (buddySystem[0].GetFree() && buddySystem[1].GetFree())
                 {
-                    Debug.WriteLine(buddySystem[1].GetFree());
-                    PrintBuddySystemList();
+                   
                     //merge
                     buddySystem.Remove(buddySystem[1]);
                     buddySystem.Remove(buddySystem[0]);
@@ -342,7 +332,7 @@ namespace WertheApp.BS
             //add elements to stacklayout
 			var b_Start = new Button
 			{
-				Text = "START PROCESS",
+				Text = "Start Process",
 				WidthRequest = StackChildSize,
 				VerticalOptions = LayoutOptions.Center
 			};
@@ -351,7 +341,7 @@ namespace WertheApp.BS
 
 			var b_End = new Button
 			{
-				Text = "END PROCESS",
+				Text = "End Process",
 				WidthRequest = StackChildSize,
 				VerticalOptions = LayoutOptions.Center
 			};
@@ -415,14 +405,14 @@ namespace WertheApp.BS
         *********************************************************************/
         //Debug Fuction: prints the memory
         private static void PrintBuddySystemList(){
-            Debug.WriteLine("#Buddy System List#");
+            //Debug.WriteLine("#Buddy System List#");
             String s = "";
             for (int i = 0; i < buddySystem.Count; i++)
             {
                 int value = buddySystem[i].GetBlockSize();
                 s += value + " ";
             }
-            Debug.WriteLine(s);
+            //Debug.WriteLine(s);
 
             String st = "";
             for (int i = 0; i < buddySystem.Count; i++)
@@ -430,7 +420,7 @@ namespace WertheApp.BS
                 int value = buddySystem[i].GetProcessSize();
                 st += value + " ";
             }
-            Debug.WriteLine(st);
+            //Debug.WriteLine(st);
         }
 	}
 }

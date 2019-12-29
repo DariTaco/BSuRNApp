@@ -1,5 +1,4 @@
-﻿using System;
-namespace WertheApp.HelpingClasses
+﻿namespace WertheApp.HelpingClasses
 {
     //supposed to be a singleton class
     //Which helps to aquire the correct Screen Size after the phone was rotated

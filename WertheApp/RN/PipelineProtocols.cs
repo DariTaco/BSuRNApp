@@ -1,8 +1,6 @@
 ﻿using System;
 using CocosSharp;
 using Xamarin.Forms;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace WertheApp.RN
 {
@@ -129,9 +127,6 @@ namespace WertheApp.RN
                 scrollView.Content = gameView;
                 grid.Children.Add(scrollView, 0, 0);
                 */
-                Debug.WriteLine("##########IOS######");
-                Debug.WriteLine(gameviewHeight * scaleFactor);
-                Debug.WriteLine(Application.Current.MainPage.Height);
                 //gameView.HorizontalOptions = LayoutOptions.CenterAndExpand;
                // gameView.VerticalOptions = LayoutOptions.FillAndExpand;
                // gameView.HorizontalOptions = LayoutOptions.FillAndExpand;

@@ -3,9 +3,7 @@ using System;
 using CocosSharp;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
 using Xamarin.Forms;
-using System.Threading.Tasks;
 
 //TAKE NOTE: the reference value of an action is always the same!! 
 //It always refers to the values that were set when the original object was first definded.

@@ -1,7 +1,6 @@
 ﻿using System;
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
-using System.Diagnostics;
 
 namespace WertheApp.RN
 {
@@ -309,12 +308,6 @@ namespace WertheApp.RN
             CongestionAvoidanceDraw.stateR = stateR;
             CongestionAvoidanceDraw.stateT = stateT;
             CongestionAvoidanceDraw.Paint();
-            //PrintArray(reno);
-            //PrintArray(sstreshR)
-            Debug.WriteLine("tahoe");
-            PrintArray(tahoe);
-            Debug.WriteLine("tresh");
-            PrintArray(sstreshT);
 
         }
 
@@ -588,7 +581,7 @@ namespace WertheApp.RN
 
         public static void PrintArray(int[,] array)
         {
-            Debug.WriteLine("");
+            //Debug.WriteLine("");
             // Loop over 2D int array and display it.
             for (int i = 0; i <= array.GetUpperBound(0); i++)
             {
@@ -598,7 +591,7 @@ namespace WertheApp.RN
                     s += array[i, j];
                     s += " ";
                 }
-                Debug.WriteLine(s);
+                //Debug.WriteLine(s);
             }
         }
     }

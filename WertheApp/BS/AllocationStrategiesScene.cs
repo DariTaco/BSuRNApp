@@ -2,7 +2,6 @@
 using CocosSharp;
 using System.Collections.Generic;
 using System.Linq; //fragmentList.ElementAt(i);
-using System.Diagnostics;
 using Xamarin.Forms; //Messaging Center
 
 //just gonna say: whoever has to read or even work with this code. I'm genuinly sorry. I'm sure there is a way better solution for everything...
@@ -20,9 +19,10 @@ namespace WertheApp.BS
         static int totalMemorySize; //totalMemorySize = availableMemory + numberOfFragments -1
         static float relativeFragmentSize; //rule of three -> 300px XYtotalMemorySize //I chose float instead of double because in order to draw a box with CCSharp you need a float value
         static CCDrawNode cc_box;
+        static CCColor4B color_blue;
 
-		//variables for adding function
-		static String strategy; 
+        //variables for adding function
+        static String strategy; 
         public static int[,] memoryBlocks; //2D array used to work with the memory and is constantly updated
         public static int pos; //memoryBlocks[pos]
         public static int suc; //the latest successfull block that was filled //NEXTFIT
@@ -100,6 +100,8 @@ namespace WertheApp.BS
             totalMemorySize = availableMemory + numberOfFragments - 1;
             //300 because memorybox is set to be 300px
             relativeFragmentSize = float.Parse("300") /float.Parse(totalMemorySize.ToString());//nicht gerade elegant, ich weiß
+
+            color_blue = new CCColor4B(67, 110, 238, 204);
         }
 
 
@@ -292,7 +294,7 @@ namespace WertheApp.BS
                     from: new CCPoint(posXstart, 22),
                     to: new CCPoint(posXstart, 70),
                     lineWidth: partingLineWidth,
-                    color: CCColor4B.Blue);
+                    color: color_blue);
                 posXstart += relativeFragmentSize;
             }
 			layer.AddChild(cc_fill);

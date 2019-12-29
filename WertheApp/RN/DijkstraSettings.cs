@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WertheApp.RN

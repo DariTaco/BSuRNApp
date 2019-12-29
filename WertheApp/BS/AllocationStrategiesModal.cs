@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions; //Regex.IsMatch
-using System.Diagnostics; //Debug.WriteLine("");
 using Xamarin.Forms; //Messaging Center
 
 namespace WertheApp.BS

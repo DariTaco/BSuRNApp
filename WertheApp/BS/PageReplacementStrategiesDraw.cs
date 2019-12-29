@@ -2,7 +2,6 @@
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
-using System.Diagnostics; //Debug.WriteLine("");
 using System.Collections.Generic;
 
 //Ram array explanation
@@ -420,7 +419,7 @@ namespace WertheApp.BS
             {
                 s += ", " + p;
             }
-            Debug.WriteLine(s);
+            //Debug.WriteLine(s);
         }
     }
 }

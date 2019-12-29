@@ -3,8 +3,6 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq; //fragmentList.ElementAt(i);
 using SkiaSharp.Views.Forms;
-using SkiaSharp;
-using System.Diagnostics;
 namespace WertheApp.BS
 {
 
@@ -164,7 +162,6 @@ namespace WertheApp.BS
                     break;
             }
             PageReplacementStrategiesDraw.Paint();//Update Canvas
-            //PrintDisc(disc);
             //disable next button if the sequence was processed entirely
             if (currentStep == sequenceLength-1){
                 b_Next.IsEnabled = false;
@@ -978,8 +975,8 @@ namespace WertheApp.BS
         //print 2d array
         static void PrintDisc(int[,] array)
         {
-            Debug.WriteLine("");
-            Debug.WriteLine("DISC " + SequenceList.Count + "x" + discSize);
+            //Debug.WriteLine("");
+            //Debug.WriteLine("DISC " + SequenceList.Count + "x" + discSize);
             // Loop over 2D int array and display it.
             for (int i = 0; i <= array.GetUpperBound(0); i++)
             {
@@ -989,7 +986,7 @@ namespace WertheApp.BS
                     s += array[i, j];
                     s += " ";
                 }
-                Debug.WriteLine(s);
+                //Debug.WriteLine(s);
             }
         }
 
@@ -998,8 +995,8 @@ namespace WertheApp.BS
         //print 3d array
         static void PrintRam(int[,,] array)
         {
-            Debug.WriteLine("");
-            Debug.WriteLine("RAM" + SequenceList.Count + "x" + ramSize);
+            //Debug.WriteLine("");
+            //Debug.WriteLine("RAM" + SequenceList.Count + "x" + ramSize);
             // Loop over 3D int array and display it.
             for (int i = 0; i <= array.GetUpperBound(0); i++)
             {
@@ -1021,7 +1018,7 @@ namespace WertheApp.BS
                     s += array[i, j, 0] + rbit + mbit;
                     s += " ";
                 }
-                Debug.WriteLine(s);
+                //Debug.WriteLine(s);
             }
         }
         /**********************************************************************
