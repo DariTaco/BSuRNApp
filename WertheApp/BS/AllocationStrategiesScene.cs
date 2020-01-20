@@ -19,7 +19,7 @@ namespace WertheApp.BS
         static int totalMemorySize; //totalMemorySize = availableMemory + numberOfFragments -1
         static float relativeFragmentSize; //rule of three -> 300px XYtotalMemorySize //I chose float instead of double because in order to draw a box with CCSharp you need a float value
         static CCDrawNode cc_box;
-        static CCColor4B color_blue;
+        static CCColor4B color_blue, color_red;
 
         //variables for adding function
         static String strategy; 
@@ -102,6 +102,7 @@ namespace WertheApp.BS
             relativeFragmentSize = float.Parse("300") /float.Parse(totalMemorySize.ToString());//nicht gerade elegant, ich weiß
 
             color_blue = new CCColor4B(67, 110, 238, 204);
+            color_red = new CCColor4B(170, 0, 60);
         }
 
 
@@ -120,7 +121,7 @@ namespace WertheApp.BS
                 box,
                 fillColor: CCColor4B.White,
                 borderWidth: 1,
-                borderColor: CCColor4B.Red);
+                borderColor: color_red);
             //add box to layer
             layer.AddChild(cc_box);
 
@@ -174,17 +175,17 @@ namespace WertheApp.BS
 				from: new CCPoint(posArrow1, 95),
 				to: new CCPoint(posArrow1, 75),
 				lineWidth: 1,
-				color: CCColor4B.Red);
+				color: color_red);
 			cc_arrow1a.DrawLine(
 				from: new CCPoint(posArrow1 + 0.5f, 75),
 				to: new CCPoint(posArrow1 - 5, 80),
 				lineWidth: 1,
-				color: CCColor4B.Red);
+				color: color_red);
 			cc_arrow1b.DrawLine(
 				from: new CCPoint(posArrow1 - 0.5f, 75),
 				to: new CCPoint(posArrow1 + 5, 80),
 				lineWidth: 1,
-				color: CCColor4B.Red);
+				color: color_red);
 
 			layer.AddChild(cc_arrow1);
 			layer.AddChild(cc_arrow1a);

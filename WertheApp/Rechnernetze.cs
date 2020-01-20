@@ -8,7 +8,7 @@ namespace WertheApp
         //CONSTRUCTOR
         public Rechnernetze()
         {
-            Title = "Rechnernetze";
+            Title = "Computer Networks";
             var stackLayout = new StackLayout { Margin = new Thickness(10) };
             this.Content = stackLayout;
 

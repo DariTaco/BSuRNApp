@@ -8,7 +8,7 @@ namespace WertheApp
         //CONSTRUCTOR
         public Betriebssysteme()
         {
-            Title = "Betriebssysteme";
+            Title = "Operating Systems";
             var stackLayout = new StackLayout { Margin = new Thickness(10) };
             this.Content = stackLayout;
 
