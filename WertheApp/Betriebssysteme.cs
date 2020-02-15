@@ -28,6 +28,7 @@ namespace WertheApp
 			stackLayout.Children.Add(l_space);
 
             var listView = new ListView();
+			listView.BackgroundColor = Color.Transparent;
 			listView.ItemsSource = new string[]
             {
                 "Allocation Strategies", "Buddy System", "Page Replacement Strategies"

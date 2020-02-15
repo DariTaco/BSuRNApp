@@ -29,7 +29,8 @@ namespace WertheApp
 
             //creates a list with all Apps of the course
 			var listView = new ListView();
-			listView.ItemsSource = new string[]
+            listView.BackgroundColor = Color.Transparent;
+            listView.ItemsSource = new string[]
 			{
                 //Reno Fast Retransmit/Recovery
 				"Congestion Control", "Pipeline Protocols", "Reno Fast Recovery", "Ack Generation", "Dijkstra"

@@ -298,6 +298,7 @@ namespace WertheApp.BS
             {
                 ItemTemplate = new DataTemplate(typeof(BuddySystemViewCell)),
                 RowHeight = 100,
+                BackgroundColor = Color.Transparent,
             };
             buddySystemCells = new ObservableCollection<BuddySystemViewCell>();
             listView.ItemsSource = buddySystemCells;
