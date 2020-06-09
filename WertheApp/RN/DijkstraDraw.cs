@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace WertheApp.RN
 
         private static SKPaint sk_Background, sk_PaintBlack, sk_RouterText,
         sk_RouterContour, sk_RouterFill, sk_RouterFillRed, sk_WeightsText,
-            sk_TableCaption, sk_Visited,
+            sk_TableCaption, sk_TableCaptionRed, sk_Visited,
             sk_PaintBlackThin, sk_Background2;
         private static float strokeWidth;
 
@@ -142,8 +143,13 @@ namespace WertheApp.RN
         public static void DrawTableContents()
         {
             String[,] tableContents = DijkstraAlgorithm.GetTableValues();
+
+            String visitedNodes = tableContents[currentStep, 8];
+        
+
             for (int i = 0; i <= currentStep; i++)
             {
+                // check which is the current table row and write text in this row
                 int round = Int32.Parse(tableContents[i, 1]);
 
                 float yValueContent = 0;
@@ -156,12 +162,45 @@ namespace WertheApp.RN
                     case 4: yValueContent = 163.2f; break;
                     case 5: yValueContent = 173.2f; break;
                 }
+
+                
                 canvas.DrawText(tableContents[i, 2], new SKPoint(20 * xe, yValueContent * ye2), sk_TableCaption);
                 canvas.DrawText(tableContents[i, 3], new SKPoint(34 * xe, yValueContent * ye2), sk_TableCaption);
                 canvas.DrawText(tableContents[i, 4], new SKPoint(48 * xe, yValueContent * ye2), sk_TableCaption);
                 canvas.DrawText(tableContents[i, 5], new SKPoint(62 * xe, yValueContent * ye2), sk_TableCaption);
                 canvas.DrawText(tableContents[i, 6], new SKPoint(76 * xe, yValueContent * ye2), sk_TableCaption);
                 canvas.DrawText(tableContents[i, 7], new SKPoint(90 * xe, yValueContent * ye2), sk_TableCaption);
+
+                
+                char visitedNodeToMark = visitedNodes[round];
+                yValueContent = yValueContent - 10f; //previous row/round
+
+                // every new round/ every 7th step
+                if (i % 6 == 0)
+                {
+                    //overdraw the previously visited connection in red
+                    switch (visitedNodeToMark)
+                    {
+                        // v = 1st step previous row (i-5) , w = 2nd step..., x = 3rd step..., y = 4th step..., z = 5th step...
+                        case 'v':
+                            canvas.DrawText(tableContents[i-5, 3], new SKPoint(34 * xe, yValueContent * ye2), sk_TableCaptionRed);
+                            break;
+                        case 'w':
+                            canvas.DrawText(tableContents[i-4, 4], new SKPoint(48 * xe, yValueContent * ye2), sk_TableCaptionRed);
+                            break;
+                        case 'x':
+                            canvas.DrawText(tableContents[i-3, 5], new SKPoint(62 * xe, yValueContent * ye2), sk_TableCaptionRed);
+                            break;
+                        case 'y':
+                            canvas.DrawText(tableContents[i-2, 6], new SKPoint(76 * xe, yValueContent * ye2), sk_TableCaptionRed);
+                            break;
+                        case 'z':
+                            canvas.DrawText(tableContents[i-1, 7], new SKPoint(90 * xe, yValueContent * ye2), sk_TableCaptionRed);
+                            break;
+                    }
+                }
+                    
+
 
             }
         }
@@ -634,6 +673,16 @@ namespace WertheApp.RN
             sk_TableCaption = new SKPaint
             {
                 Color = SKColors.Black,
+                Style = SKPaintStyle.StrokeAndFill,
+                TextSize = 32,
+                IsAntialias = true,
+                TextAlign = SKTextAlign.Center,
+                IsVerticalText = false
+            };
+
+            sk_TableCaptionRed = new SKPaint
+            {
+                Color = SKColors.Red,
                 Style = SKPaintStyle.StrokeAndFill,
                 TextSize = 32,
                 IsAntialias = true,

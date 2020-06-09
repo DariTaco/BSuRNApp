@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+
 
 namespace WertheApp.RN
 {
@@ -144,11 +146,12 @@ namespace WertheApp.RN
         public static void Initialize()
         {
             //nodes
-            dv = new String[5] { "-", "-", "-", "-", "-" };
-            dw = new String[5] { "-", "-", "-", "-", "-" };
-            dx = new String[5] { "-", "-", "-", "-", "-" };
-            dy = new String[5] { "-", "-", "-", "-", "-" };
-            dz = new String[5] { "-", "-", "-", "-", "-" };
+            String ph = "#"; 
+            dv = new String[5] { ph, ph, ph, ph, ph };
+            dw = new String[5] { ph, ph, ph, ph, ph };
+            dx = new String[5] { ph, ph, ph, ph, ph };
+            dy = new String[5] { ph, ph, ph, ph, ph };
+            dz = new String[5] { ph, ph, ph, ph, ph };
 
             //edges
             uv = new bool[6];
@@ -213,11 +216,35 @@ namespace WertheApp.RN
 
         public static void MakeArraysForTable(DNode node, int discovery)
         {
-            //∞
-            foreach(DNode nd in network.nodesList)
+            foreach (DNode neighbor in node.GetNeighbors())
+            {
+
+                String name1 = neighbor.GetNodeName();
+                String weight1 = neighbor.GetWeight().ToString();
+                if (!neighbor.IsVisited())
+                {
+                    String prev = neighbor.GetPreviousNode().GetNodeName();
+                    weight1 = weight1 + ", " + prev;
+                }
+
+
+                switch (name1)
+                {
+                    //case "u": break;
+                    case "v": dv[discovery] = weight1; break;
+                    case "w": dw[discovery] = weight1; break;
+                    case "x": dx[discovery] = weight1; break;
+                    case "y": dy[discovery] = weight1; break;
+                    case "z": dz[discovery] = weight1; break;
+                }
+            }
+          
+            foreach (DNode nd in network.nodesList)
             {
                 String name = nd.GetNodeName();
                 String weight = nd.GetWeight().ToString();
+
+                //unreachable nodes //∞
                 if (weight == "999999999")
                 {
                     weight = "∞";
@@ -232,17 +259,71 @@ namespace WertheApp.RN
                     }
                 }
 
+                //already visited nodes
+                else if (nd.IsVisited()){
+                    weight = "-";
+                    switch (name)
+                    {
+                        //case "u": break;
+                        case "v": dv[discovery] = weight; break;
+                        case "w": dw[discovery] = weight; break;
+                        case "x": dx[discovery] = weight; break;
+                        case "y": dy[discovery] = weight; break;
+                        case "z": dz[discovery] = weight; break;
+                    }
+                }
+
+                //nodes that stay the same weight
+                else 
+                {
+                    switch (name)
+                    {
+                        //case "u": break;
+                        case "v":
+                            if (dv[discovery] == "#")
+                            {
+                                dv[discovery] = dv[discovery-1];
+                            }
+                            break;
+                        case "w":
+                            if (dw[discovery] == "#")
+                            {
+                                dw[discovery] = dw[discovery-1];
+                            }
+                            break;
+                        case "x":
+                            if (dx[discovery] == "#")
+                            {
+                                dx[discovery] = dx[discovery-1];
+                            }
+                            break;
+                        case "y":
+                            if (dy[discovery] == "#")
+                            {
+                                dy[discovery] = dy[discovery-1];
+                            }
+                            break;
+                        case "z":
+                            if (dz[discovery] == "#")
+                            {
+                                dz[discovery] = dz[discovery-1];
+                            }
+                            break;
+                    }
+                }
+
             }
 
+            /*
             //D(v), D(w), D(x), D(y), D(z)
             foreach (DNode neighbor in node.GetNeighbors())
             {
-
+                Debug.WriteLine("TEST");
                 String name = neighbor.GetNodeName();
                 String weight = neighbor.GetWeight().ToString();
                 if (neighbor.IsVisited())
                 {
-                    weight = "-";
+                    weight = "-"; 
                 }
                 else {
                     String prev = neighbor.GetPreviousNode().GetNodeName();
@@ -258,7 +339,7 @@ namespace WertheApp.RN
                     case "y": dy[discovery] = weight; break;
                     case "z": dz[discovery] = weight; break;
                 }
-            }
+            }*/
         }
 
         public static void AssignNewWeightsToNeighbors(DNode node)
