@@ -1,6 +1,7 @@
 ﻿using System;
 using CocosSharp;
 using Xamarin.Forms;
+using System.Diagnostics;
 
 namespace WertheApp.RN
 {
@@ -106,21 +107,18 @@ namespace WertheApp.RN
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
-            double scaleFactor;
+            double scaleFactorX, scaleFactorY;
             if(landscape){
-                scaleFactor = Application.Current.MainPage.Height / gameviewWidth;
-            }else{
-                scaleFactor = Application.Current.MainPage.Width / gameviewWidth;
+                scaleFactorX = Application.Current.MainPage.Height / gameviewWidth;
+                scaleFactorY = Application.Current.MainPage.Width / gameviewHeight;
             }
-
+            else{
+                scaleFactorX = Application.Current.MainPage.Width / gameviewWidth;
+                scaleFactorY = Application.Current.MainPage.Height / gameviewWidth;
+            }
             //TODO: Seit neuem update funktioniert das scrollen bei ios nicht mehr 
             //und zwar für die Werte 400 und 2000. Für 1000 geht es aber dann ist die Anzeige verschoben
             //Debug.WriteLine("get heightrequest : " + gameView.GetSizeRequest());
-            if (Device.RuntimePlatform == Device.Android){
-                gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
-                scrollView.Content = gameView;
-                grid.Children.Add(scrollView, 0, 0);
-            }
             if(Device.RuntimePlatform == Device.iOS){
                 /*
                 gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
@@ -135,6 +133,15 @@ namespace WertheApp.RN
                 scrollView.Content = gameView;
                 grid.Children.Add(scrollView, 0, 0);
                 
+            }
+            else
+            {
+                //gameView.WidthRequest = Application.Current.MainPage.Width;
+                //gameView.HeightRequest = gameviewHeight * scaleFactor; // SCROLLING!!!!!!!!!!!!!!!!
+                scrollView.Content = gameView;
+                //scrollView.ScaleYTo(2.0);
+                scrollView.ScaleXTo(2.5);
+                grid.Children.Add(scrollView, 0, 0);
             }
 		}
 

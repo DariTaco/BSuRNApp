@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace WertheApp.BS
 {
@@ -21,6 +22,7 @@ namespace WertheApp.BS
         sk_J, sk_K, sk_L, sk_M, sk_N, sk_O, sk_P, sk_Q, sk_R, sk_S, sk_T, sk_U,
         sK_V, sk_W, sk_X, sk_Y, sk_Z;
         private String processName; //added or ended process
+        public bool endProcess;
 
         private float xe, ye;
 
@@ -47,6 +49,7 @@ namespace WertheApp.BS
              }
 
             this.processName = BuddySystem.currentProcess;
+            this.endProcess = BuddySystem.endProcess;
 
             // crate the canvas
             skiaview = new SKCanvasView();
@@ -227,14 +230,19 @@ namespace WertheApp.BS
 
             //text
             SKPaint infoColor = sk_blackTextSmall;
-            if(this.processName == "merge"){
+            Debug.WriteLine("Processname " + this.processName);
+            if (this.processName == "merge"){
                 canvas.DrawText("merge", new SKPoint(xe * 84, ye * 55), infoColor);
             }else if(this.processName == "first"){
                 canvas.DrawText("size: " + BuddySystem.absoluteMemorySize.ToString(), new SKPoint(xe * 84, ye * 55), infoColor); 
             }else{
-                if(BuddySystem.endProcess){
+                
+                if(this.endProcess){
+                    //TODO
+                
                     canvas.DrawText("end: " + processName, new SKPoint(xe * 84, ye * 55), infoColor);
                 }else{
+                    //TODO
                     canvas.DrawText("start: " + processName, new SKPoint(xe * 84, ye * 55), infoColor);
                 }
             }

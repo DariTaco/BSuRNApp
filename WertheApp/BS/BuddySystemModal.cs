@@ -166,16 +166,17 @@ namespace WertheApp.BS
             *********************************************************************/
             async void B_Start_Clicked(object sender, EventArgs e)
             {
+                BuddySystem.endProcess = false;
                 //check if there was a vailid input
                 if (e_ProcessSize.Text != null && ValidateMemoryRequestInput())
                 {
+                    
                     bool bfound = BuddySystem.AllocateBlock(Int32.Parse(e_ProcessSize.Text), p_ProcessNames.SelectedItem.ToString());
 
                     //if fitting blocksize was found
                     if (bfound)
                     {
                    
-                        BuddySystem.endProcess = false;
                         BuddySystem.availableProcesses.Remove(p_ProcessNames.SelectedItem.ToString());
                         BuddySystem.activeProcesses.Add(p_ProcessNames.SelectedItem.ToString());
                         await Navigation.PopModalAsync(); // close Modal

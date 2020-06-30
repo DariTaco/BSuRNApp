@@ -3,6 +3,7 @@ using System.Linq; //list.Any()
 using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace WertheApp.BS
 {

@@ -1,5 +1,6 @@
 ﻿using WertheApp.BS;
 using Xamarin.Forms;
+using System.Diagnostics;
 
 namespace WertheApp
 {
@@ -44,6 +45,8 @@ namespace WertheApp
                         await Navigation.PushAsync(new AllocationStrategiesSettings());
 						break;
 					case "Buddy System":
+						Debug.WriteLine("BUDDY");
+
 						await Navigation.PushAsync(new BuddySystemSettings());
 						break;
                     case "Page Replacement Strategies":
