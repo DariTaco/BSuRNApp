@@ -54,7 +54,7 @@
       <DependentUpon>WertheAppPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BS\AllocationStrategies.cs" />
+    <Compile Include="BS\OldAllocationStrategies.cs" />
     <Compile Include="BS\BuddySystem.cs" />
     <Compile Include="BS\PageReplacementStrategies.cs" />
     <Compile Include="RN\CongestionAvoidance.cs" />
@@ -62,14 +62,14 @@
     <Compile Include="Betriebssysteme.cs" />
     <Compile Include="Rechnernetze.cs" />
     <Compile Include="Helping Classes\Metrics.cs" />
-    <Compile Include="BS\AllocationStrategiesScene.cs" />
-    <Compile Include="BS\AllocationStrategiesSettings.cs" />
+    <Compile Include="BS\OldAllocationStrategiesScene.cs" />
+    <Compile Include="BS\OldAllocationStrategiesSettings.cs" />
     <Compile Include="BS\BuddySystemSettings.cs" />
     <Compile Include="BS\PageReplacementStrategiesSettings.cs" />
     <Compile Include="RN\CongestionAvoidanceSettings.cs" />
     <Compile Include="RN\PipelineProtocolsSettings.cs" />
     <Compile Include="RN\PipelineProtocolsScene.cs" />
-    <Compile Include="BS\AllocationStrategiesModal.cs" />
+    <Compile Include="BS\OldAllocationStrategiesModal.cs" />
     <Compile Include="BS\BuddySystemModal.cs" />
     <Compile Include="BS\BuddySystemModal2.cs" />
     <Compile Include="RN\PipelineProtocolsScene2.cs" />
@@ -88,6 +88,12 @@
     <Compile Include="RN\DijkstraDraw.cs" />
     <Compile Include="RN\DijkstraSettingsDraw.cs" />
     <Compile Include="RN\DijkstraAlgorithm.cs" />
+    <Compile Include="BS\Deadlock.cs" />
+    <Compile Include="BS\DeadlockSettings.cs" />
+    <Compile Include="BS\DeadlockDraw.cs" />
+    <Compile Include="Helping Classes\TemplateSkiaSharp.cs" />
+    <Compile Include="Helping Classes\TemplateSkiaSharpDraw.cs" />
+    <Compile Include="Helping Classes\TemplateSkiaSharpSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

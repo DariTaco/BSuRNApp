@@ -9,7 +9,7 @@ namespace WertheApp.BS
     //This class splits the Content in 2 halfs. 
     //Top half is the animated scene, which is actually defined in AllocationStrategiesScene
     //Bottom half are buttons and labels that interact with the scene
-    public class AllocationStrategies : ContentPage
+    public class OldAllocationStrategies : ContentPage
     {
         //VARIABLES
         double StackChildSize;
@@ -51,7 +51,7 @@ namespace WertheApp.BS
 
 
         //CONSTRUCTOR
-        public AllocationStrategies(List<int> l, String s)
+        public OldAllocationStrategies(List<int> l, String s)
         {
             //ToolbarItem i = new ToolbarItem();
             //i.Text = "Help";
@@ -80,11 +80,11 @@ namespace WertheApp.BS
 
             //EVENT LISTENER
 			//subscribe to Message in order to know if a new memory request was made
-            MessagingCenter.Subscribe<AllocationStrategiesModal>(this, "new memory request", (args) =>{
+            MessagingCenter.Subscribe<OldAllocationStrategiesModal>(this, "new memory request", (args) =>{
                 l_Size.Text = memoryRequest.ToString();
                 l_Diff.Text = diff;
                 l_Free.Text = free;
-				if (AllocationStrategiesScene.CheckIfFull())
+				if (OldAllocationStrategiesScene.CheckIfFull())
 				{
 					memoryRequestState = MyEnum.memoryFull;
                 }
@@ -127,7 +127,7 @@ namespace WertheApp.BS
         //sets up the scene 
 		void HandleViewCreated(object sender, EventArgs e)
 		{
-			AllocationStrategiesScene gameScene;
+			OldAllocationStrategiesScene gameScene;
 
 			var gameView = sender as CCGameView;
 			if (gameView != null)
@@ -137,7 +137,7 @@ namespace WertheApp.BS
                 gameView.DesignResolution = new CCSizeI(gameviewWidth, gameviewHeight);
                
 				// GameScene is the root of the CocosSharp rendering hierarchy:
-				gameScene = new AllocationStrategiesScene(gameView);
+				gameScene = new OldAllocationStrategiesScene(gameView);
 
 				// Starts CocosSharp:
 				gameView.RunWithScene(gameScene);
@@ -230,37 +230,37 @@ namespace WertheApp.BS
 			{
                 case MyEnum.newRequest: //new request
                     memoryRequestState = MyEnum.searchingForBlock;
-                    AllocationStrategiesScene.RequestNew(memoryRequest);
+                    OldAllocationStrategiesScene.RequestNew(memoryRequest);
 					break;
                 case MyEnum.searchingForBlock: //searching for block
 					switch (strategy)
 					{
 						case "First Fit":
-							AllocationStrategiesScene.pos++;
-							AllocationStrategiesScene.FirstFit(memoryRequest);
+							OldAllocationStrategiesScene.pos++;
+							OldAllocationStrategiesScene.FirstFit(memoryRequest);
 							break;
 						case "Next Fit":
-                            AllocationStrategiesScene.pos++;
-                            AllocationStrategiesScene.NextFit(memoryRequest);
+                            OldAllocationStrategiesScene.pos++;
+                            OldAllocationStrategiesScene.NextFit(memoryRequest);
 							break;
 						case "Best Fit":
-                            AllocationStrategiesScene.pos++;
-                            AllocationStrategiesScene.BestFit(memoryRequest);
+                            OldAllocationStrategiesScene.pos++;
+                            OldAllocationStrategiesScene.BestFit(memoryRequest);
 							break;
 						case "Worst Fit":
-                            AllocationStrategiesScene.pos++;
-                            AllocationStrategiesScene.WorstFit(memoryRequest);
+                            OldAllocationStrategiesScene.pos++;
+                            OldAllocationStrategiesScene.WorstFit(memoryRequest);
 							break;
 						case "Tailoring Best Fit":
-                            AllocationStrategiesScene.pos++;
-                            AllocationStrategiesScene.TailoringBestFit(memoryRequest);
+                            OldAllocationStrategiesScene.pos++;
+                            OldAllocationStrategiesScene.TailoringBestFit(memoryRequest);
 							break;
 					}
 					break;
                 case MyEnum.successfull: //successfull
-					AllocationStrategiesScene.ClearRedArrow();
-					AllocationStrategiesScene.ClearGrayArrow();
-                    AllocationStrategiesScene.DrawFill();
+					OldAllocationStrategiesScene.ClearRedArrow();
+					OldAllocationStrategiesScene.ClearGrayArrow();
+                    OldAllocationStrategiesScene.DrawFill();
 					memoryRequestState = MyEnum.noRequestYet;
 
 					//clear information bar
@@ -270,8 +270,8 @@ namespace WertheApp.BS
 					l_Free.Text = free;
 					break;
                 case MyEnum.unsuccessfull: //unsucessfull
-					AllocationStrategiesScene.ClearGrayArrow();
-					AllocationStrategiesScene.ClearRedArrow();
+					OldAllocationStrategiesScene.ClearGrayArrow();
+					OldAllocationStrategiesScene.ClearRedArrow();
 					await DisplayAlert("Alert", "No free space has been found", "OK");
 					memoryRequestState = MyEnum.noRequestYet; //ready for a new request
 															  
@@ -283,14 +283,14 @@ namespace WertheApp.BS
 					break;
                 case MyEnum.noRequestYet: //no requst yet
 
-                    if (AllocationStrategiesScene.CheckIfFull())
+                    if (OldAllocationStrategiesScene.CheckIfFull())
                     {
                         memoryRequestState = MyEnum.memoryFull;
                         await DisplayAlert("Alert", "Out of memory! The app will close now", "OK");
                         await Navigation.PopAsync();
                         break;
                     }else{
-                        await Navigation.PushModalAsync(new AllocationStrategiesModal(), true);
+                        await Navigation.PushModalAsync(new OldAllocationStrategiesModal(), true);
                         break;
                     }
                 case MyEnum.memoryFull: //memory is full

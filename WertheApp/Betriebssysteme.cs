@@ -32,7 +32,7 @@ namespace WertheApp
 			listView.BackgroundColor = Color.Transparent;
 			listView.ItemsSource = new string[]
             {
-                "Allocation Strategies", "Buddy System", "Page Replacement Strategies"
+                "Allocation Strategies", "Buddy System", "Page Replacement Strategies", "Deadlock"
             };
 			//after an item was clicked, open the respective app 
 			listView.ItemTapped += async (sender, e) =>
@@ -42,7 +42,7 @@ namespace WertheApp
 				switch (appName)
 				{
 					case "Allocation Strategies":
-                        await Navigation.PushAsync(new AllocationStrategiesSettings());
+                        await Navigation.PushAsync(new OldAllocationStrategiesSettings());
 						break;
 					case "Buddy System":
 						Debug.WriteLine("BUDDY");
@@ -52,6 +52,9 @@ namespace WertheApp
                     case "Page Replacement Strategies":
                         await Navigation.PushAsync(new PageReplacementStrategiesSettings());
                         break;
+					case "Deadlock":
+						await Navigation.PushAsync(new DeadlockSettings());
+						break;
 				}
 
 			};

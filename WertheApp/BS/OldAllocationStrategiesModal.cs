@@ -4,22 +4,22 @@ using Xamarin.Forms; //Messaging Center
 
 namespace WertheApp.BS
 {
-    public class AllocationStrategiesModal : ContentPage
+    public class OldAllocationStrategiesModal : ContentPage
     {
         //VARIABLES
         String availableMemory = "Free memory: ";
         Entry e_MemoryRequest; //has to be definded here instead of Constructor because it's used in a method
 
 		//CONSTRUCTOR
-		public AllocationStrategiesModal()
+		public OldAllocationStrategiesModal()
 		{
 
             //put all memory blocks from previous page into a String
-            for (int i = 0; i < AllocationStrategiesScene.memoryBlocks.GetLength(0); i++){
-                if(i == AllocationStrategiesScene.memoryBlocks.GetLength(0)-1){
-                    availableMemory += AllocationStrategiesScene.memoryBlocks[i,0] + " ";
+            for (int i = 0; i < OldAllocationStrategiesScene.memoryBlocks.GetLength(0); i++){
+                if(i == OldAllocationStrategiesScene.memoryBlocks.GetLength(0)-1){
+                    availableMemory += OldAllocationStrategiesScene.memoryBlocks[i,0] + " ";
                 }else{
-                    availableMemory += AllocationStrategiesScene.memoryBlocks[i,0] + ", ";
+                    availableMemory += OldAllocationStrategiesScene.memoryBlocks[i,0] + ", ";
                 }
             }
 
@@ -78,8 +78,8 @@ namespace WertheApp.BS
         {
             if (e_MemoryRequest.Text != null && ValidateMemoryRequestInput())
             {
-                AllocationStrategies.memoryRequest = Int32.Parse(e_MemoryRequest.Text);
-				MessagingCenter.Send<AllocationStrategiesModal>(this, "new memory request");// inform all subscribers
+                OldAllocationStrategies.memoryRequest = Int32.Parse(e_MemoryRequest.Text);
+				MessagingCenter.Send<OldAllocationStrategiesModal>(this, "new memory request");// inform all subscribers
 				await Navigation.PopModalAsync(); // close Modal
             }
             else if (e_MemoryRequest.Text == null) { await DisplayAlert("Alert", "Please enter size of memory request", "OK"); }
