@@ -27,15 +27,16 @@ namespace WertheApp.BS
 				Margin = new Thickness(10)
 			};
 			var stackLayout = new StackLayout();
+            var stackLayout2 = new StackLayout() { Orientation = StackOrientation.Horizontal };
 
-			this.Content = scrollView;
+            this.Content = scrollView;
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             //add elements to stacklayout
             var l_MemorySize = new Label { 
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)), 
-                Text = "Memory size" };
-            var l_Exponent = new Label { Text = "Exponent:"};
+                Text = "Memory Size" };
+            var l_Exponent = new Label { Text = "Exponent: ", VerticalOptions = LayoutOptions.Center };
             p_Exponent = new Picker();
             p_Exponent.Items.Add("1");
             p_Exponent.Items.Add("2");
@@ -58,13 +59,14 @@ namespace WertheApp.BS
 
             //TO DO: Fire Event when absoulute memorysize needs to be calculated
             l_AbsoluteMemorySize = new Label { Text = "Absoulute memory size: 32"};
-            var l_Space = new Label { Text = "  " };
+            var l_Space = new Label { Text = "  "};
             var b_Start = new Button { Text = "Start" };
 			b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
 
             stackLayout.Children.Add(l_MemorySize);
-            stackLayout.Children.Add(l_Exponent);
-            stackLayout.Children.Add(p_Exponent);
+            stackLayout2.Children.Add(l_Exponent);
+            stackLayout2.Children.Add(p_Exponent);
+            stackLayout.Children.Add(stackLayout2);
             stackLayout.Children.Add(l_AbsoluteMemorySize);
             stackLayout.Children.Add(l_Space);
             stackLayout.Children.Add(b_Start);

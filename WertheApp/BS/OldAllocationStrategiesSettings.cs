@@ -34,7 +34,7 @@ namespace WertheApp.BS
             this.Content = scrollView;
             scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
-            var l_Algorithm = new Label { Text = "Algorithm:" };
+            var l_Algorithm = new Label { Text = "Algorithm", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label))};
             p_Algorithm = new Picker { Title = "Select a Strategy" };
             p_Algorithm.Items.Add("First Fit");
             p_Algorithm.Items.Add("Next Fit");
@@ -44,9 +44,9 @@ namespace WertheApp.BS
             p_Algorithm.SelectedIndex = 0; //pre selects First Fit
 
             var l_Space = new Label { Text = " " };
-            var l_Fragmentation = new Label { Text = "Fragmentation:" };
+            var l_Fragmentation = new Label { Text = "Fragmentation", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             e_Fragmentation = new Entry { Keyboard = Keyboard.Telephone, Text = "10,4,20,18,7,9,12,15" };
-            var b_Default = new Button { Text = "Default Value", HorizontalOptions = LayoutOptions.Start };
+            var b_Default = new Button { Text = "Set Default", HorizontalOptions = LayoutOptions.Start };
             b_Default.Clicked += (sender, e) => e_Fragmentation.Text = "10,4,20,18,7,9,12,15"; //add Click Event(so short, no Method needed)
 
 
@@ -58,8 +58,8 @@ namespace WertheApp.BS
             stackLayout.Children.Add(p_Algorithm);
             stackLayout.Children.Add(l_Space);
             stackLayout.Children.Add(l_Fragmentation);
-            stackLayout.Children.Add(b_Default);
             stackLayout.Children.Add(e_Fragmentation);
+            stackLayout.Children.Add(b_Default);
             stackLayout.Children.Add(l_Space2);
             stackLayout.Children.Add(b_Start);
         }

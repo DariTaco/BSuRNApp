@@ -46,14 +46,14 @@ namespace WertheApp.RN
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             //define and add elements to stacklayout
-            var l_Strategy = new Label { Text = "Strategy:" };
+            var l_Strategy = new Label { Text = "Strategy", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             p_Strategy = new Picker();
             p_Strategy.Items.Add("Go Back N");
             p_Strategy.Items.Add("Selective Repeat");
             p_Strategy.SelectedIndex = 0;//Go Back N
             var l_Space = new Label { Text = "  " };
 
-            var l_WindowSize = new Label { Text = "Window size:" };
+            var l_WindowSize = new Label { Text = "Window Size", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             p_WindowSize = new Picker();
             p_WindowSize.Items.Add("2");
             p_WindowSize.Items.Add("3");
@@ -62,8 +62,8 @@ namespace WertheApp.RN
             p_WindowSize.SelectedIndex = 3;//5
             var l_Space2 = new Label { Text = "  " };
 
-            var l_Timeout = new Label { Text = "Timeout:" };
-            l_TimeoutValue = new Label { Text = "11" };
+            var l_Timeout = new Label { Text = "Timeout", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
+            l_TimeoutValue = new Label { Text = "11" , VerticalOptions = LayoutOptions.Center};
             s_Timeout = new Slider(11,20,11); //min, max, val
             s_Timeout.HorizontalOptions = LayoutOptions.FillAndExpand;
             s_Timeout.ValueChanged += S_Timeout_ValueChanged;;
@@ -76,7 +76,7 @@ namespace WertheApp.RN
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)), 
                 Text = "20" };
             var l_RoundtripTime = new Label { FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), 
-                Text = "RTT: 10" };
+                Text = "Round Trip Time: 10" };
             var l_Space3 = new Label { Text = "  " };
 
 			var b_Start = new Button { Text = "Start" };

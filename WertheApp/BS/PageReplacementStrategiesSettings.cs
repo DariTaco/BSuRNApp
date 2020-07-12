@@ -83,7 +83,7 @@ namespace WertheApp.BS
 			stackLayout3.Children.Add(p_DISC);
 
             //add elements to StackLayout
-            var l_Strategy = new Label { Text = "Strategy:" };
+            var l_Strategy = new Label { Text = "Strategy", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
 			p_Strategy = new Picker { Title = "Select a Strategy" };
 			p_Strategy.Items.Add("Optimal Strategy");
 			p_Strategy.Items.Add("FIFO");
@@ -92,11 +92,11 @@ namespace WertheApp.BS
 			p_Strategy.Items.Add("RNU FIFO Second Chance");
             p_Strategy.SelectedIndex = 0; //"Optimal Strategy"
             var l_Space = new Label { Text = "  " };
-            var l_Sequence = new Label { Text = "Reference sequence:" };
-            var b_DefaultValue = new Button { Text = "Default Value", HorizontalOptions = LayoutOptions.Start };
+            var l_Sequence = new Label { Text = "Reference Sequence", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
+            var b_DefaultValue = new Button { Text = "Set Default", HorizontalOptions = LayoutOptions.Start };
             b_DefaultValue.Clicked += B_DefaultValue_Clicked;
             var l_Space2 = new Label { Text = "  " };
-            var l_MemorySize = new Label { Text = "Memory size:" };
+            var l_MemorySize = new Label { Text = "Memory Size", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             var l_MaxSize = new Label{
                 FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
                 Text = "Maximal size of RAM and DISC together: 8"};
@@ -108,8 +108,8 @@ namespace WertheApp.BS
             stackLayout.Children.Add(p_Strategy);
             stackLayout.Children.Add(l_Space);
             stackLayout.Children.Add(l_Sequence);
+            stackLayout.Children.Add(stackLayout2); //Stacklayout2 is nested
             stackLayout.Children.Add(b_DefaultValue);
-            stackLayout.Children.Add(stackLayout2); //Stacklayout2 is nested 
             stackLayout.Children.Add(l_Space2);
             stackLayout.Children.Add(l_MemorySize);
             stackLayout.Children.Add(stackLayout3);//Stacklayout3 is nested

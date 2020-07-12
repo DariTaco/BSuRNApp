@@ -34,8 +34,12 @@ namespace WertheApp.RN
 				Orientation = StackOrientation.Horizontal
                                               
 			};
+            var stackLayout3 = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal
 
-			this.Content = scrollView;
+            };
+            this.Content = scrollView;
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             //add elements to stackLayout2
@@ -64,9 +68,10 @@ namespace WertheApp.RN
             stackLayout2.Children.Add(s_Reno);
 
             //add elements to stacklayout
-            var l_Choose = new Label { Text = "Choose strategies:" };
+            var l_Choose = new Label { Text = "Strategy", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             var l_Space = new Label { Text = "  " };
-            var l_Treshold = new Label { Text = "Initial treshold:" };
+            var l_initialSetting = new Label { Text = "Initial Settings", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
+            var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center };
             p_Treshold = new Picker();
             p_Treshold.Items.Add("1");
             p_Treshold.Items.Add("2");
@@ -85,18 +90,22 @@ namespace WertheApp.RN
             p_Treshold.Items.Add("15");
             p_Treshold.SelectedIndex = 7; //8
             var l_Space2 = new Label { Text = "  " };
-            var b_Default = new Button { Text = "Set default values" , HorizontalOptions = LayoutOptions.Start };
+            var b_Default = new Button { Text = "Set Default" , HorizontalOptions = LayoutOptions.Start };
             b_Default.Clicked += B_Default_Clicked; //add Click Event(Method)
 			var b_Start = new Button { Text = "Start" };
 			b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
+            var l_Space3 = new Label { Text = "  " };
 
             stackLayout.Children.Add(l_Choose);
             stackLayout.Children.Add(stackLayout2);
             stackLayout.Children.Add(l_Space);
-            stackLayout.Children.Add(l_Treshold);
-            stackLayout.Children.Add(p_Treshold);
+            stackLayout.Children.Add(l_initialSetting);
+            stackLayout3.Children.Add(l_thresh);
+            stackLayout3.Children.Add(p_Treshold);
+            stackLayout.Children.Add(stackLayout3);
             stackLayout.Children.Add(l_Space2);
             stackLayout.Children.Add(b_Default);
+            stackLayout.Children.Add(l_Space);
 			stackLayout.Children.Add(b_Start);
 
 		}
