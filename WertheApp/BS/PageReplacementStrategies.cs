@@ -30,6 +30,7 @@ namespace WertheApp.BS
 
         public static ScrollView scrollview;
         public static Button b_Reset_Rbits;
+        public static Button b_Set_Rbit;
         public static Button b_Set_Mbit;
         public static Button b_Next;
 
@@ -58,7 +59,7 @@ namespace WertheApp.BS
             //[step, ram , 1] = r-bit (0 -> not set, 1 -> set)
             //[step, ram , 2] = m-bit (0 -> not set, 1 -> set)
             //[step, ram , 3] = pagefail (0 -> no pagefail, 1 -> pagefail without replacement, 2 -> pagefail with replacement)
-            //[step, ram , 4] = r bit were reset in this step -> 1, else -> 0
+            //[step, ram , 4] = r bits were reset in this step -> 1, else -> 0
             //[step, ram , 5] = m bit was set in this step -> 1, else -> 0
             ram = new int[SequenceList.Count, ramSize, 6]; 
             disc = new int[SequenceList.Count, discSize];
@@ -94,11 +95,13 @@ namespace WertheApp.BS
             {
                 b_Set_Mbit.IsEnabled = true;
                 b_Reset_Rbits.IsEnabled = true;
+                b_Set_Rbit.IsEnabled = true;
             }
             else
             {
                 b_Set_Mbit.IsEnabled = false;
                 b_Reset_Rbits.IsEnabled = false;
+                b_Set_Rbit.IsEnabled = false;
             }
             b_Next.IsEnabled = true;
          
@@ -107,6 +110,20 @@ namespace WertheApp.BS
         }
 
         //METHODS
+        /**********************************************************************
+        *********************************************************************/
+        //TODO
+        void B_Set_Rbit_Clicked(object sender, EventArgs e)
+        {
+            if (currentStep > -1)
+            {
+                //Set r-bit of current page
+                ram[currentStep, indexCurrentPage, 1] = 1;
+                //ram[currentStep, 0, 4] = 1;
+                PageReplacementStrategiesDraw.Paint();//Update Canvas
+            }
+        }
+
         /**********************************************************************
         *********************************************************************/
         void B_Reset_Rbits_Clicked(object sender, EventArgs e)
@@ -894,11 +911,11 @@ namespace WertheApp.BS
             //Screen Width -20 because Margin is 10
             if (!landscape)
             {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 4;
             }
             else
             {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 4;
             }
 
             //Using a Stacklayout to organize elements
@@ -910,6 +927,14 @@ namespace WertheApp.BS
                 Margin = new Thickness(10),
 
             };
+            b_Set_Rbit = new Button
+            {
+                Text = "Set R-Bit",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Set_Rbit.Clicked += B_Set_Rbit_Clicked;
+            stackLayout.Children.Add(b_Set_Rbit);
 
             b_Reset_Rbits = new Button
             {
