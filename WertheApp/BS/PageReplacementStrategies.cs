@@ -3,6 +3,8 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq; //fragmentList.ElementAt(i);
 using SkiaSharp.Views.Forms;
+using System.Diagnostics;
+
 namespace WertheApp.BS
 {
 
@@ -180,27 +182,57 @@ namespace WertheApp.BS
                 //if Pagefail, push optimal page in disc and push previous pages forward in ram
                 if (!pagesInRam.Contains(currentPage))
                 {
-                    //find optimal page, which will be accessed the furthest in the future
                     int optimalPage = -1;
-                    for (var i = 0; i < pagesInRam.Count; i++)
+                    int optimalPageIndex = -1;
+
+                    // check if one of the pages in ram is not in the upcoming sequence
+                    for (var k = 0; k < pagesInRam.Count; k++)
                     {
-                        bool inSequenceList = false;
-                        int optimalIndex = -1;
-                        //under the pages in ram, find the page in remaining sequence which is the furthest away
-                        for (var j = 0; j < SequenceList.Count; j++){
-                            if(pagesInRam.ElementAt(i) == SequenceList.ElementAt(j) && j > optimalIndex){
-                                inSequenceList = true;
-                                optimalIndex = j;
-                                optimalPage = pagesInRam.ElementAt(i);
-                                j = SequenceList.Count; //exit for loop
-                            }
-                        }
-                        if(!inSequenceList){
-                            optimalPage = pagesInRam.ElementAt(i);
-                            break;
+                        int elem = pagesInRam.ElementAt(k);
+                        if (!SequenceList.Contains(elem))
+                        {
+                            optimalPageIndex = k;
+                            optimalPage = elem;
                         }
                     }
 
+                    if(optimalPageIndex == -1)
+                    {
+                        //loop through upcoming sequence, starting at the end
+                        for (var i = SequenceList.Count - 1; i >= 0; i--)
+                        {
+                            int elem = SequenceList.ElementAt(i);
+
+                            //check if element in upcoming sequence is also in ram
+                            if (pagesInRam.Contains(elem))
+                            {
+                                bool foundOptimalPage = true;
+
+                                //check if element appears earlier in list, but only if beginning of list wasn't reached yet
+                                if (i > 0)
+                                {
+                                    for (var j = i - 1; j >= 0; j--)
+                                    {
+                                        // if it appears earlier in list we haven't found the optimal page
+                                        if (SequenceList.ElementAt(j) == elem)
+                                        {
+                                            foundOptimalPage = false;
+                                        }
+                                    }
+                                }
+
+                                // if not we found the optimal page
+                                if (foundOptimalPage)
+                                {
+                                    optimalPage = elem;
+                                    i = 0;
+                                    break; //exit for loop
+                                }
+
+                            }
+                        }
+                    }
+                 
                     pagesInRam.Remove(optimalPage);
                     pagesInDisc.Add(optimalPage);
                     if(pagesInDisc.Contains(currentPage)){
@@ -990,6 +1022,21 @@ namespace WertheApp.BS
             }
         }
 
+        static void printList(List<int> l)
+        {
+            String s = "first element: ";
+            int firstElem = l.ElementAt(0);
+            s += firstElem;
+            s += ", ... ";
+            foreach (object o in l)
+                {
+                s += o;
+                s += ", ";
+                }
+            Debug.WriteLine(s);
+        }
+
+
         /**********************************************************************
         *********************************************************************/
         //print 3d array
@@ -1025,3 +1072,78 @@ namespace WertheApp.BS
         *********************************************************************/
     }
 }
+
+
+
+/*
+ 
+                     int optimapPage = -1;
+                    int optimalPageIndex = -1;
+
+                    //loop through upcoming sequence, starting at the end
+                    for (var i = SequenceList.Count -1; i >= 0; i--)
+                    {
+                        int elem = SequenceList.ElementAt(i);
+
+                        //check if element in upcoming sequence is also in ram
+                        if (pagesInRam.Contains(elem))
+                        {
+                            bool foundOptimalPage = true;
+
+                            //check if element appears earlier in list, but only if beginning of list wasn't reached yet
+                            if (i > 0)
+                            {
+                                for (var j = i; j >= 0; j--)
+                                {
+                                    // if it appears earlier in list we haven't found the optimal page
+                                    if(SequenceList.ElementAt(j) == elem)
+                                    {
+                                        foundOptimalPage = false;
+                                    }
+                                }
+                            }
+
+                            // if not we found the optimal page
+                            if (foundOptimalPage)
+                            {
+                                optimapPage = elem;
+                                optimalPageIndex = i;
+                                i = 0;
+                                break; //exit for loop
+                            }
+                            
+                        }
+ 
+ */
+
+/*
+//find optimal page, which will be accessed the furthest in the future
+int optimalPage = -1;
+for (var i = 0; i < pagesInRam.Count; i++)
+{
+    bool inSequenceList = false;
+    int optimalIndex = -1;
+    //under the pages in ram, find the page in remaining sequence which is the furthest away
+    for (var j = 0; j < SequenceList.Count; j++){
+        Debug.WriteLine("i: " + i);
+        Debug.WriteLine(pagesInRam.ElementAt(i));
+        printList(pagesInRam);
+        Debug.WriteLine("j: " + j);
+        Debug.WriteLine(SequenceList.ElementAt(j));
+        printList(SequenceList);
+        Debug.WriteLine("");
+
+        if(pagesInRam.ElementAt(i) == SequenceList.ElementAt(j) && j > optimalIndex){
+            inSequenceList = true;
+            optimalIndex = j;
+            optimalPage = pagesInRam.ElementAt(i);
+            Debug.WriteLine("OPTIMAL PAGE " + optimalPage);
+            //j = SequenceList.Count; //exit for loop
+        }
+    }
+    if(!inSequenceList){
+        optimalPage = pagesInRam.ElementAt(i);
+        break;
+    }
+
+}*/
