@@ -10,16 +10,43 @@ namespace WertheApp.BS
     {
         private String dvd, usb, bluRay, printer, ijPrinter;
         private String resourceVectorE, occupiedResourceVectorB, freeResourceVectorA;
-        private Picker p_dvd, p_usb, p_BluRay, p_printer, p_ijPrinter, p_total;
+        private Picker p_dvd, p_usb, p_bluRay, p_printer, p_ijPrinter, p_total;
+
+        private Label l_occuP1, l_occuP2, l_occuP3, l_occuP4, l_occuP5;
+        private Label l_reqP1, l_reqP2, l_reqP3, l_reqP4, l_reqP5;
+
+        private Picker p_p1_dvd, p_p2_dvd, p_p3_dvd, p_p4_dvd, p_p5_dvd;
+        private Picker p_p1_usb, p_p2_usb, p_p3_usb, p_p4_usb, p_p5_usb;
+        private Picker p_p1_bluRay, p_p2_bluRay, p_p3_bluRay, p_p4_bluRay, p_p5_bluRay;
+        private Picker p_p1_printer, p_p2_printer, p_p3_printer, p_p4_printer, p_p5_printer;
+        private Picker p_p1_ijprinter, p_p2_ijprinter, p_p3_ijprinter, p_p4_ijprinter, p_p5_ijprinter;
+        private int occu_dvd, occu_usb, occu_bluRay, occu_printer, occu_ijprinter;
+
+
+        private Picker p_p1_req_dvd, p_p2_req_dvd, p_p3_req_dvd, p_p4_req_dvd, p_p5_req_dvd;
+        private Picker p_p1_req_usb, p_p2_req_usb, p_p3_req_usb, p_p4_req_usb, p_p5_req_usb;
+        private Picker p_p1_req_bluRay, p_p2_req_bluRay, p_p3_req_bluRay, p_p4_req_bluRay, p_p5_req_bluRay;
+        private Picker p_p1_req_printer, p_p2_req_printer, p_p3_req_printer, p_p4_req_printer, p_p5_req_printer;
+        private Picker p_p1_req_ijprinter, p_p2_req_ijprinter, p_p3_req_ijprinter, p_p4_req_ijprinter, p_p5_req_ijprinter;
+        private int req_dvd, req_usb, req_bluRay, req_printer, req_ijprinter;
+
         private Label l_resourceVectorE, l_occupiedResourceVectorB, l_freeResourceVectorA;
         private Entry e_occuP1, e_occuP2, e_occuP3, e_occuP4, e_occuP5,
             e_reqP1, e_reqP2, e_reqP3, e_reqP4, e_reqP5;
         private StackLayout sl_occupiedResources, sl_requestedResources;
         private StackLayout sl_OccuProcess1, sl_OccuProcess2, sl_OccuProcess3, sl_OccuProcess4, sl_OccuProcess5;
+        private StackLayout sl_ReqProcess1, sl_ReqProcess2, sl_ReqProcess3, sl_ReqProcess4, sl_ReqProcess5;
+
+        private List<Picker> occuResPickerList, reqResPickerList;
+
 
         public DeadlockSettings()
         {
             Title = "Deadlock";
+
+            occuResPickerList = new List<Picker>();
+            reqResPickerList = new List<Picker>();
+
             CreateContent();
 
         }
@@ -50,31 +77,37 @@ namespace WertheApp.BS
 
             // occupied resources
             var l_resource_occupied = new Label { Text = "Occupied Resources:" };
-            stackLayout2.Children.Add(l_resource_occupied);
-            sl_occupiedResources = new StackLayout();
+            stackLayout.Children.Add(l_resource_occupied);
+
+            sl_occupiedResources = new StackLayout() { HorizontalOptions = LayoutOptions.Start};
             CreateProcessesOccupiedResourcesUI(sl_occupiedResources);
+            stackLayout.Children.Add(sl_occupiedResources);
 
-            // requested resources
-            sl_requestedResources = new StackLayout() { HorizontalOptions = LayoutOptions.CenterAndExpand };
-            var l_requestedResources = new Label { Text = "Resource Requests:", HorizontalOptions = LayoutOptions.CenterAndExpand };
-            stackLayout2.Children.Add(l_requestedResources);
-            stackLayout.Children.Add(stackLayout2);
-            CreateProcessesRequestedResourcesUI(sl_requestedResources);
-
-            var sl_OccReqResourcesWrapper = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            sl_OccReqResourcesWrapper.Children.Add(sl_occupiedResources);
-            sl_OccReqResourcesWrapper.Children.Add(sl_requestedResources);
-
-            stackLayout.Children.Add(sl_OccReqResourcesWrapper);
-
-            occupiedResourceVectorB = "00000";
+            occupiedResourceVectorB = "0000";
             l_occupiedResourceVectorB = new Label { Text = "Vector B = (" + occupiedResourceVectorB + ")", TextColor = Color.Red };
             sl_occupiedResources.Children.Add(l_occupiedResourceVectorB);
-            freeResourceVectorA = "22222";
+            freeResourceVectorA = "2231";
             stackLayout.Children.Add(l_occupiedResourceVectorB);
 
             var l_Space4 = new Label { Text = " " };
             stackLayout.Children.Add(l_Space4);
+
+            // requested resources
+            var l_requestedResources = new Label { Text = "Resource Requests:" };
+            stackLayout.Children.Add(l_requestedResources);
+
+            sl_requestedResources = new StackLayout() { };
+            CreateProcessesRequestedResourcesUI(sl_requestedResources);
+            stackLayout.Children.Add(sl_requestedResources);
+
+            var l_Space3 = new Label { Text = " " };
+            stackLayout.Children.Add(l_Space3);
+            var b_Default = new Button { Text = "Set Default", HorizontalOptions = LayoutOptions.Start };
+            b_Default.Clicked += B_Default_Clicked; //add Click Event(Method)
+            stackLayout.Children.Add(b_Default);
+
+            var l_Space5 = new Label { Text = " " };
+            stackLayout.Children.Add(l_Space5);
 
             var l_freeResources = new Label { Text = "Free Resources", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label) )};
             stackLayout.Children.Add(l_freeResources);
@@ -82,11 +115,6 @@ namespace WertheApp.BS
             sl_requestedResources.Children.Add(l_freeResourceVectorA);
             stackLayout.Children.Add(l_freeResourceVectorA);
 
-            var l_Space3 = new Label { Text = " " };
-            stackLayout.Children.Add(l_Space3);
-            var b_Default = new Button { Text = "Set Default", HorizontalOptions = LayoutOptions.Start };
-            b_Default.Clicked += B_Default_Clicked; //add Click Event(Method)
-            stackLayout.Children.Add(b_Default);
 
             var b_Start = new Button { Text = "Start" };
             b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
@@ -101,34 +129,98 @@ namespace WertheApp.BS
         *********************************************************************/
         void CreateProcessesOccupiedResourcesUI(StackLayout sl_occupiedResources)
         {
+            // stacklayouts for every process (contain the pickers)
             sl_OccuProcess1 = new StackLayout() { Orientation = StackOrientation.Horizontal };
             sl_OccuProcess2 = new StackLayout() { Orientation = StackOrientation.Horizontal };
             sl_OccuProcess3 = new StackLayout() { Orientation = StackOrientation.Horizontal };
             sl_OccuProcess4 = new StackLayout() { Orientation = StackOrientation.Horizontal };
             sl_OccuProcess5 = new StackLayout() { Orientation = StackOrientation.Horizontal };
 
-            var l_occuP1 = new Label { Text = "P1: ", VerticalOptions = LayoutOptions.Center };
-            var l_occuP2 = new Label { Text = "P2: ", VerticalOptions = LayoutOptions.Center };
-            var l_occuP3 = new Label { Text = "P3: ", VerticalOptions = LayoutOptions.Center };
-            var l_occuP4 = new Label { Text = "P4: ", VerticalOptions = LayoutOptions.Center };
-            var l_occuP5 = new Label { Text = "P5: ", VerticalOptions = LayoutOptions.Center };
+            l_occuP1 = new Label { Text = "P1:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
+            l_occuP2 = new Label { Text = "P2:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
+            l_occuP3 = new Label { Text = "P3:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
+            l_occuP4 = new Label { Text = "P4:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
+            l_occuP5 = new Label { Text = "P5:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
 
-            e_occuP1 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.CenterAndExpand };
-            e_occuP2 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.CenterAndExpand };
-            e_occuP3 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.CenterAndExpand };
-            e_occuP4 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.CenterAndExpand };
-            e_occuP5 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.CenterAndExpand };
+            p_p1_dvd = new Picker() { WidthRequest = 40 };
+            p_p2_dvd = new Picker() { WidthRequest = 40 };
+            p_p3_dvd = new Picker() { WidthRequest = 40 };
+            p_p4_dvd = new Picker() { WidthRequest = 40 };
+            p_p5_dvd = new Picker() { WidthRequest = 40 };
 
-            sl_OccuProcess1.Children.Add(l_occuP1);
-            sl_OccuProcess1.Children.Add(e_occuP1);
-            sl_OccuProcess2.Children.Add(l_occuP2);
-            sl_OccuProcess2.Children.Add(e_occuP2);
-            sl_OccuProcess3.Children.Add(l_occuP3);
-            sl_OccuProcess3.Children.Add(e_occuP3);
-            sl_OccuProcess4.Children.Add(l_occuP4);
-            sl_OccuProcess4.Children.Add(e_occuP4);
-            sl_OccuProcess5.Children.Add(l_occuP5);
-            sl_OccuProcess5.Children.Add(e_occuP5);
+            p_p1_usb = new Picker() { WidthRequest = 40 };
+            p_p2_usb = new Picker() { WidthRequest = 40 };
+            p_p3_usb = new Picker() { WidthRequest = 40 };
+            p_p4_usb = new Picker() { WidthRequest = 40 };
+            p_p5_usb = new Picker() { WidthRequest = 40 };
+
+            p_p1_bluRay = new Picker() { WidthRequest = 40 };
+            p_p2_bluRay = new Picker() { WidthRequest = 40 };
+            p_p3_bluRay = new Picker() { WidthRequest = 40 };
+            p_p4_bluRay = new Picker() { WidthRequest = 40 };
+            p_p5_bluRay = new Picker() { WidthRequest = 40 };
+
+            p_p1_printer = new Picker() { WidthRequest = 40 };
+            p_p2_printer = new Picker() { WidthRequest = 40 };
+            p_p3_printer = new Picker() { WidthRequest = 40 };
+            p_p4_printer = new Picker() { WidthRequest = 40 };
+            p_p5_printer = new Picker() { WidthRequest = 40 };
+
+            p_p1_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p2_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p3_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p4_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p5_ijprinter = new Picker() { WidthRequest = 40 };
+
+            occuResPickerList.Add(p_p1_dvd);
+            occuResPickerList.Add(p_p2_dvd);
+            occuResPickerList.Add(p_p3_dvd);
+            occuResPickerList.Add(p_p4_dvd);
+            occuResPickerList.Add(p_p5_dvd);
+
+            occuResPickerList.Add(p_p1_usb);
+            occuResPickerList.Add(p_p2_usb);
+            occuResPickerList.Add(p_p3_usb);
+            occuResPickerList.Add(p_p4_usb);
+            occuResPickerList.Add(p_p5_usb);
+
+            occuResPickerList.Add(p_p1_bluRay);
+            occuResPickerList.Add(p_p2_bluRay);
+            occuResPickerList.Add(p_p3_bluRay);
+            occuResPickerList.Add(p_p4_bluRay);
+            occuResPickerList.Add(p_p5_bluRay);
+
+            occuResPickerList.Add(p_p1_printer);
+            occuResPickerList.Add(p_p2_printer);
+            occuResPickerList.Add(p_p3_printer);
+            occuResPickerList.Add(p_p4_printer);
+            occuResPickerList.Add(p_p5_printer);
+
+            occuResPickerList.Add(p_p1_ijprinter);
+            occuResPickerList.Add(p_p2_ijprinter);
+            occuResPickerList.Add(p_p3_ijprinter);
+            occuResPickerList.Add(p_p4_ijprinter);
+            occuResPickerList.Add(p_p5_ijprinter);
+
+            AddItemsToOccuResPickers();
+            SetOccuResPickersToZero();
+            SetVectorChangedEvents();
+            AddPickersToOccuRes();
 
             sl_occupiedResources.Children.Add(sl_OccuProcess1);
             sl_occupiedResources.Children.Add(sl_OccuProcess2);
@@ -139,18 +231,101 @@ namespace WertheApp.BS
         *********************************************************************/
         void CreateProcessesRequestedResourcesUI(StackLayout stackLayout)
         {
+            // stacklayouts for every process (contain the pickers)
+            sl_ReqProcess1 = new StackLayout() { Orientation = StackOrientation.Horizontal };
+            sl_ReqProcess2 = new StackLayout() { Orientation = StackOrientation.Horizontal };
+            sl_ReqProcess3 = new StackLayout() { Orientation = StackOrientation.Horizontal };
+            sl_ReqProcess4 = new StackLayout() { Orientation = StackOrientation.Horizontal };
+            sl_ReqProcess5 = new StackLayout() { Orientation = StackOrientation.Horizontal };
 
-            e_reqP1 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.Start };
-            e_reqP2 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.Start };
-            e_reqP3 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.Start };
-            e_reqP4 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.Start };
-            e_reqP5 = new Entry { Keyboard = Keyboard.Telephone, Text = "0,1,0,1,0", HorizontalOptions = LayoutOptions.Start };
+            l_reqP1 = new Label { Text = "P1:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40 };
+            l_reqP2 = new Label { Text = "P2:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
+            l_reqP3 = new Label { Text = "P3:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
+            l_reqP4 = new Label { Text = "P4:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
+            l_reqP5 = new Label { Text = "P5:  ",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 40
+            };
 
-            sl_requestedResources.Children.Add(e_reqP1);
-            sl_requestedResources.Children.Add(e_reqP2);
-            sl_requestedResources.Children.Add(e_reqP3);
+            //pickers for every resource /process combination
+            p_p1_req_dvd = new Picker() { WidthRequest = 40 };
+            p_p2_req_dvd = new Picker() { WidthRequest = 40 };
+            p_p3_req_dvd = new Picker() { WidthRequest = 40 };
+            p_p4_req_dvd = new Picker() { WidthRequest = 40 };
+            p_p5_req_dvd = new Picker() { WidthRequest = 40 };
 
+            p_p1_req_usb = new Picker() { WidthRequest = 40 };
+            p_p2_req_usb = new Picker() { WidthRequest = 40 };
+            p_p3_req_usb = new Picker() { WidthRequest = 40 };
+            p_p4_req_usb = new Picker() { WidthRequest = 40 };
+            p_p5_req_usb = new Picker() { WidthRequest = 40 };
 
+            p_p1_req_bluRay = new Picker() { WidthRequest = 40 };
+            p_p2_req_bluRay = new Picker() { WidthRequest = 40 };
+            p_p3_req_bluRay = new Picker() { WidthRequest = 40 };
+            p_p4_req_bluRay = new Picker() { WidthRequest = 40 };
+            p_p5_req_bluRay = new Picker() { WidthRequest = 40 };
+
+            p_p1_req_printer = new Picker() { WidthRequest = 40 };
+            p_p2_req_printer = new Picker() { WidthRequest = 40 };
+            p_p3_req_printer = new Picker() { WidthRequest = 40 };
+            p_p4_req_printer = new Picker() { WidthRequest = 40 };
+            p_p5_req_printer = new Picker() { WidthRequest = 40 };
+
+            p_p1_req_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p2_req_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p3_req_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p4_req_ijprinter = new Picker() { WidthRequest = 40 };
+            p_p5_req_ijprinter = new Picker() { WidthRequest = 40 };
+
+            reqResPickerList.Add(p_p1_req_dvd);
+            reqResPickerList.Add(p_p2_req_dvd);
+            reqResPickerList.Add(p_p3_req_dvd);
+            reqResPickerList.Add(p_p4_req_dvd);
+            reqResPickerList.Add(p_p5_req_dvd);
+
+            reqResPickerList.Add(p_p1_req_usb);
+            reqResPickerList.Add(p_p2_req_usb);
+            reqResPickerList.Add(p_p3_req_usb);
+            reqResPickerList.Add(p_p4_req_usb);
+            reqResPickerList.Add(p_p5_req_usb);
+
+            reqResPickerList.Add(p_p1_req_bluRay);
+            reqResPickerList.Add(p_p2_req_bluRay);
+            reqResPickerList.Add(p_p3_req_bluRay);
+            reqResPickerList.Add(p_p4_req_bluRay);
+            reqResPickerList.Add(p_p5_req_bluRay);
+
+            reqResPickerList.Add(p_p1_req_printer);
+            reqResPickerList.Add(p_p2_req_printer);
+            reqResPickerList.Add(p_p3_req_printer);
+            reqResPickerList.Add(p_p4_req_printer);
+            reqResPickerList.Add(p_p5_req_printer);
+
+            reqResPickerList.Add(p_p1_req_ijprinter);
+            reqResPickerList.Add(p_p2_req_ijprinter);
+            reqResPickerList.Add(p_p3_req_ijprinter);
+            reqResPickerList.Add(p_p4_req_ijprinter);
+            reqResPickerList.Add(p_p5_req_ijprinter);
+
+            AddItemsToReqResPickers();
+            SetReqResPickersToZero();
+            AddPickersToReqRes();
+
+            sl_requestedResources.Children.Add(sl_ReqProcess1);
+            sl_requestedResources.Children.Add(sl_ReqProcess2);
+            sl_requestedResources.Children.Add(sl_ReqProcess3);
         }
 
         /**********************************************************************
@@ -171,12 +346,27 @@ namespace WertheApp.BS
             }
             p_dvd.SelectedIndex = 2;
             p_dvd.SelectedIndexChanged += VectorChanged;
-            p_dvd.SelectedIndexChanged += VectorChanged2;
-            p_dvd.SelectedIndexChanged += VectorChanged3;
+            p_dvd.SelectedIndexChanged += VectorChanged4;
 
             sl_dvd.Children.Add(p_dvd);
             sl_dvd.Children.Add(l_dvd);
             stackLayoutLeft.Children.Add(sl_dvd);
+
+            // resource Laser printer
+            var sl_printer = new StackLayout() { Orientation = StackOrientation.Horizontal };
+            var l_printer = new Label { Text = " Laser Printers", VerticalOptions = LayoutOptions.Center };
+            p_printer = new Picker();
+            for (int i = 0; i < 10; i++)
+            {
+                p_printer.Items.Add(i.ToString());
+            }
+            p_printer.SelectedIndex = 2;
+            p_printer.SelectedIndexChanged += VectorChanged;
+            p_printer.SelectedIndexChanged += VectorChanged4;
+
+            sl_printer.Children.Add(p_printer);
+            sl_printer.Children.Add(l_printer);
+            stackLayoutLeft.Children.Add(sl_printer);
 
             // resource USB
             var sl_usb = new StackLayout() { Orientation = StackOrientation.Horizontal };
@@ -186,10 +376,9 @@ namespace WertheApp.BS
             {
                 p_usb.Items.Add(i.ToString());
             }
-            p_usb.SelectedIndex = 2;
+            p_usb.SelectedIndex = 3;
             p_usb.SelectedIndexChanged += VectorChanged;
-            p_usb.SelectedIndexChanged += VectorChanged2;
-            p_usb.SelectedIndexChanged += VectorChanged3;
+            p_usb.SelectedIndexChanged += VectorChanged4;
 
             sl_usb.Children.Add(p_usb);
             sl_usb.Children.Add(l_usb);
@@ -202,36 +391,19 @@ namespace WertheApp.BS
                 Text = " BluRay Drives",
                 VerticalOptions = LayoutOptions.Center
             };
-            p_BluRay = new Picker();
+            p_bluRay = new Picker();
             for (int i = 0; i < 10; i++)
             {
-                p_BluRay.Items.Add(i.ToString());
+                p_bluRay.Items.Add(i.ToString());
             }
-            p_BluRay.SelectedIndex = 2;
-            p_BluRay.SelectedIndexChanged += VectorChanged;
-            p_BluRay.SelectedIndexChanged += VectorChanged2;
-            p_BluRay.SelectedIndexChanged += VectorChanged3;
+            p_bluRay.SelectedIndex = 1;
+            p_bluRay.SelectedIndexChanged += VectorChanged;
+            p_bluRay.SelectedIndexChanged += VectorChanged4;
 
-            sl_bluRay.Children.Add(p_BluRay);
+            sl_bluRay.Children.Add(p_bluRay);
             sl_bluRay.Children.Add(l_bluRay);
-            stackLayoutLeft.Children.Add(sl_bluRay);
+            stackLayoutRight.Children.Add(sl_bluRay);
 
-            // resource Laser printer
-            var sl_printer = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_printer = new Label { Text = " Laser Printers", VerticalOptions = LayoutOptions.Center };
-            p_printer = new Picker();
-            for (int i = 0; i < 10; i++)
-            {
-                p_printer.Items.Add(i.ToString());
-            }
-            p_printer.SelectedIndex = 2;
-            p_printer.SelectedIndexChanged += VectorChanged;
-            p_printer.SelectedIndexChanged += VectorChanged2;
-            p_printer.SelectedIndexChanged += VectorChanged3;
-
-            sl_printer.Children.Add(p_printer);
-            sl_printer.Children.Add(l_printer);
-            stackLayoutRight.Children.Add(sl_printer);
 
             // resource inkjet printer
             var sl_ijPrinter = new StackLayout() { Orientation = StackOrientation.Horizontal };
@@ -245,10 +417,9 @@ namespace WertheApp.BS
             {
                 p_ijPrinter.Items.Add(i.ToString());
             }
-            p_ijPrinter.SelectedIndex = 2;
+            p_ijPrinter.SelectedIndex = 0;
             p_ijPrinter.SelectedIndexChanged += VectorChanged;
-            p_ijPrinter.SelectedIndexChanged += VectorChanged2;
-            p_ijPrinter.SelectedIndexChanged += VectorChanged3;
+            p_ijPrinter.SelectedIndexChanged += VectorChanged4;
 
             sl_ijPrinter.Children.Add(p_ijPrinter);
             sl_ijPrinter.Children.Add(l_ijPrinter);
@@ -260,7 +431,7 @@ namespace WertheApp.BS
             stackLayout.Children.Add(stackLayoutRLContainer);
 
             // resource vector
-            resourceVectorE = "22222";
+            resourceVectorE = "2231";
             l_resourceVectorE = new Label { Text = "Vector E = (" + resourceVectorE + ")", TextColor = Color.Blue };
             stackLayout.Children.Add(l_resourceVectorE);
 
@@ -285,9 +456,17 @@ namespace WertheApp.BS
 
         /**********************************************************************
         *********************************************************************/
-        //TODO:sets default values
         void B_Default_Clicked(object sender, EventArgs e)
         {
+            SetReqResPickersToZero();
+            SetOccuResPickersToZero();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        void B_Preset_Clicked(object sender, EventArgs e)
+        {
+
             
         }
 
@@ -304,30 +483,31 @@ namespace WertheApp.BS
                 sl_occupiedResources.Children.Add(sl_OccuProcess1);
                 sl_occupiedResources.Children.Add(sl_OccuProcess2);
 
-                sl_requestedResources.Children.Add(e_reqP1);
-                sl_requestedResources.Children.Add(e_reqP2);
+                sl_requestedResources.Children.Add(sl_ReqProcess1);
+                sl_requestedResources.Children.Add(sl_ReqProcess2);
 
             }
             if (total >= 3)
             {
                 sl_occupiedResources.Children.Add(sl_OccuProcess3);
-                sl_requestedResources.Children.Add(e_reqP3);
+                sl_requestedResources.Children.Add(sl_ReqProcess3);
 
             }
             if (total >= 4)
             {
                 sl_occupiedResources.Children.Add(sl_OccuProcess4);
-                sl_requestedResources.Children.Add(e_reqP4);
+                sl_requestedResources.Children.Add(sl_ReqProcess4);
             }
             if (total >= 5)
             {
                 sl_occupiedResources.Children.Add(sl_OccuProcess5);
-                sl_requestedResources.Children.Add(e_reqP5);
+                sl_requestedResources.Children.Add(sl_ReqProcess5);
 
             }
 
         }
 
+        //Vector changed für Vector E berechnen
         /**********************************************************************
         *********************************************************************/
         void VectorChanged(object sender, EventArgs e)
@@ -335,7 +515,7 @@ namespace WertheApp.BS
             dvd = p_dvd.SelectedItem.ToString();
             printer = p_printer.SelectedItem.ToString();
             usb = p_usb.SelectedItem.ToString();
-            bluRay = p_BluRay.SelectedItem.ToString();
+            bluRay = p_bluRay.SelectedItem.ToString();
             ijPrinter = p_ijPrinter.SelectedItem.ToString();
 
             resourceVectorE = "";
@@ -349,51 +529,192 @@ namespace WertheApp.BS
             l_resourceVectorE.Text = "Vector E = (" + resourceVectorE + ")";
         }
 
-        /**********************************************************************
-        *********************************************************************/
-        void VectorChanged2(object sender, EventArgs e)
+        //calculate Vector for occupied ressources (VECTOR B) 
+        void SetVectorB()
         {
             dvd = p_dvd.SelectedItem.ToString();
             printer = p_printer.SelectedItem.ToString();
             usb = p_usb.SelectedItem.ToString();
-            bluRay = p_BluRay.SelectedItem.ToString();
+            bluRay = p_bluRay.SelectedItem.ToString();
             ijPrinter = p_ijPrinter.SelectedItem.ToString();
 
-            //TODO: Ausrechnen Occupied
-            var occu_dvd = dvd;
-            var occu_printer = printer;
-            var occu_usb = usb;
-            var occu_bluRay = bluRay;
-            var occu_ijPrinter = ijPrinter;
+            //Get number of processes
+            var total = Int16.Parse(p_total.SelectedItem.ToString());
+
+            //calculate vector B
+            int occu_dvd = 0;
+            int occu_printer = 0;
+            int occu_usb = 0;
+            int occu_bluRay = 0;
+            int occu_ijprinter = 0;
+            if (total >= 2)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p1_dvd.SelectedItem.ToString())
+                    + Int32.Parse(p_p2_dvd.SelectedItem.ToString());
+
+                occu_printer = occu_printer + Int32.Parse(p_p1_printer.SelectedItem.ToString())
+                    + Int32.Parse(p_p2_printer.SelectedItem.ToString());
+
+                occu_usb = occu_usb + Int32.Parse(p_p1_usb.SelectedItem.ToString())
+                  + Int32.Parse(p_p2_usb.SelectedItem.ToString());
+
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p1_bluRay.SelectedItem.ToString())
+                  + Int32.Parse(p_p2_bluRay.SelectedItem.ToString());
+
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p1_ijprinter.SelectedItem.ToString())
+                  + Int32.Parse(p_p2_ijprinter.SelectedItem.ToString());
+
+            }
+            if (total >= 3)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p3_dvd.SelectedItem.ToString());
+                occu_printer = occu_printer + Int32.Parse(p_p3_printer.SelectedItem.ToString());
+                occu_usb = occu_usb + Int32.Parse(p_p3_usb.SelectedItem.ToString());
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p3_bluRay.SelectedItem.ToString());
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p3_ijprinter.SelectedItem.ToString());
+            }
+            if (total >= 4)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p4_dvd.SelectedItem.ToString());
+                occu_printer = occu_printer + Int32.Parse(p_p4_printer.SelectedItem.ToString());
+                occu_usb = occu_usb + Int32.Parse(p_p4_usb.SelectedItem.ToString());
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p4_bluRay.SelectedItem.ToString());
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p4_ijprinter.SelectedItem.ToString());
+
+            }
+            if (total >= 5)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p5_dvd.SelectedItem.ToString());
+                occu_printer = occu_printer + Int32.Parse(p_p5_printer.SelectedItem.ToString());
+                occu_usb = occu_usb + Int32.Parse(p_p5_usb.SelectedItem.ToString());
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p5_bluRay.SelectedItem.ToString());
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p5_ijprinter.SelectedItem.ToString());
+
+            }
 
             occupiedResourceVectorB = "";
             if (dvd != "0") { occupiedResourceVectorB = "" + occupiedResourceVectorB + "" + occu_dvd; }
             if (printer != "0") { occupiedResourceVectorB = "" + occupiedResourceVectorB + "" + occu_printer; }
             if (usb != "0") { occupiedResourceVectorB = "" + occupiedResourceVectorB + "" + occu_usb; }
             if (bluRay != "0") { occupiedResourceVectorB = "" + occupiedResourceVectorB + "" + occu_bluRay; }
-            if (ijPrinter != "0") { occupiedResourceVectorB = "" + occupiedResourceVectorB + "" + occu_ijPrinter; }
+            if (ijPrinter != "0") { occupiedResourceVectorB = "" + occupiedResourceVectorB + "" + occu_ijprinter; }
+
+            String vectorBText = "Vector B = (" + occupiedResourceVectorB + ")";
+
+            string attention = "!!! Cannot occupy more resources than available!";
+            if (occu_dvd > Int32.Parse(dvd) ||
+                occu_printer > Int32.Parse(printer) ||
+                occu_usb > Int32.Parse(usb) ||
+                occu_bluRay > Int32.Parse(bluRay) ||
+                occu_ijprinter > Int32.Parse(ijPrinter)
+                )
+            {
+                vectorBText = vectorBText + " " + attention;
+            }
 
 
-            l_occupiedResourceVectorB.Text = "Vector B = (" + occupiedResourceVectorB + ")";
+            l_occupiedResourceVectorB.Text = vectorBText;
+
+        }
+        //calculate Vector for occupied ressources (VECTOR B) 
+        /**********************************************************************
+        *********************************************************************/
+        void VectorChanged2(object sender, EventArgs e)
+        {
+            try {
+                SetVectorB();
+            }
+            catch (System.NullReferenceException ex) {
+              //Exception is thrown because VectorChanged2 Event is also invoked when items are removed from picker  
+            }
+            
         }
 
-        //TODO: Vector changed3 für free ressources berechnet aus total ressources und occupied
+        //TODO: Vector changed3 für free ressources (VECTOR A) berechnet aus total ressources und occupied
         /**********************************************************************
         *********************************************************************/
         void VectorChanged3(object sender, EventArgs e)
         {
+            try
+            {
+                SetVectorA();
+            }
+            catch (System.NullReferenceException ex)
+            {
+                //Exception is thrown because VectorChanged3 Event is also invoked when items are removed from picker  
+            }
+        }
+
+        void SetVectorA()
+        {
+            //get number of ressources
             dvd = p_dvd.SelectedItem.ToString();
             printer = p_printer.SelectedItem.ToString();
             usb = p_usb.SelectedItem.ToString();
-            bluRay = p_BluRay.SelectedItem.ToString();
+            bluRay = p_bluRay.SelectedItem.ToString();
             ijPrinter = p_ijPrinter.SelectedItem.ToString();
 
-            //TODO: Ausrechnen free
-            var free_dvd = dvd;
-            var free_printer = printer;
-            var free_usb = usb;
-            var free_bluRay = bluRay;
-            var free_ijPrinter = ijPrinter;
+            //Get number of processes
+            var total = Int16.Parse(p_total.SelectedItem.ToString());
+
+            //calculate vector B
+            int occu_dvd = 0;
+            int occu_printer = 0;
+            int occu_usb = 0;
+            int occu_bluRay = 0;
+            int occu_ijprinter = 0;
+
+            if (total >= 2)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p1_dvd.SelectedItem.ToString())
+                    + Int32.Parse(p_p2_dvd.SelectedItem.ToString());
+
+                occu_printer = occu_printer + Int32.Parse(p_p1_printer.SelectedItem.ToString())
+                    + Int32.Parse(p_p2_printer.SelectedItem.ToString());
+
+                occu_usb = occu_usb + Int32.Parse(p_p1_usb.SelectedItem.ToString())
+                  + Int32.Parse(p_p2_usb.SelectedItem.ToString());
+
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p1_bluRay.SelectedItem.ToString())
+                  + Int32.Parse(p_p2_bluRay.SelectedItem.ToString());
+
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p1_ijprinter.SelectedItem.ToString())
+                  + Int32.Parse(p_p2_ijprinter.SelectedItem.ToString());
+
+            }
+            if (total >= 3)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p3_dvd.SelectedItem.ToString());
+                occu_printer = occu_printer + Int32.Parse(p_p3_printer.SelectedItem.ToString());
+                occu_usb = occu_usb + Int32.Parse(p_p3_usb.SelectedItem.ToString());
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p3_bluRay.SelectedItem.ToString());
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p3_ijprinter.SelectedItem.ToString());
+            }
+            if (total >= 4)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p4_dvd.SelectedItem.ToString());
+                occu_printer = occu_printer + Int32.Parse(p_p4_printer.SelectedItem.ToString());
+                occu_usb = occu_usb + Int32.Parse(p_p4_usb.SelectedItem.ToString());
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p4_bluRay.SelectedItem.ToString());
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p4_ijprinter.SelectedItem.ToString());
+
+            }
+            if (total >= 5)
+            {
+                occu_dvd = occu_dvd + Int32.Parse(p_p5_dvd.SelectedItem.ToString());
+                occu_printer = occu_printer + Int32.Parse(p_p5_printer.SelectedItem.ToString());
+                occu_usb = occu_usb + Int32.Parse(p_p5_usb.SelectedItem.ToString());
+                occu_bluRay = occu_bluRay + Int32.Parse(p_p5_bluRay.SelectedItem.ToString());
+                occu_ijprinter = occu_ijprinter + Int32.Parse(p_p5_ijprinter.SelectedItem.ToString());
+
+            }
+
+            //calculate free ressources vector
+            int free_dvd = Int32.Parse(dvd) - occu_dvd;
+            int free_printer = Int32.Parse(printer) - occu_printer;
+            int free_usb = Int32.Parse(usb) - occu_usb;
+            int free_bluRay = Int32.Parse(bluRay) - occu_bluRay;
+            int free_ijPrinter = Int32.Parse(ijPrinter) - occu_ijprinter;
 
             freeResourceVectorA = "";
             if (dvd != "0") { freeResourceVectorA = "" + freeResourceVectorA + "" + free_dvd; }
@@ -404,8 +725,299 @@ namespace WertheApp.BS
 
 
             l_freeResourceVectorA.Text = "Vector A = (" + freeResourceVectorA + ")";
+
         }
-    
+
+        //show Ocuupied and Requested Ressources Picker
+        void VectorChanged4(object sender, EventArgs e)
+        {
+            AddItemsToOccuResPickers();
+            AddItemsToReqResPickers();
+            SetReqResPickersToZero();
+            SetOccuResPickersToZero();
+            SetVectorB();
+            SetVectorA();
+            AddPickersToOccuRes();
+            AddPickersToReqRes();
+
+        }
+
+        void SetVectorChangedEvents()
+        {
+            foreach (Picker picker in occuResPickerList)
+            {
+                picker.SelectedIndexChanged += VectorChanged2;
+                picker.SelectedIndexChanged += VectorChanged3;
+            }
+
+        }
+
+        void SetReqResPickersToZero()
+        {
+            foreach (Picker picker in reqResPickerList)
+            {
+                picker.SelectedIndex = 0;
+            }
+               
+        }
+
+        void SetOccuResPickersToZero()
+        {
+            foreach (Picker picker in occuResPickerList)
+            {
+                picker.SelectedIndex = 0;
+            }
+        }
+
+        void AddItemsToReqResPickers()
+        {
+            //get number of ressources
+            dvd = p_dvd.SelectedItem.ToString();
+            printer = p_printer.SelectedItem.ToString();
+            usb = p_usb.SelectedItem.ToString();
+            bluRay = p_bluRay.SelectedItem.ToString();
+            ijPrinter = p_ijPrinter.SelectedItem.ToString();
+
+            //first remove all items
+            foreach (Picker picker in reqResPickerList)
+            {
+                picker.Items.Clear();
+            }
+
+            //add item for every ressource
+            for (int i = 0; i <= UInt32.Parse(dvd); i++)
+            {
+                p_p1_req_dvd.Items.Add(i.ToString());
+                p_p2_req_dvd.Items.Add(i.ToString());
+                p_p3_req_dvd.Items.Add(i.ToString());
+                p_p4_req_dvd.Items.Add(i.ToString());
+                p_p5_req_dvd.Items.Add(i.ToString());
+            }
+            for (int i = 0; i <= UInt32.Parse(printer); i++)
+            {
+                p_p1_req_printer.Items.Add(i.ToString());
+                p_p2_req_printer.Items.Add(i.ToString());
+                p_p3_req_printer.Items.Add(i.ToString());
+                p_p4_req_printer.Items.Add(i.ToString());
+                p_p5_req_printer.Items.Add(i.ToString());
+            }
+            for (int i = 0; i <= UInt32.Parse(usb); i++)
+            {
+                p_p1_req_usb.Items.Add(i.ToString());
+                p_p2_req_usb.Items.Add(i.ToString());
+                p_p3_req_usb.Items.Add(i.ToString());
+                p_p4_req_usb.Items.Add(i.ToString());
+                p_p5_req_usb.Items.Add(i.ToString());
+            }
+            for (int i = 0; i <= UInt32.Parse(bluRay); i++)
+            {
+                p_p1_req_bluRay.Items.Add(i.ToString());
+                p_p2_req_bluRay.Items.Add(i.ToString());
+                p_p3_req_bluRay.Items.Add(i.ToString());
+                p_p4_req_bluRay.Items.Add(i.ToString());
+                p_p5_req_bluRay.Items.Add(i.ToString());
+            }
+            for (int i = 0; i <= UInt32.Parse(ijPrinter); i++)
+            {
+                p_p1_req_ijprinter.Items.Add(i.ToString());
+                p_p2_req_ijprinter.Items.Add(i.ToString());
+                p_p3_req_ijprinter.Items.Add(i.ToString());
+                p_p4_req_ijprinter.Items.Add(i.ToString());
+                p_p5_req_ijprinter.Items.Add(i.ToString());
+            }
+
+        }
+        void AddItemsToOccuResPickers()
+        {
+            //get number of ressources
+            dvd = p_dvd.SelectedItem.ToString();
+            printer = p_printer.SelectedItem.ToString();
+            usb = p_usb.SelectedItem.ToString();
+            bluRay = p_bluRay.SelectedItem.ToString();
+            ijPrinter = p_ijPrinter.SelectedItem.ToString();
+
+            //first remove all items
+            foreach (Picker picker in occuResPickerList)
+            {
+                picker.Items.Clear();
+            }
+
+            //add item for every ressource
+            for (int i = 0; i <= UInt32.Parse(dvd); i++)
+            {
+                p_p1_dvd.Items.Add(i.ToString());
+                p_p2_dvd.Items.Add(i.ToString());
+                p_p3_dvd.Items.Add(i.ToString());
+                p_p4_dvd.Items.Add(i.ToString());
+                p_p5_dvd.Items.Add(i.ToString());
+
+            }
+            for (int i = 0; i <= UInt32.Parse(printer); i++)
+            {
+                p_p1_printer.Items.Add(i.ToString());
+                p_p2_printer.Items.Add(i.ToString());
+                p_p3_printer.Items.Add(i.ToString());
+                p_p4_printer.Items.Add(i.ToString());
+                p_p5_printer.Items.Add(i.ToString());
+
+            }
+            for (int i = 0; i <= UInt32.Parse(usb); i++)
+            {
+                p_p1_usb.Items.Add(i.ToString());
+                p_p2_usb.Items.Add(i.ToString());
+                p_p3_usb.Items.Add(i.ToString());
+                p_p4_usb.Items.Add(i.ToString());
+                p_p5_usb.Items.Add(i.ToString());
+            }
+            for (int i = 0; i <= UInt32.Parse(bluRay); i++)
+            {
+                p_p1_bluRay.Items.Add(i.ToString());
+                p_p2_bluRay.Items.Add(i.ToString());
+                p_p3_bluRay.Items.Add(i.ToString());
+                p_p4_bluRay.Items.Add(i.ToString());
+                p_p5_bluRay.Items.Add(i.ToString());
+            }
+            for (int i = 0; i <= UInt32.Parse(ijPrinter); i++)
+            {
+                p_p1_ijprinter.Items.Add(i.ToString());
+                p_p2_ijprinter.Items.Add(i.ToString());
+                p_p3_ijprinter.Items.Add(i.ToString());
+                p_p4_ijprinter.Items.Add(i.ToString());
+                p_p5_ijprinter.Items.Add(i.ToString());
+            }
+        }
+
+
+        void AddPickersToOccuRes()
+        {
+            // get values from ressource pickers
+            dvd = p_dvd.SelectedItem.ToString();
+            printer = p_printer.SelectedItem.ToString();
+            usb = p_usb.SelectedItem.ToString();
+            bluRay = p_bluRay.SelectedItem.ToString();
+            ijPrinter = p_ijPrinter.SelectedItem.ToString();
+
+            //remove all process pickers 
+            sl_OccuProcess1.Children.Clear();
+            sl_OccuProcess2.Children.Clear();
+            sl_OccuProcess3.Children.Clear();
+            sl_OccuProcess4.Children.Clear();
+            sl_OccuProcess5.Children.Clear();
+
+            // add labels to process layouts
+            sl_OccuProcess1.Children.Add(l_occuP1);
+            sl_OccuProcess2.Children.Add(l_occuP2);
+            sl_OccuProcess3.Children.Add(l_occuP3);
+            sl_OccuProcess4.Children.Add(l_occuP4);
+            sl_OccuProcess5.Children.Add(l_occuP5);
+            
+            if (dvd != "0")
+            {
+                sl_OccuProcess1.Children.Add(p_p1_dvd);
+                sl_OccuProcess2.Children.Add(p_p2_dvd);
+                sl_OccuProcess3.Children.Add(p_p3_dvd);
+                sl_OccuProcess4.Children.Add(p_p4_dvd);
+                sl_OccuProcess5.Children.Add(p_p5_dvd);
+            }
+            if (printer != "0")
+            {
+                sl_OccuProcess1.Children.Add(p_p1_printer);
+                sl_OccuProcess2.Children.Add(p_p2_printer);
+                sl_OccuProcess3.Children.Add(p_p3_printer);
+                sl_OccuProcess4.Children.Add(p_p4_printer);
+                sl_OccuProcess5.Children.Add(p_p5_printer);
+            }
+            if (usb != "0")
+            {
+                sl_OccuProcess1.Children.Add(p_p1_usb);
+                sl_OccuProcess2.Children.Add(p_p2_usb);
+                sl_OccuProcess3.Children.Add(p_p3_usb);
+                sl_OccuProcess4.Children.Add(p_p4_usb);
+                sl_OccuProcess5.Children.Add(p_p5_usb);
+            }
+            if (bluRay != "0")
+            {
+                sl_OccuProcess1.Children.Add(p_p1_bluRay);
+                sl_OccuProcess2.Children.Add(p_p2_bluRay);
+                sl_OccuProcess3.Children.Add(p_p3_bluRay);
+                sl_OccuProcess4.Children.Add(p_p4_bluRay);
+                sl_OccuProcess5.Children.Add(p_p5_bluRay);
+            }
+            if (ijPrinter != "0")
+            {
+                sl_OccuProcess1.Children.Add(p_p1_ijprinter);
+                sl_OccuProcess2.Children.Add(p_p2_ijprinter);
+                sl_OccuProcess3.Children.Add(p_p3_ijprinter);
+                sl_OccuProcess4.Children.Add(p_p4_ijprinter);
+                sl_OccuProcess5.Children.Add(p_p5_ijprinter);
+            }
+        }
+        void AddPickersToReqRes()
+        {
+            // get values from ressource pickers
+            dvd = p_dvd.SelectedItem.ToString();
+            printer = p_printer.SelectedItem.ToString();
+            usb = p_usb.SelectedItem.ToString();
+            bluRay = p_bluRay.SelectedItem.ToString();
+            ijPrinter = p_ijPrinter.SelectedItem.ToString();
+
+            //remove all process pickers
+            sl_ReqProcess1.Children.Clear();
+            sl_ReqProcess2.Children.Clear();
+            sl_ReqProcess3.Children.Clear();
+            sl_ReqProcess4.Children.Clear();
+            sl_ReqProcess5.Children.Clear();
+
+            // add labels to process layouts
+            sl_ReqProcess1.Children.Add(l_reqP1);
+            sl_ReqProcess2.Children.Add(l_reqP2);
+            sl_ReqProcess3.Children.Add(l_reqP3);
+            sl_ReqProcess4.Children.Add(l_reqP4);
+            sl_ReqProcess5.Children.Add(l_reqP5);
+
+            if (dvd != "0")
+            {
+                sl_ReqProcess1.Children.Add(p_p1_req_dvd);
+                sl_ReqProcess2.Children.Add(p_p2_req_dvd);
+                sl_ReqProcess3.Children.Add(p_p3_req_dvd);
+                sl_ReqProcess4.Children.Add(p_p4_req_dvd);
+                sl_ReqProcess5.Children.Add(p_p5_req_dvd);
+
+            }
+            if (printer != "0")
+            {
+                sl_ReqProcess1.Children.Add(p_p1_req_printer);
+                sl_ReqProcess2.Children.Add(p_p2_req_printer);
+                sl_ReqProcess3.Children.Add(p_p3_req_printer);
+                sl_ReqProcess4.Children.Add(p_p4_req_printer);
+                sl_ReqProcess5.Children.Add(p_p5_req_printer);
+            }
+            if (usb != "0")
+            {
+                sl_ReqProcess1.Children.Add(p_p1_req_usb);
+                sl_ReqProcess2.Children.Add(p_p2_req_usb);
+                sl_ReqProcess3.Children.Add(p_p3_req_usb);
+                sl_ReqProcess4.Children.Add(p_p4_req_usb);
+                sl_ReqProcess5.Children.Add(p_p5_req_usb);
+            }
+            if (bluRay != "0")
+            {
+                sl_ReqProcess1.Children.Add(p_p1_req_bluRay);
+                sl_ReqProcess2.Children.Add(p_p2_req_bluRay);
+                sl_ReqProcess3.Children.Add(p_p3_req_bluRay);
+                sl_ReqProcess4.Children.Add(p_p4_req_bluRay);
+                sl_ReqProcess5.Children.Add(p_p5_req_bluRay);
+            }
+
+            if (ijPrinter != "0")
+            {
+                sl_ReqProcess1.Children.Add(p_p1_req_ijprinter);
+                sl_ReqProcess2.Children.Add(p_p2_req_ijprinter);
+                sl_ReqProcess3.Children.Add(p_p3_req_ijprinter);
+                sl_ReqProcess4.Children.Add(p_p4_req_ijprinter);
+                sl_ReqProcess5.Children.Add(p_p5_req_ijprinter);
+            }
+        }
 
         //TODO: Occupied changed
         /**********************************************************************
@@ -414,6 +1026,7 @@ namespace WertheApp.BS
         {
 
         }
+
 
         /**********************************************************************
         *********************************************************************/
