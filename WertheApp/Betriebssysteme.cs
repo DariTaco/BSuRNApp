@@ -33,7 +33,7 @@ namespace WertheApp
 			listView.ItemsSource = new string[]
             {
                 "Allocation Strategies", "Buddy System", "Page Replacement Strategies", "Deadlock"
-            };
+			};
 			//after an item was clicked, open the respective app 
 			listView.ItemTapped += async (sender, e) =>
 			{
@@ -45,8 +45,6 @@ namespace WertheApp
                         await Navigation.PushAsync(new OldAllocationStrategiesSettings());
 						break;
 					case "Buddy System":
-						Debug.WriteLine("BUDDY");
-
 						await Navigation.PushAsync(new BuddySystemSettings());
 						break;
                     case "Page Replacement Strategies":
