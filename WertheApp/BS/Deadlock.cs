@@ -2,6 +2,9 @@
 using Xamarin.Forms;
 using System.Collections.Generic;
 using SkiaSharp.Views.Forms;
+using System.Linq; //list.Any()
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace WertheApp.BS
 {
@@ -9,15 +12,26 @@ namespace WertheApp.BS
     public class Deadlock: ContentPage
     {
         //VARIABLES
-        private static SKCanvasView skiaview;
-        private static DeadlockDraw draw;
         private static Button b_Next;
+        public static ListView listView;
+        public static ObservableCollection<DeadlockViewCell> deadlockCells; // deadlock canvas
 
-        public Deadlock()
+        // dictionary of individual amount of existing resources
+        //keys: dvd, printer, usb, bluRay, ijPrinter, printer3D
+        public static Dictionary<string, int> exResDict;
+
+        public static int cellNumber;
+
+   
+        public Deadlock(Dictionary<string, int> d, String VE, String VB, String VC, String VA, int totalProcesses)
         {
+
             Title = "Deadlock";
 
-            draw = new DeadlockDraw();
+            exResDict = d; //exResDict["dvd"]
+            cellNumber = -1;
+
+            Debug.WriteLine(VE + " " + VB + " " + VC + " " + VA + " " + totalProcesses);
             CreateContent();
         }
 
@@ -40,11 +54,17 @@ namespace WertheApp.BS
         *********************************************************************/
         void CreateTopHalf(Grid grid)
         {
+            listView = new ListView
+            {
+                ItemTemplate = new DataTemplate(typeof(DeadlockViewCell)),
+                RowHeight = 200,
+                BackgroundColor = Color.Transparent,
+            };
+            deadlockCells = new ObservableCollection<DeadlockViewCell>();
+            listView.ItemsSource = deadlockCells;
+            grid.Children.Add(listView, 0, 0);
+            AddDeadlockCell(); //add very first cell
 
-            skiaview = new SKCanvasView();
-
-            skiaview = DeadlockDraw.ReturnCanvas();
-            grid.Children.Add(skiaview, 0, 0);
         }
 
         /**********************************************************************
@@ -72,10 +92,23 @@ namespace WertheApp.BS
 
         /**********************************************************************
         *********************************************************************/
-        void B_Next_Clicked(object sender, EventArgs e)
+        static void B_Next_Clicked(object sender, EventArgs e)
         {
-
+            cellNumber++;
+            AddDeadlockCell();
         }
 
+        public static int GetCellNumber()
+        {
+            return cellNumber;
+        }
+        /**********************************************************************
+        *********************************************************************/
+        public static void AddDeadlockCell()
+        {
+            deadlockCells.Add(new DeadlockViewCell()); //actually creates a new deadlockviewcell
+
+            //listView.ScrollTo(deadlockCells[deadlockCells.Count - 1], ScrollToPosition.End, false);
+        }
     }
 }

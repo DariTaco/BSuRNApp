@@ -90,10 +90,10 @@
     <Compile Include="RN\DijkstraAlgorithm.cs" />
     <Compile Include="BS\Deadlock.cs" />
     <Compile Include="BS\DeadlockSettings.cs" />
-    <Compile Include="BS\DeadlockDraw.cs" />
     <Compile Include="Helping Classes\TemplateSkiaSharp.cs" />
     <Compile Include="Helping Classes\TemplateSkiaSharpDraw.cs" />
     <Compile Include="Helping Classes\TemplateSkiaSharpSettings.cs" />
+    <Compile Include="BS\DeadlockViewCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

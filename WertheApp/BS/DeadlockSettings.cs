@@ -800,8 +800,6 @@ namespace WertheApp.BS
         //calculate Vector for busy ressources (VECTOR B) 
         void SetVectorB()
         {
-            Debug.WriteLine("SET VECTOR B");
-
             dvd = p_dvd.SelectedItem.ToString();
             printer = p_printer.SelectedItem.ToString();
             usb = p_usb.SelectedItem.ToString();
@@ -879,7 +877,7 @@ namespace WertheApp.BS
             if (printer3D != "0") { busyResourceVectorB = "" + busyResourceVectorB + "    " + busy_printer3D; }
             String vectorBText = "B = (" + busyResourceVectorB + "    )";
 
-            string attention = "!!! Cannot busypy more resources than available!";
+            string attention = "!!! Cannot occupy more resources than available!";
             if (busy_dvd > Int32.Parse(dvd) ||
                 busy_printer > Int32.Parse(printer) ||
                 busy_usb > Int32.Parse(usb) ||
@@ -899,7 +897,6 @@ namespace WertheApp.BS
         //calculate Vector for busy ressources (VECTOR C) 
         void SetVectorC()
         {
-            Debug.WriteLine("SET VECTOR C");
             dvd = p_dvd.SelectedItem.ToString();
             printer = p_printer.SelectedItem.ToString();
             usb = p_usb.SelectedItem.ToString();
@@ -987,7 +984,6 @@ namespace WertheApp.BS
         {
             try
             {
-                Debug.WriteLine("VECTOR C CHANGED EVENT");
                 SetVectorC();
             }
             catch (System.NullReferenceException ex)
@@ -1003,8 +999,6 @@ namespace WertheApp.BS
         *********************************************************************/
         void VectorBChangedEvent(object sender, EventArgs e)
         {
-            Debug.WriteLine("VECTOR B CHANGED EVENT");
-
             try
             {
                 SetVectorB();
@@ -1472,19 +1466,15 @@ namespace WertheApp.BS
         *********************************************************************/
         //If Button Start is clicked
         async void B_Start_Clicked(object sender, EventArgs e)
-
-            //TODO: check busy ressources can't be higher than available ressources
-            //TODO: check if resources between 2 and 5
-            //TODO: Set busy_dvd etc and give it to the next screen
-            //TODO: Set upcoming_dvd etc and give it to the next screen
         {
+            //check if resources between 2 and 5
             var countE = 0;
             foreach (Char c in resourceVectorE){
                 if (Char.IsDigit(c))
                 {
                     countE++;
                 }
-            } 
+            }
             if (countE < 3) {
                 await DisplayAlert("Alert", "Please define at least 3 resources", "OK");
             }
@@ -1492,16 +1482,59 @@ namespace WertheApp.BS
             {
                 await DisplayAlert("Alert", "Please define no more than 5 resources", "OK");
             }
+            //check busy resources can't be higher than available ressources
+            else if (l_busyResourceVectorB.Text.Contains("!!! Cannot occupy more resources than available!"))
+            {
+                await DisplayAlert("Alert", "Busy resources can't be higher than available ressources", "OK");
+
+            }
             else
             {
                 if (IsLandscape())
                 {
                     await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
                 }
-                await Navigation.PushAsync(new Deadlock());
+
+                var exResDict = GetExistingResDict();
+                //todo: only use the numbers
+                String VE = GetOnlyDigitsInString(l_resourceVectorE.Text);
+                String VB = GetOnlyDigitsInString(l_busyResourceVectorB.Text);
+                String VC = GetOnlyDigitsInString(l_upcomingVectorC.Text);
+                String VA = GetOnlyDigitsInString(l_freeResourceVectorA.Text);
+                int totalProcesses = Int16.Parse(p_runningprocesses.SelectedIndex.ToString());
+                await Navigation.PushAsync(new Deadlock(exResDict, VE, VB, VC, VA, totalProcesses));
             }
 
         }
+
+        /**********************************************************************
+        *********************************************************************/
+        String GetOnlyDigitsInString(String givenString)
+        {
+            String digits = "";
+            foreach (Char c in givenString)
+            {
+                if (Char.IsDigit(c))
+                {
+                    digits += c;
+                }
+            }
+            return digits;
+        }
+
+        Dictionary<String, int> GetExistingResDict()
+        {
+            var exResDict = new Dictionary<string, int>(){};
+            exResDict.Add("dvd", Int16.Parse(p_dvd.SelectedItem.ToString()));
+            exResDict.Add("printer", Int16.Parse(p_printer.SelectedItem.ToString()));
+            exResDict.Add("usb", Int16.Parse(p_usb.SelectedItem.ToString()));
+            exResDict.Add("bluRay", Int16.Parse(p_bluRay.SelectedItem.ToString()));
+            exResDict.Add("ijPrinter", Int16.Parse(p_ijPrinter.SelectedItem.ToString()));
+            exResDict.Add("printer3D", Int16.Parse(p_printer3D.SelectedItem.ToString()));
+
+            return exResDict;
+        }
+
 
         /**********************************************************************
         *********************************************************************/
