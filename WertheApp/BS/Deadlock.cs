@@ -15,20 +15,30 @@ namespace WertheApp.BS
         private static Button b_Next;
         public static ListView listView;
         public static ObservableCollection<DeadlockViewCell> deadlockCells; // deadlock canvas
+        public static int cellNumber;
+
 
         // dictionary of individual amount of existing resources
         //keys: dvd, printer, usb, bluRay, ijPrinter, printer3D
         public static Dictionary<string, int> exResDict;
-
-        public static int cellNumber;
+        private static String vectorE, vectorB, vectorC, vectorA;
+        private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
 
    
-        public Deadlock(Dictionary<string, int> d, String VE, String VB, String VC, String VA, int totalProcesses)
+        public Deadlock(Dictionary<string, int> d, String VE, String VB, String VC, String VA, int totalProcesses, Dictionary<int, String> VBProcesses, Dictionary<int, String> VCProcesses )
         {
 
             Title = "Deadlock";
 
             exResDict = d; //exResDict["dvd"]
+            vectorE = VE;
+            vectorB = VB;
+            vectorC = VC;
+            vectorA = VA;
+            vectorBProcesses = VBProcesses;
+            vectorCProcesses = VCProcesses;
+
+
             cellNumber = -1;
 
             Debug.WriteLine(VE + " " + VB + " " + VC + " " + VA + " " + totalProcesses);
@@ -98,10 +108,6 @@ namespace WertheApp.BS
             AddDeadlockCell();
         }
 
-        public static int GetCellNumber()
-        {
-            return cellNumber;
-        }
         /**********************************************************************
         *********************************************************************/
         public static void AddDeadlockCell()
@@ -109,6 +115,44 @@ namespace WertheApp.BS
             deadlockCells.Add(new DeadlockViewCell()); //actually creates a new deadlockviewcell
 
             //listView.ScrollTo(deadlockCells[deadlockCells.Count - 1], ScrollToPosition.End, false);
+        }
+
+
+
+        /**********************************************************************
+        *********************************************************************/
+        public static int GetCellNumber()
+        {
+            return cellNumber;
+        }
+
+        public static String GetVectorA()
+        {
+            return vectorA;
+        }
+
+        public static String GetVectorB()
+        {
+            return vectorB;
+        }
+
+        public static String GetVectorC()
+        {
+            return vectorC;
+        }
+
+        public static String GetVectorE()
+        {
+            return vectorE;
+        }
+
+        public static Dictionary<int, String> GetVectorBProcesses()
+        {
+            return vectorBProcesses;
+        }
+        public static Dictionary<int, String> GetVectorCProcesses()
+        {
+            return vectorCProcesses;
         }
     }
 }

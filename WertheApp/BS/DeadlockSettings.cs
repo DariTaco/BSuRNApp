@@ -39,6 +39,7 @@ namespace WertheApp.BS
 
         private List<Picker> busyResPickerList, upcomingResPickerList, resPickerList;
         private int preset;
+        private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
 
 
         public DeadlockSettings()
@@ -1502,7 +1503,7 @@ namespace WertheApp.BS
                 String VC = GetOnlyDigitsInString(l_upcomingVectorC.Text);
                 String VA = GetOnlyDigitsInString(l_freeResourceVectorA.Text);
                 int totalProcesses = Int16.Parse(p_runningprocesses.SelectedIndex.ToString());
-                await Navigation.PushAsync(new Deadlock(exResDict, VE, VB, VC, VA, totalProcesses));
+                await Navigation.PushAsync(new Deadlock(exResDict, VE, VB, VC, VA, totalProcesses, GetVectorBProcesses(), GetVectorCProcesses()));
             }
 
         }
@@ -1535,6 +1536,200 @@ namespace WertheApp.BS
             return exResDict;
         }
 
+        public Dictionary<int, String> GetVectorBProcesses()
+        {
+         
+            // create dictionary (keys= numbers 1 to 5 for processes 1 to 5)
+            vectorBProcesses = new Dictionary<int, String>() { };
+
+            // Vector values
+            String textP1 = ""
+                + p_p1_dvd.SelectedItem.ToString()
+                + p_p1_printer.SelectedItem.ToString()
+                + p_p1_usb.SelectedItem.ToString()
+                + p_p1_bluRay.SelectedItem.ToString()
+                + p_p1_ijprinter.SelectedItem.ToString()
+                + p_p1_printer3D.SelectedItem.ToString();
+            String textP2 = ""
+                + p_p2_dvd.SelectedItem.ToString()
+                + p_p2_printer.SelectedItem.ToString()
+                + p_p2_usb.SelectedItem.ToString()
+                + p_p2_bluRay.SelectedItem.ToString()
+                + p_p2_ijprinter.SelectedItem.ToString()
+                + p_p2_printer3D.SelectedItem.ToString();
+            String textP3 = ""
+                + p_p3_dvd.SelectedItem.ToString()
+                + p_p3_printer.SelectedItem.ToString()
+                + p_p3_usb.SelectedItem.ToString()
+                + p_p3_bluRay.SelectedItem.ToString()
+                + p_p3_ijprinter.SelectedItem.ToString()
+                + p_p3_printer3D.SelectedItem.ToString();
+            String textP4 = ""
+                + p_p4_dvd.SelectedItem.ToString()
+                + p_p4_printer.SelectedItem.ToString()
+                + p_p4_usb.SelectedItem.ToString()
+                + p_p4_bluRay.SelectedItem.ToString()
+                + p_p4_ijprinter.SelectedItem.ToString()
+                + p_p4_printer3D.SelectedItem.ToString();
+            String textP5 = ""
+                + p_p5_dvd.SelectedItem.ToString()
+                + p_p5_printer.SelectedItem.ToString()
+                + p_p5_usb.SelectedItem.ToString()
+                + p_p5_bluRay.SelectedItem.ToString()
+                + p_p5_ijprinter.SelectedItem.ToString()
+                + p_p5_printer3D.SelectedItem.ToString();
+
+            // get values from ressource pickers
+            dvd = p_dvd.SelectedItem.ToString(); //index 0
+            printer = p_printer.SelectedItem.ToString(); //index 1
+            usb = p_usb.SelectedItem.ToString(); //index 2
+            bluRay = p_bluRay.SelectedItem.ToString(); //index 3
+            ijPrinter = p_ijPrinter.SelectedItem.ToString(); //index 4
+            printer3D = p_printer3D.SelectedItem.ToString(); //index 5
+            // remove unavailable ressources (starting from the last one)
+            if (printer3D == "0") {
+                Debug.WriteLine("textP1 " + textP1);
+                textP1.Remove(4, 1);
+                textP2.Remove(5, 1); textP3.Remove(5, 1);
+                textP4.Remove(5, 1); textP5.Remove(5, 1);
+                Debug.WriteLine("textP1 neu " + textP1);
+            }
+            if (ijPrinter == "0") { textP1.Remove(4, 1);
+                textP2.Remove(4, 1); textP3.Remove(4, 1);
+                textP4.Remove(4, 1); textP5.Remove(4, 1);
+            }
+            if (bluRay == "0") { textP1.Remove(3, 1);
+                textP2.Remove(3, 1); textP3.Remove(3, 1);
+                textP4.Remove(3, 1); textP5.Remove(3, 1);
+            }
+            if (usb == "0") { textP1.Remove(2, 1);
+                Debug.WriteLine("HAGAA");
+                textP2.Remove(2, 1); textP3.Remove(2, 1);
+                textP4.Remove(2, 1); textP5.Remove(2, 1);
+            }
+            if (printer == "0") { textP1.Remove(1, 1);
+                textP2.Remove(1, 1); textP3.Remove(1, 1);
+                textP4.Remove(1, 1); textP5.Remove(1, 1);
+            }
+            if (dvd == "0") { textP1.Remove(0, 1);
+                textP2.Remove(0, 1); textP3.Remove(0, 1);
+                textP4.Remove(0, 1); textP5.Remove(0, 1);
+            }
+
+            // add key value pairs to dictionary
+            int total = Int16.Parse(p_runningprocesses.SelectedItem.ToString());
+            if(total >= 2)
+            {
+                vectorBProcesses.Add(1, textP1);
+                vectorBProcesses.Add(2, textP2);
+            }
+            if(total >= 3){vectorBProcesses.Add(3, textP3);}
+            if(total >= 4){vectorBProcesses.Add(4, textP4);}
+            if(total >= 5){vectorBProcesses.Add(5, textP5);}
+
+            return vectorBProcesses;
+        }
+        public Dictionary<int, String> GetVectorCProcesses()
+        {
+            // create dictionary (keys= numbers 1 to 5 for processes 1 to 5)
+            vectorCProcesses = new Dictionary<int, String>() { };
+
+            // Vector values
+            String textP1 = ""
+                + p_p1_upcoming_dvd.SelectedItem.ToString()
+                + p_p1_upcoming_printer.SelectedItem.ToString()
+                + p_p1_upcoming_usb.SelectedItem.ToString()
+                + p_p1_upcoming_bluRay.SelectedItem.ToString()
+                + p_p1_upcoming_ijprinter.SelectedItem.ToString()
+                + p_p1_upcoming_printer3D.SelectedItem.ToString();
+            String textP2 = ""
+                + p_p2_upcoming_dvd.SelectedItem.ToString()
+                + p_p2_upcoming_printer.SelectedItem.ToString()
+                + p_p2_upcoming_usb.SelectedItem.ToString()
+                + p_p2_upcoming_bluRay.SelectedItem.ToString()
+                + p_p2_upcoming_ijprinter.SelectedItem.ToString()
+                + p_p2_upcoming_printer3D.SelectedItem.ToString();
+            String textP3 = ""
+                + p_p3_upcoming_dvd.SelectedItem.ToString()
+                + p_p3_upcoming_printer.SelectedItem.ToString()
+                + p_p3_upcoming_usb.SelectedItem.ToString()
+                + p_p3_upcoming_bluRay.SelectedItem.ToString()
+                + p_p3_upcoming_ijprinter.SelectedItem.ToString()
+                + p_p3_upcoming_printer3D.SelectedItem.ToString();
+            String textP4 = ""
+                + p_p4_upcoming_dvd.SelectedItem.ToString()
+                + p_p4_upcoming_printer.SelectedItem.ToString()
+                + p_p4_upcoming_usb.SelectedItem.ToString()
+                + p_p4_upcoming_bluRay.SelectedItem.ToString()
+                + p_p4_upcoming_ijprinter.SelectedItem.ToString()
+                + p_p4_upcoming_printer3D.SelectedItem.ToString();
+            String textP5 = ""
+                + p_p5_upcoming_dvd.SelectedItem.ToString()
+                + p_p5_upcoming_printer.SelectedItem.ToString()
+                + p_p5_upcoming_usb.SelectedItem.ToString()
+                + p_p5_upcoming_bluRay.SelectedItem.ToString()
+                + p_p5_upcoming_ijprinter.SelectedItem.ToString()
+                + p_p5_upcoming_printer3D.SelectedItem.ToString();
+
+            // get values from ressource pickers
+            dvd = p_dvd.SelectedItem.ToString(); //index 0
+            printer = p_printer.SelectedItem.ToString(); //index 1
+            usb = p_usb.SelectedItem.ToString(); //index 2
+            bluRay = p_bluRay.SelectedItem.ToString(); //index 3
+            ijPrinter = p_ijPrinter.SelectedItem.ToString(); //index 4
+            printer3D = p_printer3D.SelectedItem.ToString(); //index 5
+
+            // remove unavailable ressources (starting from the last one)
+            if (printer3D == "0")
+            {
+                textP1.Remove(5, 1);
+                textP2.Remove(5, 1); textP3.Remove(5, 1);
+                textP4.Remove(5, 1); textP5.Remove(5, 1);
+            }
+            if (ijPrinter == "0")
+            {
+                textP1.Remove(4, 1);
+                textP2.Remove(4, 1); textP3.Remove(4, 1);
+                textP4.Remove(4, 1); textP5.Remove(4, 1);
+            }
+            if (bluRay == "0")
+            {
+                textP1.Remove(3, 1);
+                textP2.Remove(3, 1); textP3.Remove(3, 1);
+                textP4.Remove(3, 1); textP5.Remove(3, 1);
+            }
+            if (usb == "0")
+            {
+                textP1.Remove(2, 1);
+                textP2.Remove(2, 1); textP3.Remove(2, 1);
+                textP4.Remove(2, 1); textP5.Remove(2, 1);
+            }
+            if (printer == "0")
+            {
+                textP1.Remove(1, 1);
+                textP2.Remove(1, 1); textP3.Remove(1, 1);
+                textP4.Remove(1, 1); textP5.Remove(1, 1);
+            }
+            if (dvd == "0")
+            {
+                textP1.Remove(0, 1);
+                textP2.Remove(0, 1); textP3.Remove(0, 1);
+                textP4.Remove(0, 1); textP5.Remove(0, 1);
+            }
+
+            // add key value pairs to dictionary
+            int total = Int16.Parse(p_runningprocesses.SelectedItem.ToString());
+            if (total >= 2)
+            {
+                vectorCProcesses.Add(1, textP1);
+                vectorCProcesses.Add(2, textP2);
+            }
+            if (total >= 3) { vectorCProcesses.Add(3, textP3); }
+            if (total >= 4) { vectorCProcesses.Add(4, textP4); }
+            if (total >= 5) { vectorCProcesses.Add(5, textP5); }
+
+            return vectorCProcesses;
+        }
 
         /**********************************************************************
         *********************************************************************/
