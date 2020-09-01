@@ -160,12 +160,21 @@ namespace WertheApp.BS
             };
             var b_ClearBusy = new Button {
                 Text = "Clear",
+                /*
                 FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
                 WidthRequest = 60,
-                HeightRequest = 10
+                HeightRequest = 15
+                */
             };
             b_ClearBusy.Clicked += B_ClearBusyClicked; //add Click Event(Method)
             stackLayoutBusy.Children.Add(l_resourcesBusy);
+            var l_Space2 = new Label
+            {
+                Text = " ",
+                WidthRequest = 88,
+                HorizontalOptions = LayoutOptions.Center
+            };
+            stackLayoutBusy.Children.Add(l_Space2);
             stackLayoutBusy.Children.Add(b_ClearBusy);
             stackLayout.Children.Add(stackLayoutBusy);
 
@@ -199,8 +208,19 @@ namespace WertheApp.BS
                 VerticalOptions = LayoutOptions.Center
             };
             stackLayoutUpcoming.Children.Add(l_upcoming);
+
+            var l_Space1 = new Label { Text = " ",
+                WidthRequest = 50,
+                HorizontalOptions = LayoutOptions.Center };
+           
+            stackLayoutUpcoming.Children.Add(l_Space1);
+
             var b_ClearUpcoming = new Button { Text = "Clear",
-                FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), WidthRequest = 60, HeightRequest = 10
+            
+                /*FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
+                WidthRequest = 60,
+                HeightRequest = 25
+                */
             };
             b_ClearUpcoming.Clicked += B_ClearUpcoming_Clicked; //add Click Event(Method)
             stackLayoutUpcoming.Children.Add(b_ClearUpcoming);
@@ -789,12 +809,12 @@ namespace WertheApp.BS
             if (printer3D != "0") { resourceVectorE = "" + resourceVectorE + "    " + printer3D; total++; }
             String vectorEText = "E = (" + resourceVectorE + "    )";
 
-            string attention = "!!! Pick between 2 and 5 resources!";
+            string attention = "\nPick between 2 and 5 resources!";
             if (total < 2 || total > 5)
             {
                 vectorEText = vectorEText + " " + attention;
             }
-
+            vectorEText = vectorEText.Replace("\n", System.Environment.NewLine);
             l_resourceVectorE.Text = vectorEText;
         }
 
@@ -878,7 +898,7 @@ namespace WertheApp.BS
             if (printer3D != "0") { busyResourceVectorB = "" + busyResourceVectorB + "    " + busy_printer3D; }
             String vectorBText = "B = (" + busyResourceVectorB + "    )";
 
-            string attention = "!!! Cannot occupy more resources than available!";
+            string attention = "\nCannot occupy more resources than available!";
             if (busy_dvd > Int32.Parse(dvd) ||
                 busy_printer > Int32.Parse(printer) ||
                 busy_usb > Int32.Parse(usb) ||
@@ -890,7 +910,7 @@ namespace WertheApp.BS
                 vectorBText = vectorBText + " " + attention;
             }
 
-
+            vectorBText = vectorBText.Replace("\n", System.Environment.NewLine);
             l_busyResourceVectorB.Text = vectorBText;
 
         }
@@ -1484,16 +1504,15 @@ namespace WertheApp.BS
                 await DisplayAlert("Alert", "Please define no more than 5 resources", "OK");
             }
             //check busy resources can't be higher than available ressources
-            else if (l_busyResourceVectorB.Text.Contains("!!! Cannot occupy more resources than available!"))
+            else if (l_busyResourceVectorB.Text.Contains("\nCannot occupy more resources than available!"))
             {
                 await DisplayAlert("Alert", "Busy resources can't be higher than available ressources", "OK");
-
             }
             else
             {
-                if (IsLandscape())
+                if (!IsLandscape())
                 {
-                    await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
+                    await DisplayAlert("Alert", "Please hold your phone horizontally for landscape mode", "OK");
                 }
 
                 var exResDict = GetExistingResDict();
@@ -1502,7 +1521,7 @@ namespace WertheApp.BS
                 String VB = GetOnlyDigitsInString(l_busyResourceVectorB.Text);
                 String VC = GetOnlyDigitsInString(l_upcomingVectorC.Text);
                 String VA = GetOnlyDigitsInString(l_freeResourceVectorA.Text);
-                int totalProcesses = Int16.Parse(p_runningprocesses.SelectedIndex.ToString());
+                int totalProcesses = Int16.Parse(p_runningprocesses.SelectedItem.ToString());
                 await Navigation.PushAsync(new Deadlock(exResDict, VE, VB, VC, VA, totalProcesses, GetVectorBProcesses(), GetVectorCProcesses()));
             }
 

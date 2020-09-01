@@ -23,9 +23,13 @@ namespace WertheApp.BS
         public static Dictionary<string, int> exResDict;
         private static String vectorE, vectorB, vectorC, vectorA;
         private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
+        private static int totalProcesses;
 
    
-        public Deadlock(Dictionary<string, int> d, String VE, String VB, String VC, String VA, int totalProcesses, Dictionary<int, String> VBProcesses, Dictionary<int, String> VCProcesses )
+        public Deadlock(Dictionary<string, int> d,
+            String VE, String VB, String VC, String VA,
+            int tProcesses,
+            Dictionary<int, String> VBProcesses, Dictionary<int,String> VCProcesses )
         {
 
             Title = "Deadlock";
@@ -37,7 +41,7 @@ namespace WertheApp.BS
             vectorA = VA;
             vectorBProcesses = VBProcesses;
             vectorCProcesses = VCProcesses;
-
+            totalProcesses = tProcesses;
 
             cellNumber = -1;
 
@@ -153,6 +157,11 @@ namespace WertheApp.BS
         public static Dictionary<int, String> GetVectorCProcesses()
         {
             return vectorCProcesses;
+        }
+
+        public static int GetTotalProcesses()
+        {
+            return totalProcesses;
         }
     }
 }
