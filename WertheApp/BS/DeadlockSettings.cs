@@ -691,6 +691,8 @@ namespace WertheApp.BS
             p_printer.SelectedIndex = 3;
             p_usb.SelectedIndex = 4;
             p_bluRay.SelectedIndex = 2;
+            p_ijPrinter.SelectedIndex = 0;
+            p_printer3D.SelectedIndex = 0;
 
             //set process total
             p_runningprocesses.SelectedIndex = 5;
