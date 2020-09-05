@@ -1607,32 +1607,34 @@ namespace WertheApp.BS
             printer3D = p_printer3D.SelectedItem.ToString(); //index 5
             // remove unavailable ressources (starting from the last one)
             if (printer3D == "0") {
-                Debug.WriteLine("textP1 " + textP1);
-                textP1.Remove(4, 1);
-                textP2.Remove(5, 1); textP3.Remove(5, 1);
-                textP4.Remove(5, 1); textP5.Remove(5, 1);
-                Debug.WriteLine("textP1 neu " + textP1);
+                textP1 = textP1.Remove(4, 1);
+                textP2 = textP2.Remove(5, 1); textP3 = textP3.Remove(5, 1);
+                textP4 = textP4.Remove(5, 1); textP5 = textP5.Remove(5, 1);
             }
-            if (ijPrinter == "0") { textP1.Remove(4, 1);
-                textP2.Remove(4, 1); textP3.Remove(4, 1);
-                textP4.Remove(4, 1); textP5.Remove(4, 1);
+            if (ijPrinter == "0") {
+                textP1 = textP1.Remove(4, 1);
+                textP2 = textP2.Remove(4, 1); textP3 = textP3.Remove(4, 1);
+                textP4 = textP4.Remove(4, 1); textP5 = textP5.Remove(4, 1);
             }
-            if (bluRay == "0") { textP1.Remove(3, 1);
-                textP2.Remove(3, 1); textP3.Remove(3, 1);
-                textP4.Remove(3, 1); textP5.Remove(3, 1);
+            if (bluRay == "0") {
+                textP1 = textP1.Remove(3, 1);
+                textP2 = textP2.Remove(3, 1); textP3 = textP3.Remove(3, 1);
+                textP4 = textP4.Remove(3, 1); textP5 = textP5.Remove(3, 1);
             }
-            if (usb == "0") { textP1.Remove(2, 1);
-                Debug.WriteLine("HAGAA");
-                textP2.Remove(2, 1); textP3.Remove(2, 1);
-                textP4.Remove(2, 1); textP5.Remove(2, 1);
+            if (usb == "0") {
+                textP1 = textP1.Remove(2, 1);
+                textP2 = textP2.Remove(2, 1); textP3 = textP3.Remove(2, 1);
+                textP4 = textP4.Remove(2, 1); textP5 = textP5.Remove(2, 1);
             }
-            if (printer == "0") { textP1.Remove(1, 1);
-                textP2.Remove(1, 1); textP3.Remove(1, 1);
-                textP4.Remove(1, 1); textP5.Remove(1, 1);
+            if (printer == "0") {
+                textP1 = textP1.Remove(1, 1);
+                textP2 = textP2.Remove(1, 1); textP3 = textP3.Remove(1, 1);
+                textP4 = textP4.Remove(1, 1); textP5 = textP5.Remove(1, 1);
             }
-            if (dvd == "0") { textP1.Remove(0, 1);
-                textP2.Remove(0, 1); textP3.Remove(0, 1);
-                textP4.Remove(0, 1); textP5.Remove(0, 1);
+            if (dvd == "0") {
+                textP1 = textP1.Remove(0, 1);
+                textP2 = textP2.Remove(0, 1); textP3 = textP3.Remove(0, 1);
+                textP4 = textP4.Remove(0, 1); textP5 = textP5.Remove(0, 1);
             }
 
             // add key value pairs to dictionary
@@ -1701,39 +1703,39 @@ namespace WertheApp.BS
             // remove unavailable ressources (starting from the last one)
             if (printer3D == "0")
             {
-                textP1.Remove(5, 1);
-                textP2.Remove(5, 1); textP3.Remove(5, 1);
-                textP4.Remove(5, 1); textP5.Remove(5, 1);
+                textP1 = textP1.Remove(5, 1);
+                textP2 = textP2.Remove(5, 1); textP3 = textP3.Remove(5, 1);
+                textP4 = textP4.Remove(5, 1); textP5 = textP5.Remove(5, 1);
             }
             if (ijPrinter == "0")
             {
-                textP1.Remove(4, 1);
-                textP2.Remove(4, 1); textP3.Remove(4, 1);
-                textP4.Remove(4, 1); textP5.Remove(4, 1);
+                textP1 = textP1.Remove(4, 1);
+                textP2 = textP2.Remove(4, 1); textP3 = textP3.Remove(4, 1);
+                textP4 = textP4.Remove(4, 1); textP5 = textP5.Remove(4, 1);
             }
             if (bluRay == "0")
             {
-                textP1.Remove(3, 1);
-                textP2.Remove(3, 1); textP3.Remove(3, 1);
-                textP4.Remove(3, 1); textP5.Remove(3, 1);
+                textP1 = textP1.Remove(3, 1);
+                textP2 = textP2.Remove(3, 1); textP3 = textP3.Remove(3, 1);
+                textP4 = textP4.Remove(3, 1); textP5 = textP5.Remove(3, 1);
             }
             if (usb == "0")
             {
-                textP1.Remove(2, 1);
-                textP2.Remove(2, 1); textP3.Remove(2, 1);
-                textP4.Remove(2, 1); textP5.Remove(2, 1);
+                textP1 = textP1.Remove(2, 1);
+                textP2 = textP2.Remove(2, 1); textP3 = textP3.Remove(2, 1);
+                textP4 = textP4.Remove(2, 1); textP5 = textP5.Remove(2, 1);
             }
             if (printer == "0")
             {
-                textP1.Remove(1, 1);
-                textP2.Remove(1, 1); textP3.Remove(1, 1);
-                textP4.Remove(1, 1); textP5.Remove(1, 1);
+                textP1 = textP1.Remove(1, 1);
+                textP2 = textP2.Remove(1, 1); textP3 = textP3.Remove(1, 1);
+                textP4 = textP4.Remove(1, 1); textP5 = textP5.Remove(1, 1);
             }
             if (dvd == "0")
             {
-                textP1.Remove(0, 1);
-                textP2.Remove(0, 1); textP3.Remove(0, 1);
-                textP4.Remove(0, 1); textP5.Remove(0, 1);
+                textP1 = textP1.Remove(0, 1);
+                textP2 = textP2.Remove(0, 1); textP3 = textP3.Remove(0, 1);
+                textP4 = textP4.Remove(0, 1); textP5 = textP5.Remove(0, 1);
             }
 
             // add key value pairs to dictionary
