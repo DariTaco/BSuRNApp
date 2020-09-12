@@ -21,7 +21,7 @@ namespace WertheApp.BS
         private Picker p_p1_printer, p_p2_printer, p_p3_printer, p_p4_printer, p_p5_printer;
         private Picker p_p1_ijprinter, p_p2_ijprinter, p_p3_ijprinter, p_p4_ijprinter, p_p5_ijprinter;
         private Picker p_p1_printer3D, p_p2_printer3D, p_p3_printer3D, p_p4_printer3D, p_p5_printer3D;
-        private int busy_dvd, busy_usb, busy_bluRay, busy_printer, busy_ijprinter, busy_printer3D;
+        // private int busy_dvd, busy_usb, busy_bluRay, busy_printer, busy_ijprinter, busy_printer3D;
 
 
         private Picker p_p1_upcoming_dvd, p_p2_upcoming_dvd, p_p3_upcoming_dvd, p_p4_upcoming_dvd, p_p5_upcoming_dvd;
@@ -30,7 +30,7 @@ namespace WertheApp.BS
         private Picker p_p1_upcoming_printer, p_p2_upcoming_printer, p_p3_upcoming_printer, p_p4_upcoming_printer, p_p5_upcoming_printer;
         private Picker p_p1_upcoming_ijprinter, p_p2_upcoming_ijprinter, p_p3_upcoming_ijprinter, p_p4_upcoming_ijprinter, p_p5_upcoming_ijprinter;
         private Picker p_p1_upcoming_printer3D, p_p2_upcoming_printer3D, p_p3_upcoming_printer3D, p_p4_upcoming_printer3D, p_p5_upcoming_printer3D;
-        private int upcoming_dvd, upcoming_usb, upcoming_bluRay, upcoming_printer, upcoming_ijprinter;
+        //private int upcoming_dvd, upcoming_usb, upcoming_bluRay, upcoming_printer, upcoming_ijprinter;
 
         private Label l_resourceVectorE, l_busyResourceVectorB, l_freeResourceVectorA, l_upcomingVectorC;
         private StackLayout sl_busyResources, sl_upcomingRequests;
@@ -38,7 +38,7 @@ namespace WertheApp.BS
         private StackLayout sl_upcomingProcess1, sl_upcomingProcess2, sl_upcomingProcess3, sl_upcomingProcess4, sl_upcomingProcess5;
 
         private List<Picker> busyResPickerList, upcomingResPickerList, resPickerList;
-        private int preset;
+        //private int preset;
         private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
 
 
@@ -49,7 +49,7 @@ namespace WertheApp.BS
             busyResPickerList = new List<Picker>();
             upcomingResPickerList = new List<Picker>();
             resPickerList = new List<Picker>();
-            preset = 0;
+            //preset = 0;
 
             CreateContent();
 

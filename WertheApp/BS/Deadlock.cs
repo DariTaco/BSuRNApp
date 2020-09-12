@@ -6,6 +6,7 @@ using System.Linq; //list.Any()
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
+
 namespace WertheApp.BS
 {
 
@@ -25,6 +26,7 @@ namespace WertheApp.BS
         private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
         private static int totalProcesses;
 
+        public static List<int> todoProcesses, doneProcesses; 
    
         public Deadlock(Dictionary<string, int> d,
             String VE, String VB, String VC, String VA,
@@ -42,6 +44,13 @@ namespace WertheApp.BS
             vectorBProcesses = VBProcesses;
             vectorCProcesses = VCProcesses;
             totalProcesses = tProcesses;
+
+            todoProcesses = new List<int>();
+            for(int i = 1; i <= totalProcesses; i++)
+            {
+                todoProcesses.Add(i);
+            }
+            doneProcesses = new List<int>();
 
             cellNumber = -1;
 
@@ -128,7 +137,7 @@ namespace WertheApp.BS
         {
             deadlockCells.Add(new DeadlockViewCell()); //actually creates a new deadlockviewcell
 
-            //listView.ScrollTo(deadlockCells[deadlockCells.Count - 1], ScrollToPosition.End, false);
+            listView.ScrollTo(deadlockCells[deadlockCells.Count - 1], ScrollToPosition.End, false);
         }
 
 
@@ -174,48 +183,98 @@ namespace WertheApp.BS
             return totalProcesses;
         }
 
-
+        public static List<int> GetDoneProcesses()
+        {
+            return doneProcesses;
+        }
         /* LOGIC
          * *********************************************************************
         *********************************************************************/
-        public static void CP1_Clicked()
+
+        public static void CP1_Clicked(ref SKCanvasView sender, ref bool touchable)
         {
             //TODO: nothing happens if process was already selected before or it doesnt exist
-            Debug.WriteLine("#####YOOOO P1######");
-            cellNumber++;
-            AddDeadlockCell();
+            bool found = todoProcesses.Remove(1);
+            //doneProcesses.Add(1);
+            Debug.WriteLine("#####YOOOO P1######"+found);
+            if (found)
+            {
+                doneProcesses.Add(1);
+                sender.EnableTouchEvents = false;
+                touchable = false;
+                //sender.SetTouchSensitive(false);
+                cellNumber++;
+                AddDeadlockCell();
+            }
         }
-        public static void CP2_Clicked()
+        public static void CP2_Clicked(ref SKCanvasView sender, ref bool touchable)
+        {
+            bool found = todoProcesses.Remove(2);
+            Debug.WriteLine("#####YOOOO P2######" + found);
+            if (found)
+            {
+                doneProcesses.Add(2);
+                sender.EnableTouchEvents = false;
+                touchable = false;
+                //sender.SetTouchSensitive(false);
+                cellNumber++;
+                AddDeadlockCell();
+            }
+        }
+        public static void CP3_Clicked(ref SKCanvasView sender, ref bool touchable)
         {
             //TODO: nothing happens if process was already selected before or it doesnt exist
-            Debug.WriteLine("#####YOOOO P2######");
-            cellNumber++;
-            AddDeadlockCell();
+            bool found = todoProcesses.Remove(3);
+            Debug.WriteLine("#####YOOOO P3######" + found);
+            if (found)
+            {
+                doneProcesses.Add(3);
+                sender.EnableTouchEvents = false;
+                touchable = false;
+                //sender.SetTouchSensitive(false);
+                cellNumber++;
+                AddDeadlockCell();
+            }
 
         }
-        public static void CP3_Clicked()
+        public static void CP4_Clicked(ref SKCanvasView sender, ref bool touchable)
         {
             //TODO: nothing happens if process was already selected before or it doesnt exist
-            Debug.WriteLine("#####YOOOO P3######");
-            cellNumber++;
-            AddDeadlockCell();
+            bool found = todoProcesses.Remove(4);
+            Debug.WriteLine("#####YOOOO P4######" + found);
+            if (found)
+            {
+                doneProcesses.Add(4);
+                sender.EnableTouchEvents = false;
+                touchable = false;
+                //sender.SetTouchSensitive(false);
+                cellNumber++;
+                AddDeadlockCell();
+            }
 
         }
-        public static void CP4_Clicked()
+        public static void CP5_Clicked(ref SKCanvasView sender, ref bool touchable)
         {
             //TODO: nothing happens if process was already selected before or it doesnt exist
-            Debug.WriteLine("#####YOOOO P4######");
-            cellNumber++;
-            AddDeadlockCell();
+            bool found = todoProcesses.Remove(5);
+            Debug.WriteLine("#####YOOOO P5######" + found);
+            if (found)
+            {
+                doneProcesses.Add(5);
+                sender.EnableTouchEvents = false;
+                touchable = false;
+                //sender.SetTouchSensitive(false);
+                cellNumber++;
+                AddDeadlockCell();
+            }
 
         }
-        public static void CP5_Clicked()
-        {
-            //TODO: nothing happens if process was already selected before or it doesnt exist
-            Debug.WriteLine("#####YOOOO P5######");
-            cellNumber++;
-            AddDeadlockCell();
 
-        }
+
+    }
+
+    public class DeadlockItemForFuckingViewCell
+    {
+
     }
 }

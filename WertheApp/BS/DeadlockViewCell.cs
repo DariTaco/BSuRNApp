@@ -14,20 +14,26 @@ namespace WertheApp.BS
         private SKCanvasView skiaview;
         private float xe, ye;
         private SKPaint sk_Paint1, sk_blackText, sk_AText, sk_BText, sk_CText, sk_EText,
-            sk_BackgroundBlue, sk_BackgroundRed, sk_BackgroundYellow, sk_BackgroundGreen;
+            sk_BackgroundBlue, sk_BackgroundRed, sk_BackgroundYellow, sk_BackgroundGreen,
+            sk_BackgroundWhite;
 
         private int cellNumber;
 
         private String vectorE, vectorB, vectorC, vectorA;
         private Dictionary<int, String> vectorBProcesses, vectorCProcesses;
         private int totalProcesses;
+        private readonly List<int> doneProcesses; //TODO dass es so bleibt wie beim ersten Mal initialisiert
 
         // Click Sensitive Areas
         private SKRect rect_CP1, rect_CP2, rect_CP3, rect_CP4, rect_CP5;
+        private bool touchable;
+
 
 
         public DeadlockViewCell()
         {
+
+            Debug.WriteLine("CONSTRUCTOR");
             // crate the canvas
             this.skiaview = new SKCanvasView();
             this.skiaview.PaintSurface += PaintSurface;
@@ -45,12 +51,17 @@ namespace WertheApp.BS
             this.vectorBProcesses = Deadlock.GetVectorBProcesses();
             this.totalProcesses = Deadlock.GetTotalProcesses();
 
+            //this.doneProcesses = new List<int>();
+            this.doneProcesses = Deadlock.GetDoneProcesses();
+
+            touchable = true;
         }
 
         //METHODS
         /**********************************************************************
         *********************************************************************/
         // do the drawing
+        //NOTE: GETS CALLED SEVERAL TIMES 
         void PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             //canvas object
@@ -65,17 +76,17 @@ namespace WertheApp.BS
             MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
 
             /*********************HERE GOES THE DRAWING************************/
-         
 
-            if(this.cellNumber == -1)
+            DrawBackground(this.canvas, sk_BackgroundWhite);
+
+            if (this.cellNumber == -1)
             {
-                //DrawBackground(this.canvas, sk_Background);
-                DrawFirstCell(this.canvas);
+                this.DrawFirstCell(this.canvas);
             }
             else
             {
                 //DrawBackground(this.canvas, sk_BackgroundRed);
-                DrawCell(this.canvas);
+                this.DrawCell(this.canvas);
             }
 
             //execute all drawing actions
@@ -94,34 +105,30 @@ namespace WertheApp.BS
 
                     if (rect_CP1.Contains(e.Location))
                     {
-                        Deadlock.CP1_Clicked();
-                        this.skiaview.EnableTouchEvents = false; 
+                        Deadlock.CP1_Clicked(ref this.skiaview, ref this.touchable);
                     }
                     else if (rect_CP2.Contains(e.Location))
                     {
-                        Deadlock.CP2_Clicked();
-                        this.skiaview.EnableTouchEvents = false;
+                        Deadlock.CP2_Clicked(ref this.skiaview, ref this.touchable);
                     }
                     else if (rect_CP3.Contains(e.Location))
                     {
-                        Deadlock.CP3_Clicked();
-                        this.skiaview.EnableTouchEvents = false;
+                        Deadlock.CP3_Clicked(ref this.skiaview, ref this.touchable);
                     }
                     else if (rect_CP4.Contains(e.Location))
                     {
-                        Deadlock.CP4_Clicked();
-                        this.skiaview.EnableTouchEvents = false;
+                        Deadlock.CP4_Clicked(ref this.skiaview, ref this.touchable);
                     }
                     else if (rect_CP5.Contains(e.Location))
                     {
-                        Deadlock.CP5_Clicked();
-                        this.skiaview.EnableTouchEvents = false;
+                        Deadlock.CP5_Clicked(ref this.skiaview, ref this.touchable);
                     }
                     break;
             }
 
             e.Handled = true;
         }
+
         private void CreateTouchSensitiveAreas()
         {
             int startx = 64;
@@ -141,6 +148,12 @@ namespace WertheApp.BS
             //this.canvas.DrawRect(rect_CP5, sk_BackgroundRed);
 
         }
+        public void SetTouchSensitive(bool x)
+        {
+            this.touchable = x;
+            this.skiaview.EnableTouchEvents = x;
+        }
+
         /**********************************************************************
         *********************************************************************/
         public void DrawBackground(SKCanvas canvas, SKPaint color)
@@ -154,18 +167,26 @@ namespace WertheApp.BS
         public void DrawFirstCell(SKCanvas canvas)
         {
 
-            DrawAllVectors(canvas);
-            DrawBusyProcesses(canvas);
-            DrawUpcomingProcesses(canvas);
+            this.DrawAllVectors(canvas);
+            this.DrawBusyProcesses(canvas);
+            this.DrawUpcomingProcesses(canvas);
 
 
             // grid lines
             //showGridLines(canvas);
 
-            // add touch sensitivity
-            this.skiaview.Touch += OnTouch;
-            this.skiaview.EnableTouchEvents = true;
-            CreateTouchSensitiveAreas();
+            // add/disble touch sensitivity
+            if (this.touchable)
+            {
+                this.skiaview.Touch += OnTouch;
+                this.skiaview.EnableTouchEvents = true;
+                this.CreateTouchSensitiveAreas();
+            }
+            else
+            {
+                this.skiaview.EnableTouchEvents = false;
+            }
+
         }
 
         public void showGridLines(SKCanvas canvas)
@@ -214,7 +235,7 @@ namespace WertheApp.BS
 
             //Draw blue background
             SKRect sk_rBackground = new SKRect(xe * x1Backg, ye * y1Backg, xe * x2Backg, ye * (y1Backg + stepBackg)); //left , top, right, bottom
-            this.canvas.DrawRect(sk_rBackground, sk_BackgroundBlue); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackground, sk_BackgroundBlue); //left, top, right, bottom, color
             //Vector E
             SKPoint textPosition = new SKPoint(xe * startx, ye * (starty + step));
             canvas.DrawText(textE, textPosition, sk_blackText);
@@ -245,7 +266,7 @@ namespace WertheApp.BS
 
             //Draw red background
             SKRect sk_rBackground = new SKRect(34 * xe, 2 * ye, 62 * xe, 98 * ye); //left , top, right, bottom
-            this.canvas.DrawRect(sk_rBackground, sk_BackgroundRed); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackground, sk_BackgroundRed); //left, top, right, bottom, color
 
             //Busy Processes
             int startx = 35;
@@ -264,10 +285,19 @@ namespace WertheApp.BS
                     resultText = resultText + inputText[j] + space;
                 }
 
-                //Draw formatted text
-                SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
-                textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                canvas.DrawText(textBusy, sk_p, sk_blackText);
+                // draw only Processes that aren't done yet and draw done Processes as marked
+                if (this.doneProcesses.Contains(i))
+                {
+                    
+                }
+                else
+                {
+                    //Draw formatted text
+                    SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
+                    textBusy = "B(P" + (i + 1) + ") = " + resultText;
+                    canvas.DrawText(textBusy, sk_p, sk_blackText);
+
+                }
 
             }
         }
@@ -277,7 +307,7 @@ namespace WertheApp.BS
 
             //Draw yellow background
             SKRect sk_rBackground = new SKRect(64 * xe, 2 * ye, 92 * xe, 98 * ye); //left , top, right, bottom
-            this.canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
 
             //Upcoming Processes
             int startx = 65;
@@ -317,32 +347,39 @@ namespace WertheApp.BS
 
             //Draw yellow background
             SKRect sk_rBackground = new SKRect(xe * x1Backg, ye * y1Backg, xe * x2Backg, ye * (y1Backg + stepBackg)); //left , top, right, bottom
-            this.canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
             // C(x)
             SKPoint textPosition2 = new SKPoint(xe * startx, ye * starty);
             canvas.DrawText("C(Px) = ( x x x x ) ", textPosition2, sk_blackText);
 
             //Draw red background
             SKRect sk_rBackground2 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg), xe * x2Backg, ye * (y1Backg + stepBackg * 2)); //left , top, right, bottom
-            this.canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
             // B(x)
             SKPoint textPosition3 = new SKPoint(xe * startx, ye * (starty + step));
             canvas.DrawText("B(Px) = ( x x x x ) ", textPosition3, sk_blackText);
 
             //Draw green background
             SKRect sk_rBackground4 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg * 2), xe * x2Backg, ye * (y1Backg + stepBackg * 3)); //left , top, right, bottom
-            this.canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
             // Aneu
             SKPoint textPosition4 = new SKPoint(xe * startx, ye * (starty + step * 2));
             canvas.DrawText("Anew = ( x x x x ) ", textPosition4, sk_blackText);
 
-            DrawBusyProcesses(canvas);
-            DrawUpcomingProcesses(canvas);
+            this.DrawBusyProcesses(canvas);
+            this.DrawUpcomingProcesses(canvas);
 
-            // add touch sensitivity
-            this.skiaview.Touch += OnTouch;
-            this.skiaview.EnableTouchEvents = true;
-            CreateTouchSensitiveAreas();
+            // add/disble touch sensitivity
+            if (this.touchable)
+            {
+                this.skiaview.Touch += OnTouch;
+                this.skiaview.EnableTouchEvents = true;
+                this.CreateTouchSensitiveAreas();
+            }
+            else
+            {
+                this.skiaview.EnableTouchEvents = false;
+            }
         }
 
         /**********************************************************************
@@ -417,6 +454,14 @@ namespace WertheApp.BS
                 StrokeWidth = 5,
                 IsAntialias = true,
                 Color = new SKColor(172, 255, 47).WithAlpha(30)
+            };
+
+            sk_BackgroundWhite = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = SKColors.White
             };
         }
 
