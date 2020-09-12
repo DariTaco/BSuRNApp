@@ -47,6 +47,16 @@ namespace WertheApp.BS
 
             Debug.WriteLine(VE + " " + VB + " " + VC + " " + VA + " " + totalProcesses);
             CreateContent();
+
+            ShowMyHint();
+        }
+
+        //METHODS
+        /**********************************************************************
+        *********************************************************************/
+        public async void ShowMyHint()
+        {
+            await DisplayAlert("Hint", "Pick and click on a process in C until all processes are finished or a Deadlock happens", "OK");
         }
 
         /**********************************************************************
@@ -162,6 +172,50 @@ namespace WertheApp.BS
         public static int GetTotalProcesses()
         {
             return totalProcesses;
+        }
+
+
+        /* LOGIC
+         * *********************************************************************
+        *********************************************************************/
+        public static void CP1_Clicked()
+        {
+            //TODO: nothing happens if process was already selected before or it doesnt exist
+            Debug.WriteLine("#####YOOOO P1######");
+            cellNumber++;
+            AddDeadlockCell();
+        }
+        public static void CP2_Clicked()
+        {
+            //TODO: nothing happens if process was already selected before or it doesnt exist
+            Debug.WriteLine("#####YOOOO P2######");
+            cellNumber++;
+            AddDeadlockCell();
+
+        }
+        public static void CP3_Clicked()
+        {
+            //TODO: nothing happens if process was already selected before or it doesnt exist
+            Debug.WriteLine("#####YOOOO P3######");
+            cellNumber++;
+            AddDeadlockCell();
+
+        }
+        public static void CP4_Clicked()
+        {
+            //TODO: nothing happens if process was already selected before or it doesnt exist
+            Debug.WriteLine("#####YOOOO P4######");
+            cellNumber++;
+            AddDeadlockCell();
+
+        }
+        public static void CP5_Clicked()
+        {
+            //TODO: nothing happens if process was already selected before or it doesnt exist
+            Debug.WriteLine("#####YOOOO P5######");
+            cellNumber++;
+            AddDeadlockCell();
+
         }
     }
 }

@@ -22,6 +22,9 @@ namespace WertheApp.BS
         private Dictionary<int, String> vectorBProcesses, vectorCProcesses;
         private int totalProcesses;
 
+        // Click Sensitive Areas
+        private SKRect rect_CP1, rect_CP2, rect_CP3, rect_CP4, rect_CP5;
+
 
         public DeadlockViewCell()
         {
@@ -41,10 +44,6 @@ namespace WertheApp.BS
             vectorBProcesses = new Dictionary<int, string> { };
             this.vectorBProcesses = Deadlock.GetVectorBProcesses();
             this.totalProcesses = Deadlock.GetTotalProcesses();
-            Debug.WriteLine("Total processes " + totalProcesses);
-            Debug.WriteLine("Process1 " + vectorBProcesses[1]);
-            Debug.WriteLine("Process2 " + vectorBProcesses[2]);
-
 
         }
 
@@ -83,11 +82,70 @@ namespace WertheApp.BS
             this.canvas.Flush();
         }
 
+
+        /* TOUCH SENISITIVIY
+        **********************************************************************
+       *********************************************************************/
+        private async void OnTouch(object sender, SKTouchEventArgs e)
+        {
+            switch (e.ActionType)
+            {
+                case SKTouchAction.Pressed:
+
+                    if (rect_CP1.Contains(e.Location))
+                    {
+                        Deadlock.CP1_Clicked();
+                        this.skiaview.EnableTouchEvents = false; 
+                    }
+                    else if (rect_CP2.Contains(e.Location))
+                    {
+                        Deadlock.CP2_Clicked();
+                        this.skiaview.EnableTouchEvents = false;
+                    }
+                    else if (rect_CP3.Contains(e.Location))
+                    {
+                        Deadlock.CP3_Clicked();
+                        this.skiaview.EnableTouchEvents = false;
+                    }
+                    else if (rect_CP4.Contains(e.Location))
+                    {
+                        Deadlock.CP4_Clicked();
+                        this.skiaview.EnableTouchEvents = false;
+                    }
+                    else if (rect_CP5.Contains(e.Location))
+                    {
+                        Deadlock.CP5_Clicked();
+                        this.skiaview.EnableTouchEvents = false;
+                    }
+                    break;
+            }
+
+            e.Handled = true;
+        }
+        private void CreateTouchSensitiveAreas()
+        {
+            int startx = 64;
+            int endx = 92;
+            int starty = 1;
+            int step = 20;
+
+            //TODO: Depending on how many processes create amount of touch sensitive areas
+            //make zero for P4 & 5 of only 3 Processes are existent for example
+            rect_CP1 = new SKRect(xe * startx, ye * (starty + step * 0), xe * endx, ye * (starty + step * 1));
+            //this.canvas.DrawRect(rect_CP1, sk_BackgroundRed);
+            rect_CP2 = new SKRect(xe * startx, ye * (starty + step * 1), xe * endx, ye * (starty + step * 2));
+            rect_CP3 = new SKRect(xe * startx, ye * (starty + step * 2), xe * endx, ye * (starty + step * 3));
+            //this.canvas.DrawRect(rect_CP3, sk_BackgroundRed);
+            rect_CP4 = new SKRect(xe * startx, ye * (starty + step * 3), xe * endx, ye * (starty + step * 4));
+            rect_CP5 = new SKRect(xe * startx, ye * (starty + step * 4), xe * endx, ye * (starty + step * 5));
+            //this.canvas.DrawRect(rect_CP5, sk_BackgroundRed);
+
+        }
         /**********************************************************************
         *********************************************************************/
         public void DrawBackground(SKCanvas canvas, SKPaint color)
         {
-            SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
+            SKRect sk_rBackground = new SKRect(xe * 00, ye * 00, xe * 100, ye * 100); //left , top, right, bottom
             this.canvas.DrawRect(sk_rBackground, color); //left, top, right, bottom, color
         }
 
@@ -104,6 +162,10 @@ namespace WertheApp.BS
             // grid lines
             //showGridLines(canvas);
 
+            // add touch sensitivity
+            this.skiaview.Touch += OnTouch;
+            this.skiaview.EnableTouchEvents = true;
+            CreateTouchSensitiveAreas();
         }
 
         public void showGridLines(SKCanvas canvas)
@@ -127,10 +189,10 @@ namespace WertheApp.BS
         public void DrawAllVectors(SKCanvas canvas)
         {
             //Fromat text
-            String textE = "   E: ( ";
-            String textB = " - B: ( ";
-            String textC = "C: ( ";
-            String textA = "= A: ( ";
+            String textE = "   E = ( ";
+            String textB = " - B = ( ";
+            String textC = "C = ( ";
+            String textA = "= A = ( ";
             String space = "  ";
             for (int i = 0; i < vectorE.Length; i++)
             {
@@ -145,7 +207,7 @@ namespace WertheApp.BS
             int startx = 5;
             int starty = 15;
             int step = 20;
-            int x1Backg = 5;
+            int x1Backg = 4;
             int x2Backg = 30;
             int y1Backg = 22;
             int stepBackg = 20;
@@ -182,7 +244,7 @@ namespace WertheApp.BS
         {
 
             //Draw red background
-            SKRect sk_rBackground = new SKRect(35 * xe, 5 * ye, 60 * xe, 98 * ye); //left , top, right, bottom
+            SKRect sk_rBackground = new SKRect(34 * xe, 2 * ye, 62 * xe, 98 * ye); //left , top, right, bottom
             this.canvas.DrawRect(sk_rBackground, sk_BackgroundRed); //left, top, right, bottom, color
 
             //Busy Processes
@@ -204,7 +266,7 @@ namespace WertheApp.BS
 
                 //Draw formatted text
                 SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
-                textBusy = "B(P" + (i + 1) + "): " + resultText;
+                textBusy = "B(P" + (i + 1) + ") = " + resultText;
                 canvas.DrawText(textBusy, sk_p, sk_blackText);
 
             }
@@ -214,7 +276,7 @@ namespace WertheApp.BS
         {
 
             //Draw yellow background
-            SKRect sk_rBackground = new SKRect(65 * xe, 5 * ye, 90 * xe, 98 * ye); //left , top, right, bottom
+            SKRect sk_rBackground = new SKRect(64 * xe, 2 * ye, 92 * xe, 98 * ye); //left , top, right, bottom
             this.canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
 
             //Upcoming Processes
@@ -235,7 +297,7 @@ namespace WertheApp.BS
                 }
 
                 SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
-                textUpcoming = "C(P" + (i + 1) + "): " + resultText;
+                textUpcoming = "C(P" + (i + 1) + ") = " + resultText;
                 canvas.DrawText(textUpcoming, sk_p, sk_blackText);
 
             }
@@ -258,21 +320,29 @@ namespace WertheApp.BS
             this.canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
             // C(x)
             SKPoint textPosition2 = new SKPoint(xe * startx, ye * starty);
-            canvas.DrawText("C(Px): ( x x x x ) ", textPosition2, sk_blackText);
+            canvas.DrawText("C(Px) = ( x x x x ) ", textPosition2, sk_blackText);
 
             //Draw red background
             SKRect sk_rBackground2 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg), xe * x2Backg, ye * (y1Backg + stepBackg * 2)); //left , top, right, bottom
             this.canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
             // B(x)
             SKPoint textPosition3 = new SKPoint(xe * startx, ye * (starty + step));
-            canvas.DrawText("B(Px): ( x x x x ) ", textPosition3, sk_blackText);
+            canvas.DrawText("B(Px) = ( x x x x ) ", textPosition3, sk_blackText);
 
             //Draw green background
             SKRect sk_rBackground4 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg * 2), xe * x2Backg, ye * (y1Backg + stepBackg * 3)); //left , top, right, bottom
             this.canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
             // Aneu
             SKPoint textPosition4 = new SKPoint(xe * startx, ye * (starty + step * 2));
-            canvas.DrawText("Aneu: ( x x x x ) ", textPosition4, sk_blackText);
+            canvas.DrawText("Anew = ( x x x x ) ", textPosition4, sk_blackText);
+
+            DrawBusyProcesses(canvas);
+            DrawUpcomingProcesses(canvas);
+
+            // add touch sensitivity
+            this.skiaview.Touch += OnTouch;
+            this.skiaview.EnableTouchEvents = true;
+            CreateTouchSensitiveAreas();
         }
 
         /**********************************************************************
