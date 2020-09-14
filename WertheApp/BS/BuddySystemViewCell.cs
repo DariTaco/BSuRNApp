@@ -39,11 +39,18 @@ namespace WertheApp.BS
             //and since the upper way of copying the list keeps the same references to the original buddysystemblock objects
             //it has to be copied manually
             List<BuddySystemBlock> original = new List<BuddySystemBlock>(BuddySystem.buddySystem);
+
             buddySystem = new List<BuddySystemBlock>();
             for (int i = 0; i < original.Count; i++){
-                BuddySystemBlock b = new BuddySystemBlock(original[i].GetBlockSize(), original[i].GetBuddyNo());
+
+                BuddySystemBlock b = new BuddySystemBlock(
+                    original[i].GetBlockSize(),
+                    original[i].GetBuddyNo());
+
                 if(original[i].GetFree() == false){
-                    b.OccupyBlock(original[i].GetProcessName(), original[i].GetProcessSize());
+                    b.OccupyBlock(
+                        original[i].GetProcessName(),
+                        original[i].GetProcessSize());
                 }
                 buddySystem.Add(b);
              }

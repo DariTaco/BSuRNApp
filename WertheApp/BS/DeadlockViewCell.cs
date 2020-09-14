@@ -11,48 +11,56 @@ namespace WertheApp.BS
     {
         //VARIABLES
         private SKCanvas canvas;
+        SKSurface surface;
         private SKCanvasView skiaview;
         private float xe, ye;
         private SKPaint sk_Paint1, sk_blackText, sk_AText, sk_BText, sk_CText, sk_EText,
             sk_BackgroundBlue, sk_BackgroundRed, sk_BackgroundYellow, sk_BackgroundGreen,
             sk_BackgroundWhite;
 
-        private int cellNumber;
+        private int cellNumber = 0;
+        private static int cellCount = -1;
 
         private String vectorE, vectorB, vectorC, vectorA;
         private Dictionary<int, String> vectorBProcesses, vectorCProcesses;
         private int totalProcesses;
-        private readonly List<int> doneProcesses; //TODO dass es so bleibt wie beim ersten Mal initialisiert
+        private List<int> doneProcesses;
+        public bool P1done, P2done, P3done, P4done, P5done;
 
         // Click Sensitive Areas
         private SKRect rect_CP1, rect_CP2, rect_CP3, rect_CP4, rect_CP5;
         private bool touchable;
 
+        public DeadlockItem item;
 
 
+        //custom contructor unfortunately not possible...
         public DeadlockViewCell()
         {
-
-            Debug.WriteLine("CONSTRUCTOR");
-            // crate the canvas
             this.skiaview = new SKCanvasView();
             this.skiaview.PaintSurface += PaintSurface;
-
-            // assign the canvas to the cell
             this.View = this.skiaview;
 
             this.cellNumber = Deadlock.GetCellNumber();
+            Debug.WriteLine("cell number " + this.cellNumber);
+            this.doneProcesses = Deadlock.GetDoneProcesses();
             this.vectorE = Deadlock.GetVectorE();
             this.vectorB = Deadlock.GetVectorB();
             this.vectorC = Deadlock.GetVectorC();
             this.vectorA = Deadlock.GetVectorA();
             this.vectorCProcesses = Deadlock.GetVectorCProcesses();
-            vectorBProcesses = new Dictionary<int, string> { };
             this.vectorBProcesses = Deadlock.GetVectorBProcesses();
             this.totalProcesses = Deadlock.GetTotalProcesses();
 
-            //this.doneProcesses = new List<int>();
-            this.doneProcesses = Deadlock.GetDoneProcesses();
+            //NOTE: Lists and Arrays in C# do not stay the same
+            //and are recreated a lot since they're not by reference.
+            //somehow bool, int etc stay the same for this viewcellobject
+            //once they're assinged
+            this.P1done = Deadlock.P1done;
+            this.P2done = Deadlock.P2done;
+            this.P3done = Deadlock.P3done;
+            this.P4done = Deadlock.P4done;
+            this.P5done = Deadlock.P5done;
 
             touchable = true;
         }
@@ -65,8 +73,8 @@ namespace WertheApp.BS
         void PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             //canvas object
-            SKSurface surface = e.Surface;
-            this.canvas = surface.Canvas;
+            surface = e.Surface;
+            this.canvas = this.surface.Canvas;
 
             //Important! Otherwise the drawing will look messed up in iOS
             if (this.canvas != null) { this.canvas.Clear(); }
@@ -105,23 +113,23 @@ namespace WertheApp.BS
 
                     if (rect_CP1.Contains(e.Location))
                     {
-                        Deadlock.CP1_Clicked(ref this.skiaview, ref this.touchable);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 1);
                     }
                     else if (rect_CP2.Contains(e.Location))
                     {
-                        Deadlock.CP2_Clicked(ref this.skiaview, ref this.touchable);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 2);
                     }
                     else if (rect_CP3.Contains(e.Location))
                     {
-                        Deadlock.CP3_Clicked(ref this.skiaview, ref this.touchable);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 3);
                     }
                     else if (rect_CP4.Contains(e.Location))
                     {
-                        Deadlock.CP4_Clicked(ref this.skiaview, ref this.touchable);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 4);
                     }
                     else if (rect_CP5.Contains(e.Location))
                     {
-                        Deadlock.CP5_Clicked(ref this.skiaview, ref this.touchable);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 5);
                     }
                     break;
             }
@@ -167,6 +175,7 @@ namespace WertheApp.BS
         public void DrawFirstCell(SKCanvas canvas)
         {
 
+            Debug.WriteLine("draw first cell");
             this.DrawAllVectors(canvas);
             this.DrawBusyProcesses(canvas);
             this.DrawUpcomingProcesses(canvas);
@@ -273,7 +282,7 @@ namespace WertheApp.BS
             int starty = 15;
             int step = 20;
             String textBusy = "";
-            for (int i = 0; i < totalProcesses; i++)
+            for (int i = 0; i < this.totalProcesses; i++)
             {
                 //Fromat text
                 String inputText = vectorBProcesses[i + 1];
@@ -285,19 +294,65 @@ namespace WertheApp.BS
                     resultText = resultText + inputText[j] + space;
                 }
 
+                Debug.WriteLine("done Processes" + this.cellNumber);
+                Debug.WriteLine("P1" + P1done);
+                Debug.WriteLine("P2" + P2done);
+
+                switch (i+1)
+                {
+                    case 1: if (!P1done) { 
+                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
+                            textBusy = "B(P" + (i + 1) + ") = " + resultText;
+                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }; break;
+                    case 2: if (!P2done)
+                        {
+                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
+                            textBusy = "B(P" + (i + 1) + ") = " + resultText;
+                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }; break;
+                    case 3: if (!P3done)
+                        {
+                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
+                            textBusy = "B(P" + (i + 1) + ") = " + resultText;
+                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }; break;
+                    case 4: if (!P4done)
+                        {
+                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
+                            textBusy = "B(P" + (i + 1) + ") = " + resultText;
+                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }; break;
+                    case 5: if (!P5done)
+                        {
+                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
+                            textBusy = "B(P" + (i + 1) + ") = " + resultText;
+                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }; break;
+
+                }
+                /*
+                String print = "";
+                foreach (var pro in doneArr)
+                {
+                    print = print + pro + ",";
+                }
+                Debug.WriteLine("done processes array of " + this.cellNumber + ": " + print);
+
                 // draw only Processes that aren't done yet and draw done Processes as marked
+                
                 if (this.doneProcesses.Contains(i))
                 {
-                    
                 }
                 else
                 {
                     //Draw formatted text
                     SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
                     textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                    canvas.DrawText(textBusy, sk_p, sk_blackText);
+                    this.canvas.DrawText(textBusy, sk_p, sk_blackText);
 
-                }
+                }*/
+
 
             }
         }
@@ -337,6 +392,7 @@ namespace WertheApp.BS
         *********************************************************************/
         public void DrawCell(SKCanvas canvas)
         {
+            Debug.WriteLine("Draw normal cell");
             int startx = 5;
             int starty = 35;
             int step = 20;
