@@ -16,7 +16,7 @@ namespace WertheApp.BS
         private float xe, ye;
         private SKPaint sk_Paint1, sk_blackText, sk_AText, sk_BText, sk_CText, sk_EText,
             sk_BackgroundBlue, sk_BackgroundRed, sk_BackgroundYellow, sk_BackgroundGreen,
-            sk_BackgroundWhite;
+            sk_BackgroundWhite, sk_CheckMarkContour;
 
         private int cellNumber = 0;
         private static int cellCount = -1;
@@ -294,67 +294,74 @@ namespace WertheApp.BS
                     resultText = resultText + inputText[j] + space;
                 }
 
-                Debug.WriteLine("done Processes" + this.cellNumber);
-                Debug.WriteLine("P1" + P1done);
-                Debug.WriteLine("P2" + P2done);
-
+                // draw process
+                SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
                 switch (i+1)
                 {
-                    case 1: if (!P1done) { 
-                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
+                    case 1: if (!P1done)
+                        {
                             textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
-                        }; break;
+                        }
+                        else
+                        {
+                            textBusy = "B(P" + (i + 1) + ") ";
+                            DrawCheckMark(sk_p);
+                        };
+                        break;
                     case 2: if (!P2done)
                         {
-                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
                             textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
-                        }; break;
+                        }
+                        else
+                        {
+                            textBusy = "B(P" + (i + 1) + ") ";
+                            DrawCheckMark(sk_p);
+                        };
+                        break;
                     case 3: if (!P3done)
                         {
-                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
                             textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }
+                        else
+                        {
+                            textBusy = "B(P" + (i + 1) + ") ";
+                            DrawCheckMark(sk_p);
+
                         }; break;
                     case 4: if (!P4done)
                         {
-                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
                             textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }
+                        else
+                        {
+                            textBusy = "B(P" + (i + 1) + ") ";
+                            DrawCheckMark(sk_p);
+
                         }; break;
                     case 5: if (!P5done)
                         {
-                            SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
                             textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                            this.canvas.DrawText(textBusy, sk_p, sk_blackText);
+                        }
+                        else
+                        {
+                            textBusy = "B(P" + (i + 1) + ") ";
+                            DrawCheckMark(sk_p);
+
                         }; break;
-
                 }
-                /*
-                String print = "";
-                foreach (var pro in doneArr)
-                {
-                    print = print + pro + ",";
-                }
-                Debug.WriteLine("done processes array of " + this.cellNumber + ": " + print);
-
-                // draw only Processes that aren't done yet and draw done Processes as marked
-                
-                if (this.doneProcesses.Contains(i))
-                {
-                }
-                else
-                {
-                    //Draw formatted text
-                    SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
-                    textBusy = "B(P" + (i + 1) + ") = " + resultText;
-                    this.canvas.DrawText(textBusy, sk_p, sk_blackText);
-
-                }*/
-
+                this.canvas.DrawText(textBusy, sk_p, sk_blackText);
 
             }
+        }
+
+        public void DrawCheckMark(SKPoint sk_p)
+        {
+            //x on router
+            SKPath cross = new SKPath();
+            cross.MoveTo(sk_p.X + 200, sk_p.Y - 20);
+            cross.RLineTo(+20, +20);
+            cross.RLineTo(+40, -40);
+            canvas.DrawPath(cross, sk_CheckMarkContour);
         }
 
         public void DrawUpcomingProcesses(SKCanvas canvas)
@@ -518,6 +525,14 @@ namespace WertheApp.BS
                 StrokeWidth = 5,
                 IsAntialias = true,
                 Color = SKColors.White
+            };
+
+            sk_CheckMarkContour = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = 5,
+                IsAntialias = true,
+                Color = SKColors.Green
             };
         }
 
