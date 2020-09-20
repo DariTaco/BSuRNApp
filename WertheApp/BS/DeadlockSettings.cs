@@ -1769,5 +1769,15 @@ namespace WertheApp.BS
             }
             return isLandscape;
         }
+
+        /**********************************************************************
+        *********************************************************************/
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            GC.Collect();
+            Debug.WriteLine("RESUME");
+        }
+
     }
 }

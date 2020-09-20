@@ -30,6 +30,8 @@ namespace WertheApp.BS
         public static List<int> todoProcesses, doneProcesses;
         public static Dictionary<int, DeadlockItem> DeadlockItemDict;
         public static bool P1done, P2done, P3done, P4done, P5done;
+        public static String[,] history;
+        public static int currentStep;
 
 
         public Deadlock(Dictionary<string, int> d,
@@ -40,6 +42,7 @@ namespace WertheApp.BS
 
             Title = "Deadlock";
 
+            currentStep = -1;
             exResDict = d; //exResDict["dvd"]
             vectorE = VE;
             vectorB = VB;
@@ -50,6 +53,13 @@ namespace WertheApp.BS
             totalProcesses = tProcesses;
             DeadlockItemDict = new Dictionary<int, DeadlockItem>();
             doneArr = new int[5] { 0,0,0,0,0};
+            //5 processes, 4: processNumber,  Anew, C(Px), B(Px),
+            history = new String[,]{
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" }};
 
             todoProcesses = new List<int>();
             for(int i = 1; i <= totalProcesses; i++)
@@ -59,8 +69,12 @@ namespace WertheApp.BS
             doneProcesses = new List<int>();
 
             cellNumber = -1;
-
-            Debug.WriteLine(VE + " " + VB + " " + VC + " " + VA + " " + totalProcesses);
+            P1done = false;
+            P2done = false;
+            P3done = false;
+            P4done = false;
+            P5done = false;
+            Debug.WriteLine("VE: "+ VE + ", VB: " + VB + ", VC: " + VC + ", VA: " + VA + ", total Processes: " + totalProcesses);
             CreateContent();
 
             ShowMyHint();
@@ -215,7 +229,8 @@ namespace WertheApp.BS
          * *********************************************************************
         *********************************************************************/
 
-        public static void CPx_Clicked(ref SKCanvasView sender, ref bool touchable, int processNumber)
+        public static void CPx_Clicked(ref SKCanvasView sender, ref bool touchable,
+            int processNumber, String oldVA)
         {
             bool found = todoProcesses.Remove(processNumber);
             Debug.WriteLine("#####YOOOO "+ processNumber + "######"+found);
@@ -229,25 +244,69 @@ namespace WertheApp.BS
                 {
                     case 1:
                         P1done = true;
+                        currentStep++;
+                        History(processNumber, oldVA, vectorBProcesses[1]);
                         break;
                     case 2:
                         P2done = true;
+                        currentStep++;
+                        History(processNumber, oldVA, vectorBProcesses[2]);
                         break;
                     case 3:
                         P3done = true;
+                        currentStep++;
+                        History(processNumber, oldVA, vectorBProcesses[3]);
                         break;
                     case 4:
                         P4done = true;
+                        currentStep++;
+                        History(processNumber, oldVA, vectorBProcesses[4]);
                         break;
                     case 5:
                         P5done = true;
+                        currentStep++;
+                        History(processNumber, oldVA, vectorBProcesses[5]);
                         break;
                 }
                 cellNumber++;
                 AddDeadlockCell();
             }
         }
-   
+
+        public static void History(int processNumber, String oldVA, String currVB)
+        {
+            history[currentStep, 0] = processNumber.ToString();
+            history[currentStep, 1] = CalculateANew(oldVA, currVB);
+            //history[currentStep, 2] = vectorBProcesses[processNumber];
+            //history[currentStep, 3] = vectorCProcesses[processNumber];
+        }
+
+        public static String CalculateANew(String oldVA, String currVB)
+        {
+            Debug.WriteLine("Calculation");
+            Debug.WriteLine(oldVA + " + " + currVB);
+            String newA = "";
+            for (int i = 0; i < vectorA.Length; i++)
+            {
+                //Anew = A + B
+                int aplusb = Int16.Parse(oldVA[i].ToString()) + Int16.Parse(currVB[i].ToString());
+                Debug.WriteLine(aplusb);
+                newA = newA + "" + aplusb;
+                Debug.WriteLine(newA);
+            }
+            return newA;
+        }
+
+        public static String GetHistory(int step, int index)
+        {
+            switch (index)
+            {
+                case 0: return history[step, 0]; 
+                case 1: return history[step, 1]; 
+                default: return ""; 
+            }
+            
+        }
     }
 
     public class DeadlockItem

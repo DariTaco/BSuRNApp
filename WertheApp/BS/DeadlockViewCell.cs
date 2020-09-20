@@ -19,7 +19,6 @@ namespace WertheApp.BS
             sk_BackgroundWhite, sk_CheckMarkContour;
 
         private int cellNumber = 0;
-        private static int cellCount = -1;
 
         private String vectorE, vectorB, vectorC, vectorA;
         private Dictionary<int, String> vectorBProcesses, vectorCProcesses;
@@ -32,6 +31,7 @@ namespace WertheApp.BS
         private bool touchable;
 
         public DeadlockItem item;
+        private String history;
 
 
         //custom contructor unfortunately not possible...
@@ -42,12 +42,10 @@ namespace WertheApp.BS
             this.View = this.skiaview;
 
             this.cellNumber = Deadlock.GetCellNumber();
-            Debug.WriteLine("cell number " + this.cellNumber);
             this.doneProcesses = Deadlock.GetDoneProcesses();
             this.vectorE = Deadlock.GetVectorE();
             this.vectorB = Deadlock.GetVectorB();
             this.vectorC = Deadlock.GetVectorC();
-            this.vectorA = Deadlock.GetVectorA();
             this.vectorCProcesses = Deadlock.GetVectorCProcesses();
             this.vectorBProcesses = Deadlock.GetVectorBProcesses();
             this.totalProcesses = Deadlock.GetTotalProcesses();
@@ -63,6 +61,18 @@ namespace WertheApp.BS
             this.P5done = Deadlock.P5done;
 
             touchable = true;
+            if(cellNumber != -1)
+            {
+                this.history = Deadlock.GetHistory(cellNumber, 0);
+                this.vectorA = Deadlock.GetHistory(cellNumber, 1);
+                Debug.WriteLine("history of cell " + cellNumber + ": " + history);
+
+            }
+            else
+            {
+                this.vectorA = Deadlock.GetVectorA();
+
+            }
         }
 
         //METHODS
@@ -111,25 +121,31 @@ namespace WertheApp.BS
             {
                 case SKTouchAction.Pressed:
 
+
                     if (rect_CP1.Contains(e.Location))
                     {
-                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 1);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable,
+                            1, this.vectorA);
                     }
                     else if (rect_CP2.Contains(e.Location))
                     {
-                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 2);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable,
+                            2, this.vectorA);
                     }
                     else if (rect_CP3.Contains(e.Location))
                     {
-                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 3);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable,
+                            3, this.vectorA);
                     }
                     else if (rect_CP4.Contains(e.Location))
                     {
-                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 4);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable,
+                            4, this.vectorA);
                     }
                     else if (rect_CP5.Contains(e.Location))
                     {
-                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable, 5);
+                        Deadlock.CPx_Clicked(ref this.skiaview, ref this.touchable,
+                            5, this.vectorA);
                     }
                     break;
             }
@@ -175,7 +191,6 @@ namespace WertheApp.BS
         public void DrawFirstCell(SKCanvas canvas)
         {
 
-            Debug.WriteLine("draw first cell");
             this.DrawAllVectors(canvas);
             this.DrawBusyProcesses(canvas);
             this.DrawUpcomingProcesses(canvas);
@@ -198,6 +213,8 @@ namespace WertheApp.BS
 
         }
 
+        /**********************************************************************
+        *********************************************************************/
         public void showGridLines(SKCanvas canvas)
         {
             // grid lines
@@ -216,6 +233,8 @@ namespace WertheApp.BS
             }
         }
 
+        /**********************************************************************
+        *********************************************************************/
         public void DrawAllVectors(SKCanvas canvas)
         {
             //Fromat text
@@ -270,6 +289,8 @@ namespace WertheApp.BS
             canvas.DrawText(textA, textPosition4, sk_blackText);
         }
 
+        /**********************************************************************
+        *********************************************************************/
         public void DrawBusyProcesses(SKCanvas canvas)
         {
 
@@ -354,6 +375,8 @@ namespace WertheApp.BS
             }
         }
 
+        /**********************************************************************
+        *********************************************************************/
         public void DrawCheckMark(SKPoint sk_p)
         {
             //x on router
@@ -364,6 +387,8 @@ namespace WertheApp.BS
             canvas.DrawPath(cross, sk_CheckMarkContour);
         }
 
+        /**********************************************************************
+        *********************************************************************/
         public void DrawUpcomingProcesses(SKCanvas canvas)
         {
 
@@ -388,8 +413,71 @@ namespace WertheApp.BS
                     resultText = resultText + inputText[j] + space;
                 }
 
+                // draw process
                 SKPoint sk_p = new SKPoint(xe * startx, ye * (starty + step * i));
-                textUpcoming = "C(P" + (i + 1) + ") = " + resultText;
+                switch (i + 1)
+                {
+                    case 1:
+                        if (!P1done)
+                        {
+                            textUpcoming = "C(P" + (i + 1) + ") = " + resultText;
+                        }
+                        else
+                        {
+                            textUpcoming = " ";
+                            //textUpcoming = "B(P" + (i + 1) + ") ";
+                            //DrawCheckMark(sk_p);
+                        };
+                        break;
+                    case 2:
+                        if (!P2done)
+                        {
+                            textUpcoming = "C(P" + (i + 1) + ") = " + resultText;
+                        }
+                        else
+                        {
+                            textUpcoming = " ";
+                            //textUpcoming = "B(P" + (i + 1) + ") ";
+                            //DrawCheckMark(sk_p);
+                        };
+                        break;
+                    case 3:
+                        if (!P3done)
+                        {
+                            textUpcoming = "C(P" + (i + 1) + ") = " + resultText;
+                        }
+                        else
+                        {
+                            textUpcoming = " ";
+                            //textUpcoming = "B(P" + (i + 1) + ") ";
+                            //DrawCheckMark(sk_p);
+
+                        }; break;
+                    case 4:
+                        if (!P4done)
+                        {
+                            textUpcoming = "C(P" + (i + 1) + ") = " + resultText;
+                        }
+                        else
+                        {
+                            textUpcoming = " ";
+                            //textUpcoming = "B(P" + (i + 1) + ") ";
+                            //DrawCheckMark(sk_p);
+
+                        }; break;
+                    case 5:
+                        if (!P5done)
+                        {
+                            textUpcoming = "C(P" + (i + 1) + ") = " + resultText;
+                        }
+                        else
+                        {
+                            textUpcoming = " ";
+                            //textUpcoming = "B(P" + (i + 1) + ") ";
+                            //DrawCheckMark(sk_p);
+
+                        }; break;
+                }
                 canvas.DrawText(textUpcoming, sk_p, sk_blackText);
 
             }
@@ -399,36 +487,7 @@ namespace WertheApp.BS
         *********************************************************************/
         public void DrawCell(SKCanvas canvas)
         {
-            Debug.WriteLine("Draw normal cell");
-            int startx = 5;
-            int starty = 35;
-            int step = 20;
-            int x1Backg = 5;
-            int x2Backg = 30;
-            int y1Backg = 22;
-            int stepBackg = 20;
-
-            //Draw yellow background
-            SKRect sk_rBackground = new SKRect(xe * x1Backg, ye * y1Backg, xe * x2Backg, ye * (y1Backg + stepBackg)); //left , top, right, bottom
-            canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
-            // C(x)
-            SKPoint textPosition2 = new SKPoint(xe * startx, ye * starty);
-            canvas.DrawText("C(Px) = ( x x x x ) ", textPosition2, sk_blackText);
-
-            //Draw red background
-            SKRect sk_rBackground2 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg), xe * x2Backg, ye * (y1Backg + stepBackg * 2)); //left , top, right, bottom
-            canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
-            // B(x)
-            SKPoint textPosition3 = new SKPoint(xe * startx, ye * (starty + step));
-            canvas.DrawText("B(Px) = ( x x x x ) ", textPosition3, sk_blackText);
-
-            //Draw green background
-            SKRect sk_rBackground4 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg * 2), xe * x2Backg, ye * (y1Backg + stepBackg * 3)); //left , top, right, bottom
-            canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
-            // Aneu
-            SKPoint textPosition4 = new SKPoint(xe * startx, ye * (starty + step * 2));
-            canvas.DrawText("Anew = ( x x x x ) ", textPosition4, sk_blackText);
-
+            DrawCalculation();
             this.DrawBusyProcesses(canvas);
             this.DrawUpcomingProcesses(canvas);
 
@@ -445,11 +504,60 @@ namespace WertheApp.BS
             }
         }
 
+        private void DrawCalculation()
+        {
+            int startx = 5;
+            int starty = 35;
+            int step = 20;
+            int x1Backg = 5;
+            int x2Backg = 30;
+            int y1Backg = 22;
+            int stepBackg = 20;
+
+            String currVB = vectorBProcesses[Int16.Parse(history)];
+            String currVC = vectorCProcesses[Int16.Parse(history)];
+            String currVA = vectorA;
+
+            //Fromat text
+            String resultTextVB = "B(P" + history + ") = ( ";
+            String resultTextVC = "C(P" + history + ") = ( ";
+            String resultTextVA = "Anew = ( ";
+            String space = "  ";
+            for (int j = 0; j < currVB.Length; j++)
+            {
+                if (j == currVB.Length - 1) { space = " )"; }
+                resultTextVB = resultTextVB + currVB[j] + space;
+                resultTextVC = resultTextVC + currVC[j] + space;
+                resultTextVA = resultTextVA + currVA[j] + space;
+            }
+               
+            
+            //Draw yellow background
+            SKRect sk_rBackground = new SKRect(xe * x1Backg, ye * y1Backg, xe * x2Backg, ye * (y1Backg + stepBackg)); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
+            // C(x)
+            SKPoint textPosition2 = new SKPoint(xe * startx, ye * starty);
+            canvas.DrawText(resultTextVC, textPosition2, sk_blackText);
+
+            //Draw red background
+            SKRect sk_rBackground2 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg), xe * x2Backg, ye * (y1Backg + stepBackg * 2)); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
+            // B(x)
+            SKPoint textPosition3 = new SKPoint(xe * startx, ye * (starty + step));
+            canvas.DrawText(resultTextVB, textPosition3, sk_blackText);
+
+            //Draw green background
+            SKRect sk_rBackground4 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg * 2), xe * x2Backg, ye * (y1Backg + stepBackg * 3)); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
+            // Aneu
+            SKPoint textPosition4 = new SKPoint(xe * startx, ye * (starty + step * 2));
+            canvas.DrawText(resultTextVA, textPosition4, sk_blackText);
+        }
         /**********************************************************************
         *********************************************************************/
         private void MakeSKPaint()
         {
-            int vectorTextSize = 12;
+            int vectorTextSize = 10;
             //black neutral text
             sk_blackText = new SKPaint
             {
