@@ -14,6 +14,7 @@ namespace WertheApp.BS
     {
         //VARIABLES
         private static Button b_Next;
+        private static Label l_info;
         public static ListView listView;
         public static ObservableCollection<DeadlockViewCell> deadlockCells; // deadlock canvas
         public static int cellNumber;
@@ -32,6 +33,7 @@ namespace WertheApp.BS
         public static bool P1done, P2done, P3done, P4done, P5done;
         public static String[,] history;
         public static int currentStep;
+        public static String currentAnew;
 
 
         public Deadlock(Dictionary<string, int> d,
@@ -74,10 +76,18 @@ namespace WertheApp.BS
             P3done = false;
             P4done = false;
             P5done = false;
-            Debug.WriteLine("VE: "+ VE + ", VB: " + VB + ", VC: " + VC + ", VA: " + VA + ", total Processes: " + totalProcesses);
+            //Debug.WriteLine("VE: "+ VE + ", VB: " + VB + ", VC: " + VC + ", VA: " + VA + ", total Processes: " + totalProcesses);
+
+            currentAnew = vectorA;
             CreateContent();
 
             ShowMyHint();
+            bool deadlock = CheckIfDeadlock();
+            if (deadlock)
+            {
+                l_info.TextColor = Color.Red;
+                l_info.Text = "Some processes cannot terminate => deadlock.";
+            }
         }
 
         //METHODS
@@ -137,9 +147,17 @@ namespace WertheApp.BS
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.FillAndExpand
             };
-            b_Next.Clicked += B_Next_Clicked;
+            //b_Next.Clicked += B_Next_Clicked;
 
-            stackLayout.Children.Add(b_Next);
+            //stackLayout.Children.Add(b_Next);
+            l_info = new Label
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Text = "pick a process",
+                TextColor = Color.Blue};
+            stackLayout.Children.Add(l_info);
+
             grid.Children.Add(stackLayout, 0, 1);
         }
 
@@ -232,10 +250,19 @@ namespace WertheApp.BS
         public static void CPx_Clicked(ref SKCanvasView sender, ref bool touchable,
             int processNumber, String oldVA)
         {
-            bool found = todoProcesses.Remove(processNumber);
-            Debug.WriteLine("#####YOOOO "+ processNumber + "######"+found);
-            if (found)
+            bool found = todoProcesses.Contains(processNumber);
+            bool fits = CheckIfUpcomingProcessFitsInVectorA(vectorCProcesses[processNumber], oldVA);
+            l_info.Text = "";
+            l_info.TextColor = Color.Black;
+            if (!fits && found)
             {
+                l_info.TextColor = Color.Red;
+                l_info.Text = "Not enough free resources for Upcoming Process C(P" + processNumber + ") !";
+            }
+            if (found && fits)
+            {
+     
+                todoProcesses.Remove(processNumber);
                 doneArr[processNumber - 1] = processNumber;
                 doneProcesses.Add(processNumber);
                 sender.EnableTouchEvents = false;
@@ -246,26 +273,31 @@ namespace WertheApp.BS
                         P1done = true;
                         currentStep++;
                         History(processNumber, oldVA, vectorBProcesses[1]);
+                        DisplayInfo(processNumber);
                         break;
                     case 2:
                         P2done = true;
                         currentStep++;
                         History(processNumber, oldVA, vectorBProcesses[2]);
+                        DisplayInfo(processNumber);
                         break;
                     case 3:
                         P3done = true;
                         currentStep++;
                         History(processNumber, oldVA, vectorBProcesses[3]);
+                        DisplayInfo(processNumber);
                         break;
                     case 4:
                         P4done = true;
                         currentStep++;
                         History(processNumber, oldVA, vectorBProcesses[4]);
+                        DisplayInfo(processNumber);
                         break;
                     case 5:
                         P5done = true;
                         currentStep++;
                         History(processNumber, oldVA, vectorBProcesses[5]);
+                        DisplayInfo(processNumber);
                         break;
                 }
                 cellNumber++;
@@ -273,30 +305,37 @@ namespace WertheApp.BS
             }
         }
 
+
+        /**********************************************************************
+        *********************************************************************/
         public static void History(int processNumber, String oldVA, String currVB)
         {
             history[currentStep, 0] = processNumber.ToString();
             history[currentStep, 1] = CalculateANew(oldVA, currVB);
+            currentAnew = history[currentStep, 1];
             //history[currentStep, 2] = vectorBProcesses[processNumber];
             //history[currentStep, 3] = vectorCProcesses[processNumber];
         }
 
+
+        /**********************************************************************
+        *********************************************************************/
         public static String CalculateANew(String oldVA, String currVB)
         {
-            Debug.WriteLine("Calculation");
-            Debug.WriteLine(oldVA + " + " + currVB);
+
             String newA = "";
             for (int i = 0; i < vectorA.Length; i++)
             {
                 //Anew = A + B
                 int aplusb = Int16.Parse(oldVA[i].ToString()) + Int16.Parse(currVB[i].ToString());
-                Debug.WriteLine(aplusb);
                 newA = newA + "" + aplusb;
-                Debug.WriteLine(newA);
             }
             return newA;
         }
 
+
+        /**********************************************************************
+        *********************************************************************/
         public static String GetHistory(int step, int index)
         {
             switch (index)
@@ -307,8 +346,75 @@ namespace WertheApp.BS
             }
             
         }
+
+
+        /**********************************************************************
+        *********************************************************************/
+        public static bool CheckIfUpcomingProcessFitsInVectorA(String C, String A)
+        {
+            for (int i = 0; i < A.Length; i++)
+            {
+                //Anew = A - C
+                int aminusc = Int16.Parse(A[i].ToString()) - Int16.Parse(C[i].ToString());
+                if(aminusc < 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        /**********************************************************************
+        *********************************************************************/
+        public static bool CheckIfDeadlock()
+        {
+            String vectorP = "";
+            int counter = 0;
+            foreach (int processNumber in todoProcesses)
+            {
+                vectorP = vectorCProcesses[processNumber];
+                bool fit  = CheckIfUpcomingProcessFitsInVectorA(vectorP, currentAnew);
+                if (!fit)
+                {
+                    counter++;
+                }
+
+            }
+            if (counter == todoProcesses.Count)
+            {
+                return true; //deadlock
+            }
+            return false;
+
+        }
+
+        public static bool checkIfDone()
+        {
+            return (doneProcesses.Count == GetTotalProcesses());
+        }
+
+        private static void DisplayInfo(int processNumber)
+        {
+            l_info.TextColor = Color.Blue;
+            l_info.Text = "Process " + processNumber + " done! Pick another process.";
+
+            bool deadlock = CheckIfDeadlock();
+
+            bool done = checkIfDone();
+            if (done) {
+                l_info.TextColor = Color.Blue;
+                l_info.Text = "All processes can terminate => no deadlock.";
+            }else if (deadlock)
+            {
+                l_info.TextColor = Color.Red;
+                l_info.Text = "Some processes cannot terminate => deadlock.";
+            }
+        }
+
     }
 
+
+    /**********************************************************************
+    *********************************************************************/
     public class DeadlockItem
     {
         List<int> doneProcesses;
