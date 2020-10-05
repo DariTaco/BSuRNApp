@@ -106,7 +106,7 @@ namespace WertheApp.BS
             var grid = new Grid();
             this.Content = grid;
             grid.RowDefinitions = new RowDefinitionCollection {
-                    new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(6, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
             CreateTopHalf(grid);
@@ -155,7 +155,9 @@ namespace WertheApp.BS
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Text = "pick a process",
-                TextColor = Color.Blue};
+                TextColor = Color.Blue,
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label))
+            };
             stackLayout.Children.Add(l_info);
 
             grid.Children.Add(stackLayout, 0, 1);
@@ -257,7 +259,7 @@ namespace WertheApp.BS
             if (!fits && found)
             {
                 l_info.TextColor = Color.Red;
-                l_info.Text = "Not enough free resources for Upcoming Process C(P" + processNumber + ") !";
+                l_info.Text = "Not enough free resources for upcoming requests C(P" + processNumber + ") !";
             }
             if (found && fits)
             {

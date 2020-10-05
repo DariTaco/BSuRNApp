@@ -194,7 +194,7 @@ namespace WertheApp.BS
             this.DrawAllVectors(canvas);
             this.DrawBusyProcesses(canvas);
             this.DrawUpcomingProcesses(canvas);
-
+            
 
             // grid lines
             //showGridLines(canvas);
@@ -213,6 +213,12 @@ namespace WertheApp.BS
 
         }
 
+        public void DrawDividingLine()
+        {
+            SKPoint sk_p1 = new SKPoint(xe * 0, ye * 0);
+            SKPoint sk_p2 = new SKPoint(xe * 100, ye * 0);
+            canvas.DrawLine(sk_p1, sk_p2, sk_Paint1);
+        }
         /**********************************************************************
         *********************************************************************/
         public void showGridLines(SKCanvas canvas)
@@ -300,7 +306,7 @@ namespace WertheApp.BS
 
             //Busy Processes
             int startx = 35;
-            int starty = 15;
+            int starty = 13;
             int step = 20;
             String textBusy = "";
             for (int i = 0; i < this.totalProcesses; i++)
@@ -398,7 +404,7 @@ namespace WertheApp.BS
 
             //Upcoming Processes
             int startx = 65;
-            int starty = 15;
+            int starty = 13;
             int step = 20;
             String textUpcoming = "";
             for (int i = 0; i < totalProcesses; i++)
@@ -490,6 +496,7 @@ namespace WertheApp.BS
             DrawCalculation();
             this.DrawBusyProcesses(canvas);
             this.DrawUpcomingProcesses(canvas);
+            this.DrawDividingLine();
 
             // add/disble touch sensitivity
             if (this.touchable)
@@ -557,7 +564,7 @@ namespace WertheApp.BS
         *********************************************************************/
         private void MakeSKPaint()
         {
-            int vectorTextSize = 10;
+            int vectorTextSize = 9;
             //black neutral text
             sk_blackText = new SKPaint
             {
