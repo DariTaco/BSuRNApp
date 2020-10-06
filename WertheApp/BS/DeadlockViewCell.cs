@@ -12,7 +12,7 @@ namespace WertheApp.BS
         //VARIABLES
         private SKCanvas canvas;
         SKSurface surface;
-        private SKCanvasView skiaview;
+        public SKCanvasView skiaview;
         private float xe, ye;
         private SKPaint sk_Paint1, sk_blackText, sk_AText, sk_BText, sk_CText, sk_EText,
             sk_BackgroundBlue, sk_BackgroundRed, sk_BackgroundYellow, sk_BackgroundGreen,
@@ -28,7 +28,7 @@ namespace WertheApp.BS
 
         // Click Sensitive Areas
         private SKRect rect_CP1, rect_CP2, rect_CP3, rect_CP4, rect_CP5;
-        private bool touchable;
+        public bool touchable;
 
         public DeadlockItem item;
         private String history;
@@ -155,12 +155,13 @@ namespace WertheApp.BS
 
         private void CreateTouchSensitiveAreas()
         {
-            int startx = 64;
-            int endx = 92;
-            int starty = 1;
-            int step = 20;
-
-            //TODO: Depending on how many processes create amount of touch sensitive areas
+            //int startx = 64;
+            //int endx = 92;
+            int startx = 34;
+            int endx = 62;
+            int starty = 2;
+            int step = 19;
+           
             //make zero for P4 & 5 of only 3 Processes are existent for example
             rect_CP1 = new SKRect(xe * startx, ye * (starty + step * 0), xe * endx, ye * (starty + step * 1));
             //this.canvas.DrawRect(rect_CP1, sk_BackgroundRed);
@@ -301,11 +302,12 @@ namespace WertheApp.BS
         {
 
             //Draw red background
-            SKRect sk_rBackground = new SKRect(34 * xe, 2 * ye, 62 * xe, 98 * ye); //left , top, right, bottom
+            SKRect sk_rBackground = new SKRect(64 * xe, 2 * ye, 92 * xe, 98 * ye); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground, sk_BackgroundRed); //left, top, right, bottom, color
 
             //Busy Processes
-            int startx = 35;
+            //int startx = 35;
+            int startx = 65;
             int starty = 13;
             int step = 20;
             String textBusy = "";
@@ -399,13 +401,15 @@ namespace WertheApp.BS
         {
 
             //Draw yellow background
-            SKRect sk_rBackground = new SKRect(64 * xe, 2 * ye, 92 * xe, 98 * ye); //left , top, right, bottom
+            SKRect sk_rBackground = new SKRect(34 * xe, 2 * ye, 62 * xe, 98 * ye); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
 
             //Upcoming Processes
-            int startx = 65;
+            //int startx = 65;
+            int startx = 35;
             int starty = 13;
             int step = 20;
+
             String textUpcoming = "";
             for (int i = 0; i < totalProcesses; i++)
             {

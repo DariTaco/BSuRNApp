@@ -13,7 +13,7 @@ namespace WertheApp.BS
     public class Deadlock: ContentPage
     {
         //VARIABLES
-        private static Button b_Next;
+        private static Button b_undo;
         private static Label l_info;
         public static ListView listView;
         public static ObservableCollection<DeadlockViewCell> deadlockCells; // deadlock canvas
@@ -29,7 +29,6 @@ namespace WertheApp.BS
         private static int[] doneArr;
 
         public static List<int> todoProcesses, doneProcesses;
-        public static Dictionary<int, DeadlockItem> DeadlockItemDict;
         public static bool P1done, P2done, P3done, P4done, P5done;
         public static String[,] history;
         public static int currentStep;
@@ -53,7 +52,6 @@ namespace WertheApp.BS
             vectorBProcesses = VBProcesses;
             vectorCProcesses = VCProcesses;
             totalProcesses = tProcesses;
-            DeadlockItemDict = new Dictionary<int, DeadlockItem>();
             doneArr = new int[5] { 0,0,0,0,0};
             //5 processes, 4: processNumber,  Anew, C(Px), B(Px),
             history = new String[,]{
@@ -88,6 +86,7 @@ namespace WertheApp.BS
                 l_info.TextColor = Color.Red;
                 l_info.Text = "Some processes cannot terminate => deadlock.";
             }
+
         }
 
         //METHODS
@@ -106,7 +105,7 @@ namespace WertheApp.BS
             var grid = new Grid();
             this.Content = grid;
             grid.RowDefinitions = new RowDefinitionCollection {
-                    new RowDefinition{ Height = new GridLength(6, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(5, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
             CreateTopHalf(grid);
@@ -141,15 +140,6 @@ namespace WertheApp.BS
 
             };
 
-            b_Next = new Button
-            {
-                Text = "Next",
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.FillAndExpand
-            };
-            //b_Next.Clicked += B_Next_Clicked;
-
-            //stackLayout.Children.Add(b_Next);
             l_info = new Label
             {
                 VerticalOptions = LayoutOptions.Center,
@@ -160,15 +150,66 @@ namespace WertheApp.BS
             };
             stackLayout.Children.Add(l_info);
 
+            b_undo = new Button
+            {
+                Text = "Undo"
+            };
+            b_undo.Clicked += B_Undo_Clicked;
+            b_undo.IsEnabled = false;
+
+            stackLayout.Children.Add(b_undo);
+
             grid.Children.Add(stackLayout, 0, 1);
         }
 
         /**********************************************************************
         *********************************************************************/
-        static void B_Next_Clicked(object sender, EventArgs e)
+        static void B_Undo_Clicked(object sender, EventArgs e)
         {
-            cellNumber++;
-            AddDeadlockCell();
+            deadlockCells.Remove(deadlockCells.Last());
+
+            //Variablen und Listen updaten
+            int processNumber = doneProcesses.Last();
+            Debug.WriteLine("done processes Last:" + doneProcesses.Last());
+            switch (processNumber)
+            {
+                case 1:
+                    P1done = false;
+                    break;
+                case 2:
+                    P2done = false;
+                    break;
+                case 3:
+                    P3done = false;
+                    break;
+                case 4:
+                    P4done = false;
+                    break;
+                case 5:
+                    P5done = false;
+                    break;
+            }
+            history[processNumber-1, 0] = "0";
+            history[processNumber-1, 1] = "0";
+            todoProcesses.Add(processNumber);
+            doneProcesses.Remove(processNumber);
+            currentStep--;
+
+            //check if undo is still possible
+            if (!doneProcesses.Any())
+            {
+                b_undo.IsEnabled = false;
+                Debug.WriteLine("Empty");
+            }
+
+            //TODO: enable touch sensitiveness
+            deadlockCells[0].SetTouchSensitive(true);
+            deadlockCells[0].skiaview.EnableTouchEvents = true;
+            deadlockCells[0].touchable = true;
+            deadlockCells.Last().SetTouchSensitive(true);
+            deadlockCells.Last().skiaview.EnableTouchEvents = true;
+            deadlockCells.Last().touchable = true;
+            deadlockCells.Last().Paint();
         }
 
         /**********************************************************************
@@ -180,10 +221,11 @@ namespace WertheApp.BS
             //vectorBProcesses, vectorCProcesses,
             //totalProcesses, doneProcesses);
             DeadlockItem item = new DeadlockItem(cellNumber, doneProcesses);
-            DeadlockItemDict.Add(cellNumber, item);
+            //TODO: hier Referenz übergeben!!!
             deadlockCells.Add(new DeadlockViewCell()); //actually creates a new deadlockviewcell and doesn't pass the reference
 
-            //listView.ScrollTo(deadlockCells[deadlockCells.Count - 1], ScrollToPosition.End, false);
+   
+            //listView.ScrollTo(deadlockCells[deadlockCells.Count-1], ScrollToPosition.End, false);
         }
 
 
@@ -233,10 +275,6 @@ namespace WertheApp.BS
         {
             return doneProcesses;
         }
-        public static DeadlockItem GetItemFromDict(int key)
-        {
-            return DeadlockItemDict[key];
-        }
         public static ObservableCollection<DeadlockViewCell> GetDeadlockCellsCollection()
         {
             return deadlockCells;
@@ -254,8 +292,8 @@ namespace WertheApp.BS
         {
             bool found = todoProcesses.Contains(processNumber);
             bool fits = CheckIfUpcomingProcessFitsInVectorA(vectorCProcesses[processNumber], oldVA);
-            l_info.Text = "";
-            l_info.TextColor = Color.Black;
+            //l_info.Text = "";
+            //l_info.TextColor = Color.Black;
             if (!fits && found)
             {
                 l_info.TextColor = Color.Red;
@@ -304,6 +342,7 @@ namespace WertheApp.BS
                 }
                 cellNumber++;
                 AddDeadlockCell();
+                b_undo.IsEnabled = true;
             }
         }
 
