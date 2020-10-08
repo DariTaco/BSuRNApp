@@ -30,9 +30,10 @@ namespace WertheApp.BS
         private SKRect rect_CP1, rect_CP2, rect_CP3, rect_CP4, rect_CP5;
         public bool touchable;
 
+
+
         public DeadlockItem item;
         private String history;
-
 
         //custom contructor unfortunately not possible...
         public DeadlockViewCell()
@@ -61,11 +62,14 @@ namespace WertheApp.BS
             this.P5done = Deadlock.P5done;
 
             touchable = true;
+         
             if(cellNumber != -1)
             {
                 this.history = Deadlock.GetHistory(cellNumber, 0);
                 this.vectorA = Deadlock.GetHistory(cellNumber, 1);
                 Debug.WriteLine("history of cell " + cellNumber + ": " + history);
+                //Deadlock.deadLockViewCellCansvasList.Add(this.skiaview);
+                //Deadlock.deadLockViewCellTouchableList.Add(this.touchable);
 
             }
             else
@@ -79,7 +83,6 @@ namespace WertheApp.BS
         /**********************************************************************
         *********************************************************************/
         // do the drawing
-        //NOTE: GETS CALLED SEVERAL TIMES 
         void PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             //canvas object
@@ -109,18 +112,21 @@ namespace WertheApp.BS
 
             //execute all drawing actions
             this.canvas.Flush();
+
+            Debug.WriteLine("Draw canvas of " + this.Id);
+
         }
 
 
-        /* TOUCH SENISITIVIY
-        **********************************************************************
-       *********************************************************************/
-        private async void OnTouch(object sender, SKTouchEventArgs e)
+            /* TOUCH SENISITIVIY
+            **********************************************************************
+           *********************************************************************/
+            private async void OnTouch(object sender, SKTouchEventArgs e)
         {
             switch (e.ActionType)
             {
                 case SKTouchAction.Pressed:
-
+                    Debug.WriteLine(this.Id);
 
                     if (rect_CP1.Contains(e.Location))
                     {
@@ -172,11 +178,6 @@ namespace WertheApp.BS
             rect_CP5 = new SKRect(xe * startx, ye * (starty + step * 4), xe * endx, ye * (starty + step * 5));
             //this.canvas.DrawRect(rect_CP5, sk_BackgroundRed);
 
-        }
-        public void SetTouchSensitive(bool x)
-        {
-            this.touchable = x;
-            this.skiaview.EnableTouchEvents = x;
         }
 
         /**********************************************************************

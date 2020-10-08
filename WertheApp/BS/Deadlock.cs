@@ -34,6 +34,11 @@ namespace WertheApp.BS
         public static int currentStep;
         public static String currentAnew;
 
+        public static List<bool> deadLockViewCellTouchableList;
+        public static List<SKCanvasView> deadLockViewCellCansvasList;
+        public static List<DeadlockViewCell> deadLockViewCellList;
+
+
 
         public Deadlock(Dictionary<string, int> d,
             String VE, String VB, String VC, String VA,
@@ -87,6 +92,9 @@ namespace WertheApp.BS
                 l_info.Text = "Some processes cannot terminate => deadlock.";
             }
 
+            deadLockViewCellTouchableList = new List<bool>();
+            deadLockViewCellCansvasList = new List<SKCanvasView>();
+            deadLockViewCellList = new List<DeadlockViewCell>();
         }
 
         //METHODS
@@ -170,7 +178,7 @@ namespace WertheApp.BS
 
             //Variablen und Listen updaten
             int processNumber = doneProcesses.Last();
-            Debug.WriteLine("done processes Last:" + doneProcesses.Last());
+            //Debug.WriteLine("done processes Last:" + doneProcesses.Last());
             switch (processNumber)
             {
                 case 1:
@@ -194,22 +202,24 @@ namespace WertheApp.BS
             todoProcesses.Add(processNumber);
             doneProcesses.Remove(processNumber);
             currentStep--;
+            cellNumber--;
 
             //check if undo is still possible
             if (!doneProcesses.Any())
             {
                 b_undo.IsEnabled = false;
-                Debug.WriteLine("Empty");
             }
 
-            //TODO: enable touch sensitiveness
-            deadlockCells[0].SetTouchSensitive(true);
-            deadlockCells[0].skiaview.EnableTouchEvents = true;
-            deadlockCells[0].touchable = true;
-            deadlockCells.Last().SetTouchSensitive(true);
-            deadlockCells.Last().skiaview.EnableTouchEvents = true;
-            deadlockCells.Last().touchable = true;
+            Debug.WriteLine("count in observable collection" + deadlockCells.Count());
             deadlockCells.Last().Paint();
+
+            //TODO: enable touch sensitiveness for Android as well
+            Debug.WriteLine("current step" + currentStep);
+            deadLockViewCellTouchableList[currentStep+1] = true;
+            deadLockViewCellCansvasList[currentStep+1].EnableTouchEvents = true;
+
+            Debug.WriteLine("dvtl count = " + deadLockViewCellTouchableList.Count);
+
         }
 
         /**********************************************************************
@@ -221,8 +231,9 @@ namespace WertheApp.BS
             //vectorBProcesses, vectorCProcesses,
             //totalProcesses, doneProcesses);
             DeadlockItem item = new DeadlockItem(cellNumber, doneProcesses);
-            //TODO: hier Referenz übergeben!!!
+        
             deadlockCells.Add(new DeadlockViewCell()); //actually creates a new deadlockviewcell and doesn't pass the reference
+            //can't even pass reference because Add method doesn't implement it
 
    
             //listView.ScrollTo(deadlockCells[deadlockCells.Count-1], ScrollToPosition.End, false);
@@ -307,6 +318,10 @@ namespace WertheApp.BS
                 doneProcesses.Add(processNumber);
                 sender.EnableTouchEvents = false;
                 touchable = false;
+
+                // ad to List so that reference is later accessible
+                deadLockViewCellCansvasList.Add(sender);
+                deadLockViewCellTouchableList.Add(touchable);
                 switch (processNumber)
                 {
                     case 1:
