@@ -334,8 +334,8 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textBusy = "B(P" + (i + 1) + ") ";
-                            DrawCheckMark(sk_p);
+                            textBusy = "";
+                            //DrawCheckMark(sk_p);
                         };
                         break;
                     case 2: if (!P2done)
@@ -344,8 +344,8 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textBusy = "B(P" + (i + 1) + ") ";
-                            DrawCheckMark(sk_p);
+                            textBusy = "";
+                            //DrawCheckMark(sk_p);
                         };
                         break;
                     case 3: if (!P3done)
@@ -354,8 +354,8 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textBusy = "B(P" + (i + 1) + ") ";
-                            DrawCheckMark(sk_p);
+                            textBusy = "";
+                            //DrawCheckMark(sk_p);
 
                         }; break;
                     case 4: if (!P4done)
@@ -364,8 +364,8 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textBusy = "B(P" + (i + 1) + ") ";
-                            DrawCheckMark(sk_p);
+                            textBusy = "";
+                            //DrawCheckMark(sk_p);
 
                         }; break;
                     case 5: if (!P5done)
@@ -374,8 +374,8 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textBusy = "B(P" + (i + 1) + ") ";
-                            DrawCheckMark(sk_p);
+                            textBusy = "";
+                            //DrawCheckMark(sk_p);
 
                         }; break;
                 }
@@ -435,9 +435,9 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textUpcoming = " ";
+                            textUpcoming = "P1 ";
                             //textUpcoming = "B(P" + (i + 1) + ") ";
-                            //DrawCheckMark(sk_p);
+                            DrawCheckMark(sk_p);
                         };
                         break;
                     case 2:
@@ -447,9 +447,9 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textUpcoming = " ";
+                            textUpcoming = "P2 ";
                             //textUpcoming = "B(P" + (i + 1) + ") ";
-                            //DrawCheckMark(sk_p);
+                            DrawCheckMark(sk_p);
                         };
                         break;
                     case 3:
@@ -459,9 +459,9 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textUpcoming = " ";
+                            textUpcoming = "P3 ";
                             //textUpcoming = "B(P" + (i + 1) + ") ";
-                            //DrawCheckMark(sk_p);
+                            DrawCheckMark(sk_p);
 
                         }; break;
                     case 4:
@@ -471,9 +471,9 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textUpcoming = " ";
+                            textUpcoming = "P4 ";
                             //textUpcoming = "B(P" + (i + 1) + ") ";
-                            //DrawCheckMark(sk_p);
+                            DrawCheckMark(sk_p);
 
                         }; break;
                     case 5:
@@ -483,9 +483,9 @@ namespace WertheApp.BS
                         }
                         else
                         {
-                            textUpcoming = " ";
+                            textUpcoming = "P5 ";
                             //textUpcoming = "B(P" + (i + 1) + ") ";
-                            //DrawCheckMark(sk_p);
+                            DrawCheckMark(sk_p);
 
                         }; break;
                 }
@@ -526,21 +526,24 @@ namespace WertheApp.BS
             int y1Backg = 22;
             int stepBackg = 20;
 
+            String oldVA = Deadlock.GetHistory(cellNumber-1, 1);
             String currVB = vectorBProcesses[Int16.Parse(history)];
             String currVC = vectorCProcesses[Int16.Parse(history)];
             String currVA = vectorA;
 
             //Fromat text
+            String resultTextVAold = "Aold = ( ";
             String resultTextVB = "B(P" + history + ") = ( ";
             String resultTextVC = "C(P" + history + ") = ( ";
-            String resultTextVA = "Anew = ( ";
+            String resultTextVAnew = "Anew = ( ";
             String space = "  ";
             for (int j = 0; j < currVB.Length; j++)
             {
                 if (j == currVB.Length - 1) { space = " )"; }
                 resultTextVB = resultTextVB + currVB[j] + space;
                 resultTextVC = resultTextVC + currVC[j] + space;
-                resultTextVA = resultTextVA + currVA[j] + space;
+                resultTextVAnew = resultTextVAnew + currVA[j] + space;
+                resultTextVAold = resultTextVAold + oldVA[j] + space;
             }
                
             
@@ -563,7 +566,7 @@ namespace WertheApp.BS
             canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
             // Aneu
             SKPoint textPosition4 = new SKPoint(xe * startx, ye * (starty + step * 2));
-            canvas.DrawText(resultTextVA, textPosition4, sk_blackText);
+            canvas.DrawText(resultTextVAnew, textPosition4, sk_blackText);
         }
         /**********************************************************************
         *********************************************************************/

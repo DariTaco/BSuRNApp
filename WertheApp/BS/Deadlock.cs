@@ -13,7 +13,7 @@ namespace WertheApp.BS
     public class Deadlock: ContentPage
     {
         //VARIABLES
-        private static Button b_undo;
+        private static Button b_undo, b_restart;
         private static Label l_info;
         public static ListView listView;
         public static ObservableCollection<DeadlockViewCell> deadlockCells; // deadlock canvas
@@ -26,7 +26,6 @@ namespace WertheApp.BS
         private static String vectorE, vectorB, vectorC, vectorA;
         private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
         private static int totalProcesses;
-        private static int[] doneArr;
 
         public static List<int> todoProcesses, doneProcesses;
         public static bool P1done, P2done, P3done, P4done, P5done;
@@ -57,7 +56,6 @@ namespace WertheApp.BS
             vectorBProcesses = VBProcesses;
             vectorCProcesses = VCProcesses;
             totalProcesses = tProcesses;
-            doneArr = new int[5] { 0,0,0,0,0};
             //5 processes, 4: processNumber,  Anew, C(Px), B(Px),
             history = new String[,]{
                 { "0", "0", "0", "0" },
@@ -165,9 +163,53 @@ namespace WertheApp.BS
             b_undo.Clicked += B_Undo_Clicked;
             b_undo.IsEnabled = false;
 
-            stackLayout.Children.Add(b_undo);
+            //stackLayout.Children.Add(b_undo);
+
+            b_restart = new Button
+            {
+                Text = "Restart"
+            };
+            b_restart.Clicked += B_Restart_Clicked;
+            b_restart.IsEnabled = false;
+            stackLayout.Children.Add(b_restart);
 
             grid.Children.Add(stackLayout, 0, 1);
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        static void B_Restart_Clicked(object sender, EventArgs e)
+        {
+            //clear scrollbar
+            deadlockCells.Clear();
+
+            //reset everything
+            currentStep = -1;
+            cellNumber = -1;
+            currentAnew = vectorA;
+
+            history = new String[,]{
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" },
+                { "0", "0", "0", "0" }};
+            P1done = false;
+            P2done = false;
+            P3done = false;
+            P4done = false;
+            P5done = false;
+            todoProcesses.Clear();
+            for (int i = 1; i <= totalProcesses; i++)
+            {
+                todoProcesses.Add(i);
+            }
+            doneProcesses.Clear();
+
+            //disbale button
+            b_restart.IsEnabled = false;
+
+            AddDeadlockCell(); //add very first cell
         }
 
         /**********************************************************************
@@ -213,7 +255,7 @@ namespace WertheApp.BS
             Debug.WriteLine("count in observable collection" + deadlockCells.Count());
             deadlockCells.Last().Paint();
 
-            //TODO: enable touch sensitiveness for Android as well
+            //TODO: enable touch sensitiveness 
             Debug.WriteLine("current step" + currentStep);
             deadLockViewCellTouchableList[currentStep+1] = true;
             deadLockViewCellCansvasList[currentStep+1].EnableTouchEvents = true;
@@ -290,10 +332,7 @@ namespace WertheApp.BS
         {
             return deadlockCells;
         }
-        public static int[] GetDoneArr()
-        {
-            return doneArr;
-        }
+
         /* LOGIC
          * *********************************************************************
         *********************************************************************/
@@ -314,7 +353,6 @@ namespace WertheApp.BS
             {
      
                 todoProcesses.Remove(processNumber);
-                doneArr[processNumber - 1] = processNumber;
                 doneProcesses.Add(processNumber);
                 sender.EnableTouchEvents = false;
                 touchable = false;
@@ -358,6 +396,7 @@ namespace WertheApp.BS
                 cellNumber++;
                 AddDeadlockCell();
                 b_undo.IsEnabled = true;
+                b_restart.IsEnabled = true;
             }
         }
 
