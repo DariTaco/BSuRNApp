@@ -261,11 +261,11 @@ namespace WertheApp.BS
 
             }
 
-            int startx = 5;
+            int startx = 3;
             int starty = 15;
             int step = 20;
-            int x1Backg = 4;
-            int x2Backg = 30;
+            int x1Backg = 3;
+            int x2Backg = 32;
             int y1Backg = 22;
             int stepBackg = 20;
 
@@ -518,21 +518,24 @@ namespace WertheApp.BS
 
         private void DrawCalculation()
         {
-            int startx = 5;
-            int starty = 35;
+            int startx = 4;
+            int starty = 21;
             int step = 20;
-            int x1Backg = 5;
-            int x2Backg = 30;
-            int y1Backg = 22;
+            int x1Backg = 3;
+            int x2Backg = 32;
+            int y1Backg = 10;
             int stepBackg = 20;
 
-            String oldVA = Deadlock.GetHistory(cellNumber-1, 1);
+            // vectors to display
+            String oldVA = "";
+            if (cellNumber == 0){oldVA = Deadlock.GetVectorA(); }
+            else{ oldVA = Deadlock.GetHistory(cellNumber - 1, 1);}
             String currVB = vectorBProcesses[Int16.Parse(history)];
             String currVC = vectorCProcesses[Int16.Parse(history)];
             String currVA = vectorA;
 
             //Fromat text
-            String resultTextVAold = "Aold = ( ";
+            String resultTextVAold = "Aold   = ( ";
             String resultTextVB = "B(P" + history + ") = ( ";
             String resultTextVC = "C(P" + history + ") = ( ";
             String resultTextVAnew = "Anew = ( ";
@@ -545,27 +548,33 @@ namespace WertheApp.BS
                 resultTextVAnew = resultTextVAnew + currVA[j] + space;
                 resultTextVAold = resultTextVAold + oldVA[j] + space;
             }
-               
-            
+
+            //Draw green background
+            SKRect sk_rBackground0 = new SKRect(xe * x1Backg, ye * y1Backg, xe * x2Backg, ye * (y1Backg + stepBackg )); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackground0, sk_BackgroundGreen); //left, top, right, bottom, color
+            // Aold
+            SKPoint textPosition0 = new SKPoint(xe * startx, ye * starty);
+            canvas.DrawText(resultTextVAold, textPosition0, sk_blackText);
+
             //Draw yellow background
-            SKRect sk_rBackground = new SKRect(xe * x1Backg, ye * y1Backg, xe * x2Backg, ye * (y1Backg + stepBackg)); //left , top, right, bottom
+            SKRect sk_rBackground = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg), xe * x2Backg, ye * (y1Backg + stepBackg * 2)); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
             // C(x)
-            SKPoint textPosition2 = new SKPoint(xe * startx, ye * starty);
+            SKPoint textPosition2 = new SKPoint(xe * startx, ye * (starty + step));
             canvas.DrawText(resultTextVC, textPosition2, sk_blackText);
 
             //Draw red background
-            SKRect sk_rBackground2 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg), xe * x2Backg, ye * (y1Backg + stepBackg * 2)); //left , top, right, bottom
+            SKRect sk_rBackground2 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg * 2), xe * x2Backg, ye * (y1Backg + stepBackg * 3)); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
             // B(x)
-            SKPoint textPosition3 = new SKPoint(xe * startx, ye * (starty + step));
+            SKPoint textPosition3 = new SKPoint(xe * startx, ye * (starty + step * 2));
             canvas.DrawText(resultTextVB, textPosition3, sk_blackText);
 
             //Draw green background
-            SKRect sk_rBackground4 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg * 2), xe * x2Backg, ye * (y1Backg + stepBackg * 3)); //left , top, right, bottom
+            SKRect sk_rBackground4 = new SKRect(xe * x1Backg, ye * (y1Backg + stepBackg * 3), xe * x2Backg, ye * (y1Backg + stepBackg * 4)); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
-            // Aneu
-            SKPoint textPosition4 = new SKPoint(xe * startx, ye * (starty + step * 2));
+            // Anew
+            SKPoint textPosition4 = new SKPoint(xe * startx, ye * (starty + step * 3));
             canvas.DrawText(resultTextVAnew, textPosition4, sk_blackText);
         }
         /**********************************************************************
@@ -577,7 +586,9 @@ namespace WertheApp.BS
             sk_blackText = new SKPaint
             {
                 Color = SKColors.Black,
-                TextSize = ye * vectorTextSize
+                //TextSize = ye * vectorTextSize
+                TextSize = 40
+
             };
             sk_EText = new SKPaint
             {
