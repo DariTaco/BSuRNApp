@@ -341,16 +341,17 @@ namespace WertheApp.BS
             int processNumber, String oldVA)
         {
             bool found = todoProcesses.Contains(processNumber);
-            bool fits = CheckIfUpcomingProcessFitsInVectorA(vectorCProcesses[processNumber], oldVA);
-            //l_info.Text = "";
-            //l_info.TextColor = Color.Black;
-            if (!fits && found)
+            if (found)
             {
-                l_info.TextColor = Color.Red;
-                l_info.Text = "Not enough free resources for upcoming requests C(P" + processNumber + ") !";
-            }
-            if (found && fits)
-            {
+                bool fits = CheckIfUpcomingProcessFitsInVectorA(vectorCProcesses[processNumber], oldVA);
+                if (!fits)
+                {
+                    l_info.TextColor = Color.Red;
+                    l_info.Text = "Not enough free resources for upcoming requests C(P" + processNumber + ") !";
+                }
+            
+                else if (found && fits)
+                {
      
                 todoProcesses.Remove(processNumber);
                 doneProcesses.Add(processNumber);
@@ -397,6 +398,7 @@ namespace WertheApp.BS
                 AddDeadlockCell();
                 b_undo.IsEnabled = true;
                 b_restart.IsEnabled = true;
+            }
             }
         }
 

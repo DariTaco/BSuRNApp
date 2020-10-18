@@ -11,7 +11,12 @@ namespace WertheApp
         {
             InitializeComponent();
 
-            Title = "WertheApp";
+			ToolbarItem info = new ToolbarItem();
+			info.Text = "Info";
+			this.ToolbarItems.Add(info);
+			info.Clicked += B_Info_Clicked;
+
+			Title = "WertheApp";
             //Title = "Start Screen"
 
 			// This is the top-level grid, which will split our page in half
@@ -95,6 +100,11 @@ namespace WertheApp
 
             //add content to Toplevel grid
 			grid.Children.Add(stackLayout, 0, 1);
+		}
+
+		async void B_Info_Clicked(object sender, EventArgs e)
+		{
+			await Navigation.PushAsync(new Info());
 		}
 
 		async void B_Bs_Clicked(object sender, EventArgs e)

@@ -1,5 +1,7 @@
-﻿using System;
-
+﻿/*
+ https://docs.microsoft.com/en-us/xamarin/essentials/get-started?tabs=macos%2Candroid
+ */
+using System;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -21,6 +23,8 @@ namespace WertheApp.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            Xamarin.Essentials.Platform.Init(this, bundle);
+
 
             LoadApplication(new App());
         }

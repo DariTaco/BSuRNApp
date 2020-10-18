@@ -43,7 +43,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Shared Resources\AalenHS1.png">
       <LogicalName>AalenHS1.png</LogicalName>
-      <IncludeInPackage>true</IncludeInPackage>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +93,7 @@
     <Compile Include="Helping Classes\TemplateSkiaSharpDraw.cs" />
     <Compile Include="Helping Classes\TemplateSkiaSharpSettings.cs" />
     <Compile Include="BS\DeadlockViewCell.cs" />
+    <Compile Include="Info.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

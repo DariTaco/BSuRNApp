@@ -315,11 +315,11 @@ namespace WertheApp.BS
 			//Screen Width -20 because Margin is 10
             if (!isContentCreated)
             {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 2;
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
             }
             else
             {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
             }
 
 			//Using a Stacklayout to organize elements
@@ -332,7 +332,16 @@ namespace WertheApp.BS
 			};
 
             //add elements to stacklayout
-			var b_Start = new Button
+            var b_Restart = new Button
+            {
+                Text = "Restart",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Restart.Clicked += B_Restart_Clicked;
+            stackLayout.Children.Add(b_Restart);
+
+            var b_Start = new Button
 			{
 				Text = "Start Process",
 				WidthRequest = StackChildSize,
@@ -353,9 +362,24 @@ namespace WertheApp.BS
 			grid.Children.Add(stackLayout, 0, 1);
         }
 
-		/**********************************************************************
+        /**********************************************************************
         *********************************************************************/
-		async void B_Start_Clicked(object sender, EventArgs e)
+        async void B_Restart_Clicked(object sender, EventArgs e)
+        {
+            activeProcesses = new List<String>();
+            availableProcesses = new List<string>(availableProcessesInput);
+
+            currentProcess = "first";
+            buddySystem = new List<BuddySystemBlock>();
+            buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize, 0));
+            endProcess = false;
+
+            CreateContent();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Start_Clicked(object sender, EventArgs e)
 		{
             if (availableProcesses.Any())
             {

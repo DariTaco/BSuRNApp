@@ -170,10 +170,10 @@ namespace WertheApp.BS
             //Screen Width is divided by the amount of elements (9)
             //Screen Width -20 because Margin is 10
             if(!isContentCreated){
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 9;
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 10;
             }
             else{
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 9;
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 10;
             }
 
             //Using a Stacklayout to organize elements
@@ -184,6 +184,15 @@ namespace WertheApp.BS
 				Margin = new Thickness(10),
 
             };
+
+            var b_Restart = new Button
+            {
+                Text = "Restart",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            b_Restart.Clicked += B_Restart_Clicked;
+            stackLayout.Children.Add(b_Restart);
 
             var l_1 = new Label { Text = "Size:", WidthRequest = StackChildSize, 
                 VerticalOptions= LayoutOptions.Center};
@@ -221,6 +230,16 @@ namespace WertheApp.BS
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Restart_Clicked(object sender, EventArgs e)
+        {
+
+            memoryRequestState = MyEnum.noRequestYet;
+            CreateContent();
+
+
+        }
         /**********************************************************************
         *********************************************************************/
         async void B_Next_Clicked(object sender, EventArgs e)

@@ -12,6 +12,7 @@ namespace WertheApp.BS
     {
         //VARIABLES
         double StackChildSize;
+        public static List<int> OrigSequenceList;
         public static List<int> SequenceList { get; set; }
         public static String strategy;
         public static int ramSize;
@@ -48,8 +49,12 @@ namespace WertheApp.BS
         //CONSTRUCTOR
         public PageReplacementStrategies(List<int> l, String s, int r, int d)
         {
-            
+
+            OrigSequenceList = new List<int>( l );
             SequenceList = l;
+            Debug.WriteLine("1sequence list count " + SequenceList.Count);
+            Debug.WriteLine("1 orig sequence list count " + OrigSequenceList.Count);
+
             strategy = s;
             ramSize = r;
             discSize = d;
@@ -112,7 +117,6 @@ namespace WertheApp.BS
         //METHODS
         /**********************************************************************
         *********************************************************************/
-        //TODO
         void B_Set_Rbit_Clicked(object sender, EventArgs e)
         {
             if (currentStep > -1)
@@ -911,11 +915,11 @@ namespace WertheApp.BS
             //Screen Width -20 because Margin is 10
             if (!landscape)
             {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 4;
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 5;
             }
             else
             {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 4;
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 5;
             }
 
             //Using a Stacklayout to organize elements
@@ -927,6 +931,17 @@ namespace WertheApp.BS
                 Margin = new Thickness(10),
 
             };
+
+
+            var b_Restart = new Button
+            {
+                Text = "Restart",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Restart.Clicked += B_Restart_Clicked;
+            stackLayout.Children.Add(b_Restart);
+
             b_Set_Rbit = new Button
             {
                 Text = "Set R-Bit",
@@ -966,10 +981,49 @@ namespace WertheApp.BS
             grid.Children.Add(stackLayout, 0, 1);
         }
 
-		/**********************************************************************
+        /**********************************************************************
         *********************************************************************/
-		//this method is called everytime the device is rotated
-		protected override void OnSizeAllocated(double width, double height)
+        async void B_Restart_Clicked(object sender, EventArgs e)
+        {
+            SequenceList = new List<int>(OrigSequenceList);
+            Debug.WriteLine("2sequence list count " + SequenceList.Count);
+            Debug.WriteLine("2 orig sequence list count " + OrigSequenceList.Count);
+
+            ram = new int[SequenceList.Count, ramSize, 6];
+            disc = new int[SequenceList.Count, discSize];
+
+            currentStep = -1; //no page in ram or disc yet
+            currentPage = -1;
+            indexCurrentPage = -1;
+            sequenceLength = SequenceList.Count();
+            pagesInRam = new List<int>();
+            pagesInDisc = new List<int>();
+
+            draw = new PageReplacementStrategiesDraw(ramSize, discSize, sequenceLength, SequenceList);
+            CreateContent();
+
+            //enable/disable buttons depending on strategy
+            if (strategy == "RNU FIFO" || strategy == "RNU FIFO Second Chance")
+            {
+                b_Set_Mbit.IsEnabled = true;
+                b_Reset_Rbits.IsEnabled = true;
+                b_Set_Rbit.IsEnabled = true;
+            }
+            else
+            {
+                b_Set_Mbit.IsEnabled = false;
+                b_Reset_Rbits.IsEnabled = false;
+                b_Set_Rbit.IsEnabled = false;
+            }
+            b_Next.IsEnabled = true;
+
+            InitializeDisc(disc);
+            InitializeRam(ram);
+        }
+        /**********************************************************************
+        *********************************************************************/
+        //this method is called everytime the device is rotated
+        protected override void OnSizeAllocated(double width, double height)
 		{
 			base.OnSizeAllocated(width, height); //must be called
 			if (this.width != width || this.height != height)

@@ -4,6 +4,7 @@
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "2.0.3",
     "SkiaSharp.Views.Forms": "1.68.3",
+    "Xamarin.Essentials": "1.5.3.2",
     "Xamarin.Forms": "4.6.0.800"
   },
   "frameworks": {
