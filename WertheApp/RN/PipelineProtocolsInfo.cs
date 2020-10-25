@@ -8,7 +8,7 @@ namespace WertheApp.RN
     {
         public PipelineProtocolsInfo()
         {
-            Title = "Info";
+            Title = "Hint";
             StackLayout stackL = new StackLayout { };
             Content = stackL;
              

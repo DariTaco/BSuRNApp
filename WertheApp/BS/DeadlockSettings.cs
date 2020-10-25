@@ -744,11 +744,109 @@ namespace WertheApp.BS
 
         void SetPreset2()
         {
+            //dvd, printer, usb, bluRay, ijPrinter, printer3D
+            // set resources
+            p_dvd.SelectedIndex = 2;
+            p_printer.SelectedIndex = 2;
+            p_usb.SelectedIndex = 6;
+            p_bluRay.SelectedIndex = 0;
+            p_ijPrinter.SelectedIndex = 0;
+            p_printer3D.SelectedIndex = 3;
 
+            //set process total
+            p_runningprocesses.SelectedIndex = 5;
+
+            //set busy resources p1
+            p_p1_usb.SelectedIndex = 3;
+
+            //set busy resources p2
+            //none
+
+            //set busy resources p3
+            p_p3_dvd.SelectedIndex = 1;
+            p_p3_printer.SelectedIndex = 1;
+            p_p3_usb.SelectedIndex = 2;
+
+            //set busy resources p4
+            p_p4_dvd.SelectedIndex = 1;
+            p_p4_usb.SelectedIndex = 1;
+            p_p4_printer3D.SelectedIndex = 1;
+
+            //set busy resources p5
+            p_p5_printer.SelectedIndex = 1;
+            p_p5_printer3D.SelectedIndex = 1;
+
+
+            //set future requests p1
+            p_p1_upcoming_printer3D.SelectedIndex = 1;
+
+            //set future requests  p2
+            p_p2_upcoming_usb.SelectedIndex = 2;
+            p_p2_upcoming_printer3D.SelectedIndex = 1;
+
+            //set future requests p3
+            p_p3_upcoming_printer.SelectedIndex = 2;
+            p_p3_upcoming_usb.SelectedIndex = 2;
+            p_p3_upcoming_printer3D.SelectedIndex = 2;
+
+            //set future requests p4
+            p_p4_upcoming_dvd.SelectedIndex = 1;
+            p_p4_upcoming_printer3D.SelectedIndex = 1;
+
+            //set future requests p5
+            p_p5_upcoming_printer.SelectedIndex = 1;
+            p_p5_upcoming_printer3D.SelectedIndex = 1;
         }
 
         void SetPreset3()
         {
+            //dvd, printer, usb, bluRay, ijPrinter, printer3D
+            // set resources
+            p_dvd.SelectedIndex = 1;
+            p_printer.SelectedIndex = 1;
+            p_usb.SelectedIndex = 1;
+            p_bluRay.SelectedIndex = 0;
+            p_ijPrinter.SelectedIndex = 0;
+            p_printer3D.SelectedIndex = 1;
+
+            //set process total
+            p_runningprocesses.SelectedIndex = 5;
+
+            //set busy resources p1
+            //none
+
+            //set busy resources p2
+            //none
+
+            //set busy resources p3
+            p_p3_dvd.SelectedIndex = 1;
+            p_p3_printer.SelectedIndex = 1;
+
+            //set busy resources p4
+            p_p4_usb.SelectedIndex = 1;
+
+            //set busy resources p5
+            p_p5_printer3D.SelectedIndex = 1;
+
+
+            //set future requests p1
+            p_p1_upcoming_dvd.SelectedIndex = 1;
+            p_p1_upcoming_printer.SelectedIndex = 1;
+            p_p1_upcoming_usb.SelectedIndex = 1;
+            p_p1_upcoming_printer3D.SelectedIndex = 1;
+
+            //set future requests  p2
+            p_p2_upcoming_usb.SelectedIndex = 1;
+
+            //set future requests p3
+            p_p3_upcoming_usb.SelectedIndex = 1;
+            p_p3_upcoming_printer3D.SelectedIndex = 1;
+
+            //set future requests p4
+            //none
+
+            //set future requests p5
+            p_p5_upcoming_usb.SelectedIndex = 1;
 
         }
 
