@@ -21,6 +21,7 @@ namespace WertheApp.BS
         public static List<BuddySystemBlock> buddySystem;
         public static String currentProcess; //important variable for class buddysytsemviewcell
         public static bool endProcess; //important variable for class buddysytsemviewcell
+        public static Button b_Restart;
 
         public static ListView listView;
 
@@ -91,6 +92,8 @@ namespace WertheApp.BS
             if(block == blockSize && buddySystem[index].GetFree()){
                 buddySystem[index].OccupyBlock(processName, processSize);
                 AddBuddySystemCell();
+                b_Restart.IsEnabled = true;
+
                 return true;
             }
 
@@ -99,6 +102,8 @@ namespace WertheApp.BS
                 SplitBlock(index, blockSize);
                 buddySystem[index].OccupyBlock(processName, processSize);
                 AddBuddySystemCell();
+                b_Restart.IsEnabled = true;
+
                 return true;
             }
             return false;
@@ -270,7 +275,6 @@ namespace WertheApp.BS
             BuddySystemViewCell b = new BuddySystemViewCell();
             //BuddySystemViewCell a = new BuddySystemViewCell();/*TODO*/
             buddySystemCells.Add(new BuddySystemViewCell()); //actually creates a new buddysystemviewcell
-
             listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
         }
 
@@ -332,13 +336,14 @@ namespace WertheApp.BS
 			};
 
             //add elements to stacklayout
-            var b_Restart = new Button
+            b_Restart = new Button
             {
                 Text = "Restart",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
             b_Restart.Clicked += B_Restart_Clicked;
+            b_Restart.IsEnabled = false;
             stackLayout.Children.Add(b_Restart);
 
             var b_Start = new Button
@@ -373,6 +378,7 @@ namespace WertheApp.BS
             buddySystem = new List<BuddySystemBlock>();
             buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize, 0));
             endProcess = false;
+            b_Restart.IsEnabled = false;
 
             CreateContent();
         }

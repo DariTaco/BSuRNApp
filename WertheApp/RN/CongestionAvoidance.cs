@@ -14,13 +14,14 @@ namespace WertheApp.RN
         bool landscape = false; //indicates device orientation
         double StackChildSize;
 
+
         private double width = 0;
 		private double height = 0;
 
         private SKCanvasView skiaview;
         private CongestionAvoidanceDraw draw;
 
-        Button b_DupAck, b_Timeout, b_NewAck;
+        Button b_DupAck, b_Timeout, b_NewAck, b_Restart;
         private Color orange1 = new Color(242, 115, 0);
 
         public static int stateT, stateR; //0 -> slow start, 1 -> congestion avoidance, 2 -> fast recovery
@@ -30,6 +31,7 @@ namespace WertheApp.RN
         public const int numberOfRounds = 32;
         public static int maxCwnd;
         public static int tresholdR,tresholdT;
+        private static int initial_tresh;
         public static int[,] reno; //contains y values for reno [value, round]
         public static int[,] tahoe; //contains y values for tahoe
         public static int[,] sstreshR; //contains y values for treshold Reno
@@ -39,6 +41,7 @@ namespace WertheApp.RN
         //CONSTRUCTOR
         public CongestionAvoidance(int th, bool r, bool t)
         {
+            initial_tresh = th;
             tresholdR = th;
             tresholdT = th;
             renoOn = r;
@@ -315,6 +318,8 @@ namespace WertheApp.RN
         *********************************************************************/
         void SaveState()
         {
+            b_Restart.IsEnabled = true;
+
             if (renoOn)
             {
                 sstreshR[0, currentIndex] = tresholdR;
@@ -506,11 +511,11 @@ namespace WertheApp.RN
             //Screen Width -20 because Margin is 10
             if (!landscape)
             {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
+                StackChildSize = (Application.Current.MainPage.Height - 20) / 4;
             }
             else
             {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
+                StackChildSize = (Application.Current.MainPage.Width - 20) / 4;
             }
 
             //Using a Stacklayout to organize elements
@@ -522,6 +527,16 @@ namespace WertheApp.RN
 				Margin = new Thickness(10),
 
 			};
+
+            b_Restart = new Button
+            {
+                Text = "Restart",
+                WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Restart.Clicked += B_Restart_Clicked;
+            b_Restart.IsEnabled = false;
+            stackLayout.Children.Add(b_Restart);
 
             b_DupAck = new Button
             {
@@ -555,10 +570,50 @@ namespace WertheApp.RN
             grid.Children.Add(stackLayout, 0, 1);
 		}
 
-		/**********************************************************************
+        /**********************************************************************
         *********************************************************************/
-		//this method is called everytime the device is rotated
-		protected override void OnSizeAllocated(double width, double height)
+        async void B_Restart_Clicked(object sender, EventArgs e)
+        {
+            tresholdR = initial_tresh;
+            tresholdT = initial_tresh;
+            flag1 = false;
+            flagDupAckAndNoNewRound = false;
+            stateT = 0;
+            stateR = 0;
+            dupAckCountR = 0;
+            dupAckCountT = 0;
+            cwndR = 1;
+            cwndT = 1;
+            currentRoundR = 0;
+            currentRoundT = 0;
+            currentIndex = 0;
+            maxCwnd = 14;
+
+            //note: numberOfRounds*4 is kinda arbitrary. Since there can be no arrays of unknown length, but it has to be long enough
+            reno = new int[2, numberOfRounds * 4];
+            tahoe = new int[2, numberOfRounds * 4];
+            reno[1, 0] = 0;
+            reno[0, 0] = cwndR;
+            tahoe[1, 0] = 0;
+            tahoe[0, 0] = cwndT;
+
+            sstreshR = new int[2, numberOfRounds * 4];
+            sstreshT = new int[2, numberOfRounds * 4];
+            sstreshR[1, 0] = 0;
+            sstreshR[0, 0] = tresholdR;
+            sstreshT[1, 0] = 0;
+            sstreshT[0, 0] = tresholdT;
+
+            b_Restart.IsEnabled = false;
+            UpdateButtons();
+            UpdateDrawing();
+
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        //this method is called everytime the device is rotated
+        protected override void OnSizeAllocated(double width, double height)
 		{
 			base.OnSizeAllocated(width, height); //must be called
 			if (this.width != width || this.height != height)

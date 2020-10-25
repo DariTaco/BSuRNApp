@@ -15,6 +15,7 @@ namespace WertheApp.BS
         double StackChildSize;
         public static List<int> fragmentList { get; set; } //List of fragments. From Settings Page passed to the constructor and later accesed from Scene
         public static String strategy { get; set; } //Choosen strategy (Firts Fit, ...) from Settings Page passed to the constructor and later accesed from Scene
+        public static Button b_Restart;
 
         public static int memoryRequest; //gets its value from the modal page
 
@@ -185,13 +186,14 @@ namespace WertheApp.BS
 
             };
 
-            var b_Restart = new Button
+            b_Restart = new Button
             {
                 Text = "Restart",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.CenterAndExpand
             };
             b_Restart.Clicked += B_Restart_Clicked;
+            b_Restart.IsEnabled = false;
             stackLayout.Children.Add(b_Restart);
 
             var l_1 = new Label { Text = "Size:", WidthRequest = StackChildSize, 
@@ -237,6 +239,8 @@ namespace WertheApp.BS
 
             memoryRequestState = MyEnum.noRequestYet;
             CreateContent();
+            b_Restart.IsEnabled = false;
+
 
 
         }
@@ -281,9 +285,10 @@ namespace WertheApp.BS
 					OldAllocationStrategiesScene.ClearGrayArrow();
                     OldAllocationStrategiesScene.DrawFill();
 					memoryRequestState = MyEnum.noRequestYet;
+                    b_Restart.IsEnabled = true;
 
-					//clear information bar
-					l_Size.Text = size;
+                    //clear information bar
+                    l_Size.Text = size;
 					l_Diff.Text = diff;
 					l_Best.Text = best;
 					l_Free.Text = free;

@@ -94,6 +94,7 @@
     <Compile Include="Helping Classes\TemplateSkiaSharpSettings.cs" />
     <Compile Include="BS\DeadlockViewCell.cs" />
     <Compile Include="Info.cs" />
+    <Compile Include="RN\PipelineProtocolsInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

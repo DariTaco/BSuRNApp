@@ -17,6 +17,7 @@ namespace WertheApp.BS
         public static String strategy;
         public static int ramSize;
         public static int discSize;
+        public static Button b_Restart;
 
         public static int[,,] ram; //3d array to save the page numbers in ram (1d,2d) and if r-bits and m-bits are set(3d)
         public static int[,] disc; //2d array to save the page numbers in disc
@@ -185,6 +186,8 @@ namespace WertheApp.BS
                     break;
             }
             PageReplacementStrategiesDraw.Paint();//Update Canvas
+            b_Restart.IsEnabled = true;
+
             //disable next button if the sequence was processed entirely
             if (currentStep == sequenceLength-1){
                 b_Next.IsEnabled = false;
@@ -933,13 +936,14 @@ namespace WertheApp.BS
             };
 
 
-            var b_Restart = new Button
+            b_Restart = new Button
             {
                 Text = "Restart",
                 WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
             b_Restart.Clicked += B_Restart_Clicked;
+            b_Restart.IsEnabled = false;
             stackLayout.Children.Add(b_Restart);
 
             b_Set_Rbit = new Button
@@ -1016,6 +1020,7 @@ namespace WertheApp.BS
                 b_Set_Rbit.IsEnabled = false;
             }
             b_Next.IsEnabled = true;
+            b_Restart.IsEnabled = false;
 
             InitializeDisc(disc);
             InitializeRam(ram);

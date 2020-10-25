@@ -19,7 +19,7 @@ namespace WertheApp.RN
 
         public static bool paused = false;
         public static CocosSharpView gameView;
-        Button b_Pause;
+        Button b_Pause, b_Restart;
 
         bool landscape = false; //indicates device orientation
 
@@ -36,6 +36,12 @@ namespace WertheApp.RN
 		//CONSTRUCTOR
 		public PipelineProtocols(int a, String s, int t)
         {
+
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
+
             windowSize = a;
             strategy = s;
             timeoutTime = t;
@@ -186,11 +192,11 @@ namespace WertheApp.RN
             double stackChildSize;
             if (landscape)
             {
-                stackChildSize = (Application.Current.MainPage.Height - 20) / 2;
+                stackChildSize = (Application.Current.MainPage.Height - 20) / 3;
             }
             else
             {
-                stackChildSize = (Application.Current.MainPage.Width - 20) / 2;
+                stackChildSize = (Application.Current.MainPage.Width - 20) / 3;
             }
 
 			//Using a Stacklayout to organize elements
@@ -203,14 +209,15 @@ namespace WertheApp.RN
 
 			};
 
-            Button b_Send = new Button
+            b_Restart = new Button
             {
-                Text = "Send Package",
+                Text = "Restart",
                 WidthRequest = stackChildSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            b_Send.Clicked += B_Send_Clicked;
-            stackLayout.Children.Add(b_Send);
+            b_Restart.Clicked += B_Restart_Clicked;
+            b_Restart.IsEnabled = false;
+            stackLayout.Children.Add(b_Restart);
 
             b_Pause = new Button
             {
@@ -221,13 +228,23 @@ namespace WertheApp.RN
             b_Pause.Clicked += B_Stop_Clicked;
             stackLayout.Children.Add(b_Pause);
 
-			grid.Children.Add(stackLayout, 0, 1);
+            Button b_Send = new Button
+            {
+                Text = "Send",
+                WidthRequest = stackChildSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+            b_Send.Clicked += B_Send_Clicked;
+            stackLayout.Children.Add(b_Send);
+
+            grid.Children.Add(stackLayout, 0, 1);
 		}
 
 		/**********************************************************************
         *********************************************************************/
 		async void B_Send_Clicked(object sender, EventArgs e)
         {
+            b_Restart.IsEnabled = true;
             if (strategy == "Selective Repeat")
             {
                 int a1 = PipelineProtocolsScene.nextSeqnum;
@@ -254,9 +271,23 @@ namespace WertheApp.RN
             }
         }
 
-		/**********************************************************************
+        /**********************************************************************
         *********************************************************************/
-		void B_Stop_Clicked(object sender, EventArgs e)
+        async void B_Restart_Clicked(object sender, EventArgs e)
+        {
+            b_Restart.IsEnabled = false;
+            OnDisappearing();
+            CreateContent();
+        }
+        /**********************************************************************
+       *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new PipelineProtocolsInfo());
+        }
+        /**********************************************************************
+        *********************************************************************/
+        void B_Stop_Clicked(object sender, EventArgs e)
         {
 			switch (paused)
 			{
