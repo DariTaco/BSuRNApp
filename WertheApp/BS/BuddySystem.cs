@@ -275,7 +275,7 @@ namespace WertheApp.BS
             BuddySystemViewCell b = new BuddySystemViewCell();
             //BuddySystemViewCell a = new BuddySystemViewCell();/*TODO*/
             buddySystemCells.Add(new BuddySystemViewCell()); //actually creates a new buddysystemviewcell
-            listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.End, false);
+            listView.ScrollTo(buddySystemCells[buddySystemCells.Count-1],ScrollToPosition.MakeVisible, true);
         }
 
 		/**********************************************************************

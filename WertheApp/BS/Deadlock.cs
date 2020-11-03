@@ -38,6 +38,9 @@ namespace WertheApp.BS
         public static List<DeadlockViewCell> deadLockViewCellList;
 
 
+        bool isContentCreated = false; //indicates weather the Content of the page was already created
+        private double width = 0;
+        private double height = 0;
 
         public Deadlock(Dictionary<string, int> d,
             String VE, String VB, String VC, String VA,
@@ -93,6 +96,19 @@ namespace WertheApp.BS
             deadLockViewCellTouchableList = new List<bool>();
             deadLockViewCellCansvasList = new List<SKCanvasView>();
             deadLockViewCellList = new List<DeadlockViewCell>();
+
+            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
+            {
+                this.isContentCreated = true;
+                CreateContent();
+                this.Content.IsVisible = true;
+            }
+            else
+            {
+                CreateContent();
+                this.isContentCreated = true;
+                this.Content.IsVisible = false;
+            }
         }
 
         //METHODS
@@ -111,7 +127,7 @@ namespace WertheApp.BS
             var grid = new Grid();
             this.Content = grid;
             grid.RowDefinitions = new RowDefinitionCollection {
-                    new RowDefinition{ Height = new GridLength(5, GridUnitType.Star)},
+                    new RowDefinition{ Height = new GridLength(4, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
                 };
             CreateTopHalf(grid);
@@ -159,6 +175,7 @@ namespace WertheApp.BS
             b_undo = new Button
             {
                 Text = "Undo"
+
             };
             b_undo.Clicked += B_Undo_Clicked;
             b_undo.IsEnabled = false;
@@ -167,7 +184,10 @@ namespace WertheApp.BS
 
             b_restart = new Button
             {
-                Text = "Restart"
+                Text = "Restart",
+                HorizontalOptions = LayoutOptions.Start,
+                Margin = 0,
+                Padding = 0,
             };
             b_restart.Clicked += B_Restart_Clicked;
             b_restart.IsEnabled = false;
@@ -278,7 +298,7 @@ namespace WertheApp.BS
             //can't even pass reference because Add method doesn't implement it
 
    
-            //listView.ScrollTo(deadlockCells[deadlockCells.Count-1], ScrollToPosition.End, false);
+            listView.ScrollTo(deadlockCells[deadlockCells.Count-1], ScrollToPosition.End, false);
         }
 
 
@@ -507,6 +527,32 @@ namespace WertheApp.BS
             }
         }
 
+        /**********************************************************************
+        *********************************************************************/
+        //this method is called everytime the device is rotated
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height); //must be called
+            if (this.width != width || this.height != height)
+            {
+                this.width = width;
+                this.height = height;
+            }
+
+            //reconfigure layout
+            if (width > height)
+            {
+                //isContentCreated = true;
+                this.Content.IsVisible = true;
+            }
+            else if (height > width && isContentCreated)
+            {
+                //isContentCreated = false;
+                this.Content.IsVisible = false;
+
+                //DisplayAlert("Alert", "Please rotate the device", "OK");
+            }
+        }
     }
 
 
@@ -535,4 +581,6 @@ namespace WertheApp.BS
             return doneProcesses;
         }
     }
+
+
 }
