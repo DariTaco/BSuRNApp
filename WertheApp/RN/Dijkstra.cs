@@ -58,6 +58,7 @@ namespace WertheApp.RN
             skiaview = new SKCanvasView();
       
             skiaview = DijkstraDraw.ReturnCanvas();
+            skiaview.BackgroundColor = Color.WhiteSmoke;
             grid.Children.Add(skiaview, 0, 0);
         }
 

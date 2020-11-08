@@ -250,7 +250,7 @@ namespace WertheApp.BS
             StackLayout sl_buttons = new StackLayout { Orientation = StackOrientation.Horizontal };
             var b_ClearResources = new Button { Text = "Clear All", HorizontalOptions = LayoutOptions.Start };
             b_ClearResources.Clicked += B_ClearResources_Clicked; //add Click Event(Method)
-            sl_buttons.Children.Add(b_ClearResources);
+            //sl_buttons.Children.Add(b_ClearResources);
 
             //preset buttons
             Label l_space11 = new Label { Text = " ", WidthRequest = 40 };

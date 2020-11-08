@@ -51,8 +51,6 @@ namespace WertheApp.RN
             this.skiaview.Touch += OnTouch;
             skiaview.EnableTouchEvents = true;
 
-           
-
             SetDefaultWeights();
            
         }

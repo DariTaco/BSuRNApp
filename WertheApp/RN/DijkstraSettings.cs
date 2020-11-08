@@ -112,6 +112,7 @@ namespace WertheApp.RN
                 //get canvas to draw on
                 DijkstraSettingsDraw skiaview = new DijkstraSettingsDraw(id, this);
                 SKCanvasView canvas = skiaview.ReturnCanvas();
+                canvas.BackgroundColor = Color.WhiteSmoke;
 
                 //Grid for canvas and buttons
                 var grid = new Grid();

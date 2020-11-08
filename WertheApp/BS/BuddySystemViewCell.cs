@@ -65,7 +65,7 @@ namespace WertheApp.BS
             //changing background color for better clarity
             if (dari % 2 == 0)
             {
-                skiaview.BackgroundColor = Color.Transparent;
+                skiaview.BackgroundColor = Color.FloralWhite;
             }
             else
             {

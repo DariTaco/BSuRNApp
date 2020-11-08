@@ -64,6 +64,7 @@ namespace WertheApp.RN
         {
             skiaview = new SKCanvasView();
             skiaview = AckGenerationDraw.ReturnCanvas();
+            skiaview.BackgroundColor = Color.WhiteSmoke;
             grid.Children.Add(skiaview, 0, 0);
         }
 
