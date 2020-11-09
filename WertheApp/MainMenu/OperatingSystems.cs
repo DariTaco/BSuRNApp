@@ -4,10 +4,10 @@ using System.Diagnostics;
 
 namespace WertheApp
 {
-    public class Betriebssysteme : ContentPage
+    public class OperatingSystems : ContentPage
     {
         //CONSTRUCTOR
-        public Betriebssysteme()
+        public OperatingSystems()
         {
             Title = "Operating Systems";
             var stackLayout = new StackLayout { Margin = new Thickness(10) };

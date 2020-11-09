@@ -3,10 +3,10 @@ using Xamarin.Forms;
 
 namespace WertheApp
 {
-    public class Rechnernetze : ContentPage
+    public class ComputerNetworks : ContentPage
     {
         //CONSTRUCTOR
-        public Rechnernetze()
+        public ComputerNetworks()
         {
             Title = "Computer Networks";
             var stackLayout = new StackLayout { Margin = new Thickness(10) };
@@ -43,7 +43,7 @@ namespace WertheApp
                 switch(appName)
                 {
                     case "Congestion Control":
-                        await Navigation.PushAsync(new CongestionAvoidanceSettings());
+                        await Navigation.PushAsync(new CongestionControlSettings());
                         break;
                     case "Pipeline Protocols":
                         await Navigation.PushAsync(new PipelineProtocolsSettings());

@@ -109,12 +109,12 @@ namespace WertheApp
 
 		async void B_Bs_Clicked(object sender, EventArgs e)
 		{
-            await Navigation.PushAsync(new Betriebssysteme());
+            await Navigation.PushAsync(new OperatingSystems());
 		}
 
 		async void B_Rn_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new Rechnernetze());
+			await Navigation.PushAsync(new ComputerNetworks());
 		}
     }
 }
