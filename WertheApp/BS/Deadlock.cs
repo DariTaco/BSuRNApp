@@ -47,6 +47,10 @@ namespace WertheApp.BS
             int tProcesses,
             Dictionary<int, String> VBProcesses, Dictionary<int,String> VCProcesses )
         {
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
 
             Title = "Deadlock";
 
@@ -174,7 +178,9 @@ namespace WertheApp.BS
 
             b_undo = new Button
             {
-                Text = "Undo"
+                Text = "Undo",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
 
             };
             b_undo.Clicked += B_Undo_Clicked;
@@ -185,7 +191,8 @@ namespace WertheApp.BS
             b_restart = new Button
             {
                 Text = "Restart",
-                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
                 Margin = 0,
                 Padding = 0,
             };
@@ -552,6 +559,12 @@ namespace WertheApp.BS
 
                 //DisplayAlert("Alert", "Please rotate the device", "OK");
             }
+        }
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new DeadlockInfo());
         }
     }
 

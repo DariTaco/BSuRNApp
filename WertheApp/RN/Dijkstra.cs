@@ -21,6 +21,11 @@ namespace WertheApp.RN
         //CONSTRUCTOR
         public Dijkstra(String[] a, int n)
         {
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
+
             Title = "Dijkstra";
             toggleRestart = false;
             currentStep = 0;
@@ -234,6 +239,13 @@ namespace WertheApp.RN
         {
             DijkstraDraw.SetCurrentStep(currentStep);
             DijkstraDraw.Paint();
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new DijkstraInfo());
         }
     }
 

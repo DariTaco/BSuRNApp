@@ -21,6 +21,11 @@ namespace WertheApp.RN
         //CONSTRUCTOR
         public RenoFastRecovery()
         {
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
+
             Title = "Reno Fast Recovery";
             draw = new RenoFastRecoveryDraw();
 
@@ -73,19 +78,7 @@ namespace WertheApp.RN
            *********************************************************************/
         void CreateBottomHalf(Grid grid)
         {
-            //set the size of the elements in such a way, that they all fit on the screen
-            //Screen Width is divided by the amount of elements (3)
-            //Screen Width -20 because Margin is 10
-            double StackChildSize;
-            if (landscape)
-            {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
-            }
-            else
-            {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
-            }
-
+    
             //Using a Stacklayout to organize elements
             //with corresponding labels and String variables. 
             var stackLayout = new StackLayout
@@ -94,42 +87,29 @@ namespace WertheApp.RN
                 Margin = new Thickness(10),
 
             };
-            /*Label l_label1 = new Label()
-            {
-                Text = "tresh:",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
-            };
-            l_Tresh = new Label()
-            {
-                Text = "-",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
-            };*/
+
             b_Next = new Button
             {
                 Text = "Next",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Next.Clicked += B_Next_Clicked;
             b_Restart = new Button
             {
                 Text = "Go to End",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Back = new Button
             {
                 Text = "Back",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Back.Clicked += B_Back_Clicked;
             b_Back.IsEnabled = false;
-            //stackLayout.Children.Add(l_label1);
-            //stackLayout.Children.Add(l_Tresh);
             stackLayout.Children.Add(b_Back);
             stackLayout.Children.Add(b_Restart);
             stackLayout.Children.Add(b_Next);
@@ -200,6 +180,12 @@ namespace WertheApp.RN
             RenoFastRecoveryDraw.Paint();
         }
 
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new RenoFastRecoveryInfo());
+        }
         /**********************************************************************
         *********************************************************************/
         //this method is called everytime the device is rotated

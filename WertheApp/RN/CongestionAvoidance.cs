@@ -41,6 +41,11 @@ namespace WertheApp.RN
         //CONSTRUCTOR
         public CongestionAvoidance(int th, bool r, bool t)
         {
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
+
             initial_tresh = th;
             tresholdR = th;
             tresholdT = th;
@@ -532,8 +537,9 @@ namespace WertheApp.RN
             b_Restart = new Button
             {
                 Text = "Restart",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                //WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -543,8 +549,9 @@ namespace WertheApp.RN
             {
                 Text = "Dup ACK (" + dupAckCountR +")",
                 TextColor = Color.Green,
+                //WidthRequest = StackChildSize,
                 VerticalOptions = LayoutOptions.Center,
-                WidthRequest = StackChildSize
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_DupAck.IsEnabled = false;
             b_DupAck.Clicked += B_DupAck_Clicked;
@@ -553,8 +560,9 @@ namespace WertheApp.RN
             b_Timeout = new Button
             {
                 Text = "Timeout",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                //WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Timeout.Clicked += B_Timeout_Clicked;
             stackLayout.Children.Add(b_Timeout);
@@ -562,8 +570,9 @@ namespace WertheApp.RN
             b_NewAck = new Button
             {
                 Text = "New Acks",
-				WidthRequest = StackChildSize,
-				VerticalOptions = LayoutOptions.Center
+                //WidthRequest = StackChildSize,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_NewAck.Clicked += B_NewAck_Clicked;;
             stackLayout.Children.Add(b_NewAck);
@@ -610,7 +619,12 @@ namespace WertheApp.RN
             UpdateDrawing();
 
         }
-
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new CongestionAvoidanceInfo());
+        }
         /**********************************************************************
         *********************************************************************/
         //this method is called everytime the device is rotated

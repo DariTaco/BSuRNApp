@@ -186,18 +186,6 @@ namespace WertheApp.RN
             *********************************************************************/
             void CreateBottomHalf(Grid grid)
 		{
-            //set the size of the elements in such a way, that they all fit on the screen
-            //Screen Width is divided by the amount of elements (2)
-            //Screen Width -20 because Margin is 10
-            double stackChildSize;
-            if (landscape)
-            {
-                stackChildSize = (Application.Current.MainPage.Height - 20) / 3;
-            }
-            else
-            {
-                stackChildSize = (Application.Current.MainPage.Width - 20) / 3;
-            }
 
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
@@ -212,8 +200,8 @@ namespace WertheApp.RN
             b_Restart = new Button
             {
                 Text = "Restart",
-                WidthRequest = stackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -222,8 +210,8 @@ namespace WertheApp.RN
             b_Pause = new Button
             {
                 Text = "Pause",
-                WidthRequest = stackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Pause.Clicked += B_Stop_Clicked;
             stackLayout.Children.Add(b_Pause);
@@ -231,8 +219,8 @@ namespace WertheApp.RN
             Button b_Send = new Button
             {
                 Text = "Send",
-                WidthRequest = stackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Send.Clicked += B_Send_Clicked;
             stackLayout.Children.Add(b_Send);

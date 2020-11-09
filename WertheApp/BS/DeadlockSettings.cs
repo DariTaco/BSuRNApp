@@ -253,19 +253,22 @@ namespace WertheApp.BS
             //sl_buttons.Children.Add(b_ClearResources);
 
             //preset buttons
-            Label l_space11 = new Label { Text = " ", WidthRequest = 40 };
-            sl_buttons.Children.Add(l_space11);
-            var b_preset1 = new Button { Text = "Preset 1", HorizontalOptions = LayoutOptions.Start };
+            var b_preset1 = new Button { Text = "Preset 1",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
             b_preset1.Clicked += B_Preset1_Clicked; //add Click Event(Method)
             sl_buttons.Children.Add(b_preset1);
-            Label l_space13 = new Label { Text = " ", WidthRequest = 40 };
-            sl_buttons.Children.Add(l_space13);
-            var b_preset2 = new Button { Text = "Preset 2", HorizontalOptions = LayoutOptions.Start };
+            var b_preset2 = new Button { Text = "Preset 2",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
             b_preset2.Clicked += B_Preset2_Clicked; //add Click Event(Method)
             sl_buttons.Children.Add(b_preset2);
-            Label l_space3 = new Label { Text = " ", WidthRequest = 40 };
-            sl_buttons.Children.Add(l_space3);
-            var b_preset3 = new Button { Text = "Preset 3", HorizontalOptions = LayoutOptions.Start };
+            var b_preset3 = new Button { Text = "Preset 3",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
             b_preset3.Clicked += B_Preset3_Clicked; //add Click Event(Method)
             sl_buttons.Children.Add(b_preset3);
 

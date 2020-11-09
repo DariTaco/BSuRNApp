@@ -12,7 +12,6 @@ namespace WertheApp.BS
     public class OldAllocationStrategies : ContentPage
     {
         //VARIABLES
-        double StackChildSize;
         public static List<int> fragmentList { get; set; } //List of fragments. From Settings Page passed to the constructor and later accesed from Scene
         public static String strategy { get; set; } //Choosen strategy (Firts Fit, ...) from Settings Page passed to the constructor and later accesed from Scene
         public static Button b_Restart;
@@ -54,9 +53,10 @@ namespace WertheApp.BS
         //CONSTRUCTOR
         public OldAllocationStrategies(List<int> l, String s)
         {
-            //ToolbarItem i = new ToolbarItem();
-            //i.Text = "Help";
-            //this.ToolbarItems.Add(i);
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
 
             fragmentList = l;
             strategy = s;
@@ -167,15 +167,6 @@ namespace WertheApp.BS
         *********************************************************************/
 		void CreateBottomHalf(Grid grid)
 		{
-			//set the size of the elements in such a way, that they all fit on the screen
-            //Screen Width is divided by the amount of elements (9)
-            //Screen Width -20 because Margin is 10
-            if(!isContentCreated){
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 10;
-            }
-            else{
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 10;
-            }
 
             //Using a Stacklayout to organize elements
             //with corresponding labels and String variables. 
@@ -189,43 +180,61 @@ namespace WertheApp.BS
             b_Restart = new Button
             {
                 Text = "Restart",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.CenterAndExpand
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
             stackLayout.Children.Add(b_Restart);
 
-            var l_1 = new Label { Text = "Size:", WidthRequest = StackChildSize, 
-                VerticalOptions= LayoutOptions.Center};
-			l_Size = new Label { Text = size, WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center };
+            var l_1 = new Label { Text = "Size:",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
+			l_Size = new Label { Text = size,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
 			stackLayout.Children.Add(l_1);
             stackLayout.Children.Add(l_Size);
 
-            var l_2 = new Label { Text = "Free:", WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center };
-            l_Free = new Label { Text = free, WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center };
+            var l_2 = new Label { Text = "Free:",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
+            l_Free = new Label { Text = free,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
 			stackLayout.Children.Add(l_2);
             stackLayout.Children.Add(l_Free);
 
-            var l_3 = new Label { Text = "Diff.:", WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center };
-            l_Diff = new Label { Text = diff, WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center };
+            var l_3 = new Label { Text = "Diff.:",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
+            l_Diff = new Label { Text = diff,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
             stackLayout.Children.Add(l_3);
             stackLayout.Children.Add(l_Diff);
 
-            var l_4 = new Label { Text = "Best:", WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center };
-            l_Best = new Label { Text = best, WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.Center};
+            var l_4 = new Label { Text = "Best:",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
+            l_Best = new Label { Text = best,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
 			stackLayout.Children.Add(l_4);
             stackLayout.Children.Add(l_Best);
 
-			var b_Next = new Button{ Text = "Next", WidthRequest = StackChildSize, 
-                VerticalOptions = LayoutOptions.CenterAndExpand };
+			var b_Next = new Button{ Text = "Next",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
             b_Next.Clicked += B_Next_Clicked;
             stackLayout.Children.Add(b_Next);
 
@@ -324,8 +333,14 @@ namespace WertheApp.BS
 			}
 
         }
-		//this method is called everytime the device is rotated
-		protected override void OnSizeAllocated(double width, double height)
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new OldAllocationStrategiesInfo());
+        }
+        //this method is called everytime the device is rotated
+        protected override void OnSizeAllocated(double width, double height)
 		{
 			base.OnSizeAllocated(width, height); //must be called
 			if (this.width != width || this.height != height)

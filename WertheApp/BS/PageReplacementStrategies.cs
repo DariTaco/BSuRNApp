@@ -11,7 +11,6 @@ namespace WertheApp.BS
     public class PageReplacementStrategies : ContentPage
     {
         //VARIABLES
-        double StackChildSize;
         public static List<int> OrigSequenceList;
         public static List<int> SequenceList { get; set; }
         public static String strategy;
@@ -50,6 +49,10 @@ namespace WertheApp.BS
         //CONSTRUCTOR
         public PageReplacementStrategies(List<int> l, String s, int r, int d)
         {
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
 
             OrigSequenceList = new List<int>( l );
             SequenceList = l;
@@ -914,18 +917,6 @@ namespace WertheApp.BS
         *********************************************************************/
         void CreateBottomHalf(Grid grid)
         {
-            //set the size of the elements in such a way, that they all fit on the screen
-            //Screen Width is divided by the amount of elements (3)
-            //Screen Width -20 because Margin is 10
-            if (!landscape)
-            {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 5;
-            }
-            else
-            {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 5;
-            }
-
             //Using a Stacklayout to organize elements
             //with corresponding labels and String variables. 
             //For example l_Size, size
@@ -940,8 +931,8 @@ namespace WertheApp.BS
             b_Restart = new Button
             {
                 Text = "Restart",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -950,8 +941,8 @@ namespace WertheApp.BS
             b_Set_Rbit = new Button
             {
                 Text = "Set R-Bit",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Set_Rbit.Clicked += B_Set_Rbit_Clicked;
             stackLayout.Children.Add(b_Set_Rbit);
@@ -959,8 +950,8 @@ namespace WertheApp.BS
             b_Reset_Rbits = new Button
             {
                 Text = "Reset R-Bits",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Reset_Rbits.Clicked += B_Reset_Rbits_Clicked;
             stackLayout.Children.Add(b_Reset_Rbits);
@@ -968,8 +959,8 @@ namespace WertheApp.BS
             b_Set_Mbit = new Button
             {
                 Text = "Set M-Bit",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Set_Mbit.Clicked += B_Set_Mbit_Clicked;
             stackLayout.Children.Add(b_Set_Mbit);
@@ -977,8 +968,8 @@ namespace WertheApp.BS
             b_Next = new Button
             {
                 Text = "Next",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Next.Clicked += B_Next_Clicked;
             stackLayout.Children.Add(b_Next);
@@ -1121,7 +1112,12 @@ namespace WertheApp.BS
             Debug.WriteLine(s);
         }
 
-
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new PageReplacementStrategiesInfo());
+        }
         /**********************************************************************
         *********************************************************************/
         //print 3d array

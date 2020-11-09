@@ -10,7 +10,6 @@ namespace WertheApp.BS
     public class BuddySystem : ContentPage
     {
         //VARIABLES
-        public static double StackChildSize;
         public static double absoluteMemorySize;
         public static int powerOfTwo;
 		
@@ -33,6 +32,11 @@ namespace WertheApp.BS
         //CONSTRUCTOR
         public BuddySystem(int a)
         {
+            ToolbarItem info = new ToolbarItem();
+            info.Text = "Info";
+            this.ToolbarItems.Add(info);
+            info.Clicked += B_Info_Clicked;
+
             Title = "Buddy System";
 
             powerOfTwo = a;
@@ -314,18 +318,7 @@ namespace WertheApp.BS
 		/**********************************************************************
         *********************************************************************/
 		void CreateBottomHalf(Grid grid){
-			//set the size of the elements in such a way, that they all fit on the screen
-			//Screen Width is divided by the amount of elements (2)
-			//Screen Width -20 because Margin is 10
-            if (!isContentCreated)
-            {
-                StackChildSize = (Application.Current.MainPage.Height - 20) / 3;
-            }
-            else
-            {
-                StackChildSize = (Application.Current.MainPage.Width - 20) / 3;
-            }
-
+		
 			//Using a Stacklayout to organize elements
 			//with corresponding labels and String variables. 
 			//For example l_Size, size
@@ -339,8 +332,8 @@ namespace WertheApp.BS
             b_Restart = new Button
             {
                 Text = "Restart",
-                WidthRequest = StackChildSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -349,18 +342,18 @@ namespace WertheApp.BS
             var b_Start = new Button
 			{
 				Text = "Start Process",
-				WidthRequest = StackChildSize,
-				VerticalOptions = LayoutOptions.Center
-			};
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
 			b_Start.Clicked += B_Start_Clicked;
 			stackLayout.Children.Add(b_Start);
 
 			var b_End = new Button
 			{
 				Text = "End Process",
-				WidthRequest = StackChildSize,
-				VerticalOptions = LayoutOptions.Center
-			};
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
 			b_End.Clicked += B_End_Clicked;
 			stackLayout.Children.Add(b_End);
 
@@ -432,7 +425,12 @@ namespace WertheApp.BS
                 //DisplayAlert("Alert", "Please rotate the device", "OK");
             }
 		}
-
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new BuddySystemInfo());
+        }
         /**********************************************************************
         *********************************************************************/
         //Debug Fuction: prints the memory

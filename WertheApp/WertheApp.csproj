@@ -95,6 +95,14 @@
     <Compile Include="BS\DeadlockViewCell.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="RN\PipelineProtocolsInfo.cs" />
+    <Compile Include="BS\DeadlockInfo.cs" />
+    <Compile Include="BS\BuddySystemInfo.cs" />
+    <Compile Include="BS\OldAllocationStrategiesInfo.cs" />
+    <Compile Include="BS\PageReplacementStrategiesInfo.cs" />
+    <Compile Include="RN\AckGenerationInfo.cs" />
+    <Compile Include="RN\CongestionAvoidanceInfo.cs" />
+    <Compile Include="RN\DijkstraInfo.cs" />
+    <Compile Include="RN\RenoFastRecoveryInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">
