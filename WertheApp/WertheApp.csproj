@@ -29,7 +29,6 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml" />
-    <EmbeddedResource Include="WertheAppPage.xaml" />
     <EmbeddedResource Include="Shared Resources\hsLogo.png">
       <LogicalName>hsLogo.png</LogicalName>
       <IncludeInPackage>true</IncludeInPackage>
@@ -44,65 +43,66 @@
     <EmbeddedResource Include="Shared Resources\AalenHS1.png">
       <LogicalName>AalenHS1.png</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainMenu\WertheAppPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WertheAppPage.xaml.cs">
-      <DependentUpon>WertheAppPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BS\OldAllocationStrategies.cs" />
-    <Compile Include="BS\BuddySystem.cs" />
-    <Compile Include="BS\PageReplacementStrategies.cs" />
-    <Compile Include="RN\CongestionAvoidance.cs" />
-    <Compile Include="RN\PipelineProtocols.cs" />
-    <Compile Include="Betriebssysteme.cs" />
-    <Compile Include="Rechnernetze.cs" />
     <Compile Include="Helping Classes\Metrics.cs" />
-    <Compile Include="BS\OldAllocationStrategiesScene.cs" />
-    <Compile Include="BS\OldAllocationStrategiesSettings.cs" />
-    <Compile Include="BS\BuddySystemSettings.cs" />
-    <Compile Include="BS\PageReplacementStrategiesSettings.cs" />
-    <Compile Include="RN\CongestionAvoidanceSettings.cs" />
-    <Compile Include="RN\PipelineProtocolsSettings.cs" />
-    <Compile Include="RN\PipelineProtocolsScene.cs" />
-    <Compile Include="BS\OldAllocationStrategiesModal.cs" />
-    <Compile Include="BS\BuddySystemModal.cs" />
-    <Compile Include="BS\BuddySystemModal2.cs" />
-    <Compile Include="RN\PipelineProtocolsScene2.cs" />
-    <Compile Include="RN\PipelineProtocolsACK.cs" />
-    <Compile Include="RN\PipelineProtocolsPack.cs" />
-    <Compile Include="BS\BuddySystemViewCell.cs" />
-    <Compile Include="BS\BuddySystemBlock.cs" />
-    <Compile Include="BS\PageReplacementStrategiesDraw.cs" />
-    <Compile Include="RN\CongestionAvoidanceDraw.cs" />
-    <Compile Include="RN\RenoFastRecovery.cs" />
-    <Compile Include="RN\RenoFastRecoveryDraw.cs" />
-    <Compile Include="RN\AckGeneration.cs" />
-    <Compile Include="RN\AckGenerationDraw.cs" />
-    <Compile Include="RN\Dijkstra.cs" />
-    <Compile Include="RN\DijkstraSettings.cs" />
-    <Compile Include="RN\DijkstraDraw.cs" />
-    <Compile Include="RN\DijkstraSettingsDraw.cs" />
-    <Compile Include="RN\DijkstraAlgorithm.cs" />
-    <Compile Include="BS\Deadlock.cs" />
-    <Compile Include="BS\DeadlockSettings.cs" />
     <Compile Include="Helping Classes\TemplateSkiaSharp.cs" />
     <Compile Include="Helping Classes\TemplateSkiaSharpDraw.cs" />
     <Compile Include="Helping Classes\TemplateSkiaSharpSettings.cs" />
-    <Compile Include="BS\DeadlockViewCell.cs" />
-    <Compile Include="Info.cs" />
-    <Compile Include="RN\PipelineProtocolsInfo.cs" />
-    <Compile Include="BS\DeadlockInfo.cs" />
-    <Compile Include="BS\BuddySystemInfo.cs" />
-    <Compile Include="BS\OldAllocationStrategiesInfo.cs" />
-    <Compile Include="BS\PageReplacementStrategiesInfo.cs" />
-    <Compile Include="RN\AckGenerationInfo.cs" />
-    <Compile Include="RN\CongestionAvoidanceInfo.cs" />
-    <Compile Include="RN\DijkstraInfo.cs" />
-    <Compile Include="RN\RenoFastRecoveryInfo.cs" />
+    <Compile Include="CN\Ack Generation\AckGeneration.cs" />
+    <Compile Include="CN\Ack Generation\AckGenerationDraw.cs" />
+    <Compile Include="CN\Ack Generation\AckGenerationInfo.cs" />
+    <Compile Include="CN\Congestion Control\CongestionControlDraw.cs" />
+    <Compile Include="CN\Congestion Control\CongestionControlInfo.cs" />
+    <Compile Include="CN\Congestion Control\CongestionControlSettings.cs" />
+    <Compile Include="CN\Congestion Control\CongestionControl.cs" />
+    <Compile Include="CN\Dijkstra\Dijkstra.cs" />
+    <Compile Include="CN\Dijkstra\DijkstraAlgorithm.cs" />
+    <Compile Include="CN\Dijkstra\DijkstraDraw.cs" />
+    <Compile Include="CN\Dijkstra\DijkstraInfo.cs" />
+    <Compile Include="CN\Dijkstra\DijkstraSettings.cs" />
+    <Compile Include="CN\Dijkstra\DijkstraSettingsDraw.cs" />
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocols.cs" />
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsACK.cs" />
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsInfo.cs" />
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsPack.cs" />
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsScene.cs" />
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsScene2.cs" />
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsSettings.cs" />
+    <Compile Include="CN\Reno Fast Recovery\RenoFastRecovery.cs" />
+    <Compile Include="CN\Reno Fast Recovery\RenoFastRecoveryDraw.cs" />
+    <Compile Include="CN\Reno Fast Recovery\RenoFastRecoveryInfo.cs" />
+    <Compile Include="OS\Buddy System\BuddySystem.cs" />
+    <Compile Include="OS\Buddy System\BuddySystemBlock.cs" />
+    <Compile Include="OS\Buddy System\BuddySystemInfo.cs" />
+    <Compile Include="OS\Buddy System\BuddySystemModal.cs" />
+    <Compile Include="OS\Buddy System\BuddySystemModal2.cs" />
+    <Compile Include="OS\Buddy System\BuddySystemSettings.cs" />
+    <Compile Include="OS\Buddy System\BuddySystemViewCell.cs" />
+    <Compile Include="OS\Deadlock\Deadlock.cs" />
+    <Compile Include="OS\Deadlock\DeadlockInfo.cs" />
+    <Compile Include="OS\Deadlock\DeadlockSettings.cs" />
+    <Compile Include="OS\Deadlock\DeadlockViewCell.cs" />
+    <Compile Include="OS\Allocation Strategies\OldAllocationStrategies.cs" />
+    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesInfo.cs" />
+    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesModal.cs" />
+    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesScene.cs" />
+    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesSettings.cs" />
+    <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategies.cs" />
+    <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesDraw.cs" />
+    <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesInfo.cs" />
+    <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesSettings.cs" />
+    <Compile Include="MainMenu\ComputerNetworks.cs" />
+    <Compile Include="MainMenu\OperatingSystems.cs" />
+    <Compile Include="MainMenu\WertheAppPage.xaml.cs">
+      <DependentUpon>WertheAppPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainMenu\Info.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">
@@ -110,10 +110,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BS\" />
-    <Folder Include="RN\" />
+    <Folder Include="OS\" />
+    <Folder Include="CN\" />
     <Folder Include="Shared Resources\" />
     <Folder Include="Helping Classes\" />
+    <Folder Include="CN\Ack Generation\" />
+    <Folder Include="CN\Congestion Control\" />
+    <Folder Include="CN\Dijkstra\" />
+    <Folder Include="CN\Pipeline Protocols\" />
+    <Folder Include="CN\Reno Fast Recovery\" />
+    <Folder Include="OS\Buddy System\" />
+    <Folder Include="OS\Deadlock\" />
+    <Folder Include="OS\Allocation Strategies\" />
+    <Folder Include="OS\Page Replacement Strategies\" />
+    <Folder Include="MainMenu\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

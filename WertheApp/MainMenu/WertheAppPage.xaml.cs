@@ -6,6 +6,7 @@ namespace WertheApp
 {
     public partial class WertheAppPage : ContentPage
     {
+		
         //CONSTRUCTOR
         public WertheAppPage()
         {
@@ -17,7 +18,7 @@ namespace WertheApp
 			info.Clicked += B_Info_Clicked;
 
 			Title = "WertheApp";
-            //Title = "Start Screen"
+			//Title = "Start Screen"
 
 			// This is the top-level grid, which will split our page in half
 			var grid = new Grid();
@@ -85,7 +86,10 @@ namespace WertheApp
 
 			var b_bs = new Button
 			{
-				Text = "Operating Systems"
+				Text = "Operating Systems",
+				BackgroundColor = App._buttonBackground,
+				TextColor = App._buttonText,
+				CornerRadius = App._buttonCornerRadius
 			};
             b_bs.Clicked += B_Bs_Clicked;
 
@@ -93,7 +97,10 @@ namespace WertheApp
 
 			var b_rn = new Button
 			{
-				Text = "Computer Networks"
+				Text = "Computer Networks",
+				BackgroundColor = App._buttonBackground,
+				TextColor = App._buttonText,
+				CornerRadius = App._buttonCornerRadius
 			};
             b_rn.Clicked += B_Rn_Clicked;
 			stackLayout.Children.Add(b_rn);

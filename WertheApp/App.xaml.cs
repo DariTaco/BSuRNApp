@@ -4,10 +4,28 @@ namespace WertheApp
 {
     public partial class App : Application
     {
+        public static Color _buttonBackground { get; set; }
+        public static Color _buttonText { get; set; }
+        public static int _buttonCornerRadius { get; set; }
+        public static Color _buttonColor = new Color(0.13, 0.58, 0.95, 0.8);
         public App()
         {
             InitializeComponent();
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                
+                _buttonBackground = _buttonColor;
+                //_buttonBackground.AddLuminosity(50.0);
+                _buttonText = Color.White;
+                _buttonCornerRadius = 50;
+            }
+            else
+            {
+                _buttonBackground = Color.Transparent;
+                _buttonText = Color.Accent;
+                _buttonCornerRadius = 5;
 
+            }
             MainPage = new NavigationPage(new WertheAppPage());
         }
 
