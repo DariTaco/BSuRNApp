@@ -37,7 +37,9 @@ namespace WertheApp
 
             var l_changes = new Label { Text = "changes: ", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             stackL.Children.Add(l_changes);
-            var l_08112020 = new Label { Text = "08-Nov-2020: dark mode", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_18112020 = new Label { Text = "18-Nov-2020: bug fixes (v. 1.61)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            stackL.Children.Add(l_18112020);
+            var l_08112020 = new Label { Text = "08-Nov-2020: dark mode (v 1.6)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_08112020);
             var l_03112020 = new Label { Text = "03-Nov-2020: bug fixes", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_03112020);
@@ -45,7 +47,7 @@ namespace WertheApp
             stackL.Children.Add(l_25102020);
             var l_25102020b = new Label { Text = "25-Oct-2020: Deadlock (new)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_25102020b);
-            var l_24102020b = new Label { Text = "24-Oct-2020: versioning introduced", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_24102020b = new Label { Text = "24-Oct-2020: versioning introduced (v. 1.5)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_24102020b);
             VersionTracking.Track();
         }
