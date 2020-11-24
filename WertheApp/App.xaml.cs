@@ -8,6 +8,7 @@ namespace WertheApp
         public static Color _buttonText { get; set; }
         public static int _buttonCornerRadius { get; set; }
         public static Color _buttonColor = new Color(0.13, 0.58, 0.95, 0.8);
+        public static string _sHelpInfoHint { get; set; }
         public App()
         {
             InitializeComponent();
@@ -26,6 +27,7 @@ namespace WertheApp
                 _buttonCornerRadius = 5;
 
             }
+            _sHelpInfoHint = "HELP";
             MainPage = new NavigationPage(new WertheAppPage());
         }
 

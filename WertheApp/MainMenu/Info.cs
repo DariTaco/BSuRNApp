@@ -27,27 +27,41 @@ namespace WertheApp
         public Info()
         {
             Title = "Info";
-            StackLayout stackL = new StackLayout { };
-            Content = stackL;
+
+            var scrollView = new ScrollView
+            {
+                Margin = new Thickness(10)
+            };
+            var stackL = new StackLayout();
+
+            this.Content = scrollView;
+            scrollView.Content = stackL; //Wrap ScrollView around StackLayout to be able to scroll the content
+
+          
 
             // Current app version 
             var currentVersion = VersionTracking.CurrentVersion;
             var l_version = new Label { Text = "current version " + currentVersion , FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             stackL.Children.Add(l_version);
 
-            var l_changes = new Label { Text = "changes: ", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
-            stackL.Children.Add(l_changes);
-            var l_18112020 = new Label { Text = "18-Nov-2020: bug fixes (v. 1.61)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_history = new Label { Text = "History ", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
+            stackL.Children.Add(l_history);
+
+
+
+            var l_24112020 = new Label { Text = "18-Nov-2020, v. 1.6.2 : bug fixes ", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            stackL.Children.Add(l_24112020);
+            var l_18112020 = new Label { Text = "18-Nov-2020, v. 1.6.1 : bug fixes ", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_18112020);
-            var l_08112020 = new Label { Text = "08-Nov-2020: dark mode (v 1.6)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_08112020 = new Label { Text = "08-Nov-2020, v. 1.6.0 : dark mode", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_08112020);
-            var l_03112020 = new Label { Text = "03-Nov-2020: bug fixes", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_03112020 = new Label { Text = "03-Nov-2020, v. 1.6.0: bug fixes", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_03112020);
-            var l_25102020 = new Label { Text = "25-Oct-2020: restart buttons added", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_25102020 = new Label { Text = "25-Oct-2020, v. 1.5.0: restart buttons added", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_25102020);
-            var l_25102020b = new Label { Text = "25-Oct-2020: Deadlock (new)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_25102020b = new Label { Text = "25-Oct-2020, v. 1.5.0: Deadlock (new)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_25102020b);
-            var l_24102020b = new Label { Text = "24-Oct-2020: versioning introduced (v. 1.5)", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_24102020b = new Label { Text = "24-Oct-2020, v. 1.5.0: versioning introduced", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_24102020b);
             VersionTracking.Track();
         }
