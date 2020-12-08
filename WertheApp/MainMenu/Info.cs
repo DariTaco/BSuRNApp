@@ -23,12 +23,15 @@ namespace WertheApp
 {
     public class Info : ContentPage
     {
+        ScrollView scrollView;
+        Label l_lastLabel;
+
         //CONSTRUCTOR
         public Info()
         {
             Title = "Info";
 
-            var scrollView = new ScrollView
+            scrollView = new ScrollView
             {
                 Margin = new Thickness(10)
             };
@@ -64,6 +67,24 @@ namespace WertheApp
             var l_24102020b = new Label { Text = "24-Oct-2020, v. 1.5.0: versioning introduced", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_24102020b);
             VersionTracking.Track();
+
+            l_lastLabel = new Label { Text = "" };
+            stackL.Children.Add(l_lastLabel);
+        }
+
+
+        public async void scroll()
+        {
+            //await scrollView.ScrollToAsync(0, 1500, true);
+            await scrollView.ScrollToAsync(l_lastLabel, ScrollToPosition.End, true);
+
+
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            scroll();
         }
     }
 }

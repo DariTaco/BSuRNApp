@@ -27,7 +27,7 @@ namespace WertheApp
                 _buttonCornerRadius = 5;
 
             }
-            _sHelpInfoHint = "HELP";
+            _sHelpInfoHint = "Help";
             MainPage = new NavigationPage(new WertheAppPage());
         }
 
