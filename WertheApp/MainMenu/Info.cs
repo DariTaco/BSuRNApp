@@ -50,9 +50,11 @@ namespace WertheApp
             var l_history = new Label { Text = "History ", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             stackL.Children.Add(l_history);
 
-
-
-            var l_24112020 = new Label { Text = "18-Nov-2020, v. 1.6.2 : bug fixes ", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            var l_14122020 = new Label { Text = "14-Dec-2020, v. 1.6.4 : bug fixes ", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            stackL.Children.Add(l_14122020);
+            var l_07122020 = new Label { Text = "7-Dec-2020, v. 1.6.3 : bug fixes ", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
+            stackL.Children.Add(l_07122020);
+            var l_24112020 = new Label { Text = "24-Nov-2020, v. 1.6.2 : bug fixes ", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_24112020);
             var l_18112020 = new Label { Text = "18-Nov-2020, v. 1.6.1 : bug fixes ", FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
             stackL.Children.Add(l_18112020);
