@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>WertheApp.Droid</RootNamespace>
     <AssemblyName>WertheApp.Droid</AssemblyName>
-    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -25,9 +25,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AndroidHttpClientHandlerType></AndroidHttpClientHandlerType>
     <AndroidSigningKeyPass></AndroidSigningKeyPass>
-    <AndroidHttpClientHandlerType></AndroidHttpClientHandlerType>
     <AndroidSigningKeyPass></AndroidSigningKeyPass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
