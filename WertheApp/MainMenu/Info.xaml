@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="WertheApp.Info">
+    <ContentPage.Content>
+        <ScrollView x:Name="scrollView" Margin="10">
+            <StackLayout>
+                <Label Text="History" FontSize="30"/>
+                <Label x:Name="l_version" Text="{Binding currentVersion, StringFormat='The current version is {0:F0} &#10;'}"/>
+
+                <Label Text="&#x2022; WertheApp 1.6.7: Congestion Control bug fix"/>
+                <Label Text="&#x2022; WertheApp 1.6.6: Combined Fit bug fix"/>
+                <Label Text="&#x2022; WertheApp 1.6.5: Page Replacement Strategies Help"/>
+                <Label Text="&#x2022; WertheApp 1.6.4: Combined Fit replaces Tailoring Best Fit"/>
+                <Label Text="&#x2022; WertheApp 1.6.3: bug fixes"/>
+                <Label Text="&#x2022; WertheApp 1.6.2: bug fixes"/>
+                <Label Text="&#x2022; WertheApp 1.6.1: bug fixes"/>
+                <Label Text="&#x2022; WertheApp 1.6.0: bug fixes, dark mode"/>
+                <Label Text="&#x2022; WertheApp 1.5.0: restart buttons, Deadlock, versioning introduced in Oct. 2020 &#10;"/>
+
+
+
+
+                 <Label x:Name="last"/>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

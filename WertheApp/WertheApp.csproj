@@ -44,6 +44,46 @@
       <LogicalName>AalenHS1.png</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="MainMenu\WertheAppPage.xaml" />
+    <EmbeddedResource Include="OS\Page Replacement Strategies\PageReplacementStrategiesHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OS\Allocation Strategies\AllocationStrategiesHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainMenu\Info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OS\Buddy System\BuddySystemHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OS\Deadlock\DeadlockHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CN\Reno Fast Recovery\RenoFastRecoveryHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CN\Pipeline Protocols\PipelineProtocolsHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CN\Dijkstra\DijkstraHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CN\Congestion Control\CongestionControlHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CN\Ack Generation\AckGenerationHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -56,53 +96,73 @@
     <Compile Include="Helping Classes\TemplateSkiaSharpSettings.cs" />
     <Compile Include="CN\Ack Generation\AckGeneration.cs" />
     <Compile Include="CN\Ack Generation\AckGenerationDraw.cs" />
-    <Compile Include="CN\Ack Generation\AckGenerationInfo.cs" />
     <Compile Include="CN\Congestion Control\CongestionControlDraw.cs" />
-    <Compile Include="CN\Congestion Control\CongestionControlInfo.cs" />
     <Compile Include="CN\Congestion Control\CongestionControlSettings.cs" />
     <Compile Include="CN\Congestion Control\CongestionControl.cs" />
     <Compile Include="CN\Dijkstra\Dijkstra.cs" />
     <Compile Include="CN\Dijkstra\DijkstraAlgorithm.cs" />
     <Compile Include="CN\Dijkstra\DijkstraDraw.cs" />
-    <Compile Include="CN\Dijkstra\DijkstraInfo.cs" />
     <Compile Include="CN\Dijkstra\DijkstraSettings.cs" />
     <Compile Include="CN\Dijkstra\DijkstraSettingsDraw.cs" />
     <Compile Include="CN\Pipeline Protocols\PipelineProtocols.cs" />
     <Compile Include="CN\Pipeline Protocols\PipelineProtocolsACK.cs" />
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsInfo.cs" />
     <Compile Include="CN\Pipeline Protocols\PipelineProtocolsPack.cs" />
     <Compile Include="CN\Pipeline Protocols\PipelineProtocolsScene.cs" />
     <Compile Include="CN\Pipeline Protocols\PipelineProtocolsScene2.cs" />
     <Compile Include="CN\Pipeline Protocols\PipelineProtocolsSettings.cs" />
     <Compile Include="CN\Reno Fast Recovery\RenoFastRecovery.cs" />
     <Compile Include="CN\Reno Fast Recovery\RenoFastRecoveryDraw.cs" />
-    <Compile Include="CN\Reno Fast Recovery\RenoFastRecoveryInfo.cs" />
     <Compile Include="OS\Buddy System\BuddySystem.cs" />
     <Compile Include="OS\Buddy System\BuddySystemBlock.cs" />
-    <Compile Include="OS\Buddy System\BuddySystemInfo.cs" />
     <Compile Include="OS\Buddy System\BuddySystemModal.cs" />
     <Compile Include="OS\Buddy System\BuddySystemModal2.cs" />
     <Compile Include="OS\Buddy System\BuddySystemSettings.cs" />
     <Compile Include="OS\Buddy System\BuddySystemViewCell.cs" />
     <Compile Include="OS\Deadlock\Deadlock.cs" />
-    <Compile Include="OS\Deadlock\DeadlockInfo.cs" />
     <Compile Include="OS\Deadlock\DeadlockSettings.cs" />
     <Compile Include="OS\Deadlock\DeadlockViewCell.cs" />
     <Compile Include="OS\Allocation Strategies\OldAllocationStrategies.cs" />
-    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesInfo.cs" />
     <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesModal.cs" />
     <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesScene.cs" />
     <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesSettings.cs" />
     <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategies.cs" />
     <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesDraw.cs" />
-    <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesInfo.cs" />
     <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesSettings.cs" />
     <Compile Include="MainMenu\ComputerNetworks.cs" />
     <Compile Include="MainMenu\OperatingSystems.cs" />
     <Compile Include="MainMenu\WertheAppPage.xaml.cs">
       <DependentUpon>WertheAppPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainMenu\Info.cs" />
+    <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesHelp.xaml.cs">
+      <DependentUpon>PageReplacementStrategiesHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OS\Allocation Strategies\AllocationStrategiesHelp.xaml.cs">
+      <DependentUpon>AllocationStrategiesHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainMenu\Info.xaml.cs">
+      <DependentUpon>Info.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OS\Buddy System\BuddySystemHelp.xaml.cs">
+      <DependentUpon>BuddySystemHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OS\Deadlock\DeadlockHelp.xaml.cs">
+      <DependentUpon>DeadlockHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CN\Reno Fast Recovery\RenoFastRecoveryHelp.xaml.cs">
+      <DependentUpon>RenoFastRecoveryHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsHelp.xaml.cs">
+      <DependentUpon>PipelineProtocolsHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CN\Dijkstra\DijkstraHelp.xaml.cs">
+      <DependentUpon>DijkstraHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CN\Congestion Control\CongestionControlHelp.xaml.cs">
+      <DependentUpon>CongestionControlHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CN\Ack Generation\AckGenerationHelp.xaml.cs">
+      <DependentUpon>AckGenerationHelp.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

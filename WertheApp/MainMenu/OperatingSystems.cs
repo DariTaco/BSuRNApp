@@ -1,6 +1,6 @@
-﻿using WertheApp.BS;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using System.Diagnostics;
+using WertheApp.OS;
 
 namespace WertheApp
 {
