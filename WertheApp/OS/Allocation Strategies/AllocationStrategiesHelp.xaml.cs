@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 
-namespace WertheApp.OS
+namespace WertheApp.OS.AllocationStrategies
 {
     public partial class AllocationStrategiesHelp : ContentPage
     {

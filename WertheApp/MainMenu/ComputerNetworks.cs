@@ -48,25 +48,13 @@ namespace WertheApp
                     case "Pipeline Protocols":
                         await Navigation.PushAsync(new PipelineProtocolsSettings());
                         break;
-                    case "Reno Fast Recovery":
-                        if (IsLandscape())
-                        {
-                            await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
-                        }
+                    case "Reno Fast Recovery":                        
                         await Navigation.PushAsync(new RenoFastRecovery());
                         break;
                     case "Ack Generation":
-                        if (IsLandscape())
-                        {
-                            await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
-                        }
                         await Navigation.PushAsync(new AckGeneration());
                         break;
                     case "Dijkstra":
-                        if (IsLandscape())
-                        {
-                            await DisplayAlert("Alert", "Please hold your phone vertically for portrait mode", "OK");
-                        }
                         DijkstraSettings.ClearNetworkList();
                         await Navigation.PushAsync(new DijkstraSettings());
                         break;
@@ -76,21 +64,10 @@ namespace WertheApp
 
 			stackLayout.Children.Add(listView);
 		}
-
-        /**********************************************************************
-        *********************************************************************/
-        static bool IsLandscape()
+        protected override void OnAppearing()
         {
-            bool isLandscape = false;
-            if (Application.Current.MainPage.Width > Application.Current.MainPage.Height)
-            {
-                isLandscape = true;
-            }
-            else
-            {
-                isLandscape = false;
-            }
-            return isLandscape;
+            base.OnAppearing();
+            MessagingCenter.Send<object>(this, "Unspecified");
         }
     }
 }

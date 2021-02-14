@@ -1,6 +1,7 @@
 ﻿using Xamarin.Forms;
 using System.Diagnostics;
 using WertheApp.OS;
+using WertheApp.OS.AllocationStrategies;
 
 namespace WertheApp
 {
@@ -42,7 +43,7 @@ namespace WertheApp
 				switch (appName)
 				{
 					case "Allocation Strategies":
-                        await Navigation.PushAsync(new OldAllocationStrategiesSettings());
+                        await Navigation.PushAsync(new AllocationStrategiesSettings());
 						break;
 					case "Buddy System":
 						await Navigation.PushAsync(new BuddySystemSettings());
@@ -59,5 +60,11 @@ namespace WertheApp
 
             stackLayout.Children.Add(listView);
 		}
-    }
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			MessagingCenter.Send<object>(this, "Unspecified");
+		}
+	}
 }

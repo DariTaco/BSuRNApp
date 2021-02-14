@@ -48,10 +48,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="OS\Allocation Strategies\AllocationStrategiesHelp.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainMenu\Info.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -81,6 +77,10 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="CN\Ack Generation\AckGenerationHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OS\Allocation Strategies\AllocationStrategiesHelp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -121,10 +121,10 @@
     <Compile Include="OS\Deadlock\Deadlock.cs" />
     <Compile Include="OS\Deadlock\DeadlockSettings.cs" />
     <Compile Include="OS\Deadlock\DeadlockViewCell.cs" />
-    <Compile Include="OS\Allocation Strategies\OldAllocationStrategies.cs" />
-    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesModal.cs" />
-    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesScene.cs" />
-    <Compile Include="OS\Allocation Strategies\OldAllocationStrategiesSettings.cs" />
+    <Compile Include="OS\Allocation Strategies Old\OldAllocationStrategies.cs" />
+    <Compile Include="OS\Allocation Strategies Old\OldAllocationStrategiesModal.cs" />
+    <Compile Include="OS\Allocation Strategies Old\OldAllocationStrategiesScene.cs" />
+    <Compile Include="OS\Allocation Strategies Old\OldAllocationStrategiesSettings.cs" />
     <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategies.cs" />
     <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesDraw.cs" />
     <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesSettings.cs" />
@@ -135,9 +135,6 @@
     </Compile>
     <Compile Include="OS\Page Replacement Strategies\PageReplacementStrategiesHelp.xaml.cs">
       <DependentUpon>PageReplacementStrategiesHelp.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="OS\Allocation Strategies\AllocationStrategiesHelp.xaml.cs">
-      <DependentUpon>AllocationStrategiesHelp.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainMenu\Info.xaml.cs">
       <DependentUpon>Info.xaml</DependentUpon>
@@ -163,6 +160,13 @@
     <Compile Include="CN\Ack Generation\AckGenerationHelp.xaml.cs">
       <DependentUpon>AckGenerationHelp.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OS\Allocation Strategies\AllocationStrategiesSettings.cs" />
+    <Compile Include="OS\Allocation Strategies\AllocationStrategiesHelp.xaml.cs">
+      <DependentUpon>AllocationStrategiesHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OS\Allocation Strategies\AllocationStrategies.cs" />
+    <Compile Include="OS\Allocation Strategies\AllocationStrategiesAlgorithm.cs" />
+    <Compile Include="OS\Allocation Strategies\AllocationStrategiesDraw.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">
@@ -181,9 +185,10 @@
     <Folder Include="CN\Reno Fast Recovery\" />
     <Folder Include="OS\Buddy System\" />
     <Folder Include="OS\Deadlock\" />
-    <Folder Include="OS\Allocation Strategies\" />
+    <Folder Include="OS\Allocation Strategies Old\" />
     <Folder Include="OS\Page Replacement Strategies\" />
     <Folder Include="MainMenu\" />
+    <Folder Include="OS\Allocation Strategies\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

@@ -4,6 +4,10 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Xamarin.Forms;
+using WertheApp.OS.AllocationStrategies;
+using WertheApp.OS;
+using WertheApp.CN;
 
 namespace WertheApp.iOS
 {
@@ -16,6 +20,16 @@ namespace WertheApp.iOS
 
             LoadApplication(new App());
 
+            // Subscribe to Screen Orientation Messages
+            MessagingCenter.Subscribe<object>(this, "Portrait", sender => {
+                UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)(UIInterfaceOrientation.Portrait)), new NSString("orientation"));
+            });
+            MessagingCenter.Subscribe<object>(this, "Landscape", sender => {
+                UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)(UIInterfaceOrientation.LandscapeRight)), new NSString("orientation"));
+            });
+            MessagingCenter.Subscribe<object>(this, "Unspecified", sender => {
+                UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)(UIInterfaceOrientation.Unknown)), new NSString("orientation"));
+            });
             return base.FinishedLaunching(app, options);
         }
     }
