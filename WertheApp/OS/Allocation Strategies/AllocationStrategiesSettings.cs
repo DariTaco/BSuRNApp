@@ -98,11 +98,14 @@ namespace WertheApp.OS.AllocationStrategies
             if (p_Algorithm.SelectedIndex != -1 && e_Fragmentation.Text != null && ValidateFragmentationInput())
             {
                 CreateFragmentsList();
-                await Navigation.PushAsync(new AllocationStrategies());
+                await Navigation.PushAsync(new AllocationStrategies(p_Algorithm.SelectedItem.ToString()));
             }
+
             //actually not needed. Case should never occur
             else if (e_Fragmentation.Text == null) { await DisplayAlert("Alert", "fragmentation = null", "OK"); }
+
             else if (!ValidateFragmentationInput()) { await DisplayAlert("Alert", "Please insert a valid fragmentation! (only digits, greater than zero, separated by a comma)", "OK"); }
+
             else { await DisplayAlert("Alert", "Please fill in all necessary information", "OK"); }
         }
 
@@ -127,7 +130,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             /*if a comma appears, the string ss will be converted to int and added to fragmentList
             in the other case(digit appears), it will be added to ss
-            IMPORTANT: due to the funktion ValidateFragmentationInput, it is ensured that only commas and digits appear*/
+            IMPORTANT: due to the function ValidateFragmentationInput, it is ensured that only commas and digits appear*/
             for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] == ',')
