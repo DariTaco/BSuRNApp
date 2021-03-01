@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Xamarin.Build.Download.0.10.0\build\Xamarin.Build.Download.props" Condition="Exists('..\packages\Xamarin.Build.Download.0.10.0\build\Xamarin.Build.Download.props')" />
   <Import Project="..\packages\Xamarin.Forms.5.0.0.2012\build\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.5.0.0.2012\build\Xamarin.Forms.props')" />
   <Import Project="..\packages\Xamarin.AndroidX.Migration.1.0.8\build\monoandroid90\Xamarin.AndroidX.Migration.props" Condition="Exists('..\packages\Xamarin.AndroidX.Migration.1.0.8\build\monoandroid90\Xamarin.AndroidX.Migration.props')" />
   <PropertyGroup>
@@ -46,7 +47,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="Java.Interop" />
     <Reference Include="CocosSharp">
       <HintPath>..\packages\CocosSharp.1.7.1.0\lib\MonoAndroid10\CocosSharp.dll</HintPath>
     </Reference>
@@ -344,6 +344,30 @@
     <Reference Include="Xamarin.AndroidX.Browser">
       <HintPath>..\packages\Xamarin.AndroidX.Browser.1.3.0\lib\monoandroid90\Xamarin.AndroidX.Browser.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Firebase.Components">
+      <HintPath>..\packages\Xamarin.Firebase.Components.116.0.0\lib\monoandroid90\Xamarin.Firebase.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Google.AutoValue.Annotations">
+      <HintPath>..\packages\Xamarin.Google.AutoValue.Annotations.1.6.5\lib\monoandroid80\Xamarin.Google.AutoValue.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.GooglePlayServices.Basement">
+      <HintPath>..\packages\Xamarin.GooglePlayServices.Basement.117.1.1\lib\monoandroid90\Xamarin.GooglePlayServices.Basement.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.GooglePlayServices.Tasks">
+      <HintPath>..\packages\Xamarin.GooglePlayServices.Tasks.117.0.0\lib\monoandroid90\Xamarin.GooglePlayServices.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Firebase.Common">
+      <HintPath>..\packages\Xamarin.Firebase.Common.119.3.0\lib\monoandroid90\Xamarin.Firebase.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.GooglePlayServices.Base">
+      <HintPath>..\packages\Xamarin.GooglePlayServices.Base.117.1.0\lib\monoandroid90\Xamarin.GooglePlayServices.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Firebase.AppIndexing">
+      <HintPath>..\packages\Xamarin.Firebase.AppIndexing.119.1.0\lib\monoandroid90\Xamarin.Firebase.AppIndexing.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Platform.Android.AppLinks">
+      <HintPath>..\packages\Xamarin.Forms.AppLinks.5.0.0.2012\lib\MonoAndroid10.0\Xamarin.Forms.Platform.Android.AppLinks.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WertheApp\WertheApp.csproj">
@@ -378,6 +402,9 @@
     <Folder Include="Resources\drawable-hdpi\" />
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
+  </ItemGroup>
+  <ItemGroup>
+    <GoogleServicesJson Include="google-services.json" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Arch.Core.Common.1.1.1.3\build\monoandroid90\Xamarin.Android.Arch.Core.Common.targets" Condition="Exists('..\packages\Xamarin.Android.Arch.Core.Common.1.1.1.3\build\monoandroid90\Xamarin.Android.Arch.Core.Common.targets')" />
@@ -465,4 +492,11 @@
   <Import Project="..\packages\Xamarin.AndroidX.Browser.1.3.0\build\monoandroid90\Xamarin.AndroidX.Browser.targets" Condition="Exists('..\packages\Xamarin.AndroidX.Browser.1.3.0\build\monoandroid90\Xamarin.AndroidX.Browser.targets')" />
   <Import Project="..\packages\Xamarin.Forms.5.0.0.2012\build\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.5.0.0.2012\build\Xamarin.Forms.targets')" />
   <Import Project="..\packages\SkiaSharp.2.80.2\build\monoandroid1.0\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.2.80.2\build\monoandroid1.0\SkiaSharp.targets')" />
+  <Import Project="..\packages\Xamarin.Build.Download.0.10.0\build\Xamarin.Build.Download.targets" Condition="Exists('..\packages\Xamarin.Build.Download.0.10.0\build\Xamarin.Build.Download.targets')" />
+  <Import Project="..\packages\Xamarin.Firebase.Components.116.0.0\build\MonoAndroid90\Xamarin.Firebase.Components.targets" Condition="Exists('..\packages\Xamarin.Firebase.Components.116.0.0\build\MonoAndroid90\Xamarin.Firebase.Components.targets')" />
+  <Import Project="..\packages\Xamarin.GooglePlayServices.Basement.117.1.1\build\MonoAndroid90\Xamarin.GooglePlayServices.Basement.targets" Condition="Exists('..\packages\Xamarin.GooglePlayServices.Basement.117.1.1\build\MonoAndroid90\Xamarin.GooglePlayServices.Basement.targets')" />
+  <Import Project="..\packages\Xamarin.GooglePlayServices.Tasks.117.0.0\build\MonoAndroid90\Xamarin.GooglePlayServices.Tasks.targets" Condition="Exists('..\packages\Xamarin.GooglePlayServices.Tasks.117.0.0\build\MonoAndroid90\Xamarin.GooglePlayServices.Tasks.targets')" />
+  <Import Project="..\packages\Xamarin.Firebase.Common.119.3.0\build\MonoAndroid90\Xamarin.Firebase.Common.targets" Condition="Exists('..\packages\Xamarin.Firebase.Common.119.3.0\build\MonoAndroid90\Xamarin.Firebase.Common.targets')" />
+  <Import Project="..\packages\Xamarin.GooglePlayServices.Base.117.1.0\build\MonoAndroid90\Xamarin.GooglePlayServices.Base.targets" Condition="Exists('..\packages\Xamarin.GooglePlayServices.Base.117.1.0\build\MonoAndroid90\Xamarin.GooglePlayServices.Base.targets')" />
+  <Import Project="..\packages\Xamarin.Firebase.AppIndexing.119.1.0\build\MonoAndroid90\Xamarin.Firebase.AppIndexing.targets" Condition="Exists('..\packages\Xamarin.Firebase.AppIndexing.119.1.0\build\MonoAndroid90\Xamarin.Firebase.AppIndexing.targets')" />
 </Project>

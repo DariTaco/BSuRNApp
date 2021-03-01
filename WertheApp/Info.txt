@@ -1,0 +1,18 @@
+﻿https://search.google.com/search-console/ # Website Analystics
+Settings >> Associations
+
+https://console.firebase.google.com/ # App Indexing and Deep Linking
+https://play.google.com/console/ # Google Play Upload Andoid
+Setup >> Advanced Settings >> App Indexing
+https://appstoreconnect.apple.com/ # App Store Upload iOS
+https://github.com/dotnet/maui # Xamarin .NET MAUI
+https://devblogs.microsoft.com/xamarin/ # Xamarin blog
+
+https://developers.google.com/android/guides/client-auth # sha-1
+
+# for debug
+https://docs.microsoft.com/en-us/xamarin/android/deploy-test/signing/keystore-signature?tabs=macos # keystore sha-1
+
+# for release
+keytool -list -v -keystore ~/Library/Developer/Xamarin/Keystore/dari/dari.keystore 
+Passwort eingeben (Signing key)

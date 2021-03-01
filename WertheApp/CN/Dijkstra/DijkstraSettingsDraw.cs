@@ -862,7 +862,6 @@ namespace WertheApp.CN
                 TextSize = 55,
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
             
 
@@ -889,7 +888,6 @@ namespace WertheApp.CN
                 TextSize = 55,
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
         }
 

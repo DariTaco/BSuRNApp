@@ -250,7 +250,7 @@ namespace WertheApp.OS
 
         /**********************************************************************
         *********************************************************************/
-        async void B_Restart_Clicked(object sender, EventArgs e)
+        void B_Restart_Clicked(object sender, EventArgs e)
         {
 
             memoryRequestState = MyEnum.noRequestYet;
@@ -354,7 +354,7 @@ namespace WertheApp.OS
         }
         /**********************************************************************
         *********************************************************************/
-        async void B_Info_Clicked(object sender, EventArgs e)
+        void B_Info_Clicked(object sender, EventArgs e)
         {
             //await Navigation.PushAsync(new AllocationStrategiesHelp());
         }

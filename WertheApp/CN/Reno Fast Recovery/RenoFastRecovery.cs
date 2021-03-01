@@ -9,7 +9,6 @@ namespace WertheApp.CN
         //VARIABLES
         private double width = 0;
         private double height = 0;
-        bool landscape = false; //indicates device orientation
 
         private SKCanvasView skiaview;
         private RenoFastRecoveryDraw draw;
@@ -183,16 +182,35 @@ namespace WertheApp.CN
         }
         /**********************************************************************
         *********************************************************************/
+        AppLinkEntry _appLink; // App Linking
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send<object>(this, "Portrait");
+            MessagingCenter.Send<object>(this, "Portrait"); // enforce portrait mode
+
+            // App Linking
+            Uri appLinkUri = new Uri(string.Format(App.AppLinkUri, Title).Replace(" ", "_"));
+            _appLink = new AppLinkEntry
+            {
+                AppLinkUri = appLinkUri,
+                Description = string.Format($"This App visualizes {Title}"),
+                Title = string.Format($"WertheApp {Title}"),
+                IsLinkActive = true,
+                Thumbnail = ImageSource.FromResource("WertheApp.png")
+
+            };
+            Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             MessagingCenter.Send<object>(this, "Unspecified");
+
+
+            // App Linking
+            _appLink.IsLinkActive = false;
+            Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         //this method is called everytime the device is rotated
@@ -201,7 +219,7 @@ namespace WertheApp.CN
             base.OnSizeAllocated(width, height); //must be called
             if (this.width != width || this.height != height)
             {
-                MessagingCenter.Send<object>(this, "Portrait");
+                MessagingCenter.Send<object>(this, "Portrait"); // enforce portrait mode
 
             }
 

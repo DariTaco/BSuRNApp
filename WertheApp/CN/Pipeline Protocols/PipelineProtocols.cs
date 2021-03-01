@@ -66,13 +66,33 @@ namespace WertheApp.CN
                 PipelineProtocolsScene2.stopEverything = true;
             }
 
-            MessagingCenter.Send<object>(this, "Unspecified");
+            MessagingCenter.Send<object>(this, "Unspecified"); // undo enforcing portrait mode
+
+
+            // App Linking
+            _appLink.IsLinkActive = false;
+            Application.Current.AppLinks.RegisterLink(_appLink);
 
         }
+
+        AppLinkEntry _appLink; // App Linking
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send<object>(this, "Portrait");
+            MessagingCenter.Send<object>(this, "Portrait"); // enforce portrait mode
+
+            // App Linking
+            Uri appLinkUri = new Uri(string.Format(App.AppLinkUri, Title).Replace(" ", "_"));
+            _appLink = new AppLinkEntry
+            {
+                AppLinkUri = appLinkUri,
+                Description = string.Format($"This App visualizes {Title}"),
+                Title = string.Format($"WertheApp {Title}"),
+                IsLinkActive = true,
+                Thumbnail = ImageSource.FromResource("WertheApp.png")
+
+            };
+            Application.Current.AppLinks.RegisterLink(_appLink);
         }
         /**********************************************************************
         *********************************************************************/
@@ -255,7 +275,7 @@ namespace WertheApp.CN
 
         /**********************************************************************
         *********************************************************************/
-        async void B_Restart_Clicked(object sender, EventArgs e)
+        void B_Restart_Clicked(object sender, EventArgs e)
         {
             b_Restart.IsEnabled = false;
             OnDisappearing();
@@ -359,7 +379,7 @@ namespace WertheApp.CN
 			base.OnSizeAllocated(width, height); //must be called
 			if (this.width != width || this.height != height)
 			{
-                MessagingCenter.Send<object>(this, "Portrait");
+                MessagingCenter.Send<object>(this, "Portrait"); // enforce portrait mode
 
             }
         }

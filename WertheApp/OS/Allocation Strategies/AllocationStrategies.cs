@@ -188,16 +188,34 @@ namespace WertheApp.OS.AllocationStrategies
 
         /**********************************************************************
         ********************************************************************/
+        AppLinkEntry _appLink; // App Linking
         protected override void OnAppearing()
         {
             base.OnAppearing();
             MessagingCenter.Send<object>(this, "Landscape"); // enforce landscape mode
+
+            // App Linking
+            Uri appLinkUri = new Uri(string.Format(App.AppLinkUri, Title).Replace(" ", "_"));
+            _appLink = new AppLinkEntry
+            {
+                AppLinkUri = appLinkUri,
+                Description = string.Format($"This App visualizes {Title}"),
+                Title = string.Format($"WertheApp {Title}"),
+                IsLinkActive = true,
+                Thumbnail = ImageSource.FromResource("WertheApp.png")
+
+            };
+            Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             MessagingCenter.Send<object>(this, "Unspecified"); // undo enforcing landscape mode
+
+            // App Linking
+            _appLink.IsLinkActive = false;
+            Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         /**********************************************************************

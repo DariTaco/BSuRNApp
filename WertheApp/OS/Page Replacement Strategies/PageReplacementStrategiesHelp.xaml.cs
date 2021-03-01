@@ -20,7 +20,6 @@ namespace WertheApp.OS
         }
         */
 
-        private string _s2;
         public PageReplacementStrategiesHelp()
         {
             InitializeComponent();

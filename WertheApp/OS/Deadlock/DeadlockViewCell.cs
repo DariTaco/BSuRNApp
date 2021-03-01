@@ -121,7 +121,7 @@ namespace WertheApp.OS
             /* TOUCH SENISITIVIY
             **********************************************************************
            *********************************************************************/
-            private async void OnTouch(object sender, SKTouchEventArgs e)
+            private void OnTouch(object sender, SKTouchEventArgs e)
         {
             switch (e.ActionType)
             {

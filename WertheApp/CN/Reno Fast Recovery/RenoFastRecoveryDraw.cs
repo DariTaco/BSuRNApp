@@ -345,7 +345,7 @@ namespace WertheApp.CN
             head.RLineTo(-5, -20);
             head.RLineTo(-15, 15);
             head.Close();
-            var rotate = SKMatrix.MakeRotationDegrees(-rotationDegree, arrowEnd.X, arrowEnd.Y);
+            var rotate = SKMatrix.CreateRotationDegrees(-rotationDegree, arrowEnd.X, arrowEnd.Y);
             head.Transform(rotate);
             canvas.DrawPath(head, paint);
 
@@ -396,7 +396,7 @@ namespace WertheApp.CN
             head.RLineTo(5, -20);
             head.RLineTo(15, 15);
             head.Close();
-            var rotate = SKMatrix.MakeRotationDegrees(rotationDegree, arrowEnd.X, arrowEnd.Y);
+            var rotate = SKMatrix.CreateRotationDegrees(rotationDegree, arrowEnd.X, arrowEnd.Y);
             head.Transform(rotate);
             canvas.DrawPath(head, paint);
         }
@@ -430,7 +430,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_blackTextSmall = new SKPaint
@@ -440,7 +439,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TextArrowPkt = new SKPaint
@@ -450,7 +448,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TextArrowAck = new SKPaint
@@ -460,7 +457,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TextArrowRed = new SKPaint
@@ -470,7 +466,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TextSender = new SKPaint
@@ -480,7 +475,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TextReceiver = new SKPaint
@@ -490,7 +484,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_PaintVeryThin = new SKPaint

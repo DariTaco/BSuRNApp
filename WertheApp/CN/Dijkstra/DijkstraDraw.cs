@@ -667,7 +667,6 @@ namespace WertheApp.CN
                 TextSize = 45,
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TableCaption = new SKPaint
@@ -677,7 +676,6 @@ namespace WertheApp.CN
                 TextSize = 32,
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TableCaptionRed = new SKPaint
@@ -687,7 +685,6 @@ namespace WertheApp.CN
                 TextSize = 32,
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_RouterFill = new SKPaint
@@ -729,7 +726,6 @@ namespace WertheApp.CN
                 TextSize = 40,
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
         }
     }

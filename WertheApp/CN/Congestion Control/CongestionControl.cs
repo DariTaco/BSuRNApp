@@ -591,7 +591,7 @@ namespace WertheApp.CN
 
         /**********************************************************************
         *********************************************************************/
-        async void B_Restart_Clicked(object sender, EventArgs e)
+        void B_Restart_Clicked(object sender, EventArgs e)
         {
             thresholdR = initial_thresh;
             thresholdT = initial_thresh;
@@ -638,16 +638,35 @@ namespace WertheApp.CN
         }
         /**********************************************************************
         *********************************************************************/
+        AppLinkEntry _appLink; // App Linking
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send<object>(this, "Landscape");
+            MessagingCenter.Send<object>(this, "Landscape"); // enforce landscape mode
+
+            // App Linking
+            Uri appLinkUri = new Uri(string.Format(App.AppLinkUri, Title).Replace(" ", "_"));
+            _appLink = new AppLinkEntry
+            {
+                AppLinkUri = appLinkUri,
+                Description = string.Format($"This App visualizes {Title}"),
+                Title = string.Format($"WertheApp {Title}"),
+                IsLinkActive = true,
+                Thumbnail = ImageSource.FromResource("WertheApp.png")
+
+            };
+            Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            MessagingCenter.Send<object>(this, "Unspecified");
+            MessagingCenter.Send<object>(this, "Unspecified");  // undo enforcing landscape mode
+
+
+            // App Linking
+            _appLink.IsLinkActive = false;
+            Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         //this method is called everytime the device is rotated
@@ -656,7 +675,7 @@ namespace WertheApp.CN
 			base.OnSizeAllocated(width, height); //must be called
 			if (this.width != width || this.height != height)
 			{
-                MessagingCenter.Send<object>(this, "Landscape");
+                MessagingCenter.Send<object>(this, "Landscape");  // enforce landscape mode
             }
         }
 

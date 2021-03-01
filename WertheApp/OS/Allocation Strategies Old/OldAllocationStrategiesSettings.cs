@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions; //Regex.IsMatch();
 using Xamarin.Forms;
 
+
+
 namespace WertheApp.OS
 {
     public class OldAllocationStrategiesSettings : ContentPage
@@ -82,7 +84,7 @@ namespace WertheApp.OS
         *********************************************************************/
         async void B_Info_Clicked(object sender, EventArgs e)
         {
-            //await Navigation.PushAsync(new AllocationStrategiesHelp());
+            await Navigation.PushAsync(new WertheApp.OS.AllocationStrategies.AllocationStrategiesHelp());
         }
         /**********************************************************************
         *********************************************************************/

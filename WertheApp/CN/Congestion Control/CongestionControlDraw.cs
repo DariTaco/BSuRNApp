@@ -319,7 +319,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_blackTextSmallVertical = new SKPaint
@@ -329,7 +328,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = true
             };
 
             sk_blackTextSmallHorizontal = new SKPaint
@@ -339,7 +337,6 @@ namespace WertheApp.CN
                 IsAntialias = true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = false
             };
 
             sk_TextSlowStart = new SKPaint

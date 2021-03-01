@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "376192566582",
+    "project_id": "wertheapp",
+    "storage_bucket": "wertheapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376192566582:android:42b46b42d366f648331f97",
+        "android_client_info": {
+          "package_name": "com.hsaalen.wertheapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "376192566582-27ig86cvojtuond5vfvdig0b2jr5m9pf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hsaalen.wertheapp",
+            "certificate_hash": "6ac18f5c0a02d5e4b129887a9175ed93accb7855"
+          }
+        },
+        {
+          "client_id": "376192566582-4ki3s759m7qok1tum2htv8ssi5h997q9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hsaalen.wertheapp",
+            "certificate_hash": "632f73fc756548e7fa8bf6942b2a4e9bd3acf1e8"
+          }
+        },
+        {
+          "client_id": "376192566582-88puc0hrtvt9p14b2ookha5nnhjkp9dv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyfkgUnzV-Uh6NmdH3Fqdv4-OOqBR8HvE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "376192566582-88puc0hrtvt9p14b2ookha5nnhjkp9dv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

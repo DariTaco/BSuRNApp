@@ -311,7 +311,6 @@ namespace WertheApp.OS
                 IsAntialias = true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText =true
             };
 
             //red small text
@@ -322,7 +321,6 @@ namespace WertheApp.OS
                 IsAntialias = true,
                 IsStroke = false,
                 TextAlign = SKTextAlign.Center,
-                IsVerticalText = true
             };
 
             sk_PaintPink = new SKPaint
