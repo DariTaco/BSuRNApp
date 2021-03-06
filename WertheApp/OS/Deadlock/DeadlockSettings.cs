@@ -3,11 +3,13 @@ using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WertheApp.OS
 {
     public class DeadlockSettings : ContentPage
     {
+        private ScrollView scrollView;
         private String dvd, usb, bluRay, printer, ijPrinter, printer3D;
         private String resourceVectorE, busyResourceVectorB, freeResourceVectorA, upcomingVectorC;
         private Picker p_dvd, p_usb, p_bluRay, p_printer, p_ijPrinter, p_runningprocesses, p_printer3D;
@@ -65,14 +67,14 @@ namespace WertheApp.OS
         *********************************************************************/
         void CreateContent()
         {
-            var scrollView = new ScrollView
+            scrollView = new ScrollView
             {
                 Margin = new Thickness(10)
             };
             var stackLayout = new StackLayout();
 
-            this.Content = scrollView;
             scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
+            this.Content = scrollView;
 
             var vectorLabelSize = 120;
 
@@ -697,7 +699,11 @@ namespace WertheApp.OS
                 case 1: SetPreset1(); break;
                 case 2: SetPreset1(); break;
             }*/
+
+            Debug.WriteLine("Preset clicked");
             SetPreset1();
+           
+
         }
 
         void B_Preset2_Clicked(object sender, EventArgs e)
@@ -729,6 +735,7 @@ namespace WertheApp.OS
             //set process total
             p_runningprocesses.SelectedIndex = 5;
 
+            
             //set busy resources p1
             p_p1_dvd.SelectedIndex = 3;
             p_p1_usb.SelectedIndex = 1;
@@ -771,7 +778,8 @@ namespace WertheApp.OS
             p_p5_upcoming_dvd.SelectedIndex = 2;
             p_p5_upcoming_printer.SelectedIndex = 1;
             p_p5_upcoming_usb.SelectedIndex = 1;
-
+            
+           
         }
 
         void SetPreset2()
@@ -828,6 +836,7 @@ namespace WertheApp.OS
             //set future requests p5
             p_p5_upcoming_printer.SelectedIndex = 1;
             p_p5_upcoming_printer3D.SelectedIndex = 1;
+
         }
 
         void SetPreset3()
@@ -916,6 +925,7 @@ namespace WertheApp.OS
                 sl_upcomingRequests.Children.Add(sl_upcomingProcess5);
 
             }
+            scrollView.ForceLayout();
 
         }
 
@@ -1141,7 +1151,7 @@ namespace WertheApp.OS
             }
             catch (System.NullReferenceException ex)
             {
-                Debug.WriteLine(ex);
+                //Debug.WriteLine(ex);
                 //Exception is thrown because VectorChanged2 Event is also invoked when items are removed from picker  
             }
 
@@ -1157,7 +1167,7 @@ namespace WertheApp.OS
                 SetVectorB();
             }
             catch (System.NullReferenceException ex) {
-                Debug.WriteLine(ex);
+                //Debug.WriteLine(ex);
                 //Exception is thrown because VectorChanged2 Event is also invoked when items are removed from picker  
             }
 
@@ -1174,7 +1184,7 @@ namespace WertheApp.OS
             }
             catch (System.NullReferenceException ex)
             {
-                Debug.WriteLine(ex);
+                //Debug.WriteLine(ex);
                 //Exception is thrown because VectorChanged3 Event is also invoked when items are removed from picker  
             }
         }
@@ -1892,7 +1902,7 @@ namespace WertheApp.OS
         {
             base.OnAppearing();
             GC.Collect();
-            Debug.WriteLine("RESUME");
+            Debug.WriteLine("on appearing");
         }
 
     }

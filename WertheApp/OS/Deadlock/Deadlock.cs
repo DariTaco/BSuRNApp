@@ -46,7 +46,7 @@ namespace WertheApp.OS
             Dictionary<int, String> VBProcesses, Dictionary<int,String> VCProcesses )
         {
             ToolbarItem info = new ToolbarItem();
-            info.Text = "Info";
+            info.Text = App._sHelpInfoHint;
             this.ToolbarItems.Add(info);
             info.Clicked += B_Info_Clicked;
 
@@ -87,7 +87,7 @@ namespace WertheApp.OS
             currentAnew = vectorA;
             CreateContent();
 
-            ShowMyHint();
+            //ShowMyHint();
             bool deadlock = CheckIfDeadlock();
             if (deadlock)
             {
@@ -156,7 +156,7 @@ namespace WertheApp.OS
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                Text = "pick a process",
+                Text = "Pick a pending request C(Pi).",
                 TextColor = Color.Blue,
                 FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label))
             };
@@ -511,7 +511,7 @@ namespace WertheApp.OS
         private static void DisplayInfo(int processNumber)
         {
             l_info.TextColor = Color.Blue;
-            l_info.Text = "Process " + processNumber + " done! Pick another process.";
+            l_info.Text = "Process " + processNumber + " done! Pick another pending request.";
 
             bool deadlock = CheckIfDeadlock();
 

@@ -4,7 +4,7 @@
          <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
                 <Label Text="Dijkstra" FontSize="30"/>
-                <Label Text="Coming soon... &#10;"/>
+                <Label Text="You can change the weights by tapping on them. More Coming soon... &#10;"/>
                  <Label x:Name="last"/>
 
             </StackLayout>

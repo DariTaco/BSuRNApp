@@ -3,7 +3,7 @@ using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
 using System.Text.RegularExpressions; //Regex.IsMatch
 using System.Diagnostics;
-
+using System.Collections.Generic;
 
 namespace WertheApp.OS.AllocationStrategies
 {
@@ -14,13 +14,17 @@ namespace WertheApp.OS.AllocationStrategies
 
         private static SKCanvasView canvasView; // drawing View
         private static AllocationStrategiesDraw draw; // drawing object
-        private static String algorithm; // chosen algorithm for memory allocation
+        private static AllocationStrategiesAlgorithm algo; 
 
         // important controls
-        private static Button b_Next;
+        private static Button b_Next, b_Restart;
         private static Entry e_MemoryRequest;
 
-        public AllocationStrategies(String p_algorithm)
+        // needed for restart
+        private static List<int> fragmentsList; // memory fragments
+        private static String strategy; // chosen strategy for memory allocation
+
+        public AllocationStrategies(String p_Strategy, List<int> p_FragmentsList)
         {
             // Help/ info button upper right corner
             ToolbarItem info = new ToolbarItem();
@@ -28,10 +32,12 @@ namespace WertheApp.OS.AllocationStrategies
             this.ToolbarItems.Add(info);
             info.Clicked += B_Info_Clicked;
 
-            Title = "Allocation Strategies: " + algorithm;
-
             // assign variables
-            algorithm = p_algorithm;
+            strategy = p_Strategy;
+            fragmentsList = p_FragmentsList;
+            algo = new AllocationStrategiesAlgorithm(strategy, fragmentsList);
+
+            Title = "Allocation Strategies: " + p_Strategy;
 
             CreateContent();
         }
@@ -55,9 +61,9 @@ namespace WertheApp.OS.AllocationStrategies
         ***********************************************************************/
         void CreateTopHalf(Grid grid)
         {
-            draw = new AllocationStrategiesDraw();
+            draw = new AllocationStrategiesDraw(algo);
             canvasView = new SKCanvasView();
-            canvasView = AllocationStrategiesDraw.ReturnCanvas();
+            canvasView = draw.ReturnCanvas();
             grid.Children.Add(canvasView, 0, 0);
         }
 
@@ -73,7 +79,7 @@ namespace WertheApp.OS.AllocationStrategies
             };
 
             // restart button
-            var b_Restart = new Button
+            b_Restart = new Button
             {
                 Text = "Restart",
                 VerticalOptions = LayoutOptions.Center,
@@ -129,7 +135,8 @@ namespace WertheApp.OS.AllocationStrategies
         *********************************************************************/
         void B_Restart_Clicked(object sender, EventArgs e)
         {
-            //TODO
+            algo = new AllocationStrategiesAlgorithm(strategy, fragmentsList);
+            CreateContent();
         }
 
         /**********************************************************************
@@ -147,6 +154,11 @@ namespace WertheApp.OS.AllocationStrategies
                     // disable memory request entry and indicate that it's accepted
                     e_MemoryRequest.IsEnabled = false;
                     e_MemoryRequest.BackgroundColor = Color.FromRgba(172, 255, 47, 30);
+
+                    // enable restart button
+                    b_Restart.IsEnabled = true;
+
+                    algo.Start(Int32.Parse(e_MemoryRequest.Text));
                 }
                 // otherwise wait until a valid memory request is made by the user
                 else
@@ -156,25 +168,7 @@ namespace WertheApp.OS.AllocationStrategies
             }
             else
             {
-                AllocationStrategiesAlgorithm.Next();
-                switch (algorithm)
-                {
-                    case "First Fit":
-                        AllocationStrategiesAlgorithm.FirstFit();
-                        break;
-                    case "Next Fit":
-                        AllocationStrategiesAlgorithm.NextFit();
-                        break;
-                    case "Best Fit":
-                        AllocationStrategiesAlgorithm.BestFit();
-                        break;
-                    case "Worst Fit":
-                        AllocationStrategiesAlgorithm.WorstFit();
-                        break;
-                    case "Combined Fit":
-                        AllocationStrategiesAlgorithm.CombinedFit();
-                        break;
-                }
+                algo.Next();
             }
           
         }

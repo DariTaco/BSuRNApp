@@ -4,7 +4,7 @@
         <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
                 <Label Text="Deadlock" FontSize="30"/>
-                <Label Text="Coming soon... &#10;"/>
+                <Label Text="Pick and click on a process in C until all processes are finished or a Deadlock happens. More Coming soon... &#10;"/>
                  <Label x:Name="last"/>
 
             </StackLayout>

@@ -10,7 +10,6 @@ namespace WertheApp.OS.AllocationStrategies
     {
         private Picker p_Algorithm; 
         private Entry e_Fragmentation;
-        List<int> fragmentsList;
 
         public AllocationStrategiesSettings()
         {
@@ -97,8 +96,11 @@ namespace WertheApp.OS.AllocationStrategies
             //if a strategy was selected and a valid fragmentation was entered
             if (p_Algorithm.SelectedIndex != -1 && e_Fragmentation.Text != null && ValidateFragmentationInput())
             {
-                CreateFragmentsList();
-                await Navigation.PushAsync(new AllocationStrategies(p_Algorithm.SelectedItem.ToString()));
+                
+                await Navigation.PushAsync(new AllocationStrategies(
+                    p_Algorithm.SelectedItem.ToString(),
+                    CreateFragmentsList()
+                    ));
             }
 
             //actually not needed. Case should never occur
@@ -122,12 +124,12 @@ namespace WertheApp.OS.AllocationStrategies
         /**********************************************************************
         ***********************************************************************
         reads the input String from e_Fragmentation and adds elements to a List*/
-        void CreateFragmentsList()
+        private List<int> CreateFragmentsList()
         {
             String s = e_Fragmentation.Text;
-            fragmentsList = new List<int>();
-            String ss = "";
+            List<int> fragmentsList = new List<int>();
 
+            String ss = "";
             /*if a comma appears, the string ss will be converted to int and added to fragmentList
             in the other case(digit appears), it will be added to ss
             IMPORTANT: due to the function ValidateFragmentationInput, it is ensured that only commas and digits appear*/
@@ -149,6 +151,8 @@ namespace WertheApp.OS.AllocationStrategies
                 }
                 else { ss += s[i]; }
             }
+
+            return fragmentsList;
         }
     }
 }

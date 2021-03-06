@@ -33,7 +33,7 @@ namespace WertheApp.CN
                 
                 
             };
-            ShowMyHint();
+            //ShowMyHint();
         }
 
         //METHODS
