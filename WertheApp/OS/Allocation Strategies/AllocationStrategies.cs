@@ -83,7 +83,7 @@ namespace WertheApp.OS.AllocationStrategies
             {
                 Text = "Restart",
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius
@@ -95,12 +95,15 @@ namespace WertheApp.OS.AllocationStrategies
             // entry for entering memory request
             var l_MemoryRequest = new Label
             {   Text = "Memory request: ",
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center
             };
             e_MemoryRequest = new Entry
             {   Keyboard = Keyboard.Numeric,  //only numbers are allowed
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Fill
             };
+            e_MemoryRequest.WidthRequest = 100;
             stackLayout.Children.Add(l_MemoryRequest);
             stackLayout.Children.Add(e_MemoryRequest);
 
@@ -109,7 +112,7 @@ namespace WertheApp.OS.AllocationStrategies
             {
                 Text = "Start",
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius

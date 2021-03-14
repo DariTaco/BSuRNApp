@@ -31,7 +31,7 @@ namespace WertheApp.Droid
               DataHost = "dariakern.de",
               DataPathPrefix = "/wertheapp/",
               AutoVerify = true)]
-    [Activity(Label = "WertheApp.Droid", Icon = "@drawable/Werthebach3", Theme = "@style/MyTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "WertheApp.Droid", Icon = "@drawable/Werthebach3", Theme = "@style/MyTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.ScreenLayout) ]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -52,9 +52,9 @@ namespace WertheApp.Droid
             LoadApplication(new App());
 
             // Subscribe to Screen Orientation Messages
-            MessagingCenter.Subscribe<object>(this, "Portrait", sender => { RequestedOrientation = ScreenOrientation.Portrait; });
-            MessagingCenter.Subscribe<object>(this, "Unspecified", sender => { RequestedOrientation = ScreenOrientation.Sensor; });
-            MessagingCenter.Subscribe<object>(this, "Landscape", sender => { RequestedOrientation = ScreenOrientation.Landscape; });
+            MessagingCenter.Subscribe<object>(this, "Portrait", sender => { RequestedOrientation = ScreenOrientation.UserPortrait; });
+            MessagingCenter.Subscribe<object>(this, "Unspecified", sender => { RequestedOrientation = ScreenOrientation.FullSensor; });
+            MessagingCenter.Subscribe<object>(this, "Landscape", sender => { RequestedOrientation = ScreenOrientation.UserLandscape; });
           
         }
     }

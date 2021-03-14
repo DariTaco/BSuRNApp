@@ -84,6 +84,7 @@ namespace WertheApp.OS.AllocationStrategies
             float percent = (info.Height - strokeWidth / 2) * p;
             return percent;
         }
+
         /**********************************************************************
         *********************************************************************/
         private static void DrawMemory()
@@ -119,6 +120,20 @@ namespace WertheApp.OS.AllocationStrategies
                 canvas.DrawText(fragment.ToString(), xPercent(xText), yPercent(yText), sk_Text); // size of fragment
             }
 
+
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        private static void DrawGrayArrow()
+        {
+
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        private static void DrawRedArrow()
+        {
 
         }
 

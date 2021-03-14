@@ -10,7 +10,10 @@ namespace WertheApp.OS.AllocationStrategies
     {
         private static List<int> fragmentsList; // memory fragments
         private static String strategy; // chosen strategy for memory allocation
-        private static int totalMemorySize;
+        private static int totalMemorySize; // sum of all fragments
+
+        // algorithm
+        private static int indexLastAllocated;
 
         public AllocationStrategiesAlgorithm(String p_Strategy, List<int> p_FragmentsList)
         {
