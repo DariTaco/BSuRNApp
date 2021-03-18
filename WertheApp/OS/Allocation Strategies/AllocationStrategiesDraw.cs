@@ -17,7 +17,8 @@ namespace WertheApp.OS.AllocationStrategies
 
         // painting tools
         private static float strokeWidth; // stroke Width for paint colors
-        private static SKPaint sk_Background, sk_Black, sk_Text; //paint colors
+        private static SKPaint sk_Background, sk_Black, sk_Text,
+            sk_ArrowRed, sk_ArrowGray; //paint colorssk
 
         private static AllocationStrategiesAlgorithm algo;
        
@@ -48,12 +49,14 @@ namespace WertheApp.OS.AllocationStrategies
             //Important! Otherwise the drawing will look messed up in iOS
             if (canvas != null) { canvas.Clear(); }
 
-            MakeSKPaint();
             CalculateNeededVariables();
+            MakeSKPaint();
 
             /*********************HERE GOES THE DRAWING************************/
             /*important: the coordinate system starts in the upper left corner*/
             DrawMemory();
+            DrawRedArrow(0.5f);
+            DrawGrayArrow(0.5f);
 
             //execute all drawing actions
             canvas.Flush();
@@ -125,16 +128,32 @@ namespace WertheApp.OS.AllocationStrategies
 
         /**********************************************************************
         *********************************************************************/
-        private static void DrawGrayArrow()
+        private static void DrawGrayArrow(float xPosition)
         {
-
+            float arrowTip = 0.725f;
+            canvas.DrawLine(xPercent(xPosition), yPercent(arrowTip + 0.125f), xPercent(xPosition), yPercent(arrowTip), sk_ArrowGray);
+            SKPath arrow = new SKPath();
+            arrow.MoveTo(xPercent(xPosition), yPercent(arrowTip));
+            arrow.RLineTo(-yPercent(0.015f), +yPercent(0.03f));
+            arrow.RLineTo(+yPercent(0.03f), 0);
+            arrow.RLineTo(-yPercent(0.015f), -yPercent(0.03f));
+            arrow.Close();
+            canvas.DrawPath(arrow, sk_ArrowGray);
         }
 
         /**********************************************************************
         *********************************************************************/
-        private static void DrawRedArrow()
+        private static void DrawRedArrow(float xPosition)
         {
-
+            float arrowTip = 0.275f;
+            canvas.DrawLine(xPercent(xPosition), yPercent(arrowTip-0.125f), xPercent(xPosition), yPercent(arrowTip), sk_ArrowRed);
+            SKPath arrow = new SKPath();
+            arrow.MoveTo(xPercent(xPosition), yPercent(arrowTip));
+            arrow.RLineTo(yPercent(0.015f), -yPercent(0.03f));
+            arrow.RLineTo(-yPercent(0.03f), 0);
+            arrow.RLineTo(yPercent(0.015f), yPercent(0.03f));
+            arrow.Close();
+            canvas.DrawPath(arrow, sk_ArrowRed);
         }
 
         /**********************************************************************
@@ -153,7 +172,25 @@ namespace WertheApp.OS.AllocationStrategies
             sk_Black = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
+                IsAntialias = true,
                 Color = Color.Black.ToSKColor(),
+                StrokeWidth = strokeWidth
+            };
+
+            sk_ArrowGray = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                IsAntialias = true,
+                Color = Color.DarkSlateGray.ToSKColor(),
+                StrokeWidth = strokeWidth
+            };
+
+
+            sk_ArrowRed = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                IsAntialias = true,
+                Color = Color.DarkRed.ToSKColor(),
                 StrokeWidth = strokeWidth
             };
 
@@ -170,7 +207,7 @@ namespace WertheApp.OS.AllocationStrategies
         /**********************************************************************
         ***********************************************************************
         returns the canvas view */
-        public SKCanvasView ReturnCanvas()
+        public static SKCanvasView ReturnCanvas()
         {
             return canvasView;
         }

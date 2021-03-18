@@ -39,7 +39,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             Title = "Allocation Strategies: " + p_Strategy;
 
-            CreateContent();
+            CreateContent();            
         }
 
         /**********************************************************************
@@ -63,7 +63,7 @@ namespace WertheApp.OS.AllocationStrategies
         {
             draw = new AllocationStrategiesDraw(algo);
             canvasView = new SKCanvasView();
-            canvasView = draw.ReturnCanvas();
+            canvasView = AllocationStrategiesDraw.ReturnCanvas();
             grid.Children.Add(canvasView, 0, 0);
         }
 
