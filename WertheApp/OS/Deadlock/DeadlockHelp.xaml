@@ -4,8 +4,32 @@
         <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
                 <Label Text="Deadlock" FontSize="30"/>
-                <Label Text="Pick and click on a process in C until all processes are finished or a Deadlock happens. More Coming soon... &#10;"/>
-                 <Label x:Name="last"/>
+                <Label Text="Find out if any process Pi can finish their job or a deadlock occurs permanently. &#10;"/>
+
+                <Label Text="Vektor E " FontAttributes="Bold" TextColor="Blue"/>
+                <Label Text="holds numbers of existing resources of different types. &#10;"/>
+
+                
+                <Label Text="Vektor B(Pi) " FontAttributes="Bold" TextColor="Red"/>
+                <Label Text="holds numbers of resources already in use (type-wise of process Pi). &#10;"/>
+
+                
+                <Label Text="Vektor B" FontAttributes="Bold" TextColor="Red"/>
+                <Label Text="holds sums of any vektor B(Pi) numbers. &#10;"/>
+
+                
+                <Label Text="Vektor A" FontAttributes="Bold" TextColor="Green"/>
+                <Label Text="holds numbers of remaining available resources (type-wise). A = E - B at any time. &#10;"/>
+
+                <Label Text="Vektor C(Pi)" FontAttributes="Bold" TextColor="Orange"/>
+                <Label Text="holds numbers of upcoming requests of resources (type-wise of process Pi). &#10;"/>
+
+                <Label Text="Click on a vektor in C to pick a process Pi and see if Pi can or cannot finish with the resources available in A. Repeat this until all processes have finished, or a deadlock happens. &#10;"/>
+
+                <Label Text="If a deadlock occurs, it will not be possible to find another sequence to finish all remaining processes successfully. &#10;"/>
+             
+         
+                <Label x:Name="last"/>
 
             </StackLayout>
         </ScrollView>

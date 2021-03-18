@@ -227,6 +227,8 @@ namespace WertheApp.OS
 
             //disbale button
             b_restart.IsEnabled = false;
+            l_info.Text = "Pick a pending request C(Pi).";
+            l_info.TextColor = Color.Blue;
 
             AddDeadlockCell(); //add very first cell
         }
@@ -363,10 +365,21 @@ namespace WertheApp.OS
             if (found)
             {
                 bool fits = CheckIfUpcomingProcessFitsInVectorA(vectorCProcesses[processNumber], oldVA);
+                bool deadlock = CheckIfDeadlock();
+
                 if (!fits)
                 {
-                    l_info.TextColor = Color.Red;
-                    l_info.Text = "Not enough free resources for upcoming requests C(P" + processNumber + ") !";
+                    if (deadlock)
+                    {
+                        l_info.TextColor = Color.Red;
+                        l_info.Text = "Some processes cannot terminate => deadlock.";
+                    }
+                    else
+                    {
+                        l_info.TextColor = Color.Red;
+                        l_info.Text = "Not enough free resources for upcoming requests C(P" + processNumber + ") !";
+                    }
+   
                 }
             
                 else if (found && fits)
