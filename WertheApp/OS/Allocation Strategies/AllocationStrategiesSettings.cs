@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions; //Regex.IsMatch();
 using Xamarin.Forms;
 using System.Collections.Generic; //List<int>
-
+using System.Linq;
 
 namespace WertheApp.OS.AllocationStrategies
 {
@@ -94,7 +94,7 @@ namespace WertheApp.OS.AllocationStrategies
         async void B_Start_Clicked(object sender, EventArgs e)
         {
             //if a strategy was selected and a valid fragmentation was entered
-            if (p_Algorithm.SelectedIndex != -1 && e_Fragmentation.Text != null && ValidateFragmentationInput())
+            if (p_Algorithm.SelectedIndex != -1 && e_Fragmentation.Text != null && ValidateFragmentationInput()&&ValidateMaxMemorySize())
             {
                 
                 await Navigation.PushAsync(new AllocationStrategies(
@@ -108,6 +108,8 @@ namespace WertheApp.OS.AllocationStrategies
 
             else if (!ValidateFragmentationInput()) { await DisplayAlert("Alert", "Please insert a valid fragmentation! (only digits, greater than zero, separated by a comma)", "OK"); }
 
+            else if (!ValidateMaxMemorySize()) { await DisplayAlert("Alert", "Sum of all fragments must be <= 125", "OK"); }
+
             else { await DisplayAlert("Alert", "Please fill in all necessary information", "OK"); }
         }
 
@@ -119,6 +121,14 @@ namespace WertheApp.OS.AllocationStrategies
         {
             String s = e_Fragmentation.Text;
             return Regex.IsMatch(s, "^[1-9]+[0-9]*(,[1-9]+[0-9]*)*$"); //matches only numbers(exept 0) separated by a comma;
+        }
+
+        bool ValidateMaxMemorySize()
+        {
+            List<int> fragList = CreateFragmentsList();
+            int memSize = fragList.Sum();
+            return memSize <= 125;
+
         }
 
         /**********************************************************************

@@ -12,6 +12,9 @@ namespace WertheApp.OS.AllocationStrategies
         private static String strategy; // chosen strategy for memory allocation
         private static int totalMemorySize; // sum of all fragments
 
+        //TODO: status. vll noch enum draus machen
+        private static int status; //0-> initial memory frag, start, 1-> searching, 2->search succ, ...
+
         // algorithm
         private static int indexLastAllocated;
 
@@ -20,6 +23,9 @@ namespace WertheApp.OS.AllocationStrategies
             strategy = p_Strategy;
             fragmentsList = p_FragmentsList;
             totalMemorySize = p_FragmentsList.Sum();
+
+            //TODO: status.
+            status = 0;
         }
 
 
@@ -46,6 +52,8 @@ namespace WertheApp.OS.AllocationStrategies
         }
         public void Start(int p_MemoryRequest)
         {
+            //TODO: status.
+            status = 1;
             switch (strategy)
             {
                 case "First Fit":
@@ -79,7 +87,10 @@ namespace WertheApp.OS.AllocationStrategies
         {
             return fragmentsList;
         }
-
+        public int GetStatus()
+        {
+            return status;
+        }
     }
 }
 

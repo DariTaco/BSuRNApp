@@ -173,7 +173,7 @@ namespace WertheApp.OS.AllocationStrategies
             {
                 algo.Next();
             }
-          
+            AllocationStrategiesDraw.Paint();
         }
 
 

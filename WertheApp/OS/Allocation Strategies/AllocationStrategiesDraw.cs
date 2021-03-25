@@ -54,6 +54,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             /*********************HERE GOES THE DRAWING************************/
             /*important: the coordinate system starts in the upper left corner*/
+            WriteInitialMemoryFragmentationOnCanvas();
             DrawMemory();
             DrawRedArrow(0.5f);
             DrawGrayArrow(0.5f);
@@ -122,8 +123,8 @@ namespace WertheApp.OS.AllocationStrategies
                 float yText = mY1 + (mHeight / 2);
                 canvas.DrawText(fragment.ToString(), xPercent(xText), yPercent(yText), sk_Text); // size of fragment
             }
-
-
+            canvas.DrawText("free", xPercent(0.05f), yPercent(0.5f), sk_Text);
+            canvas.DrawText("used", xPercent(0.05f), yPercent(0.8f), sk_Text);
         }
 
         /**********************************************************************
@@ -158,6 +159,17 @@ namespace WertheApp.OS.AllocationStrategies
 
         /**********************************************************************
         *********************************************************************/
+        private static void WriteInitialMemoryFragmentationOnCanvas()
+        {
+            if(algo.GetStatus() == 0)
+            {
+                canvas.DrawText("initial memory fragmentation", xPercent(0.5f), yPercent(0.1f), sk_Text);
+            }
+ 
+        }
+
+        /**********************************************************************
+        *********************************************************************/
         static private void MakeSKPaint()
         {
 
@@ -174,7 +186,7 @@ namespace WertheApp.OS.AllocationStrategies
                 Style = SKPaintStyle.Stroke,
                 IsAntialias = true,
                 Color = Color.Black.ToSKColor(),
-                StrokeWidth = strokeWidth
+                StrokeWidth = yPercent(0.01f)
             };
 
             sk_ArrowGray = new SKPaint
@@ -200,7 +212,7 @@ namespace WertheApp.OS.AllocationStrategies
                 Color = Color.Black.ToSKColor(),
                 TextAlign = SKTextAlign.Center,
                 StrokeWidth = strokeWidth,
-                TextSize = 50
+                TextSize = yPercent(0.07f)
             };
         }
 
