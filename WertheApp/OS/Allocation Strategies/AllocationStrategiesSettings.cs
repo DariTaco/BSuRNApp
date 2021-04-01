@@ -99,7 +99,7 @@ namespace WertheApp.OS.AllocationStrategies
                 
                 await Navigation.PushAsync(new AllocationStrategies(
                     p_Algorithm.SelectedItem.ToString(),
-                    CreateFragmentsList()
+                    CreateFreeFragmentsList()
                     ));
             }
 
@@ -125,8 +125,8 @@ namespace WertheApp.OS.AllocationStrategies
 
         bool ValidateMaxMemorySize()
         {
-            List<int> fragList = CreateFragmentsList();
-            int memSize = fragList.Sum();
+            List<int> freeFragmentsList = CreateFreeFragmentsList();
+            int memSize = freeFragmentsList.Sum() + freeFragmentsList.Count - 1;
             return memSize <= 125;
 
         }
@@ -134,10 +134,10 @@ namespace WertheApp.OS.AllocationStrategies
         /**********************************************************************
         ***********************************************************************
         reads the input String from e_Fragmentation and adds elements to a List*/
-        private List<int> CreateFragmentsList()
+        private List<int> CreateFreeFragmentsList()
         {
             String s = e_Fragmentation.Text;
-            List<int> fragmentsList = new List<int>();
+            List<int> freeFragmentsList = new List<int>();
 
             String ss = "";
             /*if a comma appears, the string ss will be converted to int and added to fragmentList
@@ -148,7 +148,7 @@ namespace WertheApp.OS.AllocationStrategies
                 if (s[i] == ',')
                 {
                     int frag = Int32.Parse(ss);
-                    fragmentsList.Add(frag);
+                    freeFragmentsList.Add(frag);
 
                     ss = "";
                 }
@@ -156,13 +156,13 @@ namespace WertheApp.OS.AllocationStrategies
                 { //if end of String is reached
                     ss += s[i];
                     int frag = Int32.Parse(ss);
-                    fragmentsList.Add(frag);
+                    freeFragmentsList.Add(frag);
                     ss = "";
                 }
                 else { ss += s[i]; }
             }
 
-            return fragmentsList;
+            return freeFragmentsList;
         }
     }
 }

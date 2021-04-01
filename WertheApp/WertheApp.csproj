@@ -170,6 +170,7 @@
     <Compile Include="OS\Allocation Strategies\AllocationStrategies.cs" />
     <Compile Include="OS\Allocation Strategies\AllocationStrategiesAlgorithm.cs" />
     <Compile Include="OS\Allocation Strategies\AllocationStrategiesDraw.cs" />
+    <Compile Include="OS\Allocation Strategies\FragmentBlock.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

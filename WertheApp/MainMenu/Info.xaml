@@ -6,6 +6,7 @@
                 <Label Text="History" FontSize="30"/>
                 <Label x:Name="l_version" Text="{Binding currentVersion, StringFormat='The current version is {0:F0} &#10;'}"/>
 
+                <Label Text="&#x2022; WertheApp 1.6.12: bug fixes"/>
                 <Label Text="&#x2022; WertheApp 1.6.11: bug fixes"/>
                 <Label Text="&#x2022; WertheApp 1.6.10: Deadlock Help"/>
                 <Label Text="&#x2022; WertheApp 1.6.9: Deadlock bug fix"/>

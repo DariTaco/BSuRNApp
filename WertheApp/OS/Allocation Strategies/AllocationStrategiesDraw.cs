@@ -18,7 +18,7 @@ namespace WertheApp.OS.AllocationStrategies
         // painting tools
         private static float strokeWidth; // stroke Width for paint colors
         private static SKPaint sk_Background, sk_Black, sk_Text,
-            sk_ArrowRed, sk_ArrowGray; //paint colorssk
+            sk_ArrowRed, sk_ArrowGray, sk_UsedSpace; //paint colorssk
 
         private static AllocationStrategiesAlgorithm algo;
        
@@ -100,29 +100,39 @@ namespace WertheApp.OS.AllocationStrategies
             float mY2 = 0.7f;
             float mWidth = mX2 - mX1;
             float mHeight = mY2 - mY1;
- 
 
-            //SKRect sk_memory = new SKRect(x1 + xPercent(0.1f), y1 + yPercent(0.3f), x2 - xPercent(0.1f), y2 - yPercent(0.3f));
-            //SKRect sk_memory = new SKRect(xPercent(0.1f), yPercent(0.3f), xPercent(0.9f), yPercent(0.7f));
+            int totalMemorySize = algo.GetTotalMemorySize();
+            //TODO: create /get
+            List<FragmentBlock> allFragmentsList = algo.CreateAllFragmentsList();
+            float relativeFragmentSize = mWidth / totalMemorySize;
+            int stepsSoFar = 0;
+
+
+            foreach (FragmentBlock fragment in allFragmentsList)
+            {
+
+                stepsSoFar += fragment.GetSize();
+                float fragmentStart = mX1 + (stepsSoFar * relativeFragmentSize) - (fragment.GetSize() * relativeFragmentSize);
+                float fragmentEnd = mX1 + (stepsSoFar * relativeFragmentSize);
+                float xText = fragmentEnd - (fragmentEnd - fragmentStart) / 2; // position of text in the middle of fragment
+               
+                if (fragment.IsFree()) {
+                    // draw size of fragment in the middle of memory
+                    canvas.DrawText(fragment.GetSize().ToString(), xPercent(xText), yPercent(0.5f), sk_Text); }
+                else
+                {
+                    // draw size of fragment beneath the memory
+                    canvas.DrawText(fragment.GetSize().ToString(), xPercent(xText), yPercent(0.8f), sk_Text);
+
+                    // fill in used space
+                    SKRect usedSpace = new SKRect(xPercent(fragmentStart), yPercent(mY1), xPercent(fragmentEnd), yPercent(mY2)); //left x1 top y1 right x2 bottom y2
+                    canvas.DrawRect(usedSpace, sk_UsedSpace);
+                }
+            }
 
             // draw the outlines of the memory box
             SKRect sk_memory = new SKRect(xPercent(mX1), yPercent(mY1), xPercent(mX2), yPercent(mY2));
             canvas.DrawRect(sk_memory, sk_Black);
-
-            //draw the gaps/parting lines to indicate memory fragmentation
-            int totalMemorySize = algo.GetTotalMemorySize();
-            List<int> fragmentsList = algo.GetFragmentsList();
-            float relativeFragmentSize = mWidth / totalMemorySize;
-            int fragmentsSoFar = 0;
-            foreach (int fragment in fragmentsList)
-            {
-                fragmentsSoFar += fragment;
-                float xLine = mX1 + (fragmentsSoFar * relativeFragmentSize);
-                canvas.DrawLine(xPercent(xLine), yPercent(mY1), xPercent(xLine), yPercent(mY2), sk_Black); // fragmentation parting lines
-                float xText = mX1 + ((fragmentsSoFar - (fragment / 2)) * relativeFragmentSize); // position in the middle of a fragmentation
-                float yText = mY1 + (mHeight / 2);
-                canvas.DrawText(fragment.ToString(), xPercent(xText), yPercent(yText), sk_Text); // size of fragment
-            }
             canvas.DrawText("free", xPercent(0.05f), yPercent(0.5f), sk_Text);
             canvas.DrawText("used", xPercent(0.05f), yPercent(0.8f), sk_Text);
         }
@@ -163,7 +173,7 @@ namespace WertheApp.OS.AllocationStrategies
         {
             if(algo.GetStatus() == 0)
             {
-                canvas.DrawText("initial memory fragmentation", xPercent(0.5f), yPercent(0.1f), sk_Text);
+                canvas.DrawText("initial memory fragmentation", xPercent(0.5f), yPercent(0.2f), sk_Text);
             }
  
         }
@@ -213,6 +223,14 @@ namespace WertheApp.OS.AllocationStrategies
                 TextAlign = SKTextAlign.Center,
                 StrokeWidth = strokeWidth,
                 TextSize = yPercent(0.07f)
+            };
+
+            sk_UsedSpace = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                Color = Color.Gray.ToSKColor(),
+                StrokeWidth = yPercent(0.01f)
             };
         }
 

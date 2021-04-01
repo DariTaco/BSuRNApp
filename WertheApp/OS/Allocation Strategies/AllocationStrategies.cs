@@ -21,7 +21,9 @@ namespace WertheApp.OS.AllocationStrategies
         private static Entry e_MemoryRequest;
 
         // needed for restart
-        private static List<int> fragmentsList; // memory fragments
+        //TODO
+        private static List<int> freeFragmentsList; // list representing the free memory fragments - algorithm
+ 
         private static String strategy; // chosen strategy for memory allocation
 
         public AllocationStrategies(String p_Strategy, List<int> p_FragmentsList)
@@ -34,8 +36,8 @@ namespace WertheApp.OS.AllocationStrategies
 
             // assign variables
             strategy = p_Strategy;
-            fragmentsList = p_FragmentsList;
-            algo = new AllocationStrategiesAlgorithm(strategy, fragmentsList);
+            freeFragmentsList = p_FragmentsList;
+            algo = new AllocationStrategiesAlgorithm(strategy, freeFragmentsList);
 
             Title = "Allocation Strategies: " + p_Strategy;
 
@@ -138,7 +140,7 @@ namespace WertheApp.OS.AllocationStrategies
         *********************************************************************/
         void B_Restart_Clicked(object sender, EventArgs e)
         {
-            algo = new AllocationStrategiesAlgorithm(strategy, fragmentsList);
+            algo = new AllocationStrategiesAlgorithm(strategy, freeFragmentsList);
             CreateContent();
         }
 
