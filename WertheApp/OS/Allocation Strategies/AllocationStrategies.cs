@@ -9,24 +9,25 @@ namespace WertheApp.OS.AllocationStrategies
 {
     public class AllocationStrategies : ContentPage
     {
+        // needed for forcing landscape mode / rotation detection
         private double width = 0;
         private double height = 0;
 
+        // needed for UI
         private static SKCanvasView canvasView; // drawing View
-        private static AllocationStrategiesDraw draw; // drawing object
-        private static AllocationStrategiesAlgorithm algo; 
+        private static AllocationStrategiesDraw draw; // drawing object (!neccessary!)
+        private static AllocationStrategiesAlgorithm algo; // (!neccessary!)
 
         // important controls
         private static Button b_Next, b_Restart;
         private static Entry e_MemoryRequest;
 
         // needed for restart
-        //TODO
-        private static List<int> freeFragmentsList; // list representing the free memory fragments - algorithm
- 
+        private static List<FragmentBlock> allFragmentsList; // list representing the free and used memory fragments - algorithm
         private static String strategy; // chosen strategy for memory allocation
 
-        public AllocationStrategies(String p_Strategy, List<int> p_FragmentsList)
+        //CONSTRUCTOR
+        public AllocationStrategies(String p_Strategy, List<FragmentBlock> p_AllFragmentsList)
         {
             // Help/ info button upper right corner
             ToolbarItem info = new ToolbarItem();
@@ -36,8 +37,8 @@ namespace WertheApp.OS.AllocationStrategies
 
             // assign variables
             strategy = p_Strategy;
-            freeFragmentsList = p_FragmentsList;
-            algo = new AllocationStrategiesAlgorithm(strategy, freeFragmentsList);
+            allFragmentsList = new List<FragmentBlock>(p_AllFragmentsList); // copy List without reference to be able to alter it without affecting the original
+            algo = new AllocationStrategiesAlgorithm(strategy, allFragmentsList);
 
             Title = "Allocation Strategies: " + p_Strategy;
 
@@ -63,7 +64,7 @@ namespace WertheApp.OS.AllocationStrategies
         ***********************************************************************/
         void CreateTopHalf(Grid grid)
         {
-            draw = new AllocationStrategiesDraw(algo);
+            draw = new AllocationStrategiesDraw();
             canvasView = new SKCanvasView();
             canvasView = AllocationStrategiesDraw.ReturnCanvas();
             grid.Children.Add(canvasView, 0, 0);
@@ -105,7 +106,7 @@ namespace WertheApp.OS.AllocationStrategies
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill
             };
-            e_MemoryRequest.WidthRequest = 100;
+            e_MemoryRequest.WidthRequest = 50;
             stackLayout.Children.Add(l_MemoryRequest);
             stackLayout.Children.Add(e_MemoryRequest);
 
@@ -140,13 +141,13 @@ namespace WertheApp.OS.AllocationStrategies
         *********************************************************************/
         void B_Restart_Clicked(object sender, EventArgs e)
         {
-            algo = new AllocationStrategiesAlgorithm(strategy, freeFragmentsList);
+            algo = new AllocationStrategiesAlgorithm(strategy, allFragmentsList);
             CreateContent();
         }
 
         /**********************************************************************
         *********************************************************************/
-        void B_Next_Clicked(object sender, EventArgs e)
+        async void B_Next_Clicked(object sender, EventArgs e)
         {
             // if new memory request was made
             if(b_Next.Text == "Start" )
@@ -163,7 +164,15 @@ namespace WertheApp.OS.AllocationStrategies
                     // enable restart button
                     b_Restart.IsEnabled = true;
 
-                    algo.Start(Int32.Parse(e_MemoryRequest.Text));
+                    // check first if memory is already full before you make a new request
+                    if (AllocationStrategiesAlgorithm.MemoryIsFull())
+                    {
+                        await DisplayAlert("Alert", "Out of memory! Please restart.", "OK");
+                    }
+                    else
+                    {
+                        AllocationStrategiesAlgorithm.Start(Int32.Parse(e_MemoryRequest.Text));
+                    }
                 }
                 // otherwise wait until a valid memory request is made by the user
                 else
@@ -173,7 +182,7 @@ namespace WertheApp.OS.AllocationStrategies
             }
             else
             {
-                algo.Next();
+                AllocationStrategiesAlgorithm.Next();
             }
             AllocationStrategiesDraw.Paint();
         }

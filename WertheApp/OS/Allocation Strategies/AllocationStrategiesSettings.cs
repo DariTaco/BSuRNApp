@@ -2,15 +2,17 @@
 using System.Text.RegularExpressions; //Regex.IsMatch();
 using Xamarin.Forms;
 using System.Collections.Generic; //List<int>
-using System.Linq;
 
 namespace WertheApp.OS.AllocationStrategies
 {
     public class AllocationStrategiesSettings : ContentPage
     {
+        //VARIABLES
+        // controls
         private Picker p_Algorithm; 
         private Entry e_Fragmentation;
 
+        //CONSTRUCTOR
         public AllocationStrategiesSettings()
         {
             //Help Button top right corner
@@ -24,6 +26,7 @@ namespace WertheApp.OS.AllocationStrategies
 
         }
 
+        //METHODS
         /**********************************************************************
         *********************************************************************/
         void CreateContent()
@@ -99,7 +102,7 @@ namespace WertheApp.OS.AllocationStrategies
                 
                 await Navigation.PushAsync(new AllocationStrategies(
                     p_Algorithm.SelectedItem.ToString(),
-                    CreateFreeFragmentsList()
+                    CreateAllFragmentsList()
                     ));
             }
 
@@ -108,7 +111,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             else if (!ValidateFragmentationInput()) { await DisplayAlert("Alert", "Please insert a valid fragmentation! (only digits, greater than zero, separated by a comma)", "OK"); }
 
-            else if (!ValidateMaxMemorySize()) { await DisplayAlert("Alert", "Sum of all fragments must be <= 125", "OK"); }
+            else if (!ValidateMaxMemorySize()) { await DisplayAlert("Alert", "Sum of all fragments must be <= 125 (',' count as 1)", "OK"); }
 
             else { await DisplayAlert("Alert", "Please fill in all necessary information", "OK"); }
         }
@@ -123,23 +126,32 @@ namespace WertheApp.OS.AllocationStrategies
             return Regex.IsMatch(s, "^[1-9]+[0-9]*(,[1-9]+[0-9]*)*$"); //matches only numbers(exept 0) separated by a comma;
         }
 
+        /**********************************************************************
+        ***********************************************************************
+        validates if the memory size is less or equal than 125*/
         bool ValidateMaxMemorySize()
         {
-            List<int> freeFragmentsList = CreateFreeFragmentsList();
-            int memSize = freeFragmentsList.Sum() + freeFragmentsList.Count - 1;
-            return memSize <= 125;
+
+            List<FragmentBlock> allFragmentsList = CreateAllFragmentsList();
+            int memorySize = 0;
+            foreach(FragmentBlock fb in allFragmentsList)
+            {
+                memorySize += fb.GetSize();
+            }
+          
+            return memorySize <= 125;
 
         }
 
         /**********************************************************************
         ***********************************************************************
         reads the input String from e_Fragmentation and adds elements to a List*/
-        private List<int> CreateFreeFragmentsList()
+        private List<FragmentBlock> CreateAllFragmentsList()
         {
             String s = e_Fragmentation.Text;
-            List<int> freeFragmentsList = new List<int>();
-
+            List<FragmentBlock> allFragmentsList = new List<FragmentBlock>();
             String ss = "";
+
             /*if a comma appears, the string ss will be converted to int and added to fragmentList
             in the other case(digit appears), it will be added to ss
             IMPORTANT: due to the function ValidateFragmentationInput, it is ensured that only commas and digits appear*/
@@ -147,23 +159,25 @@ namespace WertheApp.OS.AllocationStrategies
             {
                 if (s[i] == ',')
                 {
-                    int frag = Int32.Parse(ss);
-                    freeFragmentsList.Add(frag);
+                    int fragmentBlockSize = Int32.Parse(ss);
+                    allFragmentsList.Add(new FragmentBlock(fragmentBlockSize, true, i - fragmentBlockSize)); // add free fragment
+                    allFragmentsList.Add(new FragmentBlock(1, false, i)); // add used fragment
 
                     ss = "";
                 }
                 else if (i == s.Length - 1)
                 { //if end of String is reached
                     ss += s[i];
-                    int frag = Int32.Parse(ss);
-                    freeFragmentsList.Add(frag);
+                    int fragmentBlockSize = Int32.Parse(ss);
+                    allFragmentsList.Add(new FragmentBlock(fragmentBlockSize, true, i - fragmentBlockSize)); // add free fragment
+
                     ss = "";
                 }
                 else { ss += s[i]; }
             }
 
-            return freeFragmentsList;
+            return allFragmentsList;
         }
+
     }
 }
-

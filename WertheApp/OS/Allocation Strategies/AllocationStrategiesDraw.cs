@@ -19,19 +19,15 @@ namespace WertheApp.OS.AllocationStrategies
         private static float strokeWidth; // stroke Width for paint colors
         private static SKPaint sk_Background, sk_Black, sk_Text,
             sk_ArrowRed, sk_ArrowGray, sk_UsedSpace; //paint colorssk
-
-        private static AllocationStrategiesAlgorithm algo;
        
 
-        public AllocationStrategiesDraw(AllocationStrategiesAlgorithm p_algo)
+        public AllocationStrategiesDraw()
         {
             
             // crate the canvas
             canvasView = new SKCanvasView();
             canvasView.PaintSurface += PaintSurface;
             canvasView.BackgroundColor = Color.WhiteSmoke;
-
-            algo = p_algo;
 
         }
 
@@ -76,7 +72,7 @@ namespace WertheApp.OS.AllocationStrategies
             x2 = info.Width - strokeWidth / 2;
             y2 = info.Height - strokeWidth / 2;
 
-            Debug.WriteLine(string.Format($" centerX: {centerX}, centerY {centerY}, x1: {x1}, x2: {x2}, y1: {y1}, y2: {y2}"));
+            //Debug.WriteLine(string.Format($" centerX: {centerX}, centerY {centerY}, x1: {x1}, x2: {x2}, y1: {y1}, y2: {y2}"));
         }
         static float xPercent(float p)
         {
@@ -101,9 +97,9 @@ namespace WertheApp.OS.AllocationStrategies
             float mWidth = mX2 - mX1;
             float mHeight = mY2 - mY1;
 
-            int totalMemorySize = algo.GetTotalMemorySize();
+            int totalMemorySize = AllocationStrategiesAlgorithm.GetTotalMemorySize();
             //TODO: create /get
-            List<FragmentBlock> allFragmentsList = algo.CreateAllFragmentsList();
+            List<FragmentBlock> allFragmentsList = AllocationStrategiesAlgorithm.GetAllFragmentsList();
             float relativeFragmentSize = mWidth / totalMemorySize;
             int stepsSoFar = 0;
 
@@ -171,7 +167,7 @@ namespace WertheApp.OS.AllocationStrategies
         *********************************************************************/
         private static void WriteInitialMemoryFragmentationOnCanvas()
         {
-            if(algo.GetStatus() == 0)
+            if(AllocationStrategiesAlgorithm.GetStatus() == 0)
             {
                 canvas.DrawText("initial memory fragmentation", xPercent(0.5f), yPercent(0.2f), sk_Text);
             }
