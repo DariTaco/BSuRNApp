@@ -10,14 +10,21 @@ namespace WertheApp.OS.AllocationStrategies
     {
 
         //VARIABLES
-        //TODO: status. vll noch enum draus machen
-        private static int status; //0-> initial memory frag, start, 1-> searching, 2->search succ, ...
-
+        public enum Status
+        {
+            start = 0,
+            searching = 1,
+            successfull = 2,
+            unsuccessfull = 3,
+            undefined = 9
+        }
+        private static Status status;
         // algorithm
         private static String strategy; // chosen strategy for memory allocation
         private static int totalMemorySize; // sum of all fragments (free and used)
         private static List<FragmentBlock> allFragmentsList; // list representing the free and used memory fragments - algorithm
         private static List<int> freeFragmentsIndexSequenceList;
+        private static int currentIndex;
         private static int indexLastAllocated; // list index (all fragmentslist) of fragment which was allocated in the most recent successfull memory allocation
         private static int mostPromisingIndex; // most promising fragment (all fragmentslist) block index found by the algorithm so far
         private static int memoryRequest; // current memory request made by the user
@@ -26,10 +33,11 @@ namespace WertheApp.OS.AllocationStrategies
         public AllocationStrategiesAlgorithm(String p_Strategy, List<FragmentBlock> p_AllFragmentsList)
         {
             strategy = p_Strategy;
-            status = 0; // no request made yet
+            status = Status.undefined; // no request made yet
             allFragmentsList = new List<FragmentBlock>(p_AllFragmentsList); // copy List without reference to be able to alter it without affecting the original
             freeFragmentsIndexSequenceList = new List<int>(); //empty list
             indexLastAllocated = 0; // start at the beginnning
+            currentIndex = -1; // nothing yet
             mostPromisingIndex = -1; //nothing yet
             memoryRequest = -1; //nothing yet
 
@@ -44,6 +52,8 @@ namespace WertheApp.OS.AllocationStrategies
         //METHODS
         public static void Next()
         {
+            status = Status.searching;
+
             switch (strategy)
             {
                 case "First Fit":
@@ -65,24 +75,40 @@ namespace WertheApp.OS.AllocationStrategies
         }
         public static void Start(int p_MemoryRequest)
         {
-            status = 1;
+            status = Status.start;
             mostPromisingIndex = -1;
+            currentIndex = indexLastAllocated;
             memoryRequest = p_MemoryRequest;
             UpdateFreeFragmentsIndexSequenceList(allFragmentsList);
 
         }
 
+        /**********************************************************************
+        ***********************************************************************/
         public static void FirstFit() { }
+        /**********************************************************************
+        ***********************************************************************/
         public static void NextFit() { }
+        /**********************************************************************
+        ***********************************************************************/
         public static void BestFit() { }
+        /**********************************************************************
+        ***********************************************************************/
         public static void WorstFit() { }
+
+        /**********************************************************************
+        ***********************************************************************/
         public static void CombinedFit()
         {
+            Debug.WriteLine("COMBINED FIT");
+
             // end of ring search not yet reached
             if (freeFragmentsIndexSequenceList.Any())
             {
 
                 currentIndex = freeFragmentsIndexSequenceList.First();
+                Debug.WriteLine("current index: " + currentIndex);
+
                 FragmentBlock fb = allFragmentsList.ElementAt(currentIndex);
                 //if it fits perfectly -> search was successfull
                 if (memoryRequest == fb.GetSize())
@@ -90,22 +116,24 @@ namespace WertheApp.OS.AllocationStrategies
                     Debug.WriteLine("fits perfectly!");
                     mostPromisingIndex = allFragmentsList.IndexOf(fb);
                     indexLastAllocated = mostPromisingIndex;
-
+                    status = Status.successfull;
                 }
                 //if it doesn't fit perfectly but free big enough space was found
                 else if (memoryRequest <= fb.GetSize())
                 {
+                    int mostPromisingSize = 0;
+                    if (mostPromisingIndex != -1) { mostPromisingSize = allFragmentsList.ElementAt(mostPromisingIndex).GetSize(); }
+
                     // and it's bigger than the last free space that has been found 
-                    if (fb.GetSize() > allFragmentsList.ElementAt(mostPromisingIndex).GetSize())
+                    if (fb.GetSize() > mostPromisingSize)
                     {
-                        Debug.WriteLine(fb.GetSize() + " bigger than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
+                        Debug.WriteLine(fb.GetSize() + " bigger than " + mostPromisingSize);
                         mostPromisingIndex = allFragmentsList.IndexOf(fb);
                     }
                     // but it's not bigger
                     else
                     {
                         Debug.WriteLine(fb.GetSize() + " unfortunately not bigger than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
-
                     }
                 }
                 // if it does not fit at all
@@ -113,6 +141,7 @@ namespace WertheApp.OS.AllocationStrategies
                 {
                     Debug.WriteLine("Space not big enough!");
                 }
+                freeFragmentsIndexSequenceList.RemoveAt(0);
             }
             // end of ring search reached
             else
@@ -122,47 +151,52 @@ namespace WertheApp.OS.AllocationStrategies
                 // nothing found -> search was unsuccessfull
                 if (mostPromisingIndex == -1)
                 {
-
+                    status = Status.unsuccessfull;
                 }
                 // fragment block found -> search was successfull
                 else
                 {
                     indexLastAllocated = mostPromisingIndex;
+                    currentIndex = mostPromisingIndex;
+                    status = Status.successfull;
                 }
             }
         }
-
         /**********************************************************************
-       ***********************************************************************/
-       public static int GetTotalMemorySize()
-       {
-           return totalMemorySize;
-       }
-
-       public static int GetStatus()
-       {
-           return status;
-       }
-
-       public static List<FragmentBlock> GetAllFragmentsList()
-       {
-           List<FragmentBlock> copyList = new List<FragmentBlock>(allFragmentsList);
-           return copyList;
-       }
-
-       public static bool MemoryIsFull()
+        ***********************************************************************/
+        public static void UpdateAllFragmentsList()
         {
-            bool isFull = true;
+            Debug.WriteLine("UPDATE ALL FRAGMENTSLIST");
+            Debug.WriteLine("old fragemnts list");
+            foreach (FragmentBlock fb in allFragmentsList)
+            {
+                Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
+            }
+            FragmentBlock allocatedFb = allFragmentsList.ElementAt(indexLastAllocated);
+            int remainingFragmentSize = allocatedFb.GetSize() - memoryRequest;
+
+            if(remainingFragmentSize == 0)
+            {
+                allFragmentsList.ElementAt(indexLastAllocated).Use();
+            }
+            else
+            {
+                int startIndex = allFragmentsList.ElementAt(indexLastAllocated).Use(memoryRequest);
+                FragmentBlock newFb = new FragmentBlock(remainingFragmentSize, true, startIndex);
+                allFragmentsList.Insert(indexLastAllocated + 1, newFb);
+            }
+
+            Debug.WriteLine("new fragemnts list");
             foreach(FragmentBlock fb in allFragmentsList)
             {
-                if (fb.IsFree()) { isFull = false; }
+                Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
             }
-            return isFull;
         }
+
        /**********************************************************************
        ***********************************************************************
        creates a list of all free fragment indexes in the order they are going to be processed by the algorithm*/
-       public static List<int> UpdateFreeFragmentsIndexSequenceList(List<FragmentBlock> p_AllFragmentsList)
+        public static List<int> UpdateFreeFragmentsIndexSequenceList(List<FragmentBlock> p_AllFragmentsList)
         {
             int numberOfFragments = p_AllFragmentsList.Count();
             freeFragmentsIndexSequenceList.Clear();
@@ -187,6 +221,42 @@ namespace WertheApp.OS.AllocationStrategies
             }
 
             return freeFragmentsIndexSequenceList;
+        }
+        /**********************************************************************
+        ***********************************************************************/
+        public static int GetTotalMemorySize()
+        {
+            return totalMemorySize;
+        }
+
+        public static Status GetStatus()
+        {
+            return status;
+        }
+
+        public static int GetMostPromisingIndex()
+        {
+            return mostPromisingIndex;
+        }
+
+        public static int GetCurrentIndex()
+        {
+            return currentIndex;
+        }
+        public static List<FragmentBlock> GetAllFragmentsList()
+        {
+            List<FragmentBlock> copyList = new List<FragmentBlock>(allFragmentsList);
+            return copyList;
+        }
+
+        public static bool MemoryIsFull()
+        {
+            bool isFull = true;
+            foreach (FragmentBlock fb in allFragmentsList)
+            {
+                if (fb.IsFree()) { isFull = false; }
+            }
+            return isFull;
         }
     }
 }
@@ -283,7 +353,4 @@ public List<FragmentBlock> CreateAllFragmentsList()
 
     return allFragmentsList;
 }
-public int GetStatus()
-{
-    return status;
-}*/
+*/

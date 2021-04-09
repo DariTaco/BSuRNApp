@@ -4,6 +4,7 @@ using SkiaSharp;
 using Xamarin.Forms;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WertheApp.OS.AllocationStrategies
 {
@@ -51,9 +52,20 @@ namespace WertheApp.OS.AllocationStrategies
             /*********************HERE GOES THE DRAWING************************/
             /*important: the coordinate system starts in the upper left corner*/
             WriteInitialMemoryFragmentationOnCanvas();
-            DrawMemory();
-            DrawRedArrow(0.5f);
-            DrawGrayArrow(0.5f);
+            float relativeFragmentSize = DrawMemory();
+
+            AllocationStrategiesAlgorithm.Status status = AllocationStrategiesAlgorithm.GetStatus();
+            if (status != AllocationStrategiesAlgorithm.Status.undefined && status != AllocationStrategiesAlgorithm.Status.start)
+            {
+                DrawRedArrow(relativeFragmentSize);
+
+                int promIndex = AllocationStrategiesAlgorithm.GetMostPromisingIndex();
+                if (promIndex != -1)
+                {
+                    DrawGrayArrow(promIndex, relativeFragmentSize);
+                }
+            }
+
 
             //execute all drawing actions
             canvas.Flush();
@@ -87,7 +99,7 @@ namespace WertheApp.OS.AllocationStrategies
 
         /**********************************************************************
         *********************************************************************/
-        private static void DrawMemory()
+        private static float DrawMemory()
         {
             // memory bounds in percent of the canvas
             float mX1 = 0.1f;
@@ -98,7 +110,6 @@ namespace WertheApp.OS.AllocationStrategies
             float mHeight = mY2 - mY1;
 
             int totalMemorySize = AllocationStrategiesAlgorithm.GetTotalMemorySize();
-            //TODO: create /get
             List<FragmentBlock> allFragmentsList = AllocationStrategiesAlgorithm.GetAllFragmentsList();
             float relativeFragmentSize = mWidth / totalMemorySize;
             int stepsSoFar = 0;
@@ -106,6 +117,9 @@ namespace WertheApp.OS.AllocationStrategies
 
             foreach (FragmentBlock fragment in allFragmentsList)
             {
+                // fragment size of 1 gets displayed as a .
+                String fragmentSize = fragment.GetSize().ToString();
+                if(fragmentSize == "1") { fragmentSize = "."; }
 
                 stepsSoFar += fragment.GetSize();
                 float fragmentStart = mX1 + (stepsSoFar * relativeFragmentSize) - (fragment.GetSize() * relativeFragmentSize);
@@ -114,11 +128,11 @@ namespace WertheApp.OS.AllocationStrategies
                
                 if (fragment.IsFree()) {
                     // draw size of fragment in the middle of memory
-                    canvas.DrawText(fragment.GetSize().ToString(), xPercent(xText), yPercent(0.5f), sk_Text); }
+                    canvas.DrawText(fragmentSize, xPercent(xText), yPercent(0.5f), sk_Text); }
                 else
                 {
                     // draw size of fragment beneath the memory
-                    canvas.DrawText(fragment.GetSize().ToString(), xPercent(xText), yPercent(0.8f), sk_Text);
+                    canvas.DrawText(fragmentSize, xPercent(xText), yPercent(0.8f), sk_Text);
 
                     // fill in used space
                     SKRect usedSpace = new SKRect(xPercent(fragmentStart), yPercent(mY1), xPercent(fragmentEnd), yPercent(mY2)); //left x1 top y1 right x2 bottom y2
@@ -131,12 +145,30 @@ namespace WertheApp.OS.AllocationStrategies
             canvas.DrawRect(sk_memory, sk_Black);
             canvas.DrawText("free", xPercent(0.05f), yPercent(0.5f), sk_Text);
             canvas.DrawText("used", xPercent(0.05f), yPercent(0.8f), sk_Text);
+            return relativeFragmentSize;
         }
 
         /**********************************************************************
         *********************************************************************/
-        private static void DrawGrayArrow(float xPosition)
+        private static void DrawGrayArrow(int index, float relativeFragmentSize)
         {
+            // determine position of fragment block 
+            List<FragmentBlock> allFragmentsList = AllocationStrategiesAlgorithm.GetAllFragmentsList();
+            float mX1 = 0.1f; // memory bound x1
+
+            int stepsSoFar = 0;
+            FragmentBlock fragment = null;
+            for (int i = 0; i <= index; i++)
+            {
+                fragment = allFragmentsList.ElementAt(i);
+                stepsSoFar += fragment.GetSize();
+            }
+            float fragmentStart = mX1 + (stepsSoFar * relativeFragmentSize) - (fragment.GetSize() * relativeFragmentSize);
+            float fragmentEnd = mX1 + (stepsSoFar * relativeFragmentSize);
+            float xPosition = fragmentEnd - (fragmentEnd - fragmentStart) / 2; // position of text in the middle of fragment
+
+
+            // draw the arrow
             float arrowTip = 0.725f;
             canvas.DrawLine(xPercent(xPosition), yPercent(arrowTip + 0.125f), xPercent(xPosition), yPercent(arrowTip), sk_ArrowGray);
             SKPath arrow = new SKPath();
@@ -150,8 +182,25 @@ namespace WertheApp.OS.AllocationStrategies
 
         /**********************************************************************
         *********************************************************************/
-        private static void DrawRedArrow(float xPosition)
+        private static void DrawRedArrow(float relativeFragmentSize)
         {
+            // determine position of fragment block
+            int index = AllocationStrategiesAlgorithm.GetCurrentIndex();
+            List<FragmentBlock> allFragmentsList = AllocationStrategiesAlgorithm.GetAllFragmentsList();
+            float mX1 = 0.1f; // memory bound x1
+
+            int stepsSoFar = 0;
+            FragmentBlock fragment = null;
+            for (int i = 0; i <= index; i++)
+            {
+                fragment = allFragmentsList.ElementAt(i);
+                stepsSoFar += fragment.GetSize();
+            }
+            float fragmentStart = mX1 + (stepsSoFar * relativeFragmentSize) - (fragment.GetSize() * relativeFragmentSize);
+            float fragmentEnd = mX1 + (stepsSoFar * relativeFragmentSize);
+            float xPosition = fragmentEnd - (fragmentEnd - fragmentStart) / 2; // position of text in the middle of fragment
+
+            // draw the arrow
             float arrowTip = 0.275f;
             canvas.DrawLine(xPercent(xPosition), yPercent(arrowTip-0.125f), xPercent(xPosition), yPercent(arrowTip), sk_ArrowRed);
             SKPath arrow = new SKPath();
@@ -167,7 +216,7 @@ namespace WertheApp.OS.AllocationStrategies
         *********************************************************************/
         private static void WriteInitialMemoryFragmentationOnCanvas()
         {
-            if(AllocationStrategiesAlgorithm.GetStatus() == 0)
+            if(AllocationStrategiesAlgorithm.GetStatus() == AllocationStrategiesAlgorithm.Status.undefined)
             {
                 canvas.DrawText("initial memory fragmentation", xPercent(0.5f), yPercent(0.2f), sk_Text);
             }

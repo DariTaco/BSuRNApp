@@ -42,5 +42,18 @@ namespace WertheApp.OS.AllocationStrategies
         {
             return this.endIndex;
         }
+        public void Use()
+        {
+            this.free = false;
+        }
+        public int Use(int p_size)
+        {
+            this.size = p_size;
+            this.free = false;
+            this.endIndex = this.startIndex + (p_size - 1);
+
+            int newStartIndex = endIndex + 1;
+            return newStartIndex;
+        }
     }
 }

@@ -104,7 +104,8 @@ namespace WertheApp.OS.AllocationStrategies
             e_MemoryRequest = new Entry
             {   Keyboard = Keyboard.Numeric,  //only numbers are allowed
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Fill
+                HorizontalOptions = LayoutOptions.Fill,
+                BackgroundColor = Color.White
             };
             e_MemoryRequest.WidthRequest = 50;
             stackLayout.Children.Add(l_MemoryRequest);
@@ -113,7 +114,7 @@ namespace WertheApp.OS.AllocationStrategies
             // next button
             b_Next = new Button
             {
-                Text = "Start",
+                Text = "Confirm",
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BackgroundColor = App._buttonBackground,
@@ -150,7 +151,7 @@ namespace WertheApp.OS.AllocationStrategies
         async void B_Next_Clicked(object sender, EventArgs e)
         {
             // if new memory request was made
-            if(b_Next.Text == "Start" )
+            if(b_Next.Text == "Confirm" )
             {
                 // if the memory request is valid
                 if (ValidateMemoryRequestInput(e_MemoryRequest.Text))
@@ -182,7 +183,29 @@ namespace WertheApp.OS.AllocationStrategies
             }
             else
             {
-                AllocationStrategiesAlgorithm.Next();
+         
+                AllocationStrategiesAlgorithm.Status status = AllocationStrategiesAlgorithm.GetStatus();
+
+                if (status == AllocationStrategiesAlgorithm.Status.searching || status == AllocationStrategiesAlgorithm.Status.start)
+                {
+                    AllocationStrategiesAlgorithm.Next();
+                }
+                else if (status == AllocationStrategiesAlgorithm.Status.successfull)
+                {
+                    AllocationStrategiesAlgorithm.UpdateAllFragmentsList();
+                    b_Next.Text = "Confirm";
+                    e_MemoryRequest.IsEnabled = true; // enable memory request entry 
+                    e_MemoryRequest.BackgroundColor = Color.White;
+                    e_MemoryRequest.Text = "";
+
+                }
+                else if (status == AllocationStrategiesAlgorithm.Status.unsuccessfull)
+                {
+                    b_Next.Text = "Confirm";
+                    e_MemoryRequest.IsEnabled = true; // enable memory request entry 
+                    e_MemoryRequest.BackgroundColor = Color.White;
+                    e_MemoryRequest.Text = "";
+                }
             }
             AllocationStrategiesDraw.Paint();
         }
