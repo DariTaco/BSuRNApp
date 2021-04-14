@@ -22,6 +22,9 @@
                 <Label Text="by Prof. Dr. Werthebach, OS course in Nov. 2020"/>
                 <Label Text="Combines Best Fit, Worst Fit and Next Fit. The first exactly fitting block is allocated. If such a block does not exist, all sufficiently large blocks are compared and the first found largest one is selected. Any next ring search starts directly after the last recent allocation. &#10;"/>
 
+                <Label Text="Settings" FontSize="24"/>
+                <Label Text="When entering a fragmentation sequence, ',' count(s) as one used fragemnt. &#10;"/>
+
 
                 <Label x:Name="last"/>
 

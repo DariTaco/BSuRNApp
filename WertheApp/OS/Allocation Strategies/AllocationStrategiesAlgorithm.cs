@@ -16,6 +16,7 @@ namespace WertheApp.OS.AllocationStrategies
             searching = 1,
             successfull = 2,
             unsuccessfull = 3,
+            merged = 4,
             undefined = 9
         }
         private static Status status;
@@ -34,7 +35,14 @@ namespace WertheApp.OS.AllocationStrategies
         {
             strategy = p_Strategy;
             status = Status.undefined; // no request made yet
-            allFragmentsList = new List<FragmentBlock>(p_AllFragmentsList); // copy List without reference to be able to alter it without affecting the original
+
+            // copy List without reference to be able to alter it without affecting the original
+            allFragmentsList = new List<FragmentBlock>();
+            foreach (FragmentBlock p_fb in p_AllFragmentsList)
+            {
+                FragmentBlock fb = new FragmentBlock(p_fb.GetSize(), p_fb.IsFree(), p_fb.GetStartIndex());
+                allFragmentsList.Add(fb);
+            }
             freeFragmentsIndexSequenceList = new List<int>(); //empty list
             indexLastAllocated = 0; // start at the beginnning
             currentIndex = -1; // nothing yet
@@ -168,6 +176,7 @@ namespace WertheApp.OS.AllocationStrategies
         {
             Debug.WriteLine("UPDATE ALL FRAGMENTSLIST");
             Debug.WriteLine("old fragemnts list");
+            mostPromisingIndex = -1;
             foreach (FragmentBlock fb in allFragmentsList)
             {
                 Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
@@ -185,17 +194,53 @@ namespace WertheApp.OS.AllocationStrategies
                 FragmentBlock newFb = new FragmentBlock(remainingFragmentSize, true, startIndex);
                 allFragmentsList.Insert(indexLastAllocated + 1, newFb);
             }
-
+            Debug.WriteLine("");
             Debug.WriteLine("new fragemnts list");
             foreach(FragmentBlock fb in allFragmentsList)
             {
                 Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
             }
+
+            MergeUsedFragments(0);
+            Debug.WriteLine("");
+            Debug.WriteLine("merged fragemnts list");
+            foreach (FragmentBlock fb in allFragmentsList)
+            {
+                Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
+            }
+        }
+        /**********************************************************************
+        ***********************************************************************/
+        public static void MergeUsedFragments(int index)
+        {
+            int i = index;
+            if(i >= allFragmentsList.Count())
+            {
+                status = Status.merged;
+            }
+            else if(allFragmentsList.ElementAt(i).IsFree())
+            {
+                i++;
+                MergeUsedFragments(i);
+            }
+            else
+            {
+                FragmentBlock savedFragmentBlock = allFragmentsList.ElementAt(i);
+                i++;
+                //if two or more used fragments are next to each other add the sizes of the following block to the leading block and then delete them
+                    while (i < allFragmentsList.Count() && !allFragmentsList.ElementAt(i).IsFree())
+                    {
+                        savedFragmentBlock.AddToSize(allFragmentsList.ElementAt(i).GetSize());
+                        allFragmentsList.RemoveAt(i);
+                    }
+
+                    MergeUsedFragments(i);
+            }
         }
 
-       /**********************************************************************
-       ***********************************************************************
-       creates a list of all free fragment indexes in the order they are going to be processed by the algorithm*/
+        /**********************************************************************
+        ***********************************************************************
+        creates a list of all free fragment indexes in the order they are going to be processed by the algorithm*/
         public static List<int> UpdateFreeFragmentsIndexSequenceList(List<FragmentBlock> p_AllFragmentsList)
         {
             int numberOfFragments = p_AllFragmentsList.Count();
@@ -222,6 +267,8 @@ namespace WertheApp.OS.AllocationStrategies
 
             return freeFragmentsIndexSequenceList;
         }
+
+
         /**********************************************************************
         ***********************************************************************/
         public static int GetTotalMemorySize()
@@ -245,8 +292,7 @@ namespace WertheApp.OS.AllocationStrategies
         }
         public static List<FragmentBlock> GetAllFragmentsList()
         {
-            List<FragmentBlock> copyList = new List<FragmentBlock>(allFragmentsList);
-            return copyList;
+            return allFragmentsList;
         }
 
         public static bool MemoryIsFull()

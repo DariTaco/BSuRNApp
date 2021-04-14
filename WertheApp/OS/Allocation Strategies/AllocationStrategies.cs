@@ -37,7 +37,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             // assign variables
             strategy = p_Strategy;
-            allFragmentsList = new List<FragmentBlock>(p_AllFragmentsList); // copy List without reference to be able to alter it without affecting the original
+            allFragmentsList = new List<FragmentBlock>(p_AllFragmentsList); // copy List without reference to be able to alter it without affecting the original. NOTE: objects in list can still be affected
             algo = new AllocationStrategiesAlgorithm(strategy, allFragmentsList);
 
             Title = "Allocation Strategies: " + p_Strategy;
@@ -99,7 +99,8 @@ namespace WertheApp.OS.AllocationStrategies
             var l_MemoryRequest = new Label
             {   Text = "Memory request: ",
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center
+                HorizontalOptions = LayoutOptions.Center,
+                //FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label))
             };
             e_MemoryRequest = new Entry
             {   Keyboard = Keyboard.Numeric,  //only numbers are allowed
@@ -144,6 +145,11 @@ namespace WertheApp.OS.AllocationStrategies
         {
             algo = new AllocationStrategiesAlgorithm(strategy, allFragmentsList);
             CreateContent();
+            AllocationStrategiesDraw.Paint();
+            foreach (FragmentBlock fb in allFragmentsList)
+            {
+                Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
+            }
         }
 
         /**********************************************************************
@@ -205,6 +211,8 @@ namespace WertheApp.OS.AllocationStrategies
                     e_MemoryRequest.IsEnabled = true; // enable memory request entry 
                     e_MemoryRequest.BackgroundColor = Color.White;
                     e_MemoryRequest.Text = "";
+                    await DisplayAlert("Alert", "Memory request was unsuccessfull.", "OK");
+
                 }
             }
             AllocationStrategiesDraw.Paint();

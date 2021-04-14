@@ -111,7 +111,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             else if (!ValidateFragmentationInput()) { await DisplayAlert("Alert", "Please insert a valid fragmentation! (only digits, greater than zero, separated by a comma)", "OK"); }
 
-            else if (!ValidateMaxMemorySize()) { await DisplayAlert("Alert", "Sum of all fragments must be <= 125 (',' count as 1)", "OK"); }
+            else if (!ValidateMaxMemorySize()) { await DisplayAlert("Alert", "Sum of all fragments must be <= 125", "OK"); }
 
             else { await DisplayAlert("Alert", "Please fill in all necessary information", "OK"); }
         }

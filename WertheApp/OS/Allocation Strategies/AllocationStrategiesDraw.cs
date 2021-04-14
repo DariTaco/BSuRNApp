@@ -55,9 +55,10 @@ namespace WertheApp.OS.AllocationStrategies
             float relativeFragmentSize = DrawMemory();
 
             AllocationStrategiesAlgorithm.Status status = AllocationStrategiesAlgorithm.GetStatus();
-            if (status != AllocationStrategiesAlgorithm.Status.undefined && status != AllocationStrategiesAlgorithm.Status.start)
+            if (status != AllocationStrategiesAlgorithm.Status.undefined && status != AllocationStrategiesAlgorithm.Status.start && status != AllocationStrategiesAlgorithm.Status.merged)
             {
                 DrawRedArrow(relativeFragmentSize);
+
 
                 int promIndex = AllocationStrategiesAlgorithm.GetMostPromisingIndex();
                 if (promIndex != -1)
@@ -185,7 +186,7 @@ namespace WertheApp.OS.AllocationStrategies
         private static void DrawRedArrow(float relativeFragmentSize)
         {
             // determine position of fragment block
-            int index = AllocationStrategiesAlgorithm.GetCurrentIndex();
+            int index = AllocationStrategiesAlgorithm.GetCurrentIndex(); //TODO: nach merge könnte der index nicht mehr existieren
             List<FragmentBlock> allFragmentsList = AllocationStrategiesAlgorithm.GetAllFragmentsList();
             float mX1 = 0.1f; // memory bound x1
 

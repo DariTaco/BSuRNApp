@@ -30,6 +30,11 @@ namespace WertheApp.OS.AllocationStrategies
         {
             return this.size;
         }
+        public void AddToSize(int addedSize)
+        {
+            this.size += addedSize;
+            this.endIndex += addedSize;
+        }
         public bool IsFree()
         {
             return this.free;
