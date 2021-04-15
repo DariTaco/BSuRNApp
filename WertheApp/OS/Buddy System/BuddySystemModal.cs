@@ -105,14 +105,18 @@ namespace WertheApp.OS
             var b_Start = new Button { Text = "Start process",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Start.Clicked += B_Start_Clicked;
             var l_Space2 = new Label { Text = "  " };
             var b_Cancel = new Button { Text = "Cancel",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Cancel.Clicked += B_Cancel_Clicked;
 

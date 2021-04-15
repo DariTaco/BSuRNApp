@@ -103,7 +103,9 @@ namespace WertheApp.OS
             var b_DefaultValue = new Button { Text = "Set Default", HorizontalOptions = LayoutOptions.Start,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_DefaultValue.Clicked += B_DefaultValue_Clicked;
             var l_Space2 = new Label { Text = "  " };
@@ -115,7 +117,9 @@ namespace WertheApp.OS
 			var b_Start = new Button { Text = "Start",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
 			b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
 

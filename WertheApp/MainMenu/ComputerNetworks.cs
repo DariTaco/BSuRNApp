@@ -20,7 +20,9 @@ namespace WertheApp
 		{
             var l_choose = new Label 
             { 
-                Text="Choose an App:"
+                Text="Choose an App",
+                FontSize = App._labelFontSize
+
             };
             stackLayout.Children.Add(l_choose);
 

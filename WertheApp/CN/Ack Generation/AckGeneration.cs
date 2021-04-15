@@ -56,7 +56,7 @@ namespace WertheApp.CN
         {
             skiaview = new SKCanvasView();
             skiaview = AckGenerationDraw.ReturnCanvas();
-            skiaview.BackgroundColor = Color.WhiteSmoke;
+            skiaview.BackgroundColor = App._viewBackground;
             grid.Children.Add(skiaview, 0, 0);
         }
 
@@ -70,7 +70,7 @@ namespace WertheApp.CN
             var stackLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
-                Margin = new Thickness(10),
+                Margin = new Thickness(5),
 
             };
 
@@ -81,7 +81,8 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
             };
             b_Next.Clicked += B_Next_Clicked;
             b_Restart = new Button
@@ -91,7 +92,8 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Back = new Button
@@ -101,7 +103,8 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
             };
             b_Back.Clicked += B_Back_Clicked;
             b_Back.IsEnabled = false;

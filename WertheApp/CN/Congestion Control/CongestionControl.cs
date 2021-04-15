@@ -513,7 +513,7 @@ namespace WertheApp.CN
 
             skiaview = new SKCanvasView();
             skiaview = CongestionControlDraw.ReturnCanvas();
-            skiaview.BackgroundColor = Color.WhiteSmoke;
+            skiaview.BackgroundColor = App._viewBackground; 
             grid.Children.Add(skiaview, 0, 0);
         }
 
@@ -528,7 +528,7 @@ namespace WertheApp.CN
             var stackLayout = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
-				Margin = new Thickness(10),
+				Margin = new Thickness(5),
 
 			};
 
@@ -540,7 +540,8 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -554,7 +555,9 @@ namespace WertheApp.CN
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_DupAck.IsEnabled = false;
             b_DupAck.Clicked += B_DupAck_Clicked;
@@ -568,7 +571,9 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Timeout.Clicked += B_Timeout_Clicked;
             stackLayout.Children.Add(b_Timeout);
@@ -581,7 +586,9 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_NewAck.Clicked += B_NewAck_Clicked;;
             stackLayout.Children.Add(b_NewAck);

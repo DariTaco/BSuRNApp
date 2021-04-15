@@ -88,7 +88,9 @@ namespace WertheApp.CN
 			var b_Start = new Button { Text = "Start",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
 			b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
 

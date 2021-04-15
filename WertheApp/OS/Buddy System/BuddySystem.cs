@@ -309,7 +309,7 @@ namespace WertheApp.OS
 			var stackLayout = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
-				Margin = new Thickness(10),
+				Margin = new Thickness(5),
 			};
 
             //add elements to stacklayout
@@ -320,7 +320,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -333,7 +335,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
 			b_Start.Clicked += B_Start_Clicked;
 			stackLayout.Children.Add(b_Start);
@@ -345,7 +349,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
 			b_End.Clicked += B_End_Clicked;
 			stackLayout.Children.Add(b_End);

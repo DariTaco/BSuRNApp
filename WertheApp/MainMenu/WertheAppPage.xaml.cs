@@ -77,8 +77,10 @@ namespace WertheApp
 			};
             var l_pick = new Label 
             { 
-                Text = "Pick your course"
-            };
+                Text = "Pick your course",
+				FontSize = App._labelFontSize
+
+			};
             stackLayout.Children.Add(l_pick);
 
             var l_space = new Label();
@@ -89,7 +91,9 @@ namespace WertheApp
 				Text = "Operating Systems",
 				BackgroundColor = App._buttonBackground,
 				TextColor = App._buttonText,
-				CornerRadius = App._buttonCornerRadius
+				CornerRadius = App._buttonCornerRadius,
+				FontSize = App._buttonFontSize
+
 			};
             b_bs.Clicked += B_Bs_Clicked;
 
@@ -100,7 +104,9 @@ namespace WertheApp
 				Text = "Computer Networks",
 				BackgroundColor = App._buttonBackground,
 				TextColor = App._buttonText,
-				CornerRadius = App._buttonCornerRadius
+				CornerRadius = App._buttonCornerRadius,
+				FontSize = App._buttonFontSize
+
 			};
             b_rn.Clicked += B_Rn_Clicked;
 			stackLayout.Children.Add(b_rn);

@@ -63,7 +63,9 @@ namespace WertheApp.OS.AllocationStrategies
                 HorizontalOptions = LayoutOptions.Start,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Default.Clicked += (sender, e) => e_Fragmentation.Text = "10,4,20,18,7,9,12,15";
             var l_Space2 = new Label { Text = " " };
@@ -78,7 +80,9 @@ namespace WertheApp.OS.AllocationStrategies
                 Text = "Start",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Start.Clicked += B_Start_Clicked;
             stackLayout.Children.Add(b_Start);

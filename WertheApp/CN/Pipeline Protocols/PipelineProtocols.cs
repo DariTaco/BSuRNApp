@@ -119,7 +119,7 @@ namespace WertheApp.CN
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 				VerticalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = Color.White,
+                BackgroundColor = App._viewBackground,
 				// This gets called after CocosSharp starts up:
 				ViewCreated = HandleViewCreated
 			};
@@ -198,7 +198,7 @@ namespace WertheApp.CN
 			var stackLayout = new StackLayout
 			{
                 Orientation = StackOrientation.Horizontal,
-				Margin = new Thickness(10),
+				Margin = new Thickness(5),
 
 			};
 
@@ -209,7 +209,9 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -222,7 +224,9 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Pause.Clicked += B_Stop_Clicked;
             stackLayout.Children.Add(b_Pause);
@@ -234,7 +238,9 @@ namespace WertheApp.CN
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Send.Clicked += B_Send_Clicked;
             stackLayout.Children.Add(b_Send);

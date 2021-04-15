@@ -885,7 +885,7 @@ namespace WertheApp.OS
         {
             skiaview = new SKCanvasView();
             skiaview = PageReplacementStrategiesDraw.ReturnCanvas();
-            skiaview.BackgroundColor = Color.WhiteSmoke;
+            skiaview.BackgroundColor = App._viewBackground;
             grid.Children.Add(skiaview, 0, 0);
         }
 
@@ -899,7 +899,7 @@ namespace WertheApp.OS
             var stackLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
-                Margin = new Thickness(10),
+                Margin = new Thickness(5),
 
             };
 
@@ -911,7 +911,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -924,7 +926,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Set_Rbit.Clicked += B_Set_Rbit_Clicked;
             stackLayout.Children.Add(b_Set_Rbit);
@@ -936,7 +940,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Reset_Rbits.Clicked += B_Reset_Rbits_Clicked;
             stackLayout.Children.Add(b_Reset_Rbits);
@@ -948,7 +954,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Set_Mbit.Clicked += B_Set_Mbit_Clicked;
             stackLayout.Children.Add(b_Set_Mbit);
@@ -960,7 +968,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Next.Clicked += B_Next_Clicked;
             stackLayout.Children.Add(b_Next);

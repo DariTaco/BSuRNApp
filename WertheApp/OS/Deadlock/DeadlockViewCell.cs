@@ -39,6 +39,7 @@ namespace WertheApp.OS
         public DeadlockViewCell()
         {
             this.skiaview = new SKCanvasView();
+            this.skiaview.BackgroundColor = App._viewBackground;
             this.skiaview.PaintSurface += PaintSurface;
             this.View = this.skiaview;
 
@@ -98,7 +99,7 @@ namespace WertheApp.OS
 
             /*********************HERE GOES THE DRAWING************************/
 
-            DrawBackground(this.canvas, sk_BackgroundWhite);
+            //DrawBackground(this.canvas, sk_BackgroundWhite);
 
             if (this.cellNumber == -1)
             {

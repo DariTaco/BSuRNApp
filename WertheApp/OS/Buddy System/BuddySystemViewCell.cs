@@ -65,11 +65,11 @@ namespace WertheApp.OS
             //changing background color for better clarity
             if (dari % 2 == 0)
             {
-                skiaview.BackgroundColor = Color.FloralWhite;
+                skiaview.BackgroundColor = App._viewBackground; 
             }
             else
             {
-                skiaview.BackgroundColor = Color.WhiteSmoke;
+                skiaview.BackgroundColor = App._viewBackground;
             }
             dari++;
 

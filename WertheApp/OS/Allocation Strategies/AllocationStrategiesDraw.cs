@@ -28,8 +28,7 @@ namespace WertheApp.OS.AllocationStrategies
             // crate the canvas
             canvasView = new SKCanvasView();
             canvasView.PaintSurface += PaintSurface;
-            canvasView.BackgroundColor = Color.WhiteSmoke;
-
+            canvasView.BackgroundColor = App._viewBackground;
         }
 
         /**********************************************************************
@@ -120,7 +119,7 @@ namespace WertheApp.OS.AllocationStrategies
             {
                 // fragment size of 1 gets displayed as a .
                 String fragmentSize = fragment.GetSize().ToString();
-                if(fragmentSize == "1") { fragmentSize = "."; }
+                if(fragmentSize == "1") { fragmentSize = "•"; }
 
                 stepsSoFar += fragment.GetSize();
                 float fragmentStart = mX1 + (stepsSoFar * relativeFragmentSize) - (fragment.GetSize() * relativeFragmentSize);

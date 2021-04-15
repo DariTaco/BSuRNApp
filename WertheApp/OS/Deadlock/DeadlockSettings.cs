@@ -169,7 +169,8 @@ namespace WertheApp.OS
                 Text = "Clear",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+
                 /*
                 FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
                 WidthRequest = 60,
@@ -275,7 +276,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_preset1.Clicked += B_Preset1_Clicked; //add Click Event(Method)
             sl_buttons.Children.Add(b_preset1);
@@ -284,7 +287,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_preset2.Clicked += B_Preset2_Clicked; //add Click Event(Method)
             sl_buttons.Children.Add(b_preset2);
@@ -293,7 +298,9 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_preset3.Clicked += B_Preset3_Clicked; //add Click Event(Method)
             sl_buttons.Children.Add(b_preset3);
@@ -303,7 +310,9 @@ namespace WertheApp.OS
             var b_Start = new Button { Text = "Start",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
             Label l_space3 = new Label { Text = " " };

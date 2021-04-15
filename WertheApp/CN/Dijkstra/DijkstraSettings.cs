@@ -73,7 +73,9 @@ namespace WertheApp.CN
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,
                     TextColor = App._buttonText,
-                    CornerRadius = App._buttonCornerRadius
+                    CornerRadius = App._buttonCornerRadius,
+                    FontSize = App._buttonFontSize
+
                 };
                 b_Start.Clicked += B_Start_Clicked;
 
@@ -85,7 +87,9 @@ namespace WertheApp.CN
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,
                     TextColor = App._buttonText,
-                    CornerRadius = App._buttonCornerRadius
+                    CornerRadius = App._buttonCornerRadius,
+                    FontSize = App._buttonFontSize
+
                 };
                 b_Default.Clicked += B_Default_Clicked;
 
@@ -97,7 +101,9 @@ namespace WertheApp.CN
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,
                     TextColor = App._buttonText,
-                    CornerRadius = App._buttonCornerRadius
+                    CornerRadius = App._buttonCornerRadius,
+                    FontSize = App._buttonFontSize
+
                 };
                 b_Random.Clicked += B_Random_Clicked;
 
@@ -109,7 +115,9 @@ namespace WertheApp.CN
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,
                     TextColor = App._buttonText,
-                    CornerRadius = App._buttonCornerRadius
+                    CornerRadius = App._buttonCornerRadius,
+                    FontSize = App._buttonFontSize
+
                 };
                 b_Presets.Clicked += B_Presets_Clicked;
 
@@ -117,13 +125,13 @@ namespace WertheApp.CN
                 var stackLayout = new StackLayout
                 {
                     Orientation = StackOrientation.Horizontal,
-                    Margin = new Thickness(10),
+                    Margin = new Thickness(5),
 
                 };
                 var stackLayout1 = new StackLayout
                 {
                     Orientation = StackOrientation.Horizontal,
-                    Margin = new Thickness(10),
+                    Margin = new Thickness(5),
 
                 };
                 stackLayout1.Children.Add(b_Default);
@@ -134,7 +142,7 @@ namespace WertheApp.CN
                 //get canvas to draw on
                 DijkstraSettingsDraw skiaview = new DijkstraSettingsDraw(id, this);
                 SKCanvasView canvas = skiaview.ReturnCanvas();
-                canvas.BackgroundColor = Color.WhiteSmoke;
+                canvas.BackgroundColor = App._viewBackground; 
 
                 //Grid for canvas and buttons
                 var grid = new Grid();

@@ -76,7 +76,8 @@ namespace WertheApp.CN
             var l_Choose = new Label { Text = "Strategy", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
             var l_Space = new Label { Text = "  " };
             var l_initialSetting = new Label { Text = "Initial Settings", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
-            var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center };
+            var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center,
+            };
             p_Treshold = new Picker();
             //p_Treshold.Items.Add("1");
             p_Treshold.Items.Add("2");
@@ -98,13 +99,17 @@ namespace WertheApp.CN
             var b_Default = new Button { Text = "Default" , HorizontalOptions = LayoutOptions.Start,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Default.Clicked += B_Default_Clicked; //add Click Event(Method)
 			var b_Start = new Button { Text = "Start",
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
 			b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
             var l_Space3 = new Label { Text = "  " };

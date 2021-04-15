@@ -77,7 +77,7 @@ namespace WertheApp.OS.AllocationStrategies
             var stackLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
-                Margin = new Thickness(10),
+                Margin = new Thickness(5),
 
             };
 
@@ -85,11 +85,13 @@ namespace WertheApp.OS.AllocationStrategies
             b_Restart = new Button
             {
                 Text = "Restart",
-                VerticalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
@@ -100,15 +102,17 @@ namespace WertheApp.OS.AllocationStrategies
             {   Text = "Memory request: ",
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
-                //FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label))
+                FontSize = App._buttonFontSize
             };
             e_MemoryRequest = new Entry
             {   Keyboard = Keyboard.Numeric,  //only numbers are allowed
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill,
-                BackgroundColor = Color.White
+                BackgroundColor = Color.White,
+                FontSize = App._entryFontSize
             };
             e_MemoryRequest.WidthRequest = 50;
+
             stackLayout.Children.Add(l_MemoryRequest);
             stackLayout.Children.Add(e_MemoryRequest);
 
@@ -116,11 +120,12 @@ namespace WertheApp.OS.AllocationStrategies
             b_Next = new Button
             {
                 Text = "Confirm",
-                VerticalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
             };
             b_Next.Clicked += B_Next_Clicked;
             stackLayout.Children.Add(b_Next);
