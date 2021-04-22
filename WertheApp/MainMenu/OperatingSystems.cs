@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using WertheApp.OS;
 using WertheApp.OS.AllocationStrategies;
+using System.Collections.Generic;
 
 namespace WertheApp
 {
@@ -31,7 +32,60 @@ namespace WertheApp
 			var l_space = new Label();
 			stackLayout.Children.Add(l_space);
 
-            var listView = new ListView();
+            //add buttons for apps
+            List<string> appNameList = new List<string>()    {
+                        "Allocation Strategies",
+                        "Buddy System",
+                        "Deadlock",
+                        "Page Replacement Strategies"
+                    };
+            foreach (string appName in appNameList)
+            {
+                var b_button = new Button
+                {
+                    Text = appName,
+                    BackgroundColor = App._buttonBackground,
+                    TextColor = App._buttonText,
+                    CornerRadius = App._buttonCornerRadius,
+                    FontSize = App._buttonFontSize
+                };
+                b_button.Clicked += Button_Clicked;
+                stackLayout.Children.Add(b_button);
+            }
+        }
+
+        async void Button_Clicked(object sender, System.EventArgs e)
+        {
+            var button = (sender as Button);
+            string appName = button.Text;
+
+            switch (appName)
+            {
+                case "Allocation Strategies":
+                    await Navigation.PushAsync(new AllocationStrategiesSettings());
+                    break;
+                case "Buddy System":
+                    await Navigation.PushAsync(new BuddySystemSettings());
+                    break;
+                case "Page Replacement Strategies":
+                    await Navigation.PushAsync(new PageReplacementStrategiesSettings());
+                    break;
+                case "Deadlock":
+                    await Navigation.PushAsync(new DeadlockSettings());
+                    break;
+            }
+        }
+        protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			MessagingCenter.Send<object>(this, "Unspecified");
+		}
+	}
+}
+
+
+/*
+  var listView = new ListView();
 			listView.BackgroundColor = Color.Transparent;
 			listView.ItemsSource = new string[]
             {
@@ -61,12 +115,4 @@ namespace WertheApp
 			};
 
             stackLayout.Children.Add(listView);
-		}
-
-		protected override void OnAppearing()
-		{
-			base.OnAppearing();
-			MessagingCenter.Send<object>(this, "Unspecified");
-		}
-	}
-}
+ */

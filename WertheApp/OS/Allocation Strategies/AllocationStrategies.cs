@@ -74,18 +74,39 @@ namespace WertheApp.OS.AllocationStrategies
         ***********************************************************************/
         void CreateBottomHalf(Grid grid)
         {
+            var controlsGrid = new Grid()
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition()
+
+                },
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition(){ Width = new GridLength(3, GridUnitType.Star) },
+                    new ColumnDefinition(){ Width = new GridLength(3, GridUnitType.Star) },
+                    new ColumnDefinition(){ Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition(){ Width = new GridLength(3, GridUnitType.Star) }
+
+                },
+                VerticalOptions = LayoutOptions.Start
+
+            };
+
+            /*
             var stackLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
                 Margin = new Thickness(5),
 
             };
+            */
 
             // restart button
             b_Restart = new Button
             {
                 Text = "Restart",
-                VerticalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
@@ -95,26 +116,33 @@ namespace WertheApp.OS.AllocationStrategies
             };
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
-            stackLayout.Children.Add(b_Restart);
+            controlsGrid.Children.Add(b_Restart, 0, 0);
+            //stackLayout.Children.Add(b_Restart);
 
             // entry for entering memory request
             var l_MemoryRequest = new Label
             {   Text = "Memory request: ",
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center,
-                FontSize = App._buttonFontSize
+                HorizontalOptions = LayoutOptions.End,
+                FontSize = App._labelFontSize
             };
             e_MemoryRequest = new Entry
             {   Keyboard = Keyboard.Numeric,  //only numbers are allowed
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill,
-                BackgroundColor = Color.White,
-                FontSize = App._entryFontSize
+                //BackgroundColor = Color.WhiteSmoke,
+                FontSize = App._entryFontSize,
+                TextColor = Color.Black,
+                
+                
+               
             };
             e_MemoryRequest.WidthRequest = 50;
 
-            stackLayout.Children.Add(l_MemoryRequest);
-            stackLayout.Children.Add(e_MemoryRequest);
+            controlsGrid.Children.Add(l_MemoryRequest, 1, 0);
+            controlsGrid.Children.Add(e_MemoryRequest, 2, 0);
+            //stackLayout.Children.Add(l_MemoryRequest);
+            //stackLayout.Children.Add(e_MemoryRequest);
 
             // next button
             b_Next = new Button
@@ -128,10 +156,14 @@ namespace WertheApp.OS.AllocationStrategies
                 FontSize = App._buttonFontSize
             };
             b_Next.Clicked += B_Next_Clicked;
-            stackLayout.Children.Add(b_Next);
+            controlsGrid.Children.Add(b_Next, 3, 0);
+
+            //stackLayout.Children.Add(b_Next);
 
             // add content to bottom half of grid
-            grid.Children.Add(stackLayout, 0, 1);
+            grid.Children.Add(controlsGrid, 0, 1);
+
+            //grid.Children.Add(stackLayout, 0, 1);
         }
 
         /**********************************************************************

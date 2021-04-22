@@ -38,17 +38,21 @@ namespace WertheApp
                 _labelFontSize = Device.GetNamedSize(NamedSize.Title, typeof(Button));
                 _entryFontSize = Device.GetNamedSize(NamedSize.Title, typeof(Entry));
             }
+            else
+            {
+                _buttonFontSize = Device.GetNamedSize(NamedSize.Default, typeof(Button));
+                _labelFontSize = Device.GetNamedSize(NamedSize.Default, typeof(Button));
+                _entryFontSize = Device.GetNamedSize(NamedSize.Default, typeof(Entry));
+            }
 
             // Button Styling
             if (Device.RuntimePlatform == Device.Android)
             {
                 
                 _buttonBackground = _buttonColor;
-                //_buttonBackground.AddLuminosity(50.0);
                 _buttonText = Color.White;
                 _buttonCornerRadius = 50;
-
-                _viewBackground = Color.WhiteSmoke.AddLuminosity(0.93);
+                _viewBackground = new Color(0.93, 0.93, 0.93);
             }
             else
             {
@@ -56,7 +60,6 @@ namespace WertheApp
                 _buttonText = Color.Accent;
                 _buttonCornerRadius = 5;
                 _viewBackground = Color.WhiteSmoke;
-
 
             }
 
