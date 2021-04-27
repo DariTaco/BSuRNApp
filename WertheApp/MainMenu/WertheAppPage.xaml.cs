@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Xamarin.Forms;
 
 
@@ -86,48 +87,55 @@ namespace WertheApp
             var l_space = new Label();
 			stackLayout.Children.Add(l_space);
 
-			var b_bs = new Button
+			//add buttons for apps
+			List<string> appNameList = new List<string>()    {
+						"Computer Networks",
+						"Digital Photography",
+						"Embedded Systems",
+						"Operating Systems"
+					};
+			foreach (string appName in appNameList)
 			{
-				Text = "Operating Systems",
-				BackgroundColor = App._buttonBackground,
-				TextColor = App._buttonText,
-				CornerRadius = App._buttonCornerRadius,
-				FontSize = App._buttonFontSize
+				var b_button = new Button
+				{
+					Text = appName,
+					BackgroundColor = App._buttonBackground,
+					TextColor = App._buttonText,
+					CornerRadius = App._buttonCornerRadius,
+					FontSize = App._buttonFontSize
+				};
+				b_button.Clicked += Button_Clicked;
+				stackLayout.Children.Add(b_button);
+			}
 
-			};
-            b_bs.Clicked += B_Bs_Clicked;
-
-            stackLayout.Children.Add(b_bs);
-
-			var b_rn = new Button
-			{
-				Text = "Computer Networks",
-				BackgroundColor = App._buttonBackground,
-				TextColor = App._buttonText,
-				CornerRadius = App._buttonCornerRadius,
-				FontSize = App._buttonFontSize
-
-			};
-            b_rn.Clicked += B_Rn_Clicked;
-			stackLayout.Children.Add(b_rn);
-
-            //add content to Toplevel grid
+			//add content to Toplevel grid
 			grid.Children.Add(stackLayout, 0, 1);
 		}
 
+		async void Button_Clicked(object sender, System.EventArgs e)
+		{
+			var button = (sender as Button);
+			string appName = button.Text;
+
+			switch (appName)
+			{
+				case "Computer Networks":
+					await Navigation.PushAsync(new ComputerNetworks());
+					break;
+				case "Digital Photography":
+					await Navigation.PushAsync(new DigitalPhotography());
+					break;
+				case "Embedded Systems":
+					await Navigation.PushAsync(new EmbeddedSystems());
+					break;
+				case "Operating Systems":
+					await Navigation.PushAsync(new OperatingSystems());
+					break;
+			}
+		}
 		async void B_Info_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushAsync(new Info());
-		}
-
-		async void B_Bs_Clicked(object sender, EventArgs e)
-		{
-            await Navigation.PushAsync(new OperatingSystems());
-		}
-
-		async void B_Rn_Clicked(object sender, EventArgs e)
-		{
-			await Navigation.PushAsync(new ComputerNetworks());
 		}
     }
 }

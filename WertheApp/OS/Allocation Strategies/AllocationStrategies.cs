@@ -85,29 +85,31 @@ namespace WertheApp.OS.AllocationStrategies
                 {
                     new ColumnDefinition(){ Width = new GridLength(3, GridUnitType.Star) },
                     new ColumnDefinition(){ Width = new GridLength(3, GridUnitType.Star) },
-                    new ColumnDefinition(){ Width = new GridLength(1, GridUnitType.Star) },
                     new ColumnDefinition(){ Width = new GridLength(3, GridUnitType.Star) }
 
                 },
-                VerticalOptions = LayoutOptions.Start
+                VerticalOptions = LayoutOptions.Center,
 
             };
 
-            /*
+            
             var stackLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
                 Margin = new Thickness(5),
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center
+
 
             };
-            */
+            
 
             // restart button
             b_Restart = new Button
             {
                 Text = "Restart",
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
@@ -117,7 +119,6 @@ namespace WertheApp.OS.AllocationStrategies
             b_Restart.Clicked += B_Restart_Clicked;
             b_Restart.IsEnabled = false;
             controlsGrid.Children.Add(b_Restart, 0, 0);
-            //stackLayout.Children.Add(b_Restart);
 
             // entry for entering memory request
             var l_MemoryRequest = new Label
@@ -133,37 +134,29 @@ namespace WertheApp.OS.AllocationStrategies
                 //BackgroundColor = Color.WhiteSmoke,
                 FontSize = App._entryFontSize,
                 TextColor = Color.Black,
-                
-                
-               
+                MaxLength = 3
             };
             e_MemoryRequest.WidthRequest = 50;
-
-            controlsGrid.Children.Add(l_MemoryRequest, 1, 0);
-            controlsGrid.Children.Add(e_MemoryRequest, 2, 0);
-            //stackLayout.Children.Add(l_MemoryRequest);
-            //stackLayout.Children.Add(e_MemoryRequest);
+            stackLayout.Children.Add(l_MemoryRequest);
+            stackLayout.Children.Add(e_MemoryRequest);
+            controlsGrid.Children.Add(stackLayout, 1, 0);
 
             // next button
             b_Next = new Button
             {
                 Text = "Confirm",
-                VerticalOptions = LayoutOptions.CenterAndExpand,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
                 FontSize = App._buttonFontSize
             };
             b_Next.Clicked += B_Next_Clicked;
-            controlsGrid.Children.Add(b_Next, 3, 0);
-
-            //stackLayout.Children.Add(b_Next);
+            controlsGrid.Children.Add(b_Next, 2, 0);
 
             // add content to bottom half of grid
             grid.Children.Add(controlsGrid, 0, 1);
-
-            //grid.Children.Add(stackLayout, 0, 1);
         }
 
         /**********************************************************************
