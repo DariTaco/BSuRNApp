@@ -108,7 +108,7 @@ namespace WertheApp.OS.AllocationStrategies
             {
 
                 currentIndex = freeFragmentsIndexSequenceList.First();
-                Debug.WriteLine("current index: " + currentIndex);
+                //Debug.WriteLine("current index: " + currentIndex);
 
                 FragmentBlock fb = allFragmentsList.ElementAt(currentIndex);
                 //if it fits perfectly or but free big enough space was found-> search was successfull
@@ -121,14 +121,14 @@ namespace WertheApp.OS.AllocationStrategies
                 // if it does not fit at all
                 else
                 {
-                    Debug.WriteLine("Space not big enough!");
+                    //Debug.WriteLine("Space not big enough!");
                 }
                 freeFragmentsIndexSequenceList.RemoveAt(0);
             }
             // end of ring search reached
             else
             {
-                Debug.WriteLine("end of search reached!");
+                //Debug.WriteLine("end of search reached!");
 
                 // nothing found -> search was unsuccessfull
                 status = Status.unsuccessfull;
@@ -144,20 +144,20 @@ namespace WertheApp.OS.AllocationStrategies
         ***********************************************************************/
         public static void BestFit()
         {
-            Debug.WriteLine("BEST FIT");
+            //Debug.WriteLine("BEST FIT");
 
             // end of search not yet reached
             if (freeFragmentsIndexSequenceList.Any())
             {
 
                 currentIndex = freeFragmentsIndexSequenceList.First();
-                Debug.WriteLine("current index: " + currentIndex);
+                //Debug.WriteLine("current index: " + currentIndex);
 
                 FragmentBlock fb = allFragmentsList.ElementAt(currentIndex);
                 //if it fits perfectly -> search was successfull
                 if (memoryRequest == fb.GetSize())
                 {
-                    Debug.WriteLine("fits perfectly!");
+                    //Debug.WriteLine("fits perfectly!");
                     mostPromisingIndex = allFragmentsList.IndexOf(fb);
                     indexLastAllocated = mostPromisingIndex;
                     status = Status.successfull;
@@ -171,26 +171,26 @@ namespace WertheApp.OS.AllocationStrategies
                     // and it's smaller than the last free space that has been found 
                     if (fb.GetSize() < mostPromisingSize)
                     {
-                        Debug.WriteLine(fb.GetSize() + " smaller than " + mostPromisingSize);
+                        //Debug.WriteLine(fb.GetSize() + " smaller than " + mostPromisingSize);
                         mostPromisingIndex = allFragmentsList.IndexOf(fb);
                     }
                     // but it's not smaller
                     else
                     {
-                        Debug.WriteLine(fb.GetSize() + " unfortunately not smaller than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
+                        //Debug.WriteLine(fb.GetSize() + " unfortunately not smaller than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
                     }
                 }
                 // if it does not fit at all
                 else
                 {
-                    Debug.WriteLine("Space not big enough!");
+                    //Debug.WriteLine("Space not big enough!");
                 }
                 freeFragmentsIndexSequenceList.RemoveAt(0);
             }
             // end of ring search reached
             else
             {
-                Debug.WriteLine("end of search reached!");
+                //Debug.WriteLine("end of search reached!");
 
                 // nothing found -> search was unsuccessfull
                 if (mostPromisingIndex == -1)
@@ -210,14 +210,14 @@ namespace WertheApp.OS.AllocationStrategies
         ***********************************************************************/
         public static void WorstFit()
         {
-            Debug.WriteLine("WORST FIT");
+            //Debug.WriteLine("WORST FIT");
 
             // end of search not yet reached
             if (freeFragmentsIndexSequenceList.Any())
             {
 
                 currentIndex = freeFragmentsIndexSequenceList.First();
-                Debug.WriteLine("current index: " + currentIndex);
+                //Debug.WriteLine("current index: " + currentIndex);
 
                 FragmentBlock fb = allFragmentsList.ElementAt(currentIndex);
 
@@ -230,26 +230,26 @@ namespace WertheApp.OS.AllocationStrategies
                     // and it's bigger than the last free space that has been found 
                     if (fb.GetSize() > mostPromisingSize)
                     {
-                        Debug.WriteLine(fb.GetSize() + " bigger than " + mostPromisingSize);
+                        //Debug.WriteLine(fb.GetSize() + " bigger than " + mostPromisingSize);
                         mostPromisingIndex = allFragmentsList.IndexOf(fb);
                     }
                     // but it's not bigger
                     else
                     {
-                        Debug.WriteLine(fb.GetSize() + " unfortunately not bigger than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
+                        //Debug.WriteLine(fb.GetSize() + " unfortunately not bigger than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
                     }
                 }
                 // if it does not fit at all
                 else
                 {
-                    Debug.WriteLine("Space not big enough!");
+                    //Debug.WriteLine("Space not big enough!");
                 }
                 freeFragmentsIndexSequenceList.RemoveAt(0);
             }
             // end of ring search reached
             else
             {
-                Debug.WriteLine("end of search reached!");
+                //Debug.WriteLine("end of search reached!");
 
                 // nothing found -> search was unsuccessfull
                 if (mostPromisingIndex == -1)
@@ -270,20 +270,20 @@ namespace WertheApp.OS.AllocationStrategies
         ***********************************************************************/
         public static void CombinedFit()
         {
-            Debug.WriteLine("COMBINED FIT");
+            //Debug.WriteLine("COMBINED FIT");
 
             // end of ring search not yet reached
             if (freeFragmentsIndexSequenceList.Any())
             {
 
                 currentIndex = freeFragmentsIndexSequenceList.First();
-                Debug.WriteLine("current index: " + currentIndex);
+                //Debug.WriteLine("current index: " + currentIndex);
 
                 FragmentBlock fb = allFragmentsList.ElementAt(currentIndex);
                 //if it fits perfectly -> search was successfull
                 if (memoryRequest == fb.GetSize())
                 {
-                    Debug.WriteLine("fits perfectly!");
+                    //Debug.WriteLine("fits perfectly!");
                     mostPromisingIndex = allFragmentsList.IndexOf(fb);
                     indexLastAllocated = mostPromisingIndex;
                     status = Status.successfull;
@@ -297,26 +297,26 @@ namespace WertheApp.OS.AllocationStrategies
                     // and it's bigger than the last free space that has been found 
                     if (fb.GetSize() > mostPromisingSize)
                     {
-                        Debug.WriteLine(fb.GetSize() + " bigger than " + mostPromisingSize);
+                        //Debug.WriteLine(fb.GetSize() + " bigger than " + mostPromisingSize);
                         mostPromisingIndex = allFragmentsList.IndexOf(fb);
                     }
                     // but it's not bigger
                     else
                     {
-                        Debug.WriteLine(fb.GetSize() + " unfortunately not bigger than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
+                        //Debug.WriteLine(fb.GetSize() + " unfortunately not bigger than " + allFragmentsList.ElementAt(mostPromisingIndex).GetSize());
                     }
                 }
                 // if it does not fit at all
                 else
                 {
-                    Debug.WriteLine("Space not big enough!");
+                    //Debug.WriteLine("Space not big enough!");
                 }
                 freeFragmentsIndexSequenceList.RemoveAt(0);
             }
             // end of ring search reached
             else
             {
-                Debug.WriteLine("end of ring search reached!");
+                //Debug.WriteLine("end of ring search reached!");
 
                 // nothing found -> search was unsuccessfull
                 if (mostPromisingIndex == -1)
@@ -337,11 +337,11 @@ namespace WertheApp.OS.AllocationStrategies
         public static void UpdateAllFragmentsList()
         {
             Debug.WriteLine("UPDATE ALL FRAGMENTSLIST");
-            Debug.WriteLine("old fragemnts list");
+            //Debug.WriteLine("old fragemnts list");
             mostPromisingIndex = -1;
             foreach (FragmentBlock fb in allFragmentsList)
             {
-                Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
+                //Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
             }
             FragmentBlock allocatedFb = allFragmentsList.ElementAt(indexLastAllocated);
             int remainingFragmentSize = allocatedFb.GetSize() - memoryRequest;
@@ -356,19 +356,19 @@ namespace WertheApp.OS.AllocationStrategies
                 FragmentBlock newFb = new FragmentBlock(remainingFragmentSize, true, startIndex);
                 allFragmentsList.Insert(indexLastAllocated + 1, newFb);
             }
-            Debug.WriteLine("");
-            Debug.WriteLine("new fragemnts list");
+            //Debug.WriteLine("");
+            //Debug.WriteLine("new fragemnts list");
             foreach(FragmentBlock fb in allFragmentsList)
             {
-                Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
+                //Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
             }
 
             MergeUsedFragments(0);
-            Debug.WriteLine("");
-            Debug.WriteLine("merged fragemnts list");
+            //Debug.WriteLine("");
+            //Debug.WriteLine("merged fragemnts list");
             foreach (FragmentBlock fb in allFragmentsList)
             {
-                Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
+                //Debug.Write(" |" + fb.IsFree() + " " + fb.GetSize());
             }
         }
         /**********************************************************************

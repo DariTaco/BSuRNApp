@@ -54,7 +54,7 @@ namespace WertheApp.OS.AllocationStrategies
             this.Content = grid;
             grid.RowDefinitions = new RowDefinitionCollection {
                     new RowDefinition{ Height = new GridLength(4, GridUnitType.Star)},
-                    new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)}
+                    new RowDefinition{ Height = new GridLength(1, GridUnitType.Auto)}
                 };
             CreateTopHalf(grid);
             CreateBottomHalf(grid);
@@ -186,8 +186,10 @@ namespace WertheApp.OS.AllocationStrategies
         *********************************************************************/
         async void B_Next_Clicked(object sender, EventArgs e)
         {
+            AllocationStrategiesAlgorithm.Status status = AllocationStrategiesAlgorithm.GetStatus();
+
             // if new memory request was made
-            if(b_Next.Text == "Confirm" )
+            if (b_Next.Text == "Confirm" )
             {
                 // if the memory request is valid
                 if (ValidateMemoryRequestInput(e_MemoryRequest.Text))
@@ -219,15 +221,23 @@ namespace WertheApp.OS.AllocationStrategies
             }
             else
             {
-         
-                AllocationStrategiesAlgorithm.Status status = AllocationStrategiesAlgorithm.GetStatus();
+                Debug.WriteLine("next button text");
 
+                // start or still searching
                 if (status == AllocationStrategiesAlgorithm.Status.searching || status == AllocationStrategiesAlgorithm.Status.start)
                 {
+                    Debug.WriteLine("start or Still searching ");
                     AllocationStrategiesAlgorithm.Next();
+                    status = AllocationStrategiesAlgorithm.GetStatus();
+                    if (status == AllocationStrategiesAlgorithm.Status.successfull)
+                    {
+                        b_Next.Text = "Allocate";
+                    }
                 }
+                //sth found
                 else if (status == AllocationStrategiesAlgorithm.Status.successfull)
                 {
+                    Debug.WriteLine("Sth found");
                     AllocationStrategiesAlgorithm.UpdateAllFragmentsList();
                     b_Next.Text = "Confirm";
                     e_MemoryRequest.IsEnabled = true; // enable memory request entry 
