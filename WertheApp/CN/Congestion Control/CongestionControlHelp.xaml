@@ -4,8 +4,54 @@
          <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
                 <Label Text="Congestion Control" FontSize="30"/>
-                <Label Text="Coming soon... &#10;"/>
-                 <Label x:Name="last"/>
+                <Label Text="by the Transmission Control Protocol (TCP) to ensure reliable, congestion-free data transmission between sender and receiver.&#10;"/>
+
+                <Label Text="Slow Start state" FontAttributes="Bold" TextColor="Green"/>
+                <Label Text="The transmission rate increases exponentially. &#10;"/>
+
+                
+                <Label Text="Congestion Avoidance state" FontAttributes="Bold" TextColor="Red"/>
+                <Label Text="The transmission rate increases linearly. &#10;"/>
+
+                
+                <Label Text="Fast Recovery state (only Reno)" FontAttributes="Bold" TextColor="Blue"/>
+                <Label Text="The transmission rate increases linearly. &#10;"/>
+
+                <Label Text="TCP Tahoe" FontSize="24"/>
+                <Label Text="timeout event:" FontAttributes="Bold"/>
+                <Label Text="&#x2022; set threshold to half of transmission rate
+                       &#10;&#x2022; set transmission rate to 1
+                       &#10;&#x2022; enter Slow Start state
+                       "/>
+                <Label Text="triple Ack event:" FontAttributes="Bold"/>
+                <Label Text="&#x2022; set threshold to half of transmission rate
+                       &#10;&#x2022; set transmission rate to 1
+                       &#10;&#x2022; enter Slow Start state
+                       "/>
+                <Label Text="threshold reached event:" FontAttributes="Bold"/>
+                <Label Text="&#x2022; enter Congestion Avoidance state 
+                       &#10;
+                       "/>
+
+                <Label Text="TCP Reno" FontSize="24"/>
+                <Label Text="timeout event: " FontAttributes="Bold"/>
+                <Label Text="&#x2022; set threshold to half of transmission rate
+                       &#10;&#x2022; set transmission rate to 1
+                       &#10;&#x2022; enter Slow Start state
+                       "/>
+                <Label Text="triple Ack event:" FontAttributes="Bold"/>
+                <Label Text="&#x2022; set threshold to half of transmission rate
+                       &#10;&#x2022; halve transmission rate 
+                       &#10;&#x2022; enter Fast Recovery state
+                       "/>
+                <Label Text="threshold reached event:" FontAttributes="Bold"/>
+                <Label Text="&#x2022; enter Congestion Avoidance state 
+                       "/>
+                <Label Text="new Ack in Fast Recovery event:" FontAttributes="Bold"/>
+                <Label Text="&#x2022; enter Congestion Avoidance state 
+                       &#10;
+                       "/>
+                <Label x:Name="last"/>
 
             </StackLayout>
         </ScrollView>

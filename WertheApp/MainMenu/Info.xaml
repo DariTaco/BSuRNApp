@@ -6,7 +6,7 @@
                 <Label Text="History" FontSize="30"/>
                 <Label x:Name="l_version" Text="{Binding currentVersion, StringFormat='The current version is {0:F0} &#10;'}"/>
 
-                <Label Text="&#x2022; WertheApp 1.6.19: Added course Digital Photography, added course Embedded Systems"/>
+                <Label Text="&#x2022; WertheApp 1.6.19: Added course Digital Photography and Embedded Systems, Congestion Control Help"/>
                 <Label Text="&#x2022; WertheApp 1.6.18: First Fit, Next Fit, Best Fit, Worst Fit"/>
                 <Label Text="&#x2022; WertheApp 1.6.17: bug fixes, buttons for all menus"/>
                 <Label Text="&#x2022; WertheApp 1.6.16: tablet button size, Allocation Strategies bug fixes, background color"/>
