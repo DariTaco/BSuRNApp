@@ -9,10 +9,15 @@ namespace WertheApp
         public EmbeddedSystems()
         {
             Title = "Embedded Systems";
-            var stackLayout = new StackLayout { Margin = new Thickness(10) };
-            this.Content = stackLayout;
-
+            var scrollView = new ScrollView
+            {
+                Margin = new Thickness(10)
+            };
+            var stackLayout = new StackLayout();
+            this.Content = scrollView;
+            scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
             CreateContent(stackLayout);
+
         }
 
         //METHODS

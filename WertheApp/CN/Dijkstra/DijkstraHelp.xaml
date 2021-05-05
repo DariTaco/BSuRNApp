@@ -4,7 +4,15 @@
          <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
                 <Label Text="Dijkstra" FontSize="30"/>
-                <Label Text="You can change the weights by tapping on them. More Coming soon... &#10;"/>
+                <Label Text="for finding the shortest paths in a graph. &#10;"/>
+
+                <Label Text="Settings" FontSize = "24"/>
+                <Label Text="vertices" FontAttributes="Bold"/>
+                <Label Text="The vertices are named U, V, W, X, Y, Z. U is the start vertex. &#10;"/>
+
+                <Label Text="edges" FontAttributes="Bold"/>
+                <Label Text="The vertices are connected by undirected, weighted edges. The weights represent the distance between two vertices. You can change the weights by tapping on them. &#10;"/>
+
                  <Label x:Name="last"/>
 
             </StackLayout>

@@ -3,6 +3,9 @@
     <ContentPage.Content>
         <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
+                <Label Text="Page Replacement Strategies" FontSize = "30"/>
+                <Label Text="There are several more or less effective algorithms to implement a page replacement strategy. &#10;"/>
+
                 <Label Text="Reference Sequence" FontAttributes="Bold"/>
                 <Label Text="A reference sequence are the ongoing numbers of virtual pages a process accesses during execution. &#10;"/>
 
@@ -13,15 +16,12 @@
                 <Label Text="A page fault occurs if the actual virtual page is not mapped to a real page yet. The page table of each process shows the translations of virtual memory pages into real pages if already loaded into RAM. Process execution goes fast with less page faults. If a page fault occurs, the virtual page must be transfered from (hard) disk to RAM. If memory in RAM for the new virtual page is available this loading is done immedialtely. If there are no more free RAM pages available a virtual page has to be replaced by the new virtual page in execution. &#10;"/>
 
 
-                <Label Text="Page Replacement Strategies" FontSize = "30"/>
-                <Label Text="There are several more or less effective algorithms to implement a page replacement strategy. &#10;"/>
+                <Label Text="Optimal Strategy" FontSize = "24"/>
+                <Label Text="The optimal strategy assumes that the reference sequence is known in advance. The page that will be referenced again latest (according to the reference sequence) is going to be replaced. &#10;"/>
 
                 <Label Text="Benchmark" FontAttributes="Bold"/>
                 <Label Text="We can compare the effectiveness against the optimal strategy that leads to minimal page fault occurrence. &#10;"/>
 
-                <Label Text="Optimal Strategy" FontSize = "24"/>
-                <Label Text="The optimal strategy assumes that the reference sequence is known in advance. The page that will be referenced again latest (according to the reference sequence) is going to be replaced. &#10;"/>
-                
                 <Label Text="First In First Out (FiFo) Strategy" FontSize = "24"/>
                 <Label Text="The page that was loaded first into RAM is also the first to be replaced. &#10;"/>
                 

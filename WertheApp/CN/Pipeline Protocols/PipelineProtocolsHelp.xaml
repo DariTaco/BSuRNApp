@@ -4,11 +4,28 @@
          <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
                 <Label Text="Pipeline Protocols" FontSize="30"/>
-                <Label Text="1st click on running packet corrupts packet."/>
-                <Label Text="2nd click slows propagation time on correct packet."/>
-                <Label Text="3rd click on slow packet corrupts packet."/>
-                <Label Text="4th click leads to packet loss. &#10;"/>
-                 <Label x:Name="last"/>
+                <Label Text="are sliding window protocols to handle data packets. &#10;"/>
+
+                <Label Text="data packets" FontAttributes="Bold"/>
+                <Label Text="are sent from the sender side and ideally arrive uncorrupted at the receiver side. &#10;"/>
+
+                <Label Text="acknowledgements (Acks)" FontAttributes="Bold"/>
+                <Label Text="are sent from the receiver side as a reply to a received packet. Ideally, the Acks arrive uncorrupted and on time at the sender side. &#10;"/>
+
+                <Label Text="Selective Repeat" FontSize="24"/>
+                <Label Text="Every sender has a seperate timer and waits for the Ack with the corresponding sequence number. &#10;"/>
+
+                <Label Text="Go Back N" FontSize="24"/>
+                <Label Text="All senders share a single timer and accept cumulative Acks. The receiver side always sends an Ack for the last received uncorrupted packet that matched the expected sequence number. In case of a timeout, all packets for which an Ack has not yet arrived will be resent. &#10;"/>
+
+                <Label Text="Instructions" FontSize = "24"/>
+                <Label Text="&#x2022;1st click on running packet corrupts packet."/>
+                <Label Text="&#x2022;2nd click slows propagation time on correct packet."/>
+                <Label Text="&#x2022;3rd click on slow packet corrupts packet."/>
+                <Label Text="&#x2022;4th click leads to packet loss. &#10;"/>
+
+
+                <Label x:Name="last"/>
 
             </StackLayout>
         </ScrollView>
