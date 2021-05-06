@@ -3,27 +3,34 @@
     <ContentPage.Content>
         <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
-                <Label Text="Allocation Strategies" FontSize="30"/>
-                <Label Text="For simple memory management. &#10;"/>
+                <Label Text="Allocation Strategies" FontSize="{StaticResource _H1FontSize}"/>
+                <Label Text="For simple memory management. &#10;" FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="First Fit" FontSize="24"/>
-                <Label Text="The first sufficiently large block is allocated. Any next linear search starts at the beginning. &#10;"/>
+                <Label Text="First Fit" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="The first sufficiently large block is allocated. Any next linear search starts at the beginning. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="Next Fit" FontSize="24"/>
-                <Label Text="Like First Fit at the beginning, but any next ring search starts directly after the last recent allocation. &#10;"/>
+                <Label Text="Next Fit" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="Like First Fit at the beginning, but any next ring search starts directly after the last recent allocation. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="Best Fit" FontSize="24"/>
-                <Label Text="An exactly fitting block is allocated. If such a block does not exist, all sufficiently large blocks are compared and the first found smallest one is selected. Every next search starts at the beginning. &#10;"/>
+                <Label Text="Best Fit" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="An exactly fitting block is allocated. If such a block does not exist, all sufficiently large blocks are compared and the first found smallest one is selected. Every next search starts at the beginning. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="Worst Fit" FontSize="24"/>
-                <Label Text="All sufficiently large blocks are compared and the first found largest one is selected. This leads to pretty good usable fragments for the next search starting from the beginning. &#10;"/>
+                <Label Text="Worst Fit" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="All sufficiently large blocks are compared and the first found largest one is selected. This leads to pretty good usable fragments for the next search starting from the beginning. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="Combined Fit" FontSize="24"/>
-                <Label Text="by Prof. Dr. Werthebach, OS course in Nov. 2020"/>
-                <Label Text="Combines Best Fit, Worst Fit and Next Fit. The first exactly fitting block is allocated. If such a block does not exist, all sufficiently large blocks are compared and the first found largest one is selected. Any next ring search starts directly after the last recent allocation. &#10;"/>
+                <Label Text="Combined Fit" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="by Prof. Dr. Werthebach, OS course in Nov. 2020"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="Combines Best Fit, Worst Fit and Next Fit. The first exactly fitting block is allocated. If such a block does not exist, all sufficiently large blocks are compared and the first found largest one is selected. Any next ring search starts directly after the last recent allocation. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="Settings" FontSize="24"/>
-                <Label Text="When entering a fragmentation sequence, ',' count(s) as one used fragemnt. &#10;"/>
+                <Label Text="Settings" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="When entering a fragmentation sequence, ',' count(s) as one used fragemnt. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
 
                 <Label x:Name="last"/>

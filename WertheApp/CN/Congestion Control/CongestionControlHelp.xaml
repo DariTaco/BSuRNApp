@@ -3,54 +3,85 @@
     <ContentPage.Content>
          <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
-                <Label Text="Congestion Control" FontSize="30"/>
-                <Label Text="by the Transmission Control Protocol (TCP) to ensure reliable, congestion-free data transmission between sender and receiver.&#10;"/>
+                <Label Text="Congestion Control" FontSize="{StaticResource _H1FontSize}"/>
+                <Label Text="by the Transmission Control Protocol (TCP) to ensure reliable, congestion-free data transmission between sender and receiver.&#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="Slow Start state" FontAttributes="Bold" TextColor="Green"/>
-                <Label Text="The transmission rate increases exponentially. &#10;"/>
+                <Label Text="Slow Start state"
+                       FontAttributes="Bold"
+                       TextColor="Green"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="The transmission rate increases exponentially. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
                 
-                <Label Text="Congestion Avoidance state" FontAttributes="Bold" TextColor="Red"/>
-                <Label Text="The transmission rate increases linearly. &#10;"/>
+                <Label Text="Congestion Avoidance state"
+                       FontAttributes="Bold"
+                       TextColor="Red"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="The transmission rate increases linearly. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
                 
-                <Label Text="Fast Recovery state (only Reno)" FontAttributes="Bold" TextColor="Blue"/>
-                <Label Text="The transmission rate increases linearly. &#10;"/>
+                <Label Text="Fast Recovery state (only Reno)"
+                       FontAttributes="Bold"
+                       TextColor="Blue"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="The transmission rate increases linearly. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="TCP Tahoe" FontSize="24"/>
-                <Label Text="timeout event:" FontAttributes="Bold"/>
+                <Label Text="TCP Tahoe" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="timeout event:"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; set threshold to half of transmission rate
                        &#10;&#x2022; set transmission rate to 1
                        &#10;&#x2022; enter Slow Start state
-                       "/>
-                <Label Text="triple Ack event:" FontAttributes="Bold"/>
+                       " FontSize="{StaticResource _TextFontSize}"/>
+
+                <Label Text="triple Ack event:"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; set threshold to half of transmission rate
                        &#10;&#x2022; set transmission rate to 1
                        &#10;&#x2022; enter Slow Start state
-                       "/>
-                <Label Text="threshold reached event:" FontAttributes="Bold"/>
+                       " FontSize="{StaticResource _TextFontSize}"/>
+
+                <Label Text="threshold reached event:"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; enter Congestion Avoidance state 
                        &#10;
-                       "/>
+                       " FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="TCP Reno" FontSize="24"/>
-                <Label Text="timeout event: " FontAttributes="Bold"/>
+                <Label Text="TCP Reno" FontSize="{StaticResource _H2FontSize}"/>
+                <Label Text="timeout event: "
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; set threshold to half of transmission rate
                        &#10;&#x2022; set transmission rate to 1
                        &#10;&#x2022; enter Slow Start state
-                       "/>
-                <Label Text="triple Ack event:" FontAttributes="Bold"/>
+                       " FontSize="{StaticResource _TextFontSize}"/>
+
+                <Label Text="triple Ack event:"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; set threshold to half of transmission rate
                        &#10;&#x2022; halve transmission rate 
                        &#10;&#x2022; enter Fast Recovery state
-                       "/>
-                <Label Text="threshold reached event:" FontAttributes="Bold"/>
+                       " FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="threshold reached event:"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; enter Congestion Avoidance state 
-                       "/>
-                <Label Text="new Ack in Fast Recovery event:" FontAttributes="Bold"/>
+                       " FontSize="{StaticResource _TextFontSize}"/>
+
+                <Label Text="new Ack in Fast Recovery event:"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; enter Congestion Avoidance state 
                        &#10;
-                       "/>
+                       " FontSize="{StaticResource _TextFontSize}"/>
                 <Label x:Name="last"/>
 
             </StackLayout>

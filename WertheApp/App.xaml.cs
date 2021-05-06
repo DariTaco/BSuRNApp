@@ -15,6 +15,17 @@ namespace WertheApp
         public static int _buttonCornerRadius { get; set; }
         public static Color _buttonColor = new Color(0.13, 0.58, 0.95, 0.8);
 
+        // font sizes
+        public static double _H1FontSize { get; set; }
+        public static double _H2FontSize { get; set; }
+        public static double _H3FontSize { get; set; }
+        public static double _H4FontSize { get; set; }
+        public static double _TextFontSize { get; set; }
+        public static double _SmallTextFontSize { get; set; }
+
+
+
+
         // other styling
         public static Color _viewBackground { get; set; }
 
@@ -32,20 +43,47 @@ namespace WertheApp
         {
             InitializeComponent();
 
+            // Tablet font size settings
             if (Device.Idiom == TargetIdiom.Tablet)
             {
                 _buttonFontSize = Device.GetNamedSize(NamedSize.Title, typeof(Button));
                 _labelFontSize = Device.GetNamedSize(NamedSize.Title, typeof(Button));
                 _entryFontSize = Device.GetNamedSize(NamedSize.Title, typeof(Entry));
+
+                _H1FontSize = 60;
+                _H2FontSize = 46;
+                _H3FontSize = 40;
+                _H4FontSize = 34;
+                _TextFontSize = 28;
+                _SmallTextFontSize = 22;
+
             }
+            // Smartphone font size settings
             else
             {
                 _buttonFontSize = Device.GetNamedSize(NamedSize.Default, typeof(Button));
                 _labelFontSize = Device.GetNamedSize(NamedSize.Default, typeof(Button));
                 _entryFontSize = Device.GetNamedSize(NamedSize.Default, typeof(Entry));
+
+                _H1FontSize = 40;
+                _H2FontSize = 32;
+                _H3FontSize = 26;
+                _H4FontSize = 22;
+                _TextFontSize = 18;
+                _SmallTextFontSize = 14;
+
             }
 
-            // Button Styling
+            // add to resources so it can be used in XAML
+            Resources.Add("_H1FontSize", _H1FontSize);
+            Resources.Add("_H2FontSize", _H2FontSize);
+            Resources.Add("_H3FontSize", _H3FontSize);
+            Resources.Add("_H4FontSize", _H4FontSize);
+            Resources.Add("_TextFontSize", _TextFontSize);
+            Resources.Add("_SmallTextFontSize", _SmallTextFontSize);
+
+
+            // Button styling for Android
             if (Device.RuntimePlatform == Device.Android)
             {
                 
@@ -54,6 +92,7 @@ namespace WertheApp
                 _buttonCornerRadius = 50;
                 _viewBackground = new Color(0.93, 0.93, 0.93);
             }
+            // Button sytling for iOS and other
             else
             {
                 _buttonBackground = Color.Transparent;

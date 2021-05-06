@@ -3,14 +3,21 @@
     <ContentPage.Content>
         <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
-                <Label Text="Buddy System" FontSize="30"/>
-                <Label Text="The Buddy System is a procedure for memory management. It determines which piece in memory will be allocated next when a memory request is made. The memory is divided into so-called buddies. These are two equal sized blocks, which belong together and are always a power of two. &#10;"/>
+                <Label Text="Buddy System" FontSize="{StaticResource _H1FontSize}"/>
+                <Label Text="The Buddy System is a procedure for memory management. It determines which piece in memory will be allocated next when a memory request is made. The memory is divided into so-called buddies. These are two equal sized blocks, which belong together and are always a power of two. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="Start Process" FontAttributes="Bold"/>
-                <Label Text="In order to start a process, an exactly fitting block must first be found, or at least a sufficiently large one. The block is then divided into buddies until the process fits exactly or tightly into one of the buddies. &#10;"/>
+                <Label Text="Start Process"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="In order to start a process, an exactly fitting block must first be found, or at least a sufficiently large one. The block is then divided into buddies until the process fits exactly or tightly into one of the buddies. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="End Process" FontAttributes="Bold"/>
-                <Label Text="After a process has been terminated, a check is performed to see if the buddy of the freed memory block is also free. If so, the buddies are merged. Another check is performed for the resulting block. This process is repeated until no more merging is possible or the complete memory is merged into a single block. &#10;" />
+                <Label Text="End Process"
+                       FontAttributes="Bold"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="After a process has been terminated, a check is performed to see if the buddy of the freed memory block is also free. If so, the buddies are merged. Another check is performed for the resulting block. This process is repeated until no more merging is possible or the complete memory is merged into a single block. &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
 
                  <Label x:Name="last"/>

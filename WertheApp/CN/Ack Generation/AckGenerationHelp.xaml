@@ -3,8 +3,8 @@
     <ContentPage.Content>
         <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
-                <Label Text="Acknowledgement Generation" FontSize="30"/>
-                <Label Text="Coming soon... &#10;"/>
+                <Label Text="Acknowledgement Generation" FontSize="{StaticResource _H1FontSize}"/>
+                <Label Text="Coming soon... &#10;" FontSize="{StaticResource _TextFontSize}"/>
                  <Label x:Name="last"/>
 
             </StackLayout>

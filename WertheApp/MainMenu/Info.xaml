@@ -3,32 +3,55 @@
     <ContentPage.Content>
         <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
-                <Label Text="History" FontSize="30"/>
-                <Label x:Name="l_version" Text="{Binding currentVersion, StringFormat='The current version is {0:F0} &#10;'}"/>
+                <Label Text="History" FontSize="{StaticResource _H1FontSize}"/>
+                <Label x:Name="l_version" Text="{Binding currentVersion, StringFormat='The current version is {0:F0} &#10;'}" FontSize="{StaticResource _H4FontSize}"/>
 
-                <Label Text="&#x2022; WertheApp 1.6.21: bug fixes, tablet text size"/>
-                <Label Text="&#x2022; WertheApp 1.6.20: Dijkstra and Pipeline Protocols Help"/>
-                <Label Text="&#x2022; WertheApp 1.6.19: Added course Digital Photography and Embedded Systems, Congestion Control Help"/>
-                <Label Text="&#x2022; WertheApp 1.6.18: First Fit, Next Fit, Best Fit, Worst Fit"/>
-                <Label Text="&#x2022; WertheApp 1.6.17: bug fixes, buttons for all menus"/>
-                <Label Text="&#x2022; WertheApp 1.6.16: tablet button size, Allocation Strategies bug fixes, background color"/>
-                <Label Text="&#x2022; WertheApp 1.6.15: Allocation Strategies block merging and bug fixes"/>
-                <Label Text="&#x2022; WertheApp 1.6.14: reimplemented Combined Fit, optimized representation of numbers"/>
-                <Label Text="&#x2022; WertheApp 1.6.13: reimplemented Allocation Strategies"/>
-                <Label Text="&#x2022; WertheApp 1.6.12: bug fixes"/>
-                <Label Text="&#x2022; WertheApp 1.6.11: bug fixes"/>
-                <Label Text="&#x2022; WertheApp 1.6.10: Deadlock Help"/>
-                <Label Text="&#x2022; WertheApp 1.6.9: Deadlock bug fix"/>
-                <Label Text="&#x2022; WertheApp 1.6.8: Pop-up hints removed,  Deadlock bug fix"/>
-                <Label Text="&#x2022; WertheApp 1.6.7: Congestion Control bug fix"/>
-                <Label Text="&#x2022; WertheApp 1.6.6: Combined Fit bug fix"/>
-                <Label Text="&#x2022; WertheApp 1.6.5: Page Replacement Strategies Help"/>
-                <Label Text="&#x2022; WertheApp 1.6.4: Combined Fit replaces Tailoring Best Fit"/>
-                <Label Text="&#x2022; WertheApp 1.6.3: bug fixes"/>
-                <Label Text="&#x2022; WertheApp 1.6.2: bug fixes"/>
-                <Label Text="&#x2022; WertheApp 1.6.1: bug fixes"/>
-                <Label Text="&#x2022; WertheApp 1.6.0: bug fixes, dark mode"/>
-                <Label Text="&#x2022; WertheApp 1.5.0: restart buttons, Deadlock, versioning introduced in Oct. 2020 &#10;"/>
+                <Label Text="&#10;&#x2022; WertheApp 1.6.21: bug fixes, tablet text size"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.20: Dijkstra and Pipeline Protocols Help"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.19: Added course Digital Photography and Embedded Systems, Congestion Control Help"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.18: First Fit, Next Fit, Best Fit, Worst Fit"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.17: bug fixes, buttons for all menus"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.16: tablet button size, Allocation Strategies bug fixes, background color"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.15: Allocation Strategies block merging and bug fixes"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.14: reimplemented Combined Fit, optimized representation of numbers"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.13: reimplemented Allocation Strategies"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.12: bug fixes"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.11: bug fixes"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.10: Deadlock Help"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.9: Deadlock bug fix"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.8: Pop-up hints removed,  Deadlock bug fix"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.7: Congestion Control bug fix"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.6: Combined Fit bug fix"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.5: Page Replacement Strategies Help"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.4: Combined Fit replaces Tailoring Best Fit"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.3: bug fixes"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.2: bug fixes"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.1: bug fixes"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.6.0: bug fixes, dark mode"
+                       FontSize="{StaticResource _TextFontSize}"/>
+                <Label Text="&#x2022; WertheApp 1.5.0: restart buttons, Deadlock, versioning introduced in Oct. 2020 &#10;"
+                       FontSize="{StaticResource _TextFontSize}"/>
 
                 
 

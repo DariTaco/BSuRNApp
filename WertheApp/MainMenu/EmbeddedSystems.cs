@@ -26,7 +26,7 @@ namespace WertheApp
             var l_cs = new Label
             {
                 Text = "Coming soon...",
-                FontSize = App._labelFontSize
+                FontSize = App._H4FontSize
 
             };
             stackLayout.Children.Add(l_cs);
