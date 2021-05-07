@@ -54,7 +54,7 @@ namespace WertheApp.OS.AllocationStrategies
             float relativeFragmentSize = DrawMemory();
 
             AllocationStrategiesAlgorithm.Status status = AllocationStrategiesAlgorithm.GetStatus();
-            if (status != AllocationStrategiesAlgorithm.Status.undefined && status != AllocationStrategiesAlgorithm.Status.start && status != AllocationStrategiesAlgorithm.Status.merged)
+            if (status == AllocationStrategiesAlgorithm.Status.searching || status == AllocationStrategiesAlgorithm.Status.successfull)
             {
                 DrawRedArrow(relativeFragmentSize);
 

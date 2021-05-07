@@ -233,6 +233,15 @@ namespace WertheApp.OS.AllocationStrategies
                     {
                         b_Next.Text = "Allocate";
                     }
+                    else if(status == AllocationStrategiesAlgorithm.Status.unsuccessfull)
+                    {
+                        b_Next.Text = "Confirm";
+                        e_MemoryRequest.IsEnabled = true; // enable memory request entry 
+                        e_MemoryRequest.BackgroundColor = Color.White;
+                        e_MemoryRequest.Text = "";
+                        await DisplayAlert("Alert", "Memory request was unsuccessfull.", "OK");
+
+                    }
                 }
                 //sth found
                 else if (status == AllocationStrategiesAlgorithm.Status.successfull)
@@ -245,6 +254,7 @@ namespace WertheApp.OS.AllocationStrategies
                     e_MemoryRequest.Text = "";
 
                 }
+                /*
                 else if (status == AllocationStrategiesAlgorithm.Status.unsuccessfull)
                 {
                     b_Next.Text = "Confirm";
@@ -253,7 +263,7 @@ namespace WertheApp.OS.AllocationStrategies
                     e_MemoryRequest.Text = "";
                     await DisplayAlert("Alert", "Memory request was unsuccessfull.", "OK");
 
-                }
+                }*/
             }
             AllocationStrategiesDraw.Paint();
         }
