@@ -52,15 +52,15 @@ namespace WertheApp.OS
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             //add elements to stackLayout2
-            var l_Zero = new Label { Text = "0", VerticalOptions = LayoutOptions.Center, VerticalTextAlignment = TextAlignment.Center, FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)) };
-            e_Sequence = new Entry { Keyboard = Keyboard.Numeric, Text = "12340156012356" ,HorizontalOptions = LayoutOptions.FillAndExpand, VerticalTextAlignment = TextAlignment.Center };
+            var l_Zero = new Label { Text = "0", VerticalOptions = LayoutOptions.Center, VerticalTextAlignment = TextAlignment.Center, FontSize = App._TextFontSize };
+            e_Sequence = new Entry { Keyboard = Keyboard.Numeric, Text = "12340156012356" ,HorizontalOptions = LayoutOptions.FillAndExpand, VerticalTextAlignment = TextAlignment.Center, FontSize = App._TextFontSize };
            
 
 			stackLayout2.Children.Add(l_Zero);
 			stackLayout2.Children.Add(e_Sequence);
 
             //add elements to stackLayout3
-			var l_RAM = new Label { Text = "RAM:", VerticalOptions = LayoutOptions.Center };
+			var l_RAM = new Label { Text = "RAM:", FontSize = App._TextFontSize, VerticalOptions = LayoutOptions.Center };
 			p_RAM = new Picker();
             p_RAM.Items.Add("1");
             p_RAM.Items.Add("2");
@@ -72,7 +72,7 @@ namespace WertheApp.OS
             p_RAM.SelectedIndex = 2; //"3"
 			var l_Space3 = new Label { Text = "  " };
             string dtext = App._disk + ":";
-			var l_DISC = new Label { Text = dtext, VerticalOptions = LayoutOptions.Center };
+			var l_DISC = new Label { Text = dtext, FontSize = App._TextFontSize, VerticalOptions = LayoutOptions.Center };
 			p_DISC = new Picker();
             p_DISC.Items.Add("1");
             p_DISC.Items.Add("2");
@@ -90,8 +90,10 @@ namespace WertheApp.OS
 			stackLayout3.Children.Add(p_DISC);
 
             //add elements to StackLayout
-            var l_Strategy = new Label { Text = "Strategy", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
-			p_Strategy = new Picker { Title = "Select a Strategy" };
+            var l_Strategy = new Label { Text = "Strategy",
+                FontSize = App._H3FontSize,
+            };
+			p_Strategy = new Picker { Title = "Select a Strategy" ,FontSize = App._TextFontSize };
 			p_Strategy.Items.Add("Optimal Strategy");
 			p_Strategy.Items.Add("FIFO");
 			p_Strategy.Items.Add("FIFO Second Chance");
@@ -99,7 +101,7 @@ namespace WertheApp.OS
 			p_Strategy.Items.Add("RNU FIFO Second Chance");
             p_Strategy.SelectedIndex = 0; //"Optimal Strategy"
             var l_Space = new Label { Text = "  " };
-            var l_Sequence = new Label { Text = "Reference Sequence", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
+            var l_Sequence = new Label { Text = "Reference Sequence", FontSize = App._H3FontSize };
             var b_DefaultValue = new Button { Text = "Set Default", HorizontalOptions = LayoutOptions.Start,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
@@ -109,9 +111,9 @@ namespace WertheApp.OS
             };
             b_DefaultValue.Clicked += B_DefaultValue_Clicked;
             var l_Space2 = new Label { Text = "  " };
-            var l_MemorySize = new Label { Text = "Memory Size", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
+            var l_MemorySize = new Label { Text = "Memory Size", FontSize = App._H3FontSize };
             var l_MaxSize = new Label{
-                FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
+                FontSize = App._SmallTextFontSize,
                 Text = "Maximal size of RAM and " + App._disk + " together: 8"};
             var l_Space4 = new Label { Text = "  " };
 			var b_Start = new Button { Text = "Start",

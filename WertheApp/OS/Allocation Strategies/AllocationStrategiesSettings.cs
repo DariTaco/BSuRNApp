@@ -41,8 +41,8 @@ namespace WertheApp.OS.AllocationStrategies
             scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             // Algorithm selection
-            var l_Algorithm = new Label { Text = "Algorithm", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
-            p_Algorithm = new Picker { Title = "Select a Strategy" };
+            var l_Algorithm = new Label { Text = "Algorithm", FontSize = App._H3FontSize };
+            p_Algorithm = new Picker { Title = "Select a Strategy", FontSize = App._TextFontSize };
             p_Algorithm.Items.Add("First Fit");
             p_Algorithm.Items.Add("Next Fit");
             p_Algorithm.Items.Add("Best Fit");
@@ -55,8 +55,8 @@ namespace WertheApp.OS.AllocationStrategies
             stackLayout.Children.Add(l_Space);
 
             // Fragmentation input
-            var l_Fragmentation = new Label { Text = "Fragmentation", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
-            e_Fragmentation = new Entry { Keyboard = Keyboard.Telephone, Text = "10,4,20,18,7,9,12,15" };
+            var l_Fragmentation = new Label { Text = "Fragmentation", FontSize = App._H3FontSize  };
+            e_Fragmentation = new Entry { Keyboard = Keyboard.Telephone, Text = "10,4,20,18,7,9,12,15", FontSize = App._TextFontSize };
             var b_Default = new Button
             {
                 Text = "Set Default",

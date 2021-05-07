@@ -74,9 +74,24 @@ namespace WertheApp
             //organize content in Stacklayout
             var stackLayout = new StackLayout
             {
-                Margin = new Thickness(20)
+                Margin = new Thickness(20),
+				Orientation = StackOrientation.Vertical
 			};
-            var l_pick = new Label 
+			var sL = new StackLayout
+			{
+				Margin = new Thickness(20),
+				Orientation = StackOrientation.Horizontal
+
+
+			};
+			var sL2 = new StackLayout
+			{
+				Margin = new Thickness(20),
+				Orientation = StackOrientation.Horizontal
+
+			};
+
+			var l_pick = new Label 
             { 
                 Text = "Pick your course",
 				FontSize = App._H4FontSize
@@ -94,6 +109,7 @@ namespace WertheApp
 						"Embedded Systems",
 						"Operating Systems"
 					};
+			int count = 0;
 			foreach (string appName in appNameList)
 			{
 				var b_button = new Button
@@ -102,11 +118,25 @@ namespace WertheApp
 					BackgroundColor = App._buttonBackground,
 					TextColor = App._buttonText,
 					CornerRadius = App._buttonCornerRadius,
-					FontSize = App._buttonFontSize
+					FontSize = App._buttonFontSize,
+					HorizontalOptions = LayoutOptions.CenterAndExpand,
+					VerticalOptions = LayoutOptions.CenterAndExpand
+
 				};
 				b_button.Clicked += Button_Clicked;
-				stackLayout.Children.Add(b_button);
+                if (count % 2 == 0)
+                {
+					sL.Children.Add(b_button);
+                }
+                else
+                {
+					sL2.Children.Add(b_button);
+                }
+				count++;
 			}
+
+			stackLayout.Children.Add(sL);
+			stackLayout.Children.Add(sL2);
 
 			//add content to Toplevel grid
 			grid.Children.Add(stackLayout, 0, 1);

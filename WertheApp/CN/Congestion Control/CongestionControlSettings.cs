@@ -51,7 +51,9 @@ namespace WertheApp.CN
             var l_Tahoe = new Label { 
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Tahoe",
-                TextColor = Color.Blue};
+                TextColor = Color.Blue,
+                FontSize = App._TextFontSize
+            };
             s_Tahoe = new Switch();
             s_Tahoe.IsToggled = true;
             s_Tahoe.Toggled += S_Tahoe_Toggled; //adds an event 
@@ -61,7 +63,9 @@ namespace WertheApp.CN
             var l_Reno = new Label { 
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Reno",
-                TextColor = Color.Red};
+                TextColor = Color.Red,
+                FontSize = App._TextFontSize
+            };
             s_Reno = new Switch();
             s_Reno.IsToggled = true;
             s_Reno.Toggled += S_Reno_Toggled; // adds an event 
@@ -73,12 +77,12 @@ namespace WertheApp.CN
             stackLayout2.Children.Add(s_Reno);
 
             //add elements to stacklayout
-            var l_Choose = new Label { Text = "Strategy", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
+            var l_Choose = new Label { Text = "Strategy", FontSize = App._H3FontSize };
             var l_Space = new Label { Text = "  " };
-            var l_initialSetting = new Label { Text = "Initial Settings", FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)) };
-            var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center,
+            var l_initialSetting = new Label { Text = "Initial Settings", FontSize = App._H3FontSize };
+            var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize
             };
-            p_Treshold = new Picker();
+            p_Treshold = new Picker { FontSize = App._TextFontSize};
             //p_Treshold.Items.Add("1");
             p_Treshold.Items.Add("2");
             p_Treshold.Items.Add("3");

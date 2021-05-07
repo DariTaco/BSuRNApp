@@ -38,11 +38,11 @@ namespace WertheApp.OS
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             //add elements to stacklayout
-            var l_MemorySize = new Label { 
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)), 
+            var l_MemorySize = new Label {
+                FontSize = App._H3FontSize ,
                 Text = "Memory Size" };
-            var l_Exponent = new Label { Text = "Exponent: ", VerticalOptions = LayoutOptions.Center };
-            p_Exponent = new Picker();
+            var l_Exponent = new Label { Text = "Exponent: ", VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize };
+            p_Exponent = new Picker() { FontSize = App._TextFontSize };
             p_Exponent.Items.Add("1");
             p_Exponent.Items.Add("2");
             p_Exponent.Items.Add("3");
@@ -63,7 +63,7 @@ namespace WertheApp.OS
 
 
             //TO DO: Fire Event when absoulute memorysize needs to be calculated
-            l_AbsoluteMemorySize = new Label { Text = "Absoulute memory size: 32"};
+            l_AbsoluteMemorySize = new Label { Text = "Absoulute memory size: 32", FontSize = App._SmallTextFontSize };
             var l_Space = new Label { Text = "  "};
             var b_Start = new Button { Text = "Start",
                 BackgroundColor = App._buttonBackground,
