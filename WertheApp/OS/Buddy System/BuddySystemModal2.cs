@@ -36,7 +36,7 @@ namespace WertheApp.OS
                 Orientation = StackOrientation.Horizontal 
             };
 
-			var b_End = new Button { Text = "End Process",
+			var b_End = new Button { Text = "End Process", 
 				BackgroundColor = App._buttonBackground,
 				TextColor = App._buttonText,
 				CornerRadius = App._buttonCornerRadius,
@@ -58,8 +58,8 @@ namespace WertheApp.OS
             stackLayout2.Children.Add(l_Space);
             stackLayout2.Children.Add(b_Cancel);
 
-			var l_Active = new Label { Text = "Active Processes:" };
-			p_ProcessNames = new Picker();
+			var l_Active = new Label { Text = "Active Processes:" , FontSize = App._textFontSize };
+			p_ProcessNames = new Picker() { FontSize = App._textFontSize };
             p_ProcessNames.ItemsSource = BuddySystem.activeProcesses;
 			p_ProcessNames.SelectedIndex = 0;
 

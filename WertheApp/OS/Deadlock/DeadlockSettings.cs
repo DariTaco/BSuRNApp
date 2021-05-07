@@ -82,7 +82,7 @@ namespace WertheApp.OS
 
             //EXISTING RESOURCES
             var l_resourcesExisting = new Label { Text = "Existing Resources ",
-                FontSize = App._H3FontSize,
+                FontSize = App._h3FontSize,
                 VerticalOptions = LayoutOptions.Center
             };
             stackLayout.Children.Add(l_resourcesExisting);
@@ -96,7 +96,7 @@ namespace WertheApp.OS
             {
                 Text = "E = (    " + resourceVectorE + "    )",
                 TextColor = Color.Blue,
-                FontSize = App._H4FontSize,
+                FontSize = App._h4FontSize,
                 VerticalOptions = LayoutOptions.End
             };
 
@@ -110,7 +110,7 @@ namespace WertheApp.OS
             {
                 Text = "A = (    " + freeResourceVectorA + "    )",
                 TextColor = Color.Green,
-                FontSize = App._H4FontSize,
+                FontSize = App._h4FontSize,
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -125,10 +125,10 @@ namespace WertheApp.OS
             var l_Processes = new Label
             {
                 Text = "Running Processes",
-                FontSize = App._H3FontSize,
+                FontSize = App._h3FontSize,
                 VerticalOptions = LayoutOptions.Center
             };
-            p_runningprocesses = new Picker() { FontSize = App._TextFontSize };
+            p_runningprocesses = new Picker() { FontSize = App._textFontSize };
             for (int i = 2; i < 6; i++)
             {
                 p_runningprocesses.Items.Add(i.ToString());
@@ -147,12 +147,12 @@ namespace WertheApp.OS
             var l_resourcesBusy = new Label
             {
                 Text = "Busy Resources ",
-                FontSize = App._H3FontSize,
+                FontSize = App._h3FontSize,
                 VerticalOptions = LayoutOptions.Center
             };
             var b_ClearBusy = new Button {
                 Text = "Clear",
-                FontSize = App._SmallTextFontSize,
+                FontSize = App._smallButtonFontSize,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
@@ -182,7 +182,7 @@ namespace WertheApp.OS
             {
                 Text = "B = (    " + busyResourceVectorB + "    )",
                 TextColor = Color.Red,
-                FontSize = App._H4FontSize,
+                FontSize = App._h4FontSize,
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -196,7 +196,7 @@ namespace WertheApp.OS
             //upcomingVectorC REQUESTS
             StackLayout stackLayoutUpcoming = new StackLayout { Orientation = StackOrientation.Horizontal };
             var l_upcoming = new Label { Text = "Upcoming Requests ",
-                FontSize = App._H3FontSize,
+                FontSize = App._h3FontSize,
                 VerticalOptions = LayoutOptions.Center
             };
             stackLayoutUpcoming.Children.Add(l_upcoming);
@@ -208,7 +208,7 @@ namespace WertheApp.OS
             stackLayoutUpcoming.Children.Add(l_Space1);
 
             var b_ClearUpcoming = new Button { Text = "Clear",
-                FontSize = App._SmallTextFontSize,
+                FontSize = App._smallButtonFontSize,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius
@@ -228,7 +228,7 @@ namespace WertheApp.OS
             {
                 Text = "C = (    " + upcomingVectorC + "    )",
                 TextColor = Color.Orange,
-                FontSize = App._H4FontSize,
+                FontSize = App._h4FontSize,
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -254,7 +254,7 @@ namespace WertheApp.OS
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
+                FontSize = App._smallButtonFontSize
 
             };
             b_preset1.Clicked += B_Preset1_Clicked; //add Click Event(Method)
@@ -265,7 +265,7 @@ namespace WertheApp.OS
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
+                FontSize = App._smallButtonFontSize
 
             };
             b_preset2.Clicked += B_Preset2_Clicked; //add Click Event(Method)
@@ -276,7 +276,7 @@ namespace WertheApp.OS
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
+                FontSize = App._smallButtonFontSize
 
             };
             b_preset3.Clicked += B_Preset3_Clicked; //add Click Event(Method)
@@ -310,67 +310,67 @@ namespace WertheApp.OS
             sl_busyProcess5 = new StackLayout() { Orientation = StackOrientation.Horizontal };
 
             l_busyP1 = new Label { Text = "P1:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
             l_busyP2 = new Label { Text = "P2:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
             l_busyP3 = new Label { Text = "P3:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
             l_busyP4 = new Label { Text = "P4:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
             l_busyP5 = new Label { Text = "P5:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
 
             //don't ask. I know it can be done better lol
-            p_p1_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
             busyResPickerList.Add(p_p1_dvd);
             busyResPickerList.Add(p_p2_dvd);
@@ -428,67 +428,67 @@ namespace WertheApp.OS
             sl_upcomingProcess5 = new StackLayout() { Orientation = StackOrientation.Horizontal };
 
             l_upcomingP1 = new Label { Text = "P1:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40 };
             l_upcomingP2 = new Label { Text = "P2:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
             l_upcomingP3 = new Label { Text = "P3:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
             l_upcomingP4 = new Label { Text = "P4:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
             l_upcomingP5 = new Label { Text = "P5:  ",
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
 
             //goddamit I know you can do better
             //pickers for every resource /process combination
-            p_p1_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p2_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p3_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p4_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
-            p_p5_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._TextFontSize };
+            p_p1_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
             upcomingResPickerList.Add(p_p1_upcoming_dvd);
             upcomingResPickerList.Add(p_p2_upcoming_dvd);
@@ -545,8 +545,8 @@ namespace WertheApp.OS
 
             // resource DVD
             var sl_dvd = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_dvd = new Label { Text = " DVD Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize };
-            p_dvd = new Picker() { FontSize = App._TextFontSize };
+            var l_dvd = new Label { Text = " DVD Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
+            p_dvd = new Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_dvd.Items.Add(i.ToString());
@@ -562,8 +562,8 @@ namespace WertheApp.OS
 
             // resource Laser printer
             var sl_printer = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_printer = new Label { Text = " Laser Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize };
-            p_printer = new Picker() { FontSize = App._TextFontSize };
+            var l_printer = new Label { Text = " Laser Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
+            p_printer = new Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_printer.Items.Add(i.ToString());
@@ -579,8 +579,8 @@ namespace WertheApp.OS
 
             // resource USB
             var sl_usb = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_usb = new Label { Text = " USB Disk Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize };
-            p_usb = new Picker() { FontSize = App._TextFontSize };
+            var l_usb = new Label { Text = " USB Disk Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
+            p_usb = new Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_usb.Items.Add(i.ToString());
@@ -600,9 +600,9 @@ namespace WertheApp.OS
             {
                 Text = " BluRay Drives",
                 VerticalOptions = LayoutOptions.Center,
-                FontSize = App._TextFontSize
+                FontSize = App._textFontSize
             };
-            p_bluRay = new Picker() { FontSize = App._TextFontSize };
+            p_bluRay = new Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_bluRay.Items.Add(i.ToString());
@@ -623,9 +623,9 @@ namespace WertheApp.OS
             {
                 Text = " Inkjet Printers",
                 VerticalOptions = LayoutOptions.Center,
-                FontSize = App._TextFontSize
+                FontSize = App._textFontSize
             };
-            p_ijPrinter = new Picker() { FontSize = App._TextFontSize };
+            p_ijPrinter = new Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_ijPrinter.Items.Add(i.ToString());
@@ -641,8 +641,8 @@ namespace WertheApp.OS
 
             // resource 3D printer
             var sl_printer3D = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_printer3D = new Label { Text = " 3D Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize };
-            p_printer3D = new Picker() { FontSize = App._TextFontSize };
+            var l_printer3D = new Label { Text = " 3D Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
+            p_printer3D = new Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_printer3D.Items.Add(i.ToString());

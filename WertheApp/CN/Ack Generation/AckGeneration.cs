@@ -25,6 +25,7 @@ namespace WertheApp.CN
             info.Clicked += B_Info_Clicked;
 
             Title = "Ack Generation";
+            
             draw = new AckGenerationDraw();
 
             CreateContent();

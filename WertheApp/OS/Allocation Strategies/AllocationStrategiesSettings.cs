@@ -41,8 +41,8 @@ namespace WertheApp.OS.AllocationStrategies
             scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             // Algorithm selection
-            var l_Algorithm = new Label { Text = "Algorithm", FontSize = App._H3FontSize };
-            p_Algorithm = new Picker { Title = "Select a Strategy", FontSize = App._TextFontSize };
+            var l_Algorithm = new Label { Text = "Algorithm", FontSize = App._h3FontSize };
+            p_Algorithm = new Picker { Title = "Select a Strategy", FontSize = App._textFontSize };
             p_Algorithm.Items.Add("First Fit");
             p_Algorithm.Items.Add("Next Fit");
             p_Algorithm.Items.Add("Best Fit");
@@ -55,16 +55,16 @@ namespace WertheApp.OS.AllocationStrategies
             stackLayout.Children.Add(l_Space);
 
             // Fragmentation input
-            var l_Fragmentation = new Label { Text = "Fragmentation", FontSize = App._H3FontSize  };
-            e_Fragmentation = new Entry { Keyboard = Keyboard.Telephone, Text = "10,4,20,18,7,9,12,15", FontSize = App._TextFontSize };
+            var l_Fragmentation = new Label { Text = "Fragmentation", FontSize = App._h3FontSize  };
+            e_Fragmentation = new Entry { Keyboard = Keyboard.Telephone, Text = "10,4,20,18,7,9,12,15", FontSize = App._textFontSize };
             var b_Default = new Button
             {
-                Text = "Set Default",
+                Text = "Default",
                 HorizontalOptions = LayoutOptions.Start,
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
+                FontSize = App._smallButtonFontSize
 
             };
             b_Default.Clicked += (sender, e) => e_Fragmentation.Text = "10,4,20,18,7,9,12,15";

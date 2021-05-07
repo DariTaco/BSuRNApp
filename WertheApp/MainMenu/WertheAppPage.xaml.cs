@@ -94,7 +94,7 @@ namespace WertheApp
 			var l_pick = new Label 
             { 
                 Text = "Pick your course",
-				FontSize = App._H4FontSize
+				FontSize = App._h4FontSize
 
 			};
             stackLayout.Children.Add(l_pick);

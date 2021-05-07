@@ -38,13 +38,13 @@ namespace WertheApp.OS
                 Orientation = StackOrientation.Horizontal
             };
 
-            var l_Available = new Label { Text = "Available process names:" };
-            p_ProcessNames = new Picker();
+            var l_Available = new Label { Text = "Available process names:" , FontSize = App._textFontSize};
+            p_ProcessNames = new Picker() { FontSize = App._textFontSize };
             p_ProcessNames.ItemsSource = BuddySystem.availableProcesses;
             p_ProcessNames.SelectedIndex = 0;
             var l_Space = new Label { Text = "  " };
-            var l_ProcessSize = new Label { Text = "Process size:" };
-            e_ProcessSize = new Entry{ Keyboard = Keyboard.Numeric };
+            var l_ProcessSize = new Label { Text = "Process size:" , FontSize = App._textFontSize };
+            e_ProcessSize = new Entry{ Keyboard = Keyboard.Numeric, FontSize = App._textFontSize };
             switch (BuddySystem.powerOfTwo)
             {
                 case 1:
@@ -98,7 +98,7 @@ namespace WertheApp.OS
             }
             var l_Min = new Label
             {
-                FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
+                FontSize = App._smallTextFontSize,
                 Text = "Minimum process size: " + minimumProcessSize
             };
 

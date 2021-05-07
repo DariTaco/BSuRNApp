@@ -88,7 +88,7 @@ namespace WertheApp.CN
                     BackgroundColor = App._buttonBackground,
                     TextColor = App._buttonText,
                     CornerRadius = App._buttonCornerRadius,
-                    FontSize = App._buttonFontSize
+                    FontSize = App._smallButtonFontSize
 
                 };
                 b_Default.Clicked += B_Default_Clicked;
@@ -102,7 +102,7 @@ namespace WertheApp.CN
                     BackgroundColor = App._buttonBackground,
                     TextColor = App._buttonText,
                     CornerRadius = App._buttonCornerRadius,
-                    FontSize = App._buttonFontSize
+                    FontSize = App._smallButtonFontSize
 
                 };
                 b_Random.Clicked += B_Random_Clicked;
@@ -116,7 +116,7 @@ namespace WertheApp.CN
                     BackgroundColor = App._buttonBackground,
                     TextColor = App._buttonText,
                     CornerRadius = App._buttonCornerRadius,
-                    FontSize = App._buttonFontSize
+                    FontSize = App._smallButtonFontSize
 
                 };
                 b_Presets.Clicked += B_Presets_Clicked;

@@ -52,7 +52,7 @@ namespace WertheApp.CN
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Tahoe",
                 TextColor = Color.Blue,
-                FontSize = App._TextFontSize
+                FontSize = App._textFontSize
             };
             s_Tahoe = new Switch();
             s_Tahoe.IsToggled = true;
@@ -64,7 +64,7 @@ namespace WertheApp.CN
                 VerticalOptions = LayoutOptions.Center,
                 Text = "TCP Reno",
                 TextColor = Color.Red,
-                FontSize = App._TextFontSize
+                FontSize = App._textFontSize
             };
             s_Reno = new Switch();
             s_Reno.IsToggled = true;
@@ -77,12 +77,12 @@ namespace WertheApp.CN
             stackLayout2.Children.Add(s_Reno);
 
             //add elements to stacklayout
-            var l_Choose = new Label { Text = "Strategy", FontSize = App._H3FontSize };
+            var l_Choose = new Label { Text = "Strategy", FontSize = App._h3FontSize };
             var l_Space = new Label { Text = "  " };
-            var l_initialSetting = new Label { Text = "Initial Settings", FontSize = App._H3FontSize };
-            var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize
+            var l_initialSetting = new Label { Text = "Initial Settings", FontSize = App._h3FontSize };
+            var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize
             };
-            p_Treshold = new Picker { FontSize = App._TextFontSize};
+            p_Treshold = new Picker { FontSize = App._textFontSize};
             //p_Treshold.Items.Add("1");
             p_Treshold.Items.Add("2");
             p_Treshold.Items.Add("3");
@@ -104,7 +104,7 @@ namespace WertheApp.CN
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
+                FontSize = App._smallButtonFontSize
 
             };
             b_Default.Clicked += B_Default_Clicked; //add Click Event(Method)

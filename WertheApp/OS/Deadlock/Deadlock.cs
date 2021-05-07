@@ -158,7 +158,7 @@ namespace WertheApp.OS
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Text = "Pick a pending request C(Pi).",
                 TextColor = Color.Blue,
-                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label))
+                FontSize = App._textFontSize
             };
             stackLayout.Children.Add(l_info);
 

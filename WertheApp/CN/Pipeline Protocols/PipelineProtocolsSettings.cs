@@ -52,15 +52,15 @@ namespace WertheApp.CN
 			scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
 
             //define and add elements to stacklayout
-            var l_Strategy = new Label { Text = "Strategy", FontSize = App._H3FontSize };
-            p_Strategy = new Picker() { FontSize = App._TextFontSize };
+            var l_Strategy = new Label { Text = "Strategy", FontSize = App._h3FontSize };
+            p_Strategy = new Picker() { FontSize = App._textFontSize };
             p_Strategy.Items.Add("Go Back N");
             p_Strategy.Items.Add("Selective Repeat");
             p_Strategy.SelectedIndex = 0;//Go Back N
             var l_Space = new Label { Text = "  " };
 
-            var l_WindowSize = new Label { Text = "Window Size", FontSize = App._H3FontSize };
-            p_WindowSize = new Picker() { FontSize = App._TextFontSize };
+            var l_WindowSize = new Label { Text = "Window Size", FontSize = App._h3FontSize };
+            p_WindowSize = new Picker() { FontSize = App._textFontSize };
             p_WindowSize.Items.Add("2");
             p_WindowSize.Items.Add("3");
             p_WindowSize.Items.Add("4");
@@ -68,21 +68,21 @@ namespace WertheApp.CN
             p_WindowSize.SelectedIndex = 3;//5
             var l_Space2 = new Label { Text = "  " };
 
-            var l_Timeout = new Label { Text = "Timeout =", FontSize = App._H3FontSize };
-            l_TimeoutValue = new Label { Text = "11" , VerticalOptions = LayoutOptions.Center, FontSize = App._TextFontSize };
+            var l_Timeout = new Label { Text = "Timeout =", FontSize = App._h3FontSize };
+            l_TimeoutValue = new Label { Text = "11" , VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
             s_Timeout = new Slider(11, 20, 11); //min, max, val
             s_Timeout.HorizontalOptions = LayoutOptions.FillAndExpand;
             s_Timeout.ValueChanged += S_Timeout_ValueChanged;;
             //s_Timeout.Minimum = 0.0f; //minimum roundtrip time
             //s_Timeout.Maximum = 10.0f; //maximum roundtrip time
             var l_TimeoutMi = new Label { VerticalOptions = LayoutOptions.Center,
-                FontSize = App._TextFontSize,
+                FontSize = App._textFontSize,
                 Text = "11" };
             var l_TimeoutMa = new Label { VerticalOptions = LayoutOptions.Center,
-                FontSize = App._TextFontSize, 
+                FontSize = App._textFontSize, 
                 Text = "20" };
             var l_RoundtripTime = new Label {
-                FontSize = App._SmallTextFontSize, 
+                FontSize = App._smallTextFontSize, 
                 Text = "Round Trip Time: 10" };
             var l_Space3 = new Label { Text = "  " };
 
