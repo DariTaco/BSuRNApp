@@ -52,9 +52,9 @@ namespace WertheApp.Droid
             LoadApplication(new App());
 
             // Subscribe to Screen Orientation Messages
-            MessagingCenter.Subscribe<object>(this, "Portrait", sender => { RequestedOrientation = ScreenOrientation.UserPortrait; });
+            MessagingCenter.Subscribe<object>(this, "Portrait", sender => { RequestedOrientation = ScreenOrientation.Portrait; });
             MessagingCenter.Subscribe<object>(this, "Unspecified", sender => { RequestedOrientation = ScreenOrientation.FullSensor; });
-            MessagingCenter.Subscribe<object>(this, "Landscape", sender => { RequestedOrientation = ScreenOrientation.UserLandscape; });
+            MessagingCenter.Subscribe<object>(this, "Landscape", sender => { RequestedOrientation = ScreenOrientation.Landscape; });
           
         }
     }

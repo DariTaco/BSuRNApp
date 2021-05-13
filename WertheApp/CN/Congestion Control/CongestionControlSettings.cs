@@ -112,7 +112,7 @@ namespace WertheApp.CN
                 BackgroundColor = App._buttonBackground,
                 TextColor = App._buttonText,
                 CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
+                FontSize = App._buttonFontSize,
 
             };
 			b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)

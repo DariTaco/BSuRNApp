@@ -13,6 +13,7 @@ namespace WertheApp
         public static double _entryFontSize { get; set; }
         public static int _buttonCornerRadius { get; set; }
         public static Color _buttonColor = new Color(0.13, 0.58, 0.95, 0.8);
+        public static LayoutOptions _buttonHorizontalOptions { get; set; }
 
         // font sizes
         public static double _h1FontSize { get; set; }
@@ -95,6 +96,7 @@ namespace WertheApp
                 _buttonText = Color.White;
                 _buttonCornerRadius = 50;
                 _viewBackground = new Color(0.93, 0.93, 0.93);
+                _buttonHorizontalOptions = LayoutOptions.Center;
             }
             // Button sytling for iOS and other
             else

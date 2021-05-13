@@ -8,6 +8,11 @@ namespace WertheApp
 {
     public class OperatingSystems : ContentPage
     {
+        //VARIABLES
+        private double width = 0;
+        private double height = 0;
+        List<Button> buttonList;
+
         //CONSTRUCTOR
         public OperatingSystems()
         {
@@ -18,20 +23,30 @@ namespace WertheApp
             {
                 Margin = new Thickness(10)
             };
+            var bottomGrid = new Grid();
+            bottomGrid.ColumnDefinitions = new ColumnDefinitionCollection {
+            // Bottom half will be twice as big as top half:
+			new ColumnDefinition{ Width = new GridLength(1, GridUnitType.Star)},
+            new ColumnDefinition{ Width = new GridLength(4, GridUnitType.Auto)},
+            new ColumnDefinition{ Width = new GridLength(1, GridUnitType.Star)},
+            };
+
             var stackLayout = new StackLayout();
             this.Content = scrollView;
-            scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
-
+            scrollView.Content = bottomGrid; //Wrap ScrollView around StackLayout to be able to scroll the content
             CreateContent(stackLayout);
+            bottomGrid.Children.Add(stackLayout, 1, 0);
+
         }
 
-		//METHODS
-		void CreateContent(StackLayout stackLayout)
+        //METHODS
+        void CreateContent(StackLayout stackLayout)
 		{
 			var l_choose = new Label
 			{
 				Text = "Choose an App",
-				FontSize = App._h4FontSize
+				FontSize = App._h4FontSize,
+                HorizontalOptions = LayoutOptions.Center
 
             };
 			stackLayout.Children.Add(l_choose);
@@ -40,6 +55,7 @@ namespace WertheApp
 			stackLayout.Children.Add(l_space);
 
             //add buttons for apps
+            buttonList = new List<Button>();
             List<string> appNameList = new List<string>()    {
                         "Allocation Strategies",
                         "Buddy System",
@@ -58,6 +74,8 @@ namespace WertheApp
                 };
                 b_button.Clicked += Button_Clicked;
                 stackLayout.Children.Add(b_button);
+                buttonList.Add(b_button);
+
             }
         }
 
@@ -87,8 +105,20 @@ namespace WertheApp
 			base.OnAppearing();
 			MessagingCenter.Send<object>(this, "Unspecified");
 		}
-	}
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

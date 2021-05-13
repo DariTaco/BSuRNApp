@@ -34,3 +34,10 @@ namespace WertheApp.iOS
         }
     }
 }
+
+/*
+ (UIDeviceOrientation.Portrait)), new NSString("orientation"));
+ (UIInterfaceOrientation.Portrait)), new NSString("orientation"));
+UIInterfaceOrientationMask
+
+ */

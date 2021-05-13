@@ -7,7 +7,9 @@ namespace WertheApp
 {
     public partial class WertheAppPage : ContentPage
     {
-		
+		StackLayout stackLayout;
+		List<Button> buttonList;
+
         //CONSTRUCTOR
         public WertheAppPage()
         {
@@ -56,6 +58,7 @@ namespace WertheApp
 				if (width < height)
 				{
 					i_hsLogo.Source = ImageSource.FromResource("AalenHS2.png");
+
 				}
 				else
 				{
@@ -71,30 +74,24 @@ namespace WertheApp
 		}
 		void CreateBottomHalf(Grid grid)
 		{
-            //organize content in Stacklayout
-            var stackLayout = new StackLayout
+			var bottomGrid = new Grid();
+			bottomGrid.ColumnDefinitions = new ColumnDefinitionCollection {
+            // Bottom half will be twice as big as top half:
+			new ColumnDefinition{ Width = new GridLength(1, GridUnitType.Star)},
+			new ColumnDefinition{ Width = new GridLength(4, GridUnitType.Auto)},
+			new ColumnDefinition{ Width = new GridLength(1, GridUnitType.Star)},
+			};
+
+			//organize content in Stacklayout
+			stackLayout = new StackLayout
             {
                 Margin = new Thickness(20),
-				Orientation = StackOrientation.Vertical
 			};
-			var sL = new StackLayout
-			{
-				Margin = new Thickness(20),
-				Orientation = StackOrientation.Horizontal
-
-
-			};
-			var sL2 = new StackLayout
-			{
-				Margin = new Thickness(20),
-				Orientation = StackOrientation.Horizontal
-
-			};
-
 			var l_pick = new Label 
             { 
                 Text = "Pick your course",
-				FontSize = App._h4FontSize
+				FontSize = App._h4FontSize,
+				HorizontalOptions = LayoutOptions.Center
 
 			};
             stackLayout.Children.Add(l_pick);
@@ -109,7 +106,8 @@ namespace WertheApp
 						"Embedded Systems",
 						"Operating Systems"
 					};
-			int count = 0;
+
+			buttonList = new List<Button>();
 			foreach (string appName in appNameList)
 			{
 				var b_button = new Button
@@ -119,27 +117,18 @@ namespace WertheApp
 					TextColor = App._buttonText,
 					CornerRadius = App._buttonCornerRadius,
 					FontSize = App._buttonFontSize,
-					HorizontalOptions = LayoutOptions.CenterAndExpand,
-					VerticalOptions = LayoutOptions.CenterAndExpand
-
 				};
 				b_button.Clicked += Button_Clicked;
-                if (count % 2 == 0)
-                {
-					sL.Children.Add(b_button);
-                }
-                else
-                {
-					sL2.Children.Add(b_button);
-                }
-				count++;
+				stackLayout.Children.Add(b_button);
+				buttonList.Add(b_button);
+
 			}
 
-			stackLayout.Children.Add(sL);
-			stackLayout.Children.Add(sL2);
 
 			//add content to Toplevel grid
-			grid.Children.Add(stackLayout, 0, 1);
+		
+			bottomGrid.Children.Add(stackLayout, 1, 0);
+			grid.Children.Add(bottomGrid, 0, 1);
 		}
 
 		async void Button_Clicked(object sender, System.EventArgs e)
@@ -167,5 +156,6 @@ namespace WertheApp
 		{
 			await Navigation.PushAsync(new Info());
 		}
-    }
+
+	}
 }

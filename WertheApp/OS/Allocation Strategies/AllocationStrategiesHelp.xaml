@@ -29,7 +29,7 @@
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="Settings" FontSize="{StaticResource _H2FontSize}"/>
-                <Label Text="When entering a fragmentation sequence, ',' count(s) as one used fragemnt. &#10;"
+                <Label Text="When entering a fragmentation sequence, ',' counts as one used fragemnt. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
 

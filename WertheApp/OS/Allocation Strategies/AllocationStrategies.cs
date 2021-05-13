@@ -42,6 +42,8 @@ namespace WertheApp.OS.AllocationStrategies
 
             Title = "Allocation Strategies: " + p_Strategy;
 
+            MessagingCenter.Send<object>(this, "Landscape"); // enforce landscape mode
+
             CreateContent();            
         }
 
@@ -207,6 +209,10 @@ namespace WertheApp.OS.AllocationStrategies
                     if (AllocationStrategiesAlgorithm.MemoryIsFull())
                     {
                         await DisplayAlert("Alert", "Out of memory! Please restart.", "OK");
+                        b_Next.Text = "Confirm";
+                        e_MemoryRequest.IsEnabled = true; // enable memory request entry 
+                        e_MemoryRequest.BackgroundColor = Color.White;
+                        e_MemoryRequest.Text = "";
                     }
                     else
                     {
@@ -342,8 +348,10 @@ namespace WertheApp.OS.AllocationStrategies
             base.OnSizeAllocated(width, height); //must be called
             if (this.width != width || this.height != height)
             {
+                Debug.WriteLine("TRIGGERED");
                 MessagingCenter.Send<object>(this, "Landscape"); // enforce landscape mode
             }
+
         }
 
     }
