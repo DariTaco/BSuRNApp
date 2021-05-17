@@ -4,6 +4,7 @@ using SkiaSharp;
 using System.Collections.Generic;
 using System.Text.RegularExpressions; //Regex.IsMatch
 
+/*PLEASE EXCUSE THIS HORRIBLE MESS... I wish I had time to redo everything...*/
 namespace WertheApp.CN
 {
     public class DijkstraSettingsDraw
@@ -21,7 +22,6 @@ namespace WertheApp.CN
         private String action;
 
         private static List<DijkstraSettingsDraw> networkList = new List<DijkstraSettingsDraw>();
-        private static float xe, ye;
         private static SKPaint sk_WeightsText,
             sk_RouterText, sk_RouterContour, sk_RouterFill, sk_test;
 
@@ -36,6 +36,7 @@ namespace WertheApp.CN
         rect_wZV, rect_wZX, rect_wVX,
         rect_wVY, rect_wVW, rect_wXW,
         rect_wXY, rect_wYW;
+
 
 
         //CONSTRUCTOR
@@ -74,7 +75,7 @@ namespace WertheApp.CN
             switch (e.ActionType)
             {
                 case SKTouchAction.Pressed:
-                    
+
                     if (rect_wUV.Contains(e.Location))
                     {
                         //Debug.WriteLine("UV clicked");
@@ -169,36 +170,6 @@ namespace WertheApp.CN
 
             e.Handled = true;
         }
-
-        /**********************************************************************
-        *********************************************************************/
-        // do the drawing
-        void PaintSurface(object sender, SKPaintSurfaceEventArgs e)
-        {
-            //canvas object
-            SKSurface surface = e.Surface;
-            canvas = surface.Canvas;
-
-            //Important! Otherwise the drawing will look messed up in iOS
-            if (canvas != null){ canvas.Clear();}
-
-            //calculate some stuff and make the paint
-            CalculateNeededNumbers(canvas);
-            MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
-
-            /*********************HERE GOES THE DRAWING************************/
-            SKRect sk_rBackground = new SKRect(00 * xe, 0 * ye, 100 * xe, 100 * ye); //left , top, right, bottom
-            canvas.DrawRect(sk_rBackground, sk_test); //left, top, right, bottom, color
-
-            //draw Network
-            DrawConnections();
-            DrawRouters();
-            DrawWeights();
-
-            //execute all drawing actions
-            canvas.Flush();
-        }
-
         /**********************************************************************
         *********************************************************************/
         public void DrawWeights()
@@ -349,7 +320,7 @@ namespace WertheApp.CN
             DrawConnection(routerW, routerY);
             DrawConnection(routerW, routerZ);
             DrawConnection(routerZ, routerY);
-            SKPoint p = new SKPoint(15 * xe, -30 * ye);
+            SKPoint p = new SKPoint(xPercent(0.15f), -yPercent(0.3f));
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
@@ -370,7 +341,7 @@ namespace WertheApp.CN
             DrawConnection(routerW, routerY);
             DrawConnection(routerW, routerZ);
             DrawConnection(routerZ, routerY);
-            SKPoint p = new SKPoint(15 * xe, 130 * ye);
+            SKPoint p = new SKPoint(xPercent(0.15f), yPercent(1.30f));
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p, routerY);
@@ -392,25 +363,25 @@ namespace WertheApp.CN
             DrawConnection(routerW, routerZ);
             DrawConnection(routerZ, routerY);
 
-            SKPoint p = new SKPoint(15 * xe, -30 * ye);
+            SKPoint p = new SKPoint(xPercent(0.15f), -yPercent(0.3f));
             SKPath curveUW = new SKPath();
             curveUW.MoveTo(routerU);
             curveUW.CubicTo(routerU, p, routerW);
             canvas.DrawPath(curveUW, sk_RouterContour);
 
-            SKPoint p2 = new SKPoint(15 * xe, 130 * ye);
+            SKPoint p2 = new SKPoint(xPercent(0.15f), yPercent(1.30f));
             SKPath curveUY = new SKPath();
             curveUY.MoveTo(routerU);
             curveUY.CubicTo(routerU, p2, routerY);
             canvas.DrawPath(curveUY, sk_RouterContour);
 
-            SKPoint p3 = new SKPoint(85 * xe, -30 * ye);
+            SKPoint p3 = new SKPoint(xPercent(0.85f), -yPercent(0.3f));
             SKPath curveZV = new SKPath();
             curveZV.MoveTo(routerZ);
             curveZV.CubicTo(routerZ, p3, routerV);
             canvas.DrawPath(curveZV, sk_RouterContour);
 
-            SKPoint p4 = new SKPoint(85 * xe, 130 * ye);
+            SKPoint p4 = new SKPoint(xPercent(0.85f), yPercent(1.30f));
             SKPath curveZX = new SKPath();
             curveZX.MoveTo(routerZ);
             curveZX.CubicTo(routerZ, p4, routerX);
@@ -421,7 +392,8 @@ namespace WertheApp.CN
         *********************************************************************/
         void DrawRouter(SKPoint router, String name)
         {
-            float radius = 60;
+
+            float radius = xPercent(0.07f);
             float crossLength = radius / 3;
             float crossWidth = crossLength / 2;
       
@@ -431,7 +403,7 @@ namespace WertheApp.CN
 
             //x on router
             SKPath cross = new SKPath();
-            cross.MoveTo(router.X, router.Y -10);
+            cross.MoveTo(router.X, router.Y -yPercent(0.01f));
             cross.RLineTo(-crossLength, -crossLength);
             cross.RLineTo(-crossWidth, +crossWidth);
             cross.RLineTo(+crossLength, +crossLength);
@@ -449,22 +421,22 @@ namespace WertheApp.CN
             //letter on router
             switch (name)
             {
-                case "U": this.canvas.DrawText(name, router.X + 90, router.Y + 20, sk_RouterText);
+                case "U": this.canvas.DrawText(name, router.X + xPercent(0.1f), router.Y + xPercent(0.02f), sk_RouterText);
                     break;
                 case "V":
-                    this.canvas.DrawText(name, router.X, router.Y - 75, sk_RouterText);
+                    this.canvas.DrawText(name, router.X, router.Y - xPercent(0.1f), sk_RouterText);
                     break;
                 case "W":
-                    this.canvas.DrawText(name, router.X, router.Y - 75, sk_RouterText);
+                    this.canvas.DrawText(name, router.X, router.Y - xPercent(0.1f), sk_RouterText);
                     break;
                 case "X":
-                    this.canvas.DrawText(name, router.X, router.Y + 115, sk_RouterText);
+                    this.canvas.DrawText(name, router.X, router.Y + xPercent(0.15f), sk_RouterText);
                     break;
                 case "Y":
-                    this.canvas.DrawText(name, router.X, router.Y + 115, sk_RouterText);
+                    this.canvas.DrawText(name, router.X, router.Y + xPercent(0.15f), sk_RouterText);
                     break;
                 case "Z":
-                    this.canvas.DrawText(name, router.X - 90, router.Y + 20, sk_RouterText);
+                    this.canvas.DrawText(name, router.X - xPercent(0.1f), router.Y + xPercent(0.02f), sk_RouterText);
                     break;
 
             }
@@ -499,59 +471,7 @@ namespace WertheApp.CN
         {
             this.action = a;
         }
-        /**********************************************************************
-        *********************************************************************/
-        static void CalculateNeededNumbers(SKCanvas canvas)
-        {
-            /*important: the coordinate system starts in the upper left corner*/
-            float lborder = canvas.LocalClipBounds.Left;
-            float tborder = canvas.LocalClipBounds.Top;
-            float rborder = canvas.LocalClipBounds.Right;
-            float bborder = canvas.LocalClipBounds.Bottom;
-
-            xe = rborder / 100; //using the variable surfacewidth instead would mess everything up
-            ye = bborder / 100;
-
-            // define center point for router
-            routerZ = new SKPoint(90 * xe, 50 * ye);
-            routerU = new SKPoint(10 * xe, 50 * ye);
-            routerV = new SKPoint(35 * xe, 25 * ye);
-            routerW = new SKPoint(65 * xe, 25 * ye);
-            routerX = new SKPoint(35 * xe, 75 * ye);
-            routerY = new SKPoint(65 * xe, 75 * ye);
-
-            //define points for weights
-            wUV = new SKPoint(20 * xe, 37.5f * ye);
-            wUX = new SKPoint(20 * xe, 67.5f * ye);
-            wZW = new SKPoint(80 * xe, 37.5f * ye);
-            wZY = new SKPoint(80 * xe, 67.5f * ye);
-            wVW = new SKPoint(50 * xe, 23.5f * ye);
-            wXY = new SKPoint(50 * xe, 80.5f * ye);
-            wVY = new SKPoint(41.5f * xe, 43.5f * ye);
-            wXW = new SKPoint(58.5f * xe, 43.5f * ye);
-            wVX = new SKPoint(31.5f * xe, 50 * ye);
-            wYW = new SKPoint(68.5f * xe, 50 * ye);
-            wUW = new SKPoint(10 * xe, 23.5f * ye);
-            wUY = new SKPoint(10 * xe, 80 * ye);
-            wZX = new SKPoint(90 * xe, 80 * ye);
-            wZV = new SKPoint(90 * xe, 23.5f * ye);
-
-            //define rectangles for touch
-            rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
-            rect_wUX = new SKRect(wUX.X - 50, wUX.Y - 70, wUX.X + 50, wUX.Y + 30);
-            rect_wUW = new SKRect(wUW.X - 50, wUW.Y - 70, wUW.X + 50, wUW.Y + 30);
-            rect_wUY = new SKRect(wUY.X - 50, wUY.Y - 70, wUY.X + 50, wUY.Y + 30);
-            rect_wZW = new SKRect(wZW.X - 50, wZW.Y - 70, wZW.X + 50, wZW.Y + 30);
-            rect_wZY = new SKRect(wZY.X - 50, wZY.Y - 70, wZY.X + 50, wZY.Y + 30);
-            rect_wZV = new SKRect(wZV.X - 50, wZV.Y - 70, wZV.X + 50, wZV.Y + 30);
-            rect_wZX = new SKRect(wZX.X - 50, wZX.Y - 70, wZX.X + 50, wZX.Y + 30);
-            rect_wVX = new SKRect(wVX.X - 50, wVX.Y - 70, wVX.X + 50, wVX.Y + 30);
-            rect_wVY = new SKRect(wVY.X - 50, wVY.Y - 70, wVY.X + 50, wVY.Y + 30);
-            rect_wVW = new SKRect(wVW.X - 50, wVW.Y - 70, wVW.X + 50, wVW.Y + 30);
-            rect_wXW = new SKRect(wXW.X - 50, wXW.Y - 70, wXW.X + 50, wXW.Y + 30);
-            rect_wXY = new SKRect(wXY.X - 50, wXY.Y - 70, wXY.X + 50, wXY.Y + 30);
-            rect_wYW = new SKRect(wYW.X - 50, wYW.Y - 70, wYW.X + 50, wYW.Y + 30);
-        }
+      
 
         /**********************************************************************
         *********************************************************************/
@@ -850,7 +770,7 @@ namespace WertheApp.CN
             sk_test = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
-                StrokeWidth = 5,
+                StrokeWidth = strokeWidth,
                 IsAntialias = true,
                 Color = new SKColor(67, 110, 238).WithAlpha(30)
             };
@@ -859,7 +779,7 @@ namespace WertheApp.CN
             {
                 Color = SKColors.Black,
                 Style = SKPaintStyle.StrokeAndFill,
-                TextSize = 55,
+                TextSize = xPercent(0.07f),
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
             };
@@ -868,7 +788,7 @@ namespace WertheApp.CN
             sk_RouterFill = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
-                StrokeWidth = 5,
+                StrokeWidth = strokeWidth,
                 IsAntialias = true,
                 Color = new SKColor(170, 170, 170)
             };
@@ -876,7 +796,7 @@ namespace WertheApp.CN
             sk_RouterContour = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                StrokeWidth = 5,
+                StrokeWidth = strokeWidth,
                 IsAntialias = true,
                 Color = new SKColor(100, 100, 100)
             };
@@ -885,11 +805,120 @@ namespace WertheApp.CN
             {
                 Color = SKColors.BlueViolet,
                 Style = SKPaintStyle.StrokeAndFill,
-                TextSize = 55,
+                TextSize = xPercent(0.07f),
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
             };
         }
+
+        /**********************************************************************
+       *********************************************************************/
+        static void DefineStuff(SKCanvas canvas)
+        {
+
+            // define center point for router
+            routerZ = new SKPoint(xPercent(0.9f), yPercent(0.5f));
+            routerU = new SKPoint(xPercent(0.1f), yPercent(0.5f));
+            routerV = new SKPoint(xPercent(0.35f), yPercent(0.25f));
+            routerW = new SKPoint(xPercent(0.65f), yPercent(0.25f));
+            routerX = new SKPoint(xPercent(0.35f), yPercent(0.75f));
+            routerY = new SKPoint(xPercent(0.65f), yPercent(0.75f));
+
+            wUV = new SKPoint(xPercent(0.2f), yPercent(0.375f));
+            wUX = new SKPoint(xPercent(0.2f), yPercent(0.675f));
+            wZW = new SKPoint(xPercent(0.8f), yPercent(0.375f));
+            wZY = new SKPoint(xPercent(0.8f), yPercent(0.675f));
+            wVW = new SKPoint(xPercent(0.5f), yPercent(0.235f));
+            wXY = new SKPoint(xPercent(0.5f), yPercent(0.81f));
+            wVY = new SKPoint(xPercent(0.415f), yPercent(0.435f));
+            wXW = new SKPoint(xPercent(0.585f), yPercent(0.435f));
+            wVX = new SKPoint(xPercent(0.315f), yPercent(0.5f));
+            wYW = new SKPoint(xPercent(0.685f), yPercent(0.5f));
+            wUW = new SKPoint(xPercent(0.1f), yPercent(0.235f));
+            wUY = new SKPoint(xPercent(0.1f), yPercent(0.8f));
+            wZX = new SKPoint(xPercent(0.9f), yPercent(0.8f));
+            wZV = new SKPoint(xPercent(0.9f), yPercent(0.235f));
+
+            //define rectangles for touch
+            rect_wUV = new SKRect(wUV.X - 50, wUV.Y - 70, wUV.X + 50, wUV.Y + 30);
+            rect_wUX = new SKRect(wUX.X - 50, wUX.Y - 70, wUX.X + 50, wUX.Y + 30);
+            rect_wUW = new SKRect(wUW.X - 50, wUW.Y - 70, wUW.X + 50, wUW.Y + 30);
+            rect_wUY = new SKRect(wUY.X - 50, wUY.Y - 70, wUY.X + 50, wUY.Y + 30);
+            rect_wZW = new SKRect(wZW.X - 50, wZW.Y - 70, wZW.X + 50, wZW.Y + 30);
+            rect_wZY = new SKRect(wZY.X - 50, wZY.Y - 70, wZY.X + 50, wZY.Y + 30);
+            rect_wZV = new SKRect(wZV.X - 50, wZV.Y - 70, wZV.X + 50, wZV.Y + 30);
+            rect_wZX = new SKRect(wZX.X - 50, wZX.Y - 70, wZX.X + 50, wZX.Y + 30);
+            rect_wVX = new SKRect(wVX.X - 50, wVX.Y - 70, wVX.X + 50, wVX.Y + 30);
+            rect_wVY = new SKRect(wVY.X - 50, wVY.Y - 70, wVY.X + 50, wVY.Y + 30);
+            rect_wVW = new SKRect(wVW.X - 50, wVW.Y - 70, wVW.X + 50, wVW.Y + 30);
+            rect_wXW = new SKRect(wXW.X - 50, wXW.Y - 70, wXW.X + 50, wXW.Y + 30);
+            rect_wXY = new SKRect(wXY.X - 50, wXY.Y - 70, wXY.X + 50, wXY.Y + 30);
+            rect_wYW = new SKRect(wYW.X - 50, wYW.Y - 70, wYW.X + 50, wYW.Y + 30);
+        }
+        /**********************************************************************
+        *********************************************************************/
+        // canvas
+        private static SKImageInfo info; // canvas info
+        private static float centerX, centerY, x1, x2, y1, y2; // canvas coordinates
+
+        // painting tools
+        private static float strokeWidth; // stroke Width for paint colors
+        private static void CalculateNeededVariables()
+        {
+            /*important: the coordinate system starts in the upper left corner*/
+            strokeWidth = 5;
+            centerX = info.Width / 2;
+            centerY = info.Height / 2;
+            x1 = strokeWidth / 2;
+            y1 = strokeWidth / 2;
+            x2 = info.Width - strokeWidth / 2;
+            y2 = info.Height - strokeWidth / 2;
+
+            //Debug.WriteLine(string.Format($" centerX: {centerX}, centerY {centerY}, x1: {x1}, x2: {x2}, y1: {y1}, y2: {y2}"));
+        }
+        static float xPercent(float p)
+        {
+            float percent = (info.Width - strokeWidth / 2) * p;
+            return percent;
+        }
+        static float yPercent(float p)
+        {
+            float percent = (info.Height - strokeWidth / 2) * p;
+            return percent;
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        // do the drawing
+        void PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        {
+            info = e.Info; //
+            //canvas object
+            SKSurface surface = e.Surface;
+            canvas = surface.Canvas;
+
+            //Important! Otherwise the drawing will look messed up in iOS
+            if (canvas != null) { canvas.Clear(); }
+
+            //calculate some stuff and make the paint
+            CalculateNeededVariables();
+            DefineStuff(canvas);
+            MakeSKPaint(); //depends on xe and ye and therfore has to be called after they were initialized
+
+            /*********************HERE GOES THE DRAWING************************/
+            SKRect sk_rBackground = new SKRect(x1, y1, x2, y2); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackground, sk_test); //left, top, right, bottom, color
+
+            //draw Network
+            DrawConnections();
+            DrawRouters();
+            DrawWeights();
+
+            //execute all drawing actions
+            canvas.Flush();
+        }
+
+
 
     }
 }

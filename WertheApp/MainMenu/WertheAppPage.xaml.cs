@@ -102,9 +102,10 @@ namespace WertheApp
 			//add buttons for apps
 			List<string> appNameList = new List<string>()    {
 						"Computer Networks",
+						"Operating Systems",
 						"Digital Photography",
 						"Embedded Systems",
-						"Operating Systems"
+						
 					};
 
 			buttonList = new List<Button>();
@@ -121,6 +122,12 @@ namespace WertheApp
 				b_button.Clicked += Button_Clicked;
 				stackLayout.Children.Add(b_button);
 				buttonList.Add(b_button);
+
+				// temporary fix to disable digital photography and embedded systems
+				if(b_button.Text == "Digital Photography" || b_button.Text == "Embedded Systems")
+                {
+					b_button.IsEnabled = false;
+				}
 
 			}
 

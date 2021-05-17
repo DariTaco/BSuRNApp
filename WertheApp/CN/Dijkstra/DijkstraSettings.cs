@@ -33,17 +33,11 @@ namespace WertheApp.CN
                 
                 
             };
-            //ShowMyHint();
         }
 
         //METHODS
         /**********************************************************************
         *********************************************************************/
-        public async void ShowMyHint()
-        {
-            await DisplayAlert("Hint", "You can change the weights by tapping on them", "OK");
-        }
-
         public async Task OpenPickerPopUp()
         {
             String action = await DisplayActionSheet("", "Cancel", null, "1", "2", "3", "4", "5", "6", "7", "8", "9");
@@ -54,7 +48,7 @@ namespace WertheApp.CN
         *********************************************************************/
         void CreateContent()
         {
-            //split grid in two parts (7:1)
+            //split grid in 3 parts (1:7:1)
             RowDefinitionCollection rowDefinition = new RowDefinitionCollection {
                     new RowDefinition{ Height = new GridLength(1, GridUnitType.Star)},
                     new RowDefinition{ Height = new GridLength(7, GridUnitType.Star)},
@@ -68,7 +62,6 @@ namespace WertheApp.CN
                 Button b_Start = new Button
                 {
                     Text = "Start",
-                    //WidthRequest = GetStackChildSize(),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,
@@ -82,7 +75,6 @@ namespace WertheApp.CN
                 Button b_Default = new Button
                 {
                     Text = "Default",
-                    //WidthRequest = GetStackChildSize(),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,
@@ -96,7 +88,6 @@ namespace WertheApp.CN
                 Button b_Random = new Button
                 {
                     Text = "Random",
-                    //WidthRequest = GetStackChildSize(),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,
@@ -110,7 +101,6 @@ namespace WertheApp.CN
                 Button b_Presets = new Button
                 {
                     Text = "Preset",
-                    //WidthRequest = GetStackChildSize(),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = App._buttonBackground,

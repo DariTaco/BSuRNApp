@@ -4,24 +4,24 @@
          <ScrollView x:Name="scrollView" Margin="10">
             <StackLayout>
                 <Label Text="Pipeline Protocols" FontSize="{StaticResource _H1FontSize}"/>
-                <Label Text="are sliding window protocols to handle data packets. &#10;"
+                <Label Text="are sliding window protocols that handle sending multiple data packets without waiting for the first packet in the pipeline to be acknowledged. Larger window sizes result in better performance, but can congest the network. Congestion control is essential. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="data packets" FontAttributes="Bold" FontSize="{StaticResource _TextFontSize}"/>
-                <Label Text="are sent from the sender side and ideally arrive uncorrupted at the receiver side. &#10;"
+                <Label Text="are sent from the sender side and ideally arrive uncorrupted and in order at the receicer side.&#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="acknowledgements (Acks)" FontAttributes="Bold"
                        FontSize="{StaticResource _TextFontSize}"/>
-                <Label Text="are sent from the receiver side as a reply to a received packet. Ideally, the Acks arrive uncorrupted and on time at the sender side. &#10;"
+                <Label Text="are sent back from the receiver side as a reply to a received packet.Ideally, the Ack message arrives uncorrupted, in order, and on time at the sender side. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="Selective Repeat" FontSize="{StaticResource _H2FontSize}"/>
-                <Label Text="Every sender has a seperate timer and waits for the Ack with the corresponding sequence number. &#10;"
+                <Label Text="Any sender has a seperate timer for any packet sent. Any Ack will acknowledge exactly one packet with the given sequence number. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="Go Back N" FontSize="{StaticResource _H2FontSize}"/>
-                <Label Text="All senders share a single timer and accept cumulative Acks. The receiver side always sends an Ack for the last received uncorrupted packet that matched the expected sequence number. In case of a timeout, all packets for which an Ack has not yet arrived will be resent. &#10;"
+                <Label Text="The sender shares a single timer for all packets sent. The timer simply runs for the oldest unacknowledged packet. The receiver always sends an Ack for the last uncorrupted packet that matches the expected sequence number. Out of order received packets are discarded. In case of a timeout, the sender successively resends any packet that was not acknowledged. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="Instructions" FontSize="{StaticResource _H2FontSize}"/>
