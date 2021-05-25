@@ -13,7 +13,6 @@ namespace WertheApp.OS
         private SKCanvas canvas;
         SKSurface surface;
         public SKCanvasView skiaview;
-        //private float xe, ye;
         private SKPaint sk_Paint1, sk_blackText,
             sk_BackgroundBlue, sk_BackgroundRed, sk_BackgroundYellow, sk_BackgroundGreen,
             sk_CheckMarkContour;

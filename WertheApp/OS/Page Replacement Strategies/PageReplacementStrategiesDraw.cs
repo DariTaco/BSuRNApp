@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 //Ram array explanation
 //[step, ram , 0] = pagenumber (range 0-9, -1 -> no page)
@@ -20,8 +21,10 @@ namespace WertheApp.OS
         //VARIABLES
         private static SKCanvasView skiaview;
         private static float xe, ye;
-        private static SKPaint sk_blackText, sk_blackTextSmall, sk_redTextSmall;
-        private static SKPaint sk_PaintThin, sk_PaintFat, sk_Paint1, sk_PaintRed;
+        private static SKImageInfo info; // canvas info
+
+        private static SKPaint sk_blackText, sk_blackTextNumbers, sk_blackTextSmall, sk_redTextSmall;
+        private static SKPaint sk_PaintThin, sk_PaintFat, sk_PaintWhite, sk_PaintRed, sk_PaintBlue;
         private static SKPaint sk_PaintYellow, sk_PaintPink;
         private static float rows, colums;
         private static float columnWidth, rowWidth, strokeWidth;// Width of a paint stroke
@@ -76,7 +79,7 @@ namespace WertheApp.OS
         // do the drawing
         static void PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            SKImageInfo info = e.Info;
+            info = e.Info;
             var surfaceWidth = info.Width;
             var surfaceHeight = info.Height;
             SKSurface surface = e.Surface;
@@ -107,8 +110,8 @@ namespace WertheApp.OS
             float bgDiscY2 = bgDiscY1 + (rowWidth * discSize);
             SKRect sk_rBackgroundRam = new SKRect(1 * xe, bgRamY1* ye, 99 * xe, bgRamY2 * ye); //left , top, right, bottom
             SKRect sk_rBackgroundDisc = new SKRect(1 * xe, bgDiscY1 * ye, 99 * xe, bgDiscY2 * ye); //left , top, right, bottom
-            canvas.DrawRect(sk_rBackgroundRam, sk_PaintPink); //left, top, right, bottom, color
-            canvas.DrawRect(sk_rBackgroundDisc, sk_PaintYellow);
+            canvas.DrawRect(sk_rBackgroundRam, sk_PaintYellow); //left, top, right, bottom, color
+            canvas.DrawRect(sk_rBackgroundDisc, sk_PaintPink);
 
 
             //Draw rows and colums
@@ -151,8 +154,44 @@ namespace WertheApp.OS
             float posText3 = 1 + columnCenter + columnWidth;
             foreach (var p in SequenceList)
             {
-                canvas.DrawText(p.ToString(), posText3 * xe, rowTextStart * ye, sk_blackText);
+                canvas.DrawText(p.ToString(), posText3 * xe, rowTextStart * ye, sk_blackTextNumbers);
                 posText3 += columnWidth;
+            }
+
+            //prepare a red square
+            float posPFX1 = 1 + columnWidth + (columnWidth / 6) * 1;
+            float posPFX2 = posPFX1 + (columnWidth / 6) * 4;
+            float posPFY1 = 1 + rowWidth + (rowWidth / 10) * 1;
+            float posPFY2 = posPFY1 + (rowWidth / 10) * 8;
+
+            //prepare a red circle
+            float radius = 0;
+            float cx = 1 + columnWidth + columnCenter;
+            float cy = 1 + rowWidth + rowCenter;
+            //if (rowWidth > columnWidth){ radius = columnWidth / 2.6f * xe;}
+            //else{ radius = rowWidth / 2.2f * ye;}
+            radius = xPercent(0.02f);
+
+
+            //draw pagefails
+            for (int step = 0; step <= PageReplacementStrategies.currentStep; step++)
+            {
+                if (PageReplacementStrategies.ram[step, 0, 3] == 2)
+                {
+                    //with replacement(circle)
+                    canvas.DrawCircle(cx * xe, cy * ye, radius, sk_PaintWhite); //center x, center y, radius, paint
+                    canvas.DrawCircle(cx * xe, cy * ye, radius, sk_PaintBlue); //center x, center y, radius, 
+                }
+                else if (PageReplacementStrategies.ram[step, 0, 3] == 1)
+                {
+                    //without replacement (square)
+                    SKRect sk_Pagefail = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, bottom
+                    canvas.DrawRect(sk_Pagefail, sk_PaintWhite); //left, top, right, bottom, color
+                    canvas.DrawRect(sk_Pagefail, sk_PaintBlue); //left, top, right, bottom, color
+                }
+                posPFX1 += columnWidth;
+                posPFX2 = posPFX1 + (columnWidth / 6) * 4;
+                cx += columnWidth;
             }
 
             //draw Ram: for every step thats done yet, look for pages in ram
@@ -162,7 +201,7 @@ namespace WertheApp.OS
                 for (int ram = 0; ram <= PageReplacementStrategies.ram.GetUpperBound(1); ram++){
                     int page = PageReplacementStrategies.ram[step, ram, 0];
                     if(page != -1){
-                        canvas.DrawText(page.ToString(), posXText4 * xe, posYText4 * ye, sk_blackText);
+                        canvas.DrawText(page.ToString(), posXText4 * xe, posYText4 * ye, sk_blackTextNumbers);
                     }
 
                     posYText4 += rowWidth;
@@ -180,7 +219,7 @@ namespace WertheApp.OS
                     int page = PageReplacementStrategies.disc[step, disc];
                     if (page != -1)
                     {
-                        canvas.DrawText(page.ToString(), posXText5 * xe, posYText5 * ye, sk_blackText);
+                        canvas.DrawText(page.ToString(), posXText5 * xe, posYText5 * ye, sk_blackTextNumbers);
                     }
 
                     posYText5 += rowWidth;
@@ -189,36 +228,7 @@ namespace WertheApp.OS
                 posXText5 += columnWidth;
             }
 
-            //prepare a red square
-            float posPFX1 = 1 + columnWidth + (columnWidth / 6) * 1;
-            float posPFX2 = posPFX1 + (columnWidth / 6) * 4;
-            float posPFY1 = 1 + rowWidth + (rowWidth / 10) * 1;
-            float posPFY2 = posPFY1 + (rowWidth / 10) * 8;
-
-            //prepare a red circle
-            float radius = 0; 
-            float cx = 1 + columnWidth + columnCenter;
-            float cy = 1 + rowWidth + rowCenter;
-            if (rowWidth > columnWidth){ radius = columnWidth / 2.6f * xe;}
-            else{ radius = rowWidth / 2.2f * ye;}
-
-
-            //draw pagefails
-            for (int step = 0; step <= PageReplacementStrategies.currentStep; step++){
-                if(PageReplacementStrategies.ram[step, 0, 3] == 2){
-                    //with replacement(circle)
-                    canvas.DrawCircle(cx * xe, cy * ye, radius, sk_PaintRed); //center x, center y, radius, paint
-                }
-                else if(PageReplacementStrategies.ram[step, 0, 3] == 1){
-                    //without replacement (square)
-                    SKRect sk_Pagefail = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, bottom
-                    canvas.DrawRect(sk_Pagefail, sk_PaintRed); //left, top, right, bottom, color
-                }
-                posPFX1 += columnWidth;
-                posPFX2 = posPFX1 + (columnWidth / 6) * 4;
-                cx += columnWidth;
-            }
-
+           
             //draw M-Bits and R-Bits
             float posXMbit = 1 + columnWidth + columnCenter - columnCenter / 2;
             float posYMbit = 1 + rowWidth + rowCenter + rowCenter / 2 ;
@@ -263,13 +273,12 @@ namespace WertheApp.OS
         static private void MakeSKPaint()
         {
   
-            sk_Paint1 = new SKPaint
+            sk_PaintWhite = new SKPaint
             {
-                Style = SKPaintStyle.Stroke,
-                //IsStroke = true, //indicates whether to paint the stroke or the fill
-                StrokeWidth = 5,
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = strokeWidth,
                 IsAntialias = true,
-                Color = new SKColor(0, 0, 0) //black
+                Color = new SKColor(255, 255, 255) //white
             };
 
             sk_PaintThin = new SKPaint
@@ -296,11 +305,21 @@ namespace WertheApp.OS
             sk_blackText = new SKPaint
             {
                 Color = SKColors.Black,
-                TextSize = ye * textSize,
+                TextSize = xPercent(0.02f),
                 IsAntialias =true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center
                 
+            };
+            //black neutral text
+            sk_blackTextNumbers = new SKPaint
+            {
+                Color = SKColors.Black,
+                TextSize = xPercent(0.03f),
+                IsAntialias = true,
+                IsStroke = false,
+                TextAlign = SKTextAlign.Center
+
             };
 
             //black small text
@@ -346,6 +365,14 @@ namespace WertheApp.OS
                 StrokeWidth = strokeWidth * xe,
                 IsAntialias = true,
 
+            };
+
+            sk_PaintBlue = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = strokeWidth,
+                IsAntialias = true,
+                Color = new SKColor(67, 110, 238).WithAlpha(50)
             };
         }
 
@@ -418,6 +445,19 @@ namespace WertheApp.OS
                 s += ", " + p;
             }
             //Debug.WriteLine(s);
+        }
+        static float xText(float p)
+        {
+
+            float percent = ((float)info.Height * (float)info.Width) * (p / 1000.0f);
+            Debug.WriteLine((float)info.Height * (float)info.Width);
+            Debug.WriteLine(percent);
+            return percent;
+        }
+        static float xPercent(float p)
+        {
+            float percent = (info.Width - 5 / 2) * p;
+            return percent;
         }
     }
 }
