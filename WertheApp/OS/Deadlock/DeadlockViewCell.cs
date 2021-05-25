@@ -256,16 +256,26 @@ namespace WertheApp.OS
             float x2Backg = 0.32f;
             float y1Backg = 0.22f;
             float stepBackg = 0.20f;
+            float xstepBackg = 0.024f;
+
 
             //Draw blue background
-            SKRect sk_rBackground = new SKRect(xPercent(x1Backg), yPercent(y1Backg),xPercent(x2Backg), yPercent(y1Backg) + yPercent(stepBackg)); //left , top, right, bottom
+            SKRect sk_rBackground = new SKRect(
+                xPercent(x1Backg),
+                yPercent(y1Backg),
+                xPercent(x1Backg) + xText(0.2f) + vectorC.Length * xText(0.05f),
+                yPercent(y1Backg) + yPercent(stepBackg)); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground, sk_BackgroundBlue); //left, top, right, bottom, color
             //Vector E
             SKPoint textPosition = new SKPoint(xPercent(startx), yPercent(starty) + yPercent(step));
             canvas.DrawText(textE, textPosition, sk_blackText);
 
             //Draw red background
-            SKRect sk_rBackground2 = new SKRect(xPercent(x1Backg), yPercent(y1Backg) + yPercent(stepBackg), xPercent(x2Backg), yPercent(y1Backg) + yPercent(stepBackg * 2)); //left , top, right, bottom
+            SKRect sk_rBackground2 = new SKRect(
+                xPercent(x1Backg),
+                yPercent(y1Backg) + yPercent(stepBackg),
+                xPercent(x1Backg) + xText(0.2f) + vectorC.Length * xText(0.05f),
+                yPercent(y1Backg) + yPercent(stepBackg * 2)); //left , top, right, bottom
             this.canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
             //Vector B
             SKPoint textPosition2 = new SKPoint(xPercent(startx), yPercent(starty) + yPercent(step * 2));
@@ -278,7 +288,11 @@ namespace WertheApp.OS
             */
 
             //Draw green background
-            SKRect sk_rBackground4 = new SKRect(xPercent(x1Backg), yPercent(y1Backg) + yPercent(stepBackg * 2), xPercent(x2Backg), yPercent(y1Backg) + yPercent(stepBackg * 3)); //left , top, right, bottom
+            SKRect sk_rBackground4 = new SKRect(
+                xPercent(x1Backg),
+                yPercent(y1Backg) + yPercent(stepBackg * 2),
+                xPercent(x1Backg) + xText(0.2f) + vectorC.Length * xText(0.05f),
+                yPercent(y1Backg) + yPercent(stepBackg * 3)); //left , top, right, bottom
             this.canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
             //Vector A
             SKPoint textPosition4 = new SKPoint(xPercent(startx), yPercent(starty) + yPercent(step * 3));
@@ -290,15 +304,20 @@ namespace WertheApp.OS
         public void DrawBusyProcesses(SKCanvas canvas)
         {
 
-            //Draw red background
-            SKRect sk_rBackground = new SKRect(xPercent(0.64f), yPercent(0.02f), xPercent(0.92f), yPercent(0.98f)); //left , top, right, bottom
-            canvas.DrawRect(sk_rBackground, sk_BackgroundRed); //left, top, right, bottom, color
-
             //Busy Processes
             //int startx = 35;
             float startx = 0.65f;
             float starty = 0.13f;
             float step = 0.20f;
+
+            //Draw red background
+            SKRect sk_rBackground = new SKRect(
+                xPercent(0.64f),
+                yPercent(0.02f),
+                xPercent(0.64f) + xText(0.28f) + vectorC.Length * xText(0.05f),
+                yPercent(0.98f)); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackground, sk_BackgroundRed); //left, top, right, bottom, color
+
             String textBusy = "";
             for (int i = 0; i < this.totalProcesses; i++)
             {
@@ -388,16 +407,20 @@ namespace WertheApp.OS
         *********************************************************************/
         public void DrawUpcomingProcesses(SKCanvas canvas)
         {
-
-            //Draw yellow background
-            SKRect sk_rBackground = new SKRect(xPercent(0.34f), yPercent(0.02f), xPercent(0.62f), yPercent(0.98f)); //left , top, right, bottom
-            canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
-
             //Upcoming Processes
             //int startx = 65;
-            float startx = 0.35f;
+            float startx = 0.32f;
             float starty = 0.13f;
             float step = 0.20f;
+    
+
+            //Draw yellow background
+            SKRect sk_rBackground = new SKRect(
+                xPercent(0.31f),
+                yPercent(0.02f),
+                xPercent(0.31f) + xText(0.28f) + vectorC.Length * xText(0.05f),
+                yPercent(0.98f)); //left , top, right, bottom
+            canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
 
             String textUpcoming = "";
             for (int i = 0; i < totalProcesses; i++)
@@ -513,6 +536,7 @@ namespace WertheApp.OS
             float x2Backg = 0.32f;
             float y1Backg = 0.10f;
             float stepBackg = 0.20f;
+            float xstepBackg = 0.024f;
 
             // vectors to display
             String oldVA = "";
@@ -539,13 +563,12 @@ namespace WertheApp.OS
 
             //Draw green background
             SKRect sk_rBackground0 = new SKRect(
-                xPercent(x1Backg),
+                xPercent(x1Backg) ,
                 yPercent(y1Backg),
-                xPercent(x2Backg),
+                xPercent(x1Backg) + xText(0.28f) + vectorC.Length * xText(0.05f),
                 yPercent(y1Backg) + yPercent(stepBackg)); //left , top, right, bottom
-
-
             canvas.DrawRect(sk_rBackground0, sk_BackgroundGreen); //left, top, right, bottom, color
+
             // Aold
             SKPoint textPosition0 = new SKPoint(
                 xPercent(startx),
@@ -556,7 +579,7 @@ namespace WertheApp.OS
             SKRect sk_rBackground = new SKRect(
                 xPercent(x1Backg),
                 yPercent(y1Backg) + yPercent(stepBackg),
-                xPercent(x2Backg),
+                xPercent(x1Backg) + xText(0.28f) + vectorC.Length * xText(0.05f),
                 yPercent(y1Backg) + yPercent(stepBackg * 2)); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground, sk_BackgroundYellow); //left, top, right, bottom, color
             // C(x)
@@ -569,7 +592,7 @@ namespace WertheApp.OS
             SKRect sk_rBackground2 = new SKRect(
                 xPercent(x1Backg),
                 yPercent(y1Backg) + yPercent(stepBackg * 2),
-                xPercent(x2Backg),
+                xPercent(x1Backg) + xText(0.28f) + vectorC.Length * xText(0.05f),
                 yPercent(y1Backg)+ yPercent(stepBackg * 3)); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground2, sk_BackgroundRed); //left, top, right, bottom, color
             // B(x)
@@ -582,7 +605,7 @@ namespace WertheApp.OS
             SKRect sk_rBackground4 = new SKRect(
                 xPercent(x1Backg),
                 yPercent(y1Backg) + yPercent(stepBackg * 3),
-                xPercent(x2Backg),
+                xPercent(x1Backg) + xText(0.28f) + vectorC.Length * xText(0.05f),
                 yPercent(y1Backg) + yPercent(stepBackg * 4)); //left , top, right, bottom
             canvas.DrawRect(sk_rBackground4, sk_BackgroundGreen); //left, top, right, bottom, color
             // Anew
