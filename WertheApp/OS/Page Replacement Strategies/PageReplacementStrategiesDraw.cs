@@ -372,7 +372,7 @@ namespace WertheApp.OS
                 Style = SKPaintStyle.Fill,
                 StrokeWidth = strokeWidth,
                 IsAntialias = true,
-                Color = new SKColor(67, 110, 238).WithAlpha(50)
+                Color = new SKColor(67, 110, 238).WithAlpha(80)
             };
         }
 

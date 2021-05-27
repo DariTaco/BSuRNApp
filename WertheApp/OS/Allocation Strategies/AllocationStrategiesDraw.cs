@@ -18,7 +18,7 @@ namespace WertheApp.OS.AllocationStrategies
 
         // painting tools
         private static float strokeWidth; // stroke Width for paint colors
-        private static SKPaint sk_Background, sk_Black, sk_Text,
+        private static SKPaint sk_Background, sk_Black, sk_Text, sk_TextWhite, sk_TextUsed,
             sk_ArrowRed, sk_ArrowGray, sk_UsedSpace; //paint colorssk
        
 
@@ -132,6 +132,7 @@ namespace WertheApp.OS.AllocationStrategies
                 else
                 {
                     // draw size of fragment beneath the memory
+                    //canvas.DrawText(fragmentSize, xPercent(xText), yPercent(0.8f), sk_TextWhite);
                     canvas.DrawText(fragmentSize, xPercent(xText), yPercent(0.8f), sk_Text);
 
                     // fill in used space
@@ -144,7 +145,9 @@ namespace WertheApp.OS.AllocationStrategies
             SKRect sk_memory = new SKRect(xPercent(mX1), yPercent(mY1), xPercent(mX2), yPercent(mY2));
             canvas.DrawRect(sk_memory, sk_Black);
             canvas.DrawText("free", xPercent(0.05f), yPercent(0.5f), sk_Text);
+            //canvas.DrawText("used", xPercent(0.05f), yPercent(0.8f), sk_TextWhite);
             canvas.DrawText("used", xPercent(0.05f), yPercent(0.8f), sk_Text);
+
             return relativeFragmentSize;
         }
 
@@ -270,11 +273,32 @@ namespace WertheApp.OS.AllocationStrategies
                 TextSize = yPercent(0.07f)
             };
 
+
+            sk_TextWhite = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = Color.White.ToSKColor(),
+                TextAlign = SKTextAlign.Center,
+                StrokeWidth = strokeWidth,
+                TextSize = yPercent(0.07f)
+            };
+
+            sk_TextUsed = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = new SKColor(67, 110, 238).WithAlpha(150),//blue
+                TextAlign = SKTextAlign.Center,
+                StrokeWidth = strokeWidth,
+                TextSize = yPercent(0.07f)
+            };
+
             sk_UsedSpace = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
                 IsAntialias = true,
-                Color = Color.Gray.ToSKColor(),
+                //Color = Color.Gray.ToSKColor(),
+                Color = new SKColor(67, 110, 238).WithAlpha(80),//blue
+                //Color = new SKColor(238, 130, 238).WithAlpha(80), //red
                 StrokeWidth = yPercent(0.01f)
             };
         }

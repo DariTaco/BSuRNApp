@@ -18,7 +18,6 @@ namespace WertheApp.iOS
         {
             global::Xamarin.Forms.Forms.Init();
 
-            LoadApplication(new App());
 
             // Subscribe to Screen Orientation Messages
             MessagingCenter.Subscribe<object>(this, "Portrait", sender => {
@@ -30,6 +29,9 @@ namespace WertheApp.iOS
             MessagingCenter.Subscribe<object>(this, "Unspecified", sender => {
                 UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)(UIInterfaceOrientation.Unknown)), new NSString("orientation"));
             });
+
+            LoadApplication(new App());
+
             return base.FinishedLaunching(app, options);
         }
     }

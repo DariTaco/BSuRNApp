@@ -8,7 +8,8 @@
 
                 <Label x:Name="l_version" Text="{Binding currentVersion, StringFormat='The current version is {0:F0} &#10;'}" FontSize="{StaticResource _H4FontSize}"/>
 
-                <Label Text="&#10;&#x2022; WertheApp 1.6.25: Page Replacement Strtegies device responsive and colors "
+
+                <Label Text="&#10;&#x2022; WertheApp 1.7: new App Store release, Page Replacement Strategies, Allocation Strategies and Deadlock improvements"
                        FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="&#x2022; WertheApp 1.6.24: Deadlock device responsive "
                        FontSize="{StaticResource _TextFontSize}"/>

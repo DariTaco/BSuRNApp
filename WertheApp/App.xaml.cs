@@ -2,6 +2,7 @@
 using Xamarin.Forms;
 using System.Diagnostics;
 
+
 namespace WertheApp
 {
     public partial class App : Application
@@ -144,5 +145,9 @@ namespace WertheApp
         {
             // Handle when your app resumes
         }
+
+        // notch
+
+
     }
 }

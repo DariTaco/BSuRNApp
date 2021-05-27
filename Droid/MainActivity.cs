@@ -39,6 +39,11 @@ namespace WertheApp.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            // Subscribe to Screen Orientation Messages
+            MessagingCenter.Subscribe<object>(this, "Portrait", sender => { RequestedOrientation = ScreenOrientation.Portrait; });
+            MessagingCenter.Subscribe<object>(this, "Unspecified", sender => { RequestedOrientation = ScreenOrientation.User; });
+            MessagingCenter.Subscribe<object>(this, "Landscape", sender => { RequestedOrientation = ScreenOrientation.Landscape; });
+
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
@@ -48,14 +53,8 @@ namespace WertheApp.Droid
             FirebaseApp.InitializeApp(this);
             AndroidAppLinks.Init(this);
 
-
             LoadApplication(new App());
 
-            // Subscribe to Screen Orientation Messages
-            MessagingCenter.Subscribe<object>(this, "Portrait", sender => { RequestedOrientation = ScreenOrientation.Portrait; });
-            MessagingCenter.Subscribe<object>(this, "Unspecified", sender => { RequestedOrientation = ScreenOrientation.FullSensor; });
-            MessagingCenter.Subscribe<object>(this, "Landscape", sender => { RequestedOrientation = ScreenOrientation.Landscape; });
-          
         }
     }
 

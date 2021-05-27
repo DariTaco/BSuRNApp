@@ -7,6 +7,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS
 {
 
@@ -15,7 +18,7 @@ namespace WertheApp.OS
         //VARIABLES
         private static Button b_undo, b_restart;
         private static Label l_info;
-        public static ListView listView;
+        public static Xamarin.Forms.ListView listView;
         public static ObservableCollection<DeadlockViewCell> deadlockCells; // deadlock canvas
         public static int cellNumber;
 
@@ -51,6 +54,11 @@ namespace WertheApp.OS
             info.Clicked += B_Info_Clicked;
 
             Title = "Deadlock";
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
+
 
             currentStep = -1;
             exResDict = d; //exResDict["dvd"]
@@ -128,7 +136,7 @@ namespace WertheApp.OS
         *********************************************************************/
         void CreateTopHalf(Grid grid)
         {
-            listView = new ListView
+            listView = new Xamarin.Forms.ListView
             {
                 ItemTemplate = new DataTemplate(typeof(DeadlockViewCell)),
                 RowHeight = 200,
@@ -277,15 +285,15 @@ namespace WertheApp.OS
                 b_undo.IsEnabled = false;
             }
 
-            Debug.WriteLine("count in observable collection" + deadlockCells.Count());
+            //Debug.WriteLine("count in observable collection" + deadlockCells.Count());
             deadlockCells.Last().Paint();
 
             //TODO: enable touch sensitiveness 
-            Debug.WriteLine("current step" + currentStep);
+            //Debug.WriteLine("current step" + currentStep);
             deadLockViewCellTouchableList[currentStep+1] = true;
             deadLockViewCellCansvasList[currentStep+1].EnableTouchEvents = true;
 
-            Debug.WriteLine("dvtl count = " + deadLockViewCellTouchableList.Count);
+            //Debug.WriteLine("dvtl count = " + deadLockViewCellTouchableList.Count);
 
         }
 
@@ -559,7 +567,23 @@ namespace WertheApp.OS
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send<object>(this, "Landscape"); // enforce landscape mode
+
+            Debug.WriteLine("   ");
+            Debug.WriteLine(Device.Idiom.ToString());
+            Debug.WriteLine("   ");
+
+            if (Device.Idiom == TargetIdiom.Tablet)
+            {
+                MessagingCenter.Send<object>(this, "Portrait"); 
+
+            }
+            else
+            {
+                MessagingCenter.Send<object>(this, "Landscape"); 
+
+            }
+
+
 
             // App Linking
             Uri appLinkUri = new Uri(string.Format(App.AppLinkUri, Title).Replace(" ", "_"));
@@ -572,18 +596,18 @@ namespace WertheApp.OS
                 Thumbnail = ImageSource.FromResource("WertheApp.png")
 
             };
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             MessagingCenter.Send<object>(this, "Unspecified");  // undo enforcing landscape mode
-
+            Debug.WriteLine("on disappearing");
 
             // App Linking
             _appLink.IsLinkActive = false;
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
         /**********************************************************************
         *********************************************************************/
