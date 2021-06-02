@@ -7,9 +7,9 @@
 	<key>CFBundleName</key>
 	<string>WertheApp</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.7</string>
+	<string>1.7.1</string>
 	<key>CFBundleVersion</key>
-	<string>1.7</string>
+	<string>1.7.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
@@ -34,6 +34,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>WertheLaunchScreen</string>

@@ -81,9 +81,25 @@ namespace WertheApp.OS
             var vectorLabelSize = 120;
 
             //EXISTING RESOURCES
-            var l_resourcesExisting = new Label { Text = "Existing Resources ",
+            var formattedStringExisting = new FormattedString();
+            formattedStringExisting.Spans.Add(new Span
+            {
+                Text = "E",
+                ForegroundColor = Color.Blue,
+                FontAttributes = FontAttributes.Bold,
                 FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center
+
+            });
+            formattedStringExisting.Spans.Add(new Span
+            {
+                Text = "xisting Resources ",
+                TextDecorations = TextDecorations.Underline
+            });
+            var l_resourcesExisting = new Label {
+                FormattedText = formattedStringExisting,
+                FontSize = App._h3FontSize,
+                VerticalOptions = LayoutOptions.Center,
+                TextDecorations = TextDecorations.Underline
             };
             stackLayout.Children.Add(l_resourcesExisting);
 
@@ -126,7 +142,8 @@ namespace WertheApp.OS
             {
                 Text = "Running Processes",
                 FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                TextDecorations = TextDecorations.Underline
             };
             p_runningprocesses = new Picker() { FontSize = App._textFontSize };
             for (int i = 2; i < 6; i++)
@@ -144,11 +161,26 @@ namespace WertheApp.OS
 
             // BUSY
             StackLayout stackLayoutBusy = new StackLayout { Orientation = StackOrientation.Horizontal };
+            var formattedStringBusy = new FormattedString();
+            formattedStringBusy.Spans.Add(new Span
+            {
+                Text = "B",
+                ForegroundColor = Color.Red,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = App._h3FontSize,
+
+            });
+            formattedStringBusy.Spans.Add(new Span
+            {
+                Text = "usy Resources ",
+                TextDecorations = TextDecorations.Underline
+            });
             var l_resourcesBusy = new Label
             {
-                Text = "Busy Resources ",
+                FormattedText = formattedStringBusy,
                 FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                TextDecorations = TextDecorations.Underline
             };
             var b_ClearBusy = new Button {
                 Text = "Clear",
@@ -195,9 +227,32 @@ namespace WertheApp.OS
 
             //upcomingVectorC REQUESTS
             StackLayout stackLayoutUpcoming = new StackLayout { Orientation = StackOrientation.Horizontal };
-            var l_upcoming = new Label { Text = "Upcoming Requests ",
+            //TODO
+            
+            var formattedStringUpComing = new FormattedString();
+            formattedStringUpComing.Spans.Add(new Span{
+                Text = "Up",
+                TextDecorations = TextDecorations.Underline });
+            formattedStringUpComing.Spans.Add(new Span {
+                Text = "c",
+                ForegroundColor = Color.Orange,
+                FontAttributes = FontAttributes.Bold,
                 FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center
+          
+            });
+            formattedStringUpComing.Spans.Add(new Span {
+                Text = "oming Requests ",
+                TextDecorations = TextDecorations.Underline
+            });
+            
+
+            /*  Text = "<u> Up<span style=\"color:orange\">c</span>oming Requests </u>",
+                TextType = TextType.Html,*/
+            var l_upcoming = new Label {
+                FormattedText = formattedStringUpComing,
+                FontSize = App._h3FontSize,
+                VerticalOptions = LayoutOptions.Center,
+                TextDecorations = TextDecorations.Underline
             };
             stackLayoutUpcoming.Children.Add(l_upcoming);
 

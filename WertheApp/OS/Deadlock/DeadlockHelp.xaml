@@ -7,36 +7,36 @@
                 <Label Text="Find out if any process Pi can finish their job or a deadlock occurs permanently. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="vektor E " FontAttributes="Bold" TextColor="Blue"
+                <Label Text="vector E " FontAttributes="Bold" TextColor="Blue"
                        FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="holds numbers of existing resources of different types. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 
-                <Label Text="vektor B(Pi) " FontAttributes="Bold" TextColor="Red"
+                <Label Text="vector B(Pi) " FontAttributes="Bold" TextColor="Red"
                        FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="holds numbers of resources already in use (type-wise of process Pi). &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 
-                <Label Text="vektor B" FontAttributes="Bold" TextColor="Red"
+                <Label Text="vector B" FontAttributes="Bold" TextColor="Red"
                        FontSize="{StaticResource _TextFontSize}"/>
-                <Label Text="holds sums of any vektor B(Pi) numbers. &#10;"
+                <Label Text="holds sums of any vector B(Pi) numbers. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 
-                <Label Text="vektor A" FontAttributes="Bold" TextColor="Green"
+                <Label Text="vector A" FontAttributes="Bold" TextColor="Green"
                        FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="holds numbers of remaining available resources (type-wise). A = E - B at any time. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
-                <Label Text="vektor C(Pi)" FontAttributes="Bold" TextColor="Orange"
+                <Label Text="vector C(Pi)" FontAttributes="Bold" TextColor="Orange"
                        FontSize="{StaticResource _TextFontSize}"/>
                 <Label Text="holds numbers of upcoming requests of resources (type-wise of process Pi). &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="Instructions" FontSize="{StaticResource _H2FontSize}"/>
-                <Label Text="Click on a vektor in C to pick a process Pi and see if Pi can or cannot finish with the resources available in A. Repeat this until all processes have finished, or a deadlock happens. &#10;"
+                <Label Text="Click on a vector in C to pick a process Pi and see if Pi can or cannot finish with the resources available in A. Repeat this until all processes have finished, or a deadlock happens. &#10;"
                        FontSize="{StaticResource _TextFontSize}"/>
 
                 <Label Text="If a deadlock occurs, it will not be possible to find another sequence to finish all remaining processes successfully. &#10;"
