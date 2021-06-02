@@ -114,29 +114,7 @@ namespace WertheApp.OS
             canvas.DrawRect(sk_rBackgroundDisc, sk_PaintPink);
 
 
-            //Draw rows and colums
-            float posCol = 1;
-            for (int i = 0; i <= colums ; i++){
-                if(i == 0 || i == 1 || i == colums )
-                { //first, second and last line is fat
-                    canvas.DrawLine(new SKPoint(posCol * xe, 1 * ye), new SKPoint(posCol * xe, 99 * ye), sk_PaintFat);
-                }
-                else{
-                    canvas.DrawLine(new SKPoint(posCol * xe, 1 * ye), new SKPoint(posCol * xe, 99 * ye), sk_PaintThin);
-                }
-                posCol += columnWidth;
-            }
-            float posRow = 1;
-            for (int i = 0; i <= rows ; i++){
-                if(i == 0 || i == 1 || i == rows || i == ramSize + 1)
-                { //first, second and last line is fat, also the seperating line between ram and disc
-                    canvas.DrawLine(new SKPoint(1 * xe, posRow * ye), new SKPoint(99 * xe, posRow * ye), sk_PaintFat);
-                }
-                else{
-                    canvas.DrawLine(new SKPoint(1 * xe, posRow * ye), new SKPoint(99 * xe, posRow * ye), sk_PaintThin);
-                }
-                posRow += rowWidth;
-            }
+
 
             //draw the words RAM and DISC
             float posText1 = rowTextStart + rowWidth;
@@ -158,19 +136,19 @@ namespace WertheApp.OS
                 posText3 += columnWidth;
             }
 
-            //prepare a red square
-            float posPFX1 = 1 + columnWidth + (columnWidth / 6) * 1;
-            float posPFX2 = posPFX1 + (columnWidth / 6) * 4;
-            float posPFY1 = 1 + rowWidth + (rowWidth / 10) * 1;
-            float posPFY2 = posPFY1 + (rowWidth / 10) * 8;
+            //prepare a square
+            float posPFX1 = 1 + columnWidth;// 1 + columnWidth + (columnWidth / 6) * 1;
+            float posPFX2 = posPFX1 + columnWidth;// posPFX1 + (columnWidth / 6) * 4;
+            float posPFY1 = 1 + rowWidth; //1 + rowWidth + (rowWidth / 10) * 1;
+            float posPFY2 = posPFY1 + rowWidth;// posPFY1 + (rowWidth / 10) * 8;
 
-            //prepare a red circle
+            //prepare a circle
             float radius = 0;
             float cx = 1 + columnWidth + columnCenter;
             float cy = 1 + rowWidth + rowCenter;
             //if (rowWidth > columnWidth){ radius = columnWidth / 2.6f * xe;}
             //else{ radius = rowWidth / 2.2f * ye;}
-            radius = xPercent(0.02f);
+            radius = xPercent(0.025f);
 
 
             //draw pagefails
@@ -185,12 +163,13 @@ namespace WertheApp.OS
                 else if (PageReplacementStrategies.ram[step, 0, 3] == 1)
                 {
                     //without replacement (square)
-                    SKRect sk_Pagefail = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, bottom
+                    //SKRect sk_Pagefail = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, bottom
+                    SKRect sk_Pagefail = new SKRect(posPFX1 * xe, posPFY1 * ye, posPFX2 * xe, posPFY2 * ye); //left , top, right, 
                     canvas.DrawRect(sk_Pagefail, sk_PaintWhite); //left, top, right, bottom, color
                     canvas.DrawRect(sk_Pagefail, sk_PaintBlue); //left, top, right, bottom, color
                 }
                 posPFX1 += columnWidth;
-                posPFX2 = posPFX1 + (columnWidth / 6) * 4;
+                posPFX2 = posPFX1 + columnWidth;// posPFX1 + (columnWidth / 6) * 4;
                 cx += columnWidth;
             }
 
@@ -262,6 +241,33 @@ namespace WertheApp.OS
 
             }
 
+            //Draw rows and colums
+            float posCol = 1;
+            for (int i = 0; i <= colums; i++)
+            {
+                if (i == 0 || i == 1 || i == colums)
+                { //first, second and last line is fat
+                    canvas.DrawLine(new SKPoint(posCol * xe, 1 * ye), new SKPoint(posCol * xe, 99 * ye), sk_PaintFat);
+                }
+                else
+                {
+                    canvas.DrawLine(new SKPoint(posCol * xe, 1 * ye), new SKPoint(posCol * xe, 99 * ye), sk_PaintThin);
+                }
+                posCol += columnWidth;
+            }
+            float posRow = 1;
+            for (int i = 0; i <= rows; i++)
+            {
+                if (i == 0 || i == 1 || i == rows || i == ramSize + 1)
+                { //first, second and last line is fat, also the seperating line between ram and disc
+                    canvas.DrawLine(new SKPoint(1 * xe, posRow * ye), new SKPoint(99 * xe, posRow * ye), sk_PaintFat);
+                }
+                else
+                {
+                    canvas.DrawLine(new SKPoint(1 * xe, posRow * ye), new SKPoint(99 * xe, posRow * ye), sk_PaintThin);
+                }
+                posRow += rowWidth;
+            }
 
             //execute all drawing actions
             canvas.Flush();

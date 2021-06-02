@@ -127,8 +127,7 @@ namespace WertheApp.OS
                 Text = "A = (    " + freeResourceVectorA + "    )",
                 TextColor = Color.Green,
                 FontSize = App._h4FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center
             };
 
             var l_Space0 = new Label { Text = " " };
@@ -225,9 +224,14 @@ namespace WertheApp.OS
             var l_Space4 = new Label { Text = " " };
             stackLayout.Children.Add(l_Space4);
 
+            stackLayout.Children.Add(l_freeResourceVectorA); 
+            var l_Space77 = new Label { Text = " " };
+            stackLayout.Children.Add(l_Space77); 
+
+
             //upcomingVectorC REQUESTS
             StackLayout stackLayoutUpcoming = new StackLayout { Orientation = StackOrientation.Horizontal };
-            //TODO
+           
             
             var formattedStringUpComing = new FormattedString();
             formattedStringUpComing.Spans.Add(new Span{

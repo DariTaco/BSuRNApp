@@ -235,9 +235,9 @@ namespace WertheApp.OS
         {
             //Fromat text
             String textE = "   E = ( ";
-            String textB = " - B = ( ";
+            String textB = "   B = ( ";
             String textC = "C = ( ";
-            String textA = "= A = ( ";
+            String textA = "   A = ( ";
             String space = "  ";
             for (int i = 0; i < vectorE.Length; i++)
             {
