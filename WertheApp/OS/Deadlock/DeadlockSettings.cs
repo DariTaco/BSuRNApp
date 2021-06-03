@@ -92,7 +92,7 @@ namespace WertheApp.OS
             });
             formattedStringExisting.Spans.Add(new Span
             {
-                Text = "xisting Resources ",
+                Text = "xisting Resources",
                 TextDecorations = TextDecorations.Underline
             });
             var l_resourcesExisting = new Label {
@@ -119,21 +119,16 @@ namespace WertheApp.OS
             stackLayoutVectorE.Children.Add(l_resourceVectorE);
             stackLayout.Children.Add(stackLayoutVectorE);
 
-            //VECTOR A
-            StackLayout stackLayoutVectorA = new StackLayout { Orientation = StackOrientation.Horizontal };
-            freeResourceVectorA = "2    2    3";
-            l_freeResourceVectorA = new Label
-            {
-                Text = "A = (    " + freeResourceVectorA + "    )",
-                TextColor = Color.Green,
-                FontSize = App._h4FontSize,
-                VerticalOptions = LayoutOptions.Center
-            };
-
             var l_Space0 = new Label { Text = " " };
             stackLayout.Children.Add(l_Space0);
 
             StackLayout stackLayout2 = new StackLayout { Orientation = StackOrientation.Horizontal };
+
+
+
+
+
+
 
             //RUNNING PROCESSES
             var sl_runningProcesses = new StackLayout() { Orientation = StackOrientation.Horizontal };
@@ -171,7 +166,7 @@ namespace WertheApp.OS
             });
             formattedStringBusy.Spans.Add(new Span
             {
-                Text = "usy Resources ",
+                Text = "usy Resources",
                 TextDecorations = TextDecorations.Underline
             });
             var l_resourcesBusy = new Label
@@ -224,6 +219,42 @@ namespace WertheApp.OS
             var l_Space4 = new Label { Text = " " };
             stackLayout.Children.Add(l_Space4);
 
+            //Available Resources
+            var formattedStringAvailable = new FormattedString();
+            formattedStringAvailable.Spans.Add(new Span
+            {
+                Text = "A",
+                ForegroundColor = Color.Green,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = App._h3FontSize,
+
+            });
+            formattedStringAvailable.Spans.Add(new Span
+            {
+                Text = "vailable Resources",
+                TextDecorations = TextDecorations.Underline
+            });
+            var l_resourcesAvailable = new Label
+            {
+                FormattedText = formattedStringAvailable,
+                FontSize = App._h3FontSize,
+                VerticalOptions = LayoutOptions.Center,
+                TextDecorations = TextDecorations.Underline
+            };
+
+
+            //VECTOR A
+            StackLayout stackLayoutVectorA = new StackLayout { Orientation = StackOrientation.Horizontal };
+            freeResourceVectorA = "2    2    3";
+            l_freeResourceVectorA = new Label
+            {
+                Text = "A = (    " + freeResourceVectorA + "    )",
+                TextColor = Color.Green,
+                FontSize = App._h4FontSize,
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            stackLayout.Children.Add(l_resourcesAvailable);
             stackLayout.Children.Add(l_freeResourceVectorA); 
             var l_Space77 = new Label { Text = " " };
             stackLayout.Children.Add(l_Space77); 

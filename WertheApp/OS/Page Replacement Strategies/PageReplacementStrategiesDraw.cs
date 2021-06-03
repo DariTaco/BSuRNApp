@@ -53,6 +53,8 @@ namespace WertheApp.OS
             columnCenter = columnWidth / 2;
             rowCenter = rowWidth / 2;
 
+            //TODO
+
             // crate the canvas
             skiaview = new SKCanvasView();
             skiaview.PaintSurface += PaintSurface;
@@ -210,9 +212,9 @@ namespace WertheApp.OS
            
             //draw M-Bits and R-Bits
             float posXMbit = 1 + columnWidth + columnCenter - columnCenter / 2;
-            float posYMbit = 1 + rowWidth + rowCenter + rowCenter / 2 ;
+            float posYMbit = 2 + rowWidth + rowCenter + rowCenter / 2 ;
             float posXRbit = 1 + columnWidth + columnCenter - columnCenter / 2;
-            float posYRbit = 1 + rowWidth + rowCenter - rowCenter / 2 ;
+            float posYRbit = 2 + rowWidth + rowCenter - rowCenter / 2 ;
             if (PageReplacementStrategies.strategy == "RNU FIFO Second Chance" || PageReplacementStrategies.strategy == "RNU FIFO"){
                 for (int step = 0; step <= PageReplacementStrategies.currentStep; step++){
                     for (int ram = 0; ram <= PageReplacementStrategies.ram.GetUpperBound(1); ram++){
@@ -235,8 +237,8 @@ namespace WertheApp.OS
                     }
                     posXMbit += columnWidth;
                     posXRbit += columnWidth;
-                    posYMbit = 1 + rowWidth + rowCenter + rowCenter / 2;
-                    posYRbit = 1 + rowWidth + rowCenter - rowCenter / 2;
+                    posYMbit = 2 + rowWidth + rowCenter + rowCenter / 2;
+                    posYRbit = 2 + rowWidth + rowCenter - rowCenter / 2;
                 }
 
             }
