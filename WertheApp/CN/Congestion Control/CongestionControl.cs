@@ -2,6 +2,10 @@
 using Xamarin.Forms;
 using SkiaSharp.Views.Forms;
 
+
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.CN
 {
     public class CongestionControl : ContentPage
@@ -90,6 +94,10 @@ namespace WertheApp.CN
             Title = "Congestion Control: " + strategy;
 
             draw = new CongestionControlDraw();
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
             CreateContent();
 
         }
@@ -662,7 +670,7 @@ namespace WertheApp.CN
                 Thumbnail = ImageSource.FromResource("WertheApp.png")
 
             };
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
@@ -673,7 +681,7 @@ namespace WertheApp.CN
 
             // App Linking
             _appLink.IsLinkActive = false;
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         //this method is called everytime the device is rotated

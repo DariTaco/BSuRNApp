@@ -1,15 +1,19 @@
 ﻿using System;
 using Xamarin.Forms;
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
+
 namespace WertheApp.CN
 {
     public class PipelineProtocolsSettings : ContentPage
     {
         //VARIABLES
         PipelineProtocols pipelineProtocols;
-        Picker p_WindowSize; //
-        Picker p_Strategy;
-        Slider s_Timeout;
+        Xamarin.Forms.Picker p_WindowSize; //
+        Xamarin.Forms.Picker p_Strategy;
+        Xamarin.Forms.Slider s_Timeout;
         Label l_TimeoutValue;
         public static double stepValue = 1.0;
 
@@ -23,6 +27,9 @@ namespace WertheApp.CN
             this.ToolbarItems.Add(info);
             info.Clicked += B_Info_Clicked;
 
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
             CreateContent();
 		}
 
@@ -32,8 +39,8 @@ namespace WertheApp.CN
         *********************************************************************/
 		void CreateContent()
 		{
-			var scrollView = new ScrollView
-			{
+			var scrollView = new Xamarin.Forms.ScrollView
+            {
 				Margin = new Thickness(10)
 			};
 			var stackLayout = new StackLayout();
@@ -53,14 +60,14 @@ namespace WertheApp.CN
 
             //define and add elements to stacklayout
             var l_Strategy = new Label { Text = "Strategy", FontSize = App._h3FontSize };
-            p_Strategy = new Picker() { FontSize = App._textFontSize };
+            p_Strategy = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             p_Strategy.Items.Add("Go Back N");
             p_Strategy.Items.Add("Selective Repeat");
             p_Strategy.SelectedIndex = 0;//Go Back N
             var l_Space = new Label { Text = "  " };
 
             var l_WindowSize = new Label { Text = "Window Size", FontSize = App._h3FontSize };
-            p_WindowSize = new Picker() { FontSize = App._textFontSize };
+            p_WindowSize = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             p_WindowSize.Items.Add("2");
             p_WindowSize.Items.Add("3");
             p_WindowSize.Items.Add("4");
@@ -70,7 +77,7 @@ namespace WertheApp.CN
 
             var l_Timeout = new Label { Text = "Timeout =", FontSize = App._h3FontSize };
             l_TimeoutValue = new Label { Text = "11" , VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            s_Timeout = new Slider(11, 20, 11); //min, max, val
+            s_Timeout = new Xamarin.Forms.Slider(11, 20, 11); //min, max, val
             s_Timeout.HorizontalOptions = LayoutOptions.FillAndExpand;
             s_Timeout.ValueChanged += S_Timeout_ValueChanged;;
             //s_Timeout.Minimum = 0.0f; //minimum roundtrip time

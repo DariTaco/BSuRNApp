@@ -5,6 +5,9 @@ using System.Linq; //fragmentList.ElementAt(i);
 using SkiaSharp.Views.Forms;
 using System.Diagnostics;
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS
 {
 
@@ -16,7 +19,6 @@ namespace WertheApp.OS
         public static String strategy;
         public static int ramSize;
         public static int discSize;
-        public static Button b_Restart;
 
         public static int[,,] ram; //3d array to save the page numbers in ram (1d,2d) and if r-bits and m-bits are set(3d)
         public static int[,] disc; //2d array to save the page numbers in disc
@@ -26,7 +28,8 @@ namespace WertheApp.OS
         public int gameviewWidth;
         public int gameviewHeight;
 
-        public static ScrollView scrollview;
+        public static Xamarin.Forms.ScrollView scrollview;
+        public static Button b_Restart;
         public static Button b_Reset_Rbits;
         public static Button b_Set_Rbit;
         public static Button b_Set_Mbit;
@@ -83,21 +86,15 @@ namespace WertheApp.OS
             //the button ahead will automatically be named "back" instead of "Betriebssysteme"
             CreateContent();
 
-            //enable/disable buttons depending on strategy
-            if(strategy == "RNU FIFO" || strategy == "RNU FIFO Second Chance")
-            {
-                b_Set_Mbit.IsEnabled = true;
-                b_Reset_Rbits.IsEnabled = true;
-                b_Set_Rbit.IsEnabled = true;
-            }
-            else
-            {
-                b_Set_Mbit.IsEnabled = false;
-                b_Reset_Rbits.IsEnabled = false;
-                b_Set_Rbit.IsEnabled = false;
-            }
+            //enable/disable buttons 
+            b_Set_Mbit.IsEnabled = false;
+            b_Reset_Rbits.IsEnabled = false;
+            b_Set_Rbit.IsEnabled = false;
             b_Next.IsEnabled = true;
-         
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
             InitializeDisc(disc);
             InitializeRam(ram);
         }
@@ -167,13 +164,20 @@ namespace WertheApp.OS
                     break;
                 case "RNU FIFO":
                     Rnu();
+                    b_Reset_Rbits.IsEnabled = true;
+                    b_Set_Rbit.IsEnabled = true;
+                    b_Set_Mbit.IsEnabled = true;
                     break;
                 case "RNU FIFO Second Chance":
                     RnuSecond();
+                    b_Reset_Rbits.IsEnabled = true;
+                    b_Set_Rbit.IsEnabled = true;
+                    b_Set_Mbit.IsEnabled = true;
                     break;
             }
             PageReplacementStrategiesDraw.Paint();//Update Canvas
             b_Restart.IsEnabled = true;
+ 
 
             //disable next button if the sequence was processed entirely
             if (currentStep == sequenceLength-1){
@@ -999,19 +1003,11 @@ namespace WertheApp.OS
             draw = new PageReplacementStrategiesDraw(ramSize, discSize, sequenceLength, SequenceList);
             CreateContent();
 
-            //enable/disable buttons depending on strategy
-            if (strategy == "RNU FIFO" || strategy == "RNU FIFO Second Chance")
-            {
-                b_Set_Mbit.IsEnabled = true;
-                b_Reset_Rbits.IsEnabled = true;
-                b_Set_Rbit.IsEnabled = true;
-            }
-            else
-            {
-                b_Set_Mbit.IsEnabled = false;
-                b_Reset_Rbits.IsEnabled = false;
-                b_Set_Rbit.IsEnabled = false;
-            }
+            //enable/disable buttons 
+            b_Set_Mbit.IsEnabled = false;
+            b_Reset_Rbits.IsEnabled = false;
+            b_Set_Rbit.IsEnabled = false;
+            
             b_Next.IsEnabled = true;
             b_Restart.IsEnabled = false;
 
@@ -1047,7 +1043,7 @@ namespace WertheApp.OS
                 Thumbnail = ImageSource.FromResource("WertheApp.png")
 
             };
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
@@ -1058,7 +1054,7 @@ namespace WertheApp.OS
 
             // App Linking
             _appLink.IsLinkActive = false;
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
         /**********************************************************************
         *********************************************************************/

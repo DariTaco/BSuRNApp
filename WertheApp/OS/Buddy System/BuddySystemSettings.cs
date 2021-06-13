@@ -1,12 +1,15 @@
 ﻿using System;
 using Xamarin.Forms;
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS
 {
     public class BuddySystemSettings : ContentPage
     {
         //VARIABLES
-        Picker p_Exponent; //has to be definded here instead of Constructor because value is also needed method
+        Xamarin.Forms.Picker p_Exponent; //has to be definded here instead of Constructor because value is also needed method
         Label l_AbsoluteMemorySize;
         double absoluteMemorySize = 32;
 
@@ -19,7 +22,11 @@ namespace WertheApp.OS
             info.Clicked += B_Info_Clicked;
 
             Title = "Buddy System";
-			CreateContent();
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
+            CreateContent();
         }
 
 		//METHODS
@@ -27,7 +34,7 @@ namespace WertheApp.OS
 		/**********************************************************************
         *********************************************************************/
 		void CreateContent(){
-			var scrollView = new ScrollView
+			var scrollView = new Xamarin.Forms.ScrollView
 			{
 				Margin = new Thickness(10)
 			};
@@ -42,7 +49,7 @@ namespace WertheApp.OS
                 FontSize = App._h3FontSize ,
                 Text = "Memory Size" };
             var l_Exponent = new Label { Text = "Exponent: ", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_Exponent = new Picker() { FontSize = App._textFontSize };
+            p_Exponent = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             p_Exponent.Items.Add("1");
             p_Exponent.Items.Add("2");
             p_Exponent.Items.Add("3");

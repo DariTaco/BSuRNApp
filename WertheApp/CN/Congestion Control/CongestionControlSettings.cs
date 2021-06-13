@@ -1,12 +1,16 @@
 ﻿using System;
 using Xamarin.Forms;
 
+
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.CN
 {
     public class CongestionControlSettings : ContentPage
     {
         //VARIABLES
-        Picker p_Treshold;//has to be definded here instead of Constructor because value is also needed in method
+        Xamarin.Forms.Picker p_Treshold;//has to be definded here instead of Constructor because value is also needed in method
         Switch s_Tahoe;//same
         Switch s_Reno;//same
 
@@ -19,6 +23,9 @@ namespace WertheApp.CN
             info.Text = App._sHelpInfoHint;
             this.ToolbarItems.Add(info);
             info.Clicked += B_Info_Clicked;
+
+            On<iOS>().SetUseSafeArea(true);
+
             CreateContent();
 		}
 
@@ -28,8 +35,8 @@ namespace WertheApp.CN
         *********************************************************************/
 		void CreateContent()
 		{
-			var scrollView = new ScrollView
-			{
+			var scrollView = new Xamarin.Forms.ScrollView
+            {
 				Margin = new Thickness(10)
 			};
             var stackLayout = new StackLayout();
@@ -82,7 +89,7 @@ namespace WertheApp.CN
             var l_initialSetting = new Label { Text = "Initial Settings", FontSize = App._h3FontSize };
             var l_thresh = new Label { Text = "Threshold:", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize
             };
-            p_Treshold = new Picker { FontSize = App._textFontSize};
+            p_Treshold = new Xamarin.Forms.Picker { FontSize = App._textFontSize};
             //p_Treshold.Items.Add("1");
             p_Treshold.Items.Add("2");
             p_Treshold.Items.Add("3");

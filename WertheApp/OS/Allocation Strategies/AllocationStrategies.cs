@@ -5,6 +5,9 @@ using System.Text.RegularExpressions; //Regex.IsMatch
 using System.Diagnostics;
 using System.Collections.Generic;
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS.AllocationStrategies
 {
     public class AllocationStrategies : ContentPage
@@ -20,7 +23,7 @@ namespace WertheApp.OS.AllocationStrategies
 
         // important controls
         private static Button b_Next, b_Restart;
-        private static Entry e_MemoryRequest;
+        private static Xamarin.Forms.Entry e_MemoryRequest;
 
         // needed for restart
         private static List<FragmentBlock> allFragmentsList; // list representing the free and used memory fragments - algorithm
@@ -43,6 +46,9 @@ namespace WertheApp.OS.AllocationStrategies
             Title = "Allocation Strategies: " + p_Strategy;
 
             MessagingCenter.Send<object>(this, "Landscape"); // enforce landscape mode
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
 
             CreateContent();            
         }
@@ -129,7 +135,7 @@ namespace WertheApp.OS.AllocationStrategies
                 HorizontalOptions = LayoutOptions.End,
                 FontSize = App._labelFontSize
             };
-            e_MemoryRequest = new Entry
+            e_MemoryRequest = new Xamarin.Forms.Entry
             {   Keyboard = Keyboard.Numeric,  //only numbers are allowed
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill,
@@ -327,7 +333,7 @@ namespace WertheApp.OS.AllocationStrategies
                 Thumbnail = ImageSource.FromResource("WertheApp.png")
 
             };
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
@@ -337,7 +343,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             // App Linking
             _appLink.IsLinkActive = false;
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         /**********************************************************************

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS
 {
     public class BuddySystem : ContentPage
@@ -22,7 +25,7 @@ namespace WertheApp.OS
         public static bool endProcess; //important variable for class buddysytsemviewcell
         public static Button b_Restart;
 
-        public static ListView listView;
+        public static Xamarin.Forms.ListView listView;
 
 		private double width = 0;
 		private double height = 0;
@@ -48,6 +51,10 @@ namespace WertheApp.OS
             buddySystem = new List<BuddySystemBlock>();
             buddySystem.Add(new BuddySystemBlock((int)absoluteMemorySize, 0));
             endProcess = false;
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
             CreateContent();
         }
 
@@ -287,7 +294,7 @@ namespace WertheApp.OS
 		/**********************************************************************
         *********************************************************************/
 		void CreateTopHalf(Grid grid){
-            listView = new ListView
+            listView = new Xamarin.Forms.ListView
             {
                 ItemTemplate = new DataTemplate(typeof(BuddySystemViewCell)),
                 RowHeight = 100,
@@ -429,7 +436,7 @@ namespace WertheApp.OS
                 Thumbnail = ImageSource.FromResource("WertheApp.png")
 
             };
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
 
         protected override void OnDisappearing()
@@ -440,7 +447,7 @@ namespace WertheApp.OS
 
             // App Linking
             _appLink.IsLinkActive = false;
-            Application.Current.AppLinks.RegisterLink(_appLink);
+            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
         }
         /**********************************************************************
         *********************************************************************/

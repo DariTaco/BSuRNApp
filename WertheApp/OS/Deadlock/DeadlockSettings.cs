@@ -5,35 +5,38 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS
 {
     public class DeadlockSettings : ContentPage
     {
-        private ScrollView scrollView;
+        private Xamarin.Forms.ScrollView scrollView;
 
         //uhm....you should do sth about this mess ...
         private String dvd, usb, bluRay, printer, ijPrinter, printer3D;
         private String resourceVectorE, busyResourceVectorB, freeResourceVectorA, upcomingVectorC;
-        private Picker p_dvd, p_usb, p_bluRay, p_printer, p_ijPrinter, p_runningprocesses, p_printer3D;
+        private Xamarin.Forms.Picker p_dvd, p_usb, p_bluRay, p_printer, p_ijPrinter, p_runningprocesses, p_printer3D;
 
         private Label l_busyP1, l_busyP2, l_busyP3, l_busyP4, l_busyP5;
         private Label l_upcomingP1, l_upcomingP2, l_upcomingP3, l_upcomingP4, l_upcomingP5;
 
-        private Picker p_p1_dvd, p_p2_dvd, p_p3_dvd, p_p4_dvd, p_p5_dvd;
-        private Picker p_p1_usb, p_p2_usb, p_p3_usb, p_p4_usb, p_p5_usb;
-        private Picker p_p1_bluRay, p_p2_bluRay, p_p3_bluRay, p_p4_bluRay, p_p5_bluRay;
-        private Picker p_p1_printer, p_p2_printer, p_p3_printer, p_p4_printer, p_p5_printer;
-        private Picker p_p1_ijprinter, p_p2_ijprinter, p_p3_ijprinter, p_p4_ijprinter, p_p5_ijprinter;
-        private Picker p_p1_printer3D, p_p2_printer3D, p_p3_printer3D, p_p4_printer3D, p_p5_printer3D;
+        private Xamarin.Forms.Picker p_p1_dvd, p_p2_dvd, p_p3_dvd, p_p4_dvd, p_p5_dvd;
+        private Xamarin.Forms.Picker p_p1_usb, p_p2_usb, p_p3_usb, p_p4_usb, p_p5_usb;
+        private Xamarin.Forms.Picker p_p1_bluRay, p_p2_bluRay, p_p3_bluRay, p_p4_bluRay, p_p5_bluRay;
+        private Xamarin.Forms.Picker p_p1_printer, p_p2_printer, p_p3_printer, p_p4_printer, p_p5_printer;
+        private Xamarin.Forms.Picker p_p1_ijprinter, p_p2_ijprinter, p_p3_ijprinter, p_p4_ijprinter, p_p5_ijprinter;
+        private Xamarin.Forms.Picker p_p1_printer3D, p_p2_printer3D, p_p3_printer3D, p_p4_printer3D, p_p5_printer3D;
         // private int busy_dvd, busy_usb, busy_bluRay, busy_printer, busy_ijprinter, busy_printer3D;
 
 
-        private Picker p_p1_upcoming_dvd, p_p2_upcoming_dvd, p_p3_upcoming_dvd, p_p4_upcoming_dvd, p_p5_upcoming_dvd;
-        private Picker p_p1_upcoming_usb, p_p2_upcoming_usb, p_p3_upcoming_usb, p_p4_upcoming_usb, p_p5_upcoming_usb;
-        private Picker p_p1_upcoming_bluRay, p_p2_upcoming_bluRay, p_p3_upcoming_bluRay, p_p4_upcoming_bluRay, p_p5_upcoming_bluRay;
-        private Picker p_p1_upcoming_printer, p_p2_upcoming_printer, p_p3_upcoming_printer, p_p4_upcoming_printer, p_p5_upcoming_printer;
-        private Picker p_p1_upcoming_ijprinter, p_p2_upcoming_ijprinter, p_p3_upcoming_ijprinter, p_p4_upcoming_ijprinter, p_p5_upcoming_ijprinter;
-        private Picker p_p1_upcoming_printer3D, p_p2_upcoming_printer3D, p_p3_upcoming_printer3D, p_p4_upcoming_printer3D, p_p5_upcoming_printer3D;
+        private Xamarin.Forms.Picker p_p1_upcoming_dvd, p_p2_upcoming_dvd, p_p3_upcoming_dvd, p_p4_upcoming_dvd, p_p5_upcoming_dvd;
+        private Xamarin.Forms.Picker p_p1_upcoming_usb, p_p2_upcoming_usb, p_p3_upcoming_usb, p_p4_upcoming_usb, p_p5_upcoming_usb;
+        private Xamarin.Forms.Picker p_p1_upcoming_bluRay, p_p2_upcoming_bluRay, p_p3_upcoming_bluRay, p_p4_upcoming_bluRay, p_p5_upcoming_bluRay;
+        private Xamarin.Forms.Picker p_p1_upcoming_printer, p_p2_upcoming_printer, p_p3_upcoming_printer, p_p4_upcoming_printer, p_p5_upcoming_printer;
+        private Xamarin.Forms.Picker p_p1_upcoming_ijprinter, p_p2_upcoming_ijprinter, p_p3_upcoming_ijprinter, p_p4_upcoming_ijprinter, p_p5_upcoming_ijprinter;
+        private Xamarin.Forms.Picker p_p1_upcoming_printer3D, p_p2_upcoming_printer3D, p_p3_upcoming_printer3D, p_p4_upcoming_printer3D, p_p5_upcoming_printer3D;
         //private int upcoming_dvd, upcoming_usb, upcoming_bluRay, upcoming_printer, upcoming_ijprinter;
 
         private Label l_resourceVectorE, l_busyResourceVectorB, l_freeResourceVectorA, l_upcomingVectorC;
@@ -41,7 +44,7 @@ namespace WertheApp.OS
         private StackLayout sl_busyProcess1, sl_busyProcess2, sl_busyProcess3, sl_busyProcess4, sl_busyProcess5;
         private StackLayout sl_upcomingProcess1, sl_upcomingProcess2, sl_upcomingProcess3, sl_upcomingProcess4, sl_upcomingProcess5;
 
-        private List<Picker> busyResPickerList, upcomingResPickerList, resPickerList;
+        private List<Xamarin.Forms.Picker> busyResPickerList, upcomingResPickerList, resPickerList;
         //private int preset;
         private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
 
@@ -55,10 +58,13 @@ namespace WertheApp.OS
             this.ToolbarItems.Add(info);
             info.Clicked += B_Info_Clicked;
 
-            busyResPickerList = new List<Picker>();
-            upcomingResPickerList = new List<Picker>();
-            resPickerList = new List<Picker>();
+            busyResPickerList = new List<Xamarin.Forms.Picker>();
+            upcomingResPickerList = new List<Xamarin.Forms.Picker>();
+            resPickerList = new List<Xamarin.Forms.Picker>();
             //preset = 0;
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
 
             CreateContent();
 
@@ -69,7 +75,7 @@ namespace WertheApp.OS
         *********************************************************************/
         void CreateContent()
         {
-            scrollView = new ScrollView
+            scrollView = new Xamarin.Forms.ScrollView
             {
                 Margin = new Thickness(10)
             };
@@ -139,7 +145,7 @@ namespace WertheApp.OS
                 VerticalOptions = LayoutOptions.Center,
                 TextDecorations = TextDecorations.Underline
             };
-            p_runningprocesses = new Picker() { FontSize = App._textFontSize };
+            p_runningprocesses = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             for (int i = 2; i < 6; i++)
             {
                 p_runningprocesses.Items.Add(i.ToString());
@@ -426,41 +432,41 @@ namespace WertheApp.OS
             };
 
             //don't ask. I know it can be done better lol
-            p_p1_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
             busyResPickerList.Add(p_p1_dvd);
             busyResPickerList.Add(p_p2_dvd);
@@ -544,41 +550,41 @@ namespace WertheApp.OS
 
             //goddamit I know you can do better
             //pickers for every resource /process combination
-            p_p1_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_upcoming_dvd = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_upcoming_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_upcoming_usb = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_upcoming_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_upcoming_bluRay = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_upcoming_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_upcoming_printer = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_upcoming_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_upcoming_ijprinter = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_upcoming_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
-            p_p1_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_upcoming_printer3D = new Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p1_upcoming_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p2_upcoming_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p3_upcoming_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p4_upcoming_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
+            p_p5_upcoming_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
             upcomingResPickerList.Add(p_p1_upcoming_dvd);
             upcomingResPickerList.Add(p_p2_upcoming_dvd);
@@ -636,7 +642,7 @@ namespace WertheApp.OS
             // resource DVD
             var sl_dvd = new StackLayout() { Orientation = StackOrientation.Horizontal };
             var l_dvd = new Label { Text = " DVD Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_dvd = new Picker() { FontSize = App._textFontSize };
+            p_dvd = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_dvd.Items.Add(i.ToString());
@@ -653,7 +659,7 @@ namespace WertheApp.OS
             // resource Laser printer
             var sl_printer = new StackLayout() { Orientation = StackOrientation.Horizontal };
             var l_printer = new Label { Text = " Laser Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_printer = new Picker() { FontSize = App._textFontSize };
+            p_printer = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_printer.Items.Add(i.ToString());
@@ -670,7 +676,7 @@ namespace WertheApp.OS
             // resource USB
             var sl_usb = new StackLayout() { Orientation = StackOrientation.Horizontal };
             var l_usb = new Label { Text = " USB Disk Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_usb = new Picker() { FontSize = App._textFontSize };
+            p_usb = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_usb.Items.Add(i.ToString());
@@ -692,7 +698,7 @@ namespace WertheApp.OS
                 VerticalOptions = LayoutOptions.Center,
                 FontSize = App._textFontSize
             };
-            p_bluRay = new Picker() { FontSize = App._textFontSize };
+            p_bluRay = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_bluRay.Items.Add(i.ToString());
@@ -715,7 +721,7 @@ namespace WertheApp.OS
                 VerticalOptions = LayoutOptions.Center,
                 FontSize = App._textFontSize
             };
-            p_ijPrinter = new Picker() { FontSize = App._textFontSize };
+            p_ijPrinter = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_ijPrinter.Items.Add(i.ToString());
@@ -732,7 +738,7 @@ namespace WertheApp.OS
             // resource 3D printer
             var sl_printer3D = new StackLayout() { Orientation = StackOrientation.Horizontal };
             var l_printer3D = new Label { Text = " 3D Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_printer3D = new Picker() { FontSize = App._textFontSize };
+            p_printer3D = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             for (int i = 0; i < 10; i++)
             {
                 p_printer3D.Items.Add(i.ToString());
@@ -1389,12 +1395,12 @@ namespace WertheApp.OS
 
         void SetVectorChangedEvents()
         {
-            foreach (Picker picker in busyResPickerList)
+            foreach (Xamarin.Forms.Picker picker in busyResPickerList)
             {
                 picker.SelectedIndexChanged += VectorBChangedEvent;
                 picker.SelectedIndexChanged += VectorAChangedEvent;
             }
-            foreach (Picker picker in upcomingResPickerList)
+            foreach (Xamarin.Forms.Picker picker in upcomingResPickerList)
             {
                 picker.SelectedIndexChanged += VectorCChangedEvent;
             }
@@ -1402,7 +1408,7 @@ namespace WertheApp.OS
 
         void SetResPickersToZero()
         {
-            foreach (Picker picker in resPickerList)
+            foreach (Xamarin.Forms.Picker picker in resPickerList)
             {
                 picker.SelectedIndex = 0;
             }
@@ -1411,7 +1417,7 @@ namespace WertheApp.OS
 
         void SetUpcomingResPickersToZero()
         {
-            foreach (Picker picker in upcomingResPickerList)
+            foreach (Xamarin.Forms.Picker picker in upcomingResPickerList)
             {
                 picker.SelectedIndex = 0;
             }
@@ -1420,7 +1426,7 @@ namespace WertheApp.OS
 
         void SetBusyResPickersToZero()
         {
-            foreach (Picker picker in busyResPickerList)
+            foreach (Xamarin.Forms.Picker picker in busyResPickerList)
             {
                 picker.SelectedIndex = 0;
             }
@@ -1438,7 +1444,7 @@ namespace WertheApp.OS
 
 
             //first remove all items
-            foreach (Picker picker in upcomingResPickerList)
+            foreach (Xamarin.Forms.Picker picker in upcomingResPickerList)
             {
                 picker.Items.Clear();
             }
@@ -1505,7 +1511,7 @@ namespace WertheApp.OS
             printer3D = p_printer3D.SelectedItem.ToString();
 
             //first remove all items
-            foreach (Picker picker in busyResPickerList)
+            foreach (Xamarin.Forms.Picker picker in busyResPickerList)
             {
                 picker.Items.Clear();
             }

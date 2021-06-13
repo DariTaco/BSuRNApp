@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions; ////Regex.IsMatch();
 using Xamarin.Forms;
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS
 {
     public class PageReplacementStrategiesSettings : ContentPage
     {
         //VARIABLES
-        Picker p_Strategy;//has to be definded here instead of Constructor because value is also needed in method
-		Picker p_RAM;//same
-        Picker p_disk;//same
-        Entry e_Sequence;//same
+        Xamarin.Forms.Picker p_Strategy;//has to be definded here instead of Constructor because value is also needed in method
+        Xamarin.Forms.Picker p_RAM;//same
+        Xamarin.Forms.Picker p_disk;//same
+        Xamarin.Forms.Entry e_Sequence;//same
         List<int> sequenceList; //will be given to the Constructor
 
 		//CONSTRUCTOR
@@ -24,6 +27,9 @@ namespace WertheApp.OS
             this.ToolbarItems.Add(info);
             info.Clicked += B_Info_Clicked;
 
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
             CreateContent();
 		}
 
@@ -33,7 +39,7 @@ namespace WertheApp.OS
         *********************************************************************/
 		void CreateContent()
 		{
-			var scrollView = new ScrollView
+			var scrollView = new Xamarin.Forms.ScrollView
 			{
 				Margin = new Thickness(10)
 			};
@@ -53,7 +59,7 @@ namespace WertheApp.OS
 
             //add elements to stackLayout2
             var l_Zero = new Label { Text = "0", VerticalOptions = LayoutOptions.Center, VerticalTextAlignment = TextAlignment.Center, FontSize = App._textFontSize };
-            e_Sequence = new Entry { Keyboard = Keyboard.Numeric, Text = "12340156012356" ,HorizontalOptions = LayoutOptions.FillAndExpand, VerticalTextAlignment = TextAlignment.Center, FontSize = App._textFontSize };
+            e_Sequence = new Xamarin.Forms.Entry { Keyboard = Keyboard.Numeric, Text = "12340156012356" ,HorizontalOptions = LayoutOptions.FillAndExpand, VerticalTextAlignment = TextAlignment.Center, FontSize = App._textFontSize };
            
 
 			stackLayout2.Children.Add(l_Zero);
@@ -61,7 +67,7 @@ namespace WertheApp.OS
 
             //add elements to stackLayout3
 			var l_RAM = new Label { Text = "RAM:", FontSize = App._textFontSize, VerticalOptions = LayoutOptions.Center };
-			p_RAM = new Picker() { FontSize = App._textFontSize };
+			p_RAM = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             p_RAM.Items.Add("1");
             p_RAM.Items.Add("2");
 			p_RAM.Items.Add("3");
@@ -73,7 +79,7 @@ namespace WertheApp.OS
 			var l_Space3 = new Label { Text = "  " };
             string dtext = App._disk + ":";
 			var l_DISC = new Label { Text = dtext, FontSize = App._textFontSize, VerticalOptions = LayoutOptions.Center };
-			p_disk = new Picker() { FontSize = App._textFontSize };
+			p_disk = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
             p_disk.Items.Add("1");
             p_disk.Items.Add("2");
             p_disk.Items.Add("3");
@@ -93,7 +99,7 @@ namespace WertheApp.OS
             var l_Strategy = new Label { Text = "Strategy",
                 FontSize = App._h3FontSize,
             };
-			p_Strategy = new Picker { Title = "Select a Strategy" ,FontSize = App._textFontSize };
+			p_Strategy = new Xamarin.Forms.Picker { Title = "Select a Strategy" ,FontSize = App._textFontSize };
 			p_Strategy.Items.Add("Optimal Strategy");
 			p_Strategy.Items.Add("FIFO");
 			p_Strategy.Items.Add("FIFO Second Chance");

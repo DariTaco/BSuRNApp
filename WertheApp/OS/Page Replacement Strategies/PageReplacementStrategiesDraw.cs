@@ -221,7 +221,6 @@ namespace WertheApp.OS
 
             float blackTextSmallSize = sk_blackTextSmall.TextSize;
             float blankSpace = rowWidth * ye - blackTextSmallSize * 2.000f;
-            Debug.WriteLine("blankspace : " + blankSpace);
             if(blankSpace < 0.000f) { blankSpace = 0.000f; }
             float spaceY = blankSpace / 3.0000f;
 

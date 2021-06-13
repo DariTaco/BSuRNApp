@@ -3,14 +3,17 @@ using System.Text.RegularExpressions; //Regex.IsMatch();
 using Xamarin.Forms;
 using System.Collections.Generic; //List<int>
 
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace WertheApp.OS.AllocationStrategies
 {
     public class AllocationStrategiesSettings : ContentPage
     {
         //VARIABLES
         // controls
-        private Picker p_Algorithm; 
-        private Entry e_Fragmentation;
+        private Xamarin.Forms.Picker p_Algorithm; 
+        private Xamarin.Forms.Entry e_Fragmentation;
 
         //CONSTRUCTOR
         public AllocationStrategiesSettings()
@@ -22,6 +25,10 @@ namespace WertheApp.OS.AllocationStrategies
             info.Clicked += B_Info_Clicked;
 
             Title = "Allocation Strategies";
+
+            // content starts only after notch
+            On<iOS>().SetUseSafeArea(true);
+
             CreateContent();
 
         }
@@ -32,7 +39,7 @@ namespace WertheApp.OS.AllocationStrategies
         void CreateContent()
         {
             // View
-            var scrollView = new ScrollView
+            var scrollView = new Xamarin.Forms.ScrollView
             {
                 Margin = new Thickness(10)
             };
@@ -42,7 +49,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             // Algorithm selection
             var l_Algorithm = new Label { Text = "Algorithm", FontSize = App._h3FontSize };
-            p_Algorithm = new Picker { Title = "Select a Strategy", FontSize = App._textFontSize };
+            p_Algorithm = new Xamarin.Forms.Picker { Title = "Select a Strategy", FontSize = App._textFontSize };
             p_Algorithm.Items.Add("First Fit");
             p_Algorithm.Items.Add("Next Fit");
             p_Algorithm.Items.Add("Best Fit");
@@ -56,7 +63,7 @@ namespace WertheApp.OS.AllocationStrategies
 
             // Fragmentation input
             var l_Fragmentation = new Label { Text = "Fragmentation", FontSize = App._h3FontSize  };
-            e_Fragmentation = new Entry { Keyboard = Keyboard.Telephone, Text = "10,4,20,18,7,9,12,15", FontSize = App._textFontSize };
+            e_Fragmentation = new Xamarin.Forms.Entry { Keyboard = Keyboard.Telephone, Text = "10,4,20,18,7,9,12,15", FontSize = App._textFontSize };
             var b_Default = new Button
             {
                 Text = "Default",
