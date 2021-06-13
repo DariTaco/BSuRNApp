@@ -119,23 +119,30 @@ namespace WertheApp.OS
 
 
             //draw the words RAM and DISC
-            float posText1 = rowTextStart + rowWidth;
+            float blackTextSize = sk_blackText.TextSize;
+
+
+            float posTexty = (0.5f + rowWidth + (rowWidth / 2.0f)) * ye  + (blackTextSize / 2.0f); // ye is already calculated in blacktextsize
+            float posTextx = columnCenter * xe + xe; //its already centered when specified in new SKPaint (...
             for (int i = 0; i < ramSize; i++){
-                canvas.DrawText("RAM", columnCenter * xe + xe, posText1 * ye, sk_blackText);
-                posText1 += rowWidth;
+                canvas.DrawText("RAM", posTextx, posTexty, sk_blackText);
+                posTexty += rowWidth * ye;
             }
-            float posText2 = rowTextStart + (rowWidth * (ramSize + 1));
+
             for (int i = 0; i < discSize; i++){
-                canvas.DrawText(App._disk, columnCenter * xe + xe, posText2 * ye, sk_blackText);
-                posText2 += rowWidth;
+                canvas.DrawText(App._disk, posTextx, posTexty, sk_blackText);
+                posTexty += rowWidth * ye;
             }
 
             //draw the page sequence
-            float posText3 = 1 + columnCenter + columnWidth;
+            float blackTextNumbersSize = sk_blackTextNumbers.TextSize;
+            float posTexty2 = ((rowWidth / 2.0f)) * ye + (blackTextNumbersSize / 2.0f) - 0.4f*ye;
+            float posTextx2 = (1 + columnCenter + columnWidth) * xe;
+
             foreach (var p in SequenceList)
             {
-                canvas.DrawText(p.ToString(), posText3 * xe, rowTextStart * ye, sk_blackTextNumbers);
-                posText3 += columnWidth;
+                canvas.DrawText(p.ToString(), posTextx2, posTexty2, sk_blackTextNumbers);
+                posTextx2 += columnWidth * xe;
             }
 
             //prepare a square
@@ -176,23 +183,22 @@ namespace WertheApp.OS
             }
 
             //draw Ram: for every step thats done yet, look for pages in ram
-            float posXText4 = 1 + columnCenter + columnWidth;
-            float posYText4 = rowTextStart + rowWidth;
+            float posXText = (1 + columnCenter + columnWidth) * xe;
+            float posYText = (rowWidth + (rowWidth / 2.0f)) * ye + (blackTextNumbersSize / 2.0f);
             for (int step = 0; step <= PageReplacementStrategies.currentStep; step++){
                 for (int ram = 0; ram <= PageReplacementStrategies.ram.GetUpperBound(1); ram++){
                     int page = PageReplacementStrategies.ram[step, ram, 0];
                     if(page != -1){
-                        canvas.DrawText(page.ToString(), posXText4 * xe, posYText4 * ye, sk_blackTextNumbers);
+                        canvas.DrawText(page.ToString(), posXText, posYText, sk_blackTextNumbers);
                     }
-
-                    posYText4 += rowWidth;
+                    posYText += rowWidth * ye;
                 }
-                posYText4 = rowTextStart + rowWidth;
-                posXText4 += columnWidth;
+                posYText = (rowWidth + (rowWidth / 2.0f)) * ye + (blackTextNumbersSize / 2.0f);
+                posXText += columnWidth * xe;
             }
             //draw Disc: for evry step thats done yet, look for pages in disc
-            float posXText5 = 1 + columnCenter + columnWidth;
-            float posYText5 = rowTextStart + (rowWidth * (ramSize + 1));
+            posXText = (1 + columnCenter + columnWidth) * xe;
+            posYText += rowWidth * ye;
             for (int step = 0; step <= PageReplacementStrategies.currentStep; step++)
             {
                 for (int disc = 0; disc <= PageReplacementStrategies.disc.GetUpperBound(1); disc++)
@@ -200,21 +206,27 @@ namespace WertheApp.OS
                     int page = PageReplacementStrategies.disc[step, disc];
                     if (page != -1)
                     {
-                        canvas.DrawText(page.ToString(), posXText5 * xe, posYText5 * ye, sk_blackTextNumbers);
+                        canvas.DrawText(page.ToString(), posXText, posYText, sk_blackTextNumbers);
                     }
 
-                    posYText5 += rowWidth;
+                    posYText += rowWidth * ye;
                 }
-                posYText5 = rowTextStart + (rowWidth * (ramSize + 1));
-                posXText5 += columnWidth;
+                posYText = (rowWidth * (ramSize + 1) + (rowWidth / 2.0f)) * ye + (blackTextNumbersSize / 2.0f);
+                posXText += columnWidth * xe;
             }
 
-           
+
             //draw M-Bits and R-Bits
-            float posXMbit = 1 + columnWidth + columnCenter - columnCenter / 2;
-            float posYMbit = 2 + rowWidth + rowCenter + rowCenter / 2 ;
-            float posXRbit = 1 + columnWidth + columnCenter - columnCenter / 2;
-            float posYRbit = 2 + rowWidth + rowCenter - rowCenter / 2 ;
+            float posXbit = (1 + columnWidth + columnCenter - columnCenter / 2) * xe;
+
+            float blackTextSmallSize = sk_blackTextSmall.TextSize;
+            float blankSpace = rowWidth * ye - blackTextSmallSize * 2.000f;
+            Debug.WriteLine("blankspace : " + blankSpace);
+            if(blankSpace < 0.000f) { blankSpace = 0.000f; }
+            float spaceY = blankSpace / 3.0000f;
+
+            float posYRbit = 0.4f * ye + rowWidth * ye + spaceY + blackTextSmallSize;
+            float posYMbit = 0.4f * ye + rowWidth * ye + spaceY + blackTextSmallSize + spaceY + blackTextSmallSize;
             if (PageReplacementStrategies.strategy == "RNU FIFO Second Chance" || PageReplacementStrategies.strategy == "RNU FIFO"){
                 for (int step = 0; step <= PageReplacementStrategies.currentStep; step++){
                     for (int ram = 0; ram <= PageReplacementStrategies.ram.GetUpperBound(1); ram++){
@@ -222,23 +234,22 @@ namespace WertheApp.OS
                             String rBitValue = PageReplacementStrategies.ram[step, ram, 1].ToString();
                             String mBitValue = PageReplacementStrategies.ram[step, ram, 2].ToString();
                             if(PageReplacementStrategies.ram[step, ram, 4] == 0){
-                                canvas.DrawText(rBitValue, posXRbit * xe, posYRbit * ye, sk_blackTextSmall);
+                                canvas.DrawText(rBitValue, posXbit, posYRbit, sk_blackTextSmall);
                             }else{
-                                canvas.DrawText(rBitValue, posXRbit * xe, posYRbit * ye, sk_redTextSmall);
+                                canvas.DrawText(rBitValue, posXbit, posYRbit, sk_redTextSmall);
                             }
                             if(PageReplacementStrategies.ram[step,ram,5] == 0){
-                                canvas.DrawText(mBitValue, posXMbit * xe, posYMbit * ye, sk_blackTextSmall);
+                                canvas.DrawText(mBitValue, posXbit, posYMbit, sk_blackTextSmall);
                             }else{
-                                canvas.DrawText(mBitValue, posXMbit * xe, posYMbit * ye, sk_redTextSmall);
+                                canvas.DrawText(mBitValue, posXbit, posYMbit, sk_redTextSmall);
                             }
                         }
-                        posYMbit += rowWidth;
-                        posYRbit += rowWidth;
+                        posYMbit += rowWidth*ye;
+                        posYRbit += rowWidth*ye;
                     }
-                    posXMbit += columnWidth;
-                    posXRbit += columnWidth;
-                    posYMbit = 2 + rowWidth + rowCenter + rowCenter / 2;
-                    posYRbit = 2 + rowWidth + rowCenter - rowCenter / 2;
+                    posXbit += columnWidth * xe;
+                    posYMbit = 0.4f * ye + rowWidth * ye + spaceY + blackTextSmallSize + spaceY + blackTextSmallSize;
+                    posYRbit = 0.4f * ye + rowWidth * ye + spaceY + blackTextSmallSize;
                 }
 
             }
@@ -334,7 +345,7 @@ namespace WertheApp.OS
             sk_blackTextSmall = new SKPaint
             {
                 Color = SKColors.Black,
-                TextSize = ye * textSize/2,
+                TextSize = xPercent(0.015f),
                 IsAntialias = true,
                 IsStroke = false, 
                 TextAlign = SKTextAlign.Center,
@@ -344,7 +355,7 @@ namespace WertheApp.OS
             sk_redTextSmall = new SKPaint
             {
                 Color = SKColors.OrangeRed,
-                TextSize = ye * textSize / 2,
+                TextSize = xPercent(0.015f),
                 IsAntialias = true,
                 IsStroke = false,
                 TextAlign = SKTextAlign.Center,
