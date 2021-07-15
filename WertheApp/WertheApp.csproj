@@ -64,7 +64,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="CN\Pipeline Protocols\PipelineProtocolsHelp.xaml">
+    <EmbeddedResource Include="CN\Old Pipeline Protocols\OldPipelineProtocolsHelp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -107,12 +107,11 @@
     <Compile Include="CN\Dijkstra\DijkstraDraw.cs" />
     <Compile Include="CN\Dijkstra\DijkstraSettings.cs" />
     <Compile Include="CN\Dijkstra\DijkstraSettingsDraw.cs" />
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocols.cs" />
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsACK.cs" />
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsPack.cs" />
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsScene.cs" />
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsScene2.cs" />
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsSettings.cs" />
+    <Compile Include="CN\Old Pipeline Protocols\OldPipelineProtocols.cs" />
+    <Compile Include="CN\Old Pipeline Protocols\OldPipelineProtocolsACK.cs" />
+    <Compile Include="CN\Old Pipeline Protocols\OldPipelineProtocolsPack.cs" />
+    <Compile Include="CN\Old Pipeline Protocols\OldPipelineProtocolsScene.cs" />
+    <Compile Include="CN\Old Pipeline Protocols\OldPipelineProtocolsScene2.cs" />
     <Compile Include="CN\Reno Fast Recovery\RenoFastRecovery.cs" />
     <Compile Include="CN\Reno Fast Recovery\RenoFastRecoveryDraw.cs" />
     <Compile Include="OS\Buddy System\BuddySystem.cs" />
@@ -151,8 +150,8 @@
     <Compile Include="CN\Reno Fast Recovery\RenoFastRecoveryHelp.xaml.cs">
       <DependentUpon>RenoFastRecoveryHelp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CN\Pipeline Protocols\PipelineProtocolsHelp.xaml.cs">
-      <DependentUpon>PipelineProtocolsHelp.xaml</DependentUpon>
+    <Compile Include="CN\Old Pipeline Protocols\OldPipelineProtocolsHelp.xaml.cs">
+      <DependentUpon>OldPipelineProtocolsHelp.xaml</DependentUpon>
     </Compile>
     <Compile Include="CN\Dijkstra\DijkstraHelp.xaml.cs">
       <DependentUpon>DijkstraHelp.xaml</DependentUpon>
@@ -173,6 +172,10 @@
     <Compile Include="OS\Allocation Strategies\FragmentBlock.cs" />
     <Compile Include="MainMenu\DigitalPhotography.cs" />
     <Compile Include="MainMenu\EmbeddedSystems.cs" />
+    <Compile Include="CN\Old Pipeline Protocols\OldPipelineProtocolsSettings.cs" />
+    <Compile Include="OS\Deadlock\NewDeadlockSettings.cs" />
+    <Compile Include="OS\Deadlock\Vector.cs" />
+    <Compile Include="OS\Deadlock\Resource.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">
@@ -187,7 +190,7 @@
     <Folder Include="CN\Ack Generation\" />
     <Folder Include="CN\Congestion Control\" />
     <Folder Include="CN\Dijkstra\" />
-    <Folder Include="CN\Pipeline Protocols\" />
+    <Folder Include="CN\Old Pipeline Protocols\" />
     <Folder Include="CN\Reno Fast Recovery\" />
     <Folder Include="OS\Buddy System\" />
     <Folder Include="OS\Deadlock\" />
@@ -199,6 +202,7 @@
   <ItemGroup>
     <None Include="project.json" />
     <None Include="Info.txt" />
+    <None Include="OS\Deadlock\DeadlockSettings %28copy%29.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

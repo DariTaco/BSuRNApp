@@ -10,10 +10,8 @@ using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace WertheApp.OS
 {
-    public class DeadlockSettings : ContentPage
+    public class DeadlockSettingsCopy : ContentPage
     {
-        private Xamarin.Forms.ScrollView scrollView;
-
         //uhm....you should do sth about this mess ...
         private String dvd, usb, bluRay, printer, ijPrinter, printer3D;
         private String resourceVectorE, busyResourceVectorB, freeResourceVectorA, upcomingVectorC;
@@ -49,25 +47,13 @@ namespace WertheApp.OS
         private static Dictionary<int, String> vectorBProcesses, vectorCProcesses;
 
 
-        public DeadlockSettings()
+        public DeadlockSettingsCopy()
         {
-            Title = "Deadlock";
-
-            ToolbarItem info = new ToolbarItem();
-            info.Text = App._sHelpInfoHint;
-            this.ToolbarItems.Add(info);
-            info.Clicked += B_Info_Clicked;
 
             busyResPickerList = new List<Xamarin.Forms.Picker>();
             upcomingResPickerList = new List<Xamarin.Forms.Picker>();
             resPickerList = new List<Xamarin.Forms.Picker>();
             //preset = 0;
-
-            // content starts only after notch
-            On<iOS>().SetUseSafeArea(true);
-
-            CreateContent();
-
         }
 
         //METHODS
@@ -75,320 +61,26 @@ namespace WertheApp.OS
         *********************************************************************/
         void CreateContent()
         {
-            scrollView = new Xamarin.Forms.ScrollView
-            {
-                Margin = new Thickness(10)
-            };
-            var stackLayout = new StackLayout();
-
-            scrollView.Content = stackLayout; //Wrap ScrollView around StackLayout to be able to scroll the content
-            this.Content = scrollView;
-
-            //EXISTING RESOURCES
-            var formattedStringExisting = new FormattedString();
-            formattedStringExisting.Spans.Add(new Span
-            {
-                Text = "E",
-                ForegroundColor = Color.Blue,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = App._h3FontSize,
-
-            });
-            formattedStringExisting.Spans.Add(new Span
-            {
-                Text = "xisting Resources",
-                TextDecorations = TextDecorations.Underline
-            });
-            var l_resourcesExisting = new Label {
-                FormattedText = formattedStringExisting,
-                FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                TextDecorations = TextDecorations.Underline
-            };
-            stackLayout.Children.Add(l_resourcesExisting);
-
             CreateExistingResourcesUI(stackLayout);
 
-            //VECTOR E
-            StackLayout stackLayoutVectorE = new StackLayout { Orientation = StackOrientation.Horizontal };
-            resourceVectorE = "2    2    3";
-            l_resourceVectorE = new Label
-            {
-                Text = "E = (    " + resourceVectorE + "    )",
-                TextColor = Color.Blue,
-                FontSize = App._h4FontSize,
-                VerticalOptions = LayoutOptions.End
-            };
-
-            stackLayoutVectorE.Children.Add(l_resourceVectorE);
-            stackLayout.Children.Add(stackLayoutVectorE);
-
-            var l_Space0 = new Label { Text = " " };
-            stackLayout.Children.Add(l_Space0);
-
-            StackLayout stackLayout2 = new StackLayout { Orientation = StackOrientation.Horizontal };
-
-
-
-
-
-
-
-            //RUNNING PROCESSES
-            var sl_runningProcesses = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_Processes = new Label
-            {
-                Text = "Running Processes",
-                FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                TextDecorations = TextDecorations.Underline
-            };
-            p_runningprocesses = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
-            for (int i = 2; i < 6; i++)
-            {
-                p_runningprocesses.Items.Add(i.ToString());
-            }
-            p_runningprocesses.SelectedIndex = 0;
-            p_runningprocesses.SelectedIndexChanged += ProcessesChanged;
-            sl_runningProcesses.Children.Add(l_Processes);
-            sl_runningProcesses.Children.Add(p_runningprocesses);
-            stackLayout.Children.Add(sl_runningProcesses);
-
-            Label l_space8 = new Label { Text = " " };
-            stackLayout.Children.Add(l_space8);
 
             // BUSY
-            StackLayout stackLayoutBusy = new StackLayout { Orientation = StackOrientation.Horizontal };
-            var formattedStringBusy = new FormattedString();
-            formattedStringBusy.Spans.Add(new Span
-            {
-                Text = "B",
-                ForegroundColor = Color.Red,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = App._h3FontSize,
-
-            });
-            formattedStringBusy.Spans.Add(new Span
-            {
-                Text = "usy Resources",
-                TextDecorations = TextDecorations.Underline
-            });
-            var l_resourcesBusy = new Label
-            {
-                FormattedText = formattedStringBusy,
-                FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                TextDecorations = TextDecorations.Underline
-            };
-            var b_ClearBusy = new Button {
-                Text = "Clear",
-                FontSize = App._smallButtonFontSize,
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius,
-
-            };
-            b_ClearBusy.Clicked += B_ClearBusyClicked; //add Click Event(Method)
-            stackLayoutBusy.Children.Add(l_resourcesBusy);
-            var l_Space2 = new Label
-            {
-                Text = " ",
-                WidthRequest = 88,
-                HorizontalOptions = LayoutOptions.Center
-            };
-            stackLayoutBusy.Children.Add(l_Space2);
-            stackLayoutBusy.Children.Add(b_ClearBusy);
-            stackLayout.Children.Add(stackLayoutBusy);
 
             sl_busyResources = new StackLayout() { HorizontalOptions = LayoutOptions.Start };
             CreateBusyResourcesUI(sl_busyResources);
             stackLayout.Children.Add(sl_busyResources);
 
-            StackLayout stackLayoutVectorB = new StackLayout { Orientation = StackOrientation.Horizontal };
-
-            //Vector B
-            busyResourceVectorB = "0    0    0";
-            l_busyResourceVectorB = new Label
-            {
-                Text = "B = (    " + busyResourceVectorB + "    )",
-                TextColor = Color.Red,
-                FontSize = App._h4FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center
-            };
-            stackLayoutVectorB.Children.Add(l_busyResourceVectorB);
-            stackLayout.Children.Add(stackLayoutVectorB);
-
-
-            var l_Space4 = new Label { Text = " " };
-            stackLayout.Children.Add(l_Space4);
-
-            //Available Resources
-            var formattedStringAvailable = new FormattedString();
-            formattedStringAvailable.Spans.Add(new Span
-            {
-                Text = "A",
-                ForegroundColor = Color.Green,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = App._h3FontSize,
-
-            });
-            formattedStringAvailable.Spans.Add(new Span
-            {
-                Text = "vailable Resources",
-                TextDecorations = TextDecorations.Underline
-            });
-            var l_resourcesAvailable = new Label
-            {
-                FormattedText = formattedStringAvailable,
-                FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                TextDecorations = TextDecorations.Underline
-            };
-
-
-            //VECTOR A
-            StackLayout stackLayoutVectorA = new StackLayout { Orientation = StackOrientation.Horizontal };
-            freeResourceVectorA = "2    2    3";
-            l_freeResourceVectorA = new Label
-            {
-                Text = "A = (    " + freeResourceVectorA + "    )",
-                TextColor = Color.Green,
-                FontSize = App._h4FontSize,
-                VerticalOptions = LayoutOptions.Center
-            };
-
-            stackLayout.Children.Add(l_resourcesAvailable);
-            stackLayout.Children.Add(l_freeResourceVectorA); 
-            var l_Space77 = new Label { Text = " " };
-            stackLayout.Children.Add(l_Space77); 
-
 
             //upcomingVectorC REQUESTS
             StackLayout stackLayoutUpcoming = new StackLayout { Orientation = StackOrientation.Horizontal };
            
-            
-            var formattedStringUpComing = new FormattedString();
-            formattedStringUpComing.Spans.Add(new Span{
-                Text = "Up",
-                TextDecorations = TextDecorations.Underline });
-            formattedStringUpComing.Spans.Add(new Span {
-                Text = "c",
-                ForegroundColor = Color.Orange,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = App._h3FontSize,
           
-            });
-            formattedStringUpComing.Spans.Add(new Span {
-                Text = "oming Requests ",
-                TextDecorations = TextDecorations.Underline
-            });
-            
-
-            /*  Text = "<u> Up<span style=\"color:orange\">c</span>oming Requests </u>",
-                TextType = TextType.Html,*/
-            var l_upcoming = new Label {
-                FormattedText = formattedStringUpComing,
-                FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                TextDecorations = TextDecorations.Underline
-            };
-            stackLayoutUpcoming.Children.Add(l_upcoming);
-
-            var l_Space1 = new Label { Text = " ",
-                WidthRequest = 50,
-                HorizontalOptions = LayoutOptions.Center };
-           
-            stackLayoutUpcoming.Children.Add(l_Space1);
-
-            var b_ClearUpcoming = new Button { Text = "Clear",
-                FontSize = App._smallButtonFontSize,
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
-            };
-            b_ClearUpcoming.Clicked += B_ClearUpcoming_Clicked; //add Click Event(Method)
-            stackLayoutUpcoming.Children.Add(b_ClearUpcoming);
-            stackLayout.Children.Add(stackLayoutUpcoming);
-
             sl_upcomingRequests = new StackLayout() { };
             CreateUpcomingRequestsUI(sl_upcomingRequests);
             stackLayout.Children.Add(sl_upcomingRequests);
 
-            //VECTOR C
-            StackLayout stackLayoutVectorC = new StackLayout { Orientation = StackOrientation.Horizontal };
-            upcomingVectorC = "0    0    0";
-            l_upcomingVectorC = new Label
-            {
-                Text = "C = (    " + upcomingVectorC + "    )",
-                TextColor = Color.Orange,
-                FontSize = App._h4FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center
-            };
-            stackLayoutVectorC.Children.Add(l_upcomingVectorC);
-            stackLayout.Children.Add(stackLayoutVectorC);
 
-            var l_Space5 = new Label { Text = " " };
-            stackLayout.Children.Add(l_Space5);
-
-            StackLayout sl_buttons = new StackLayout { Orientation = StackOrientation.Horizontal };
-            var b_ClearResources = new Button { Text = "Clear All", HorizontalOptions = LayoutOptions.Start,
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius
-            };
-            b_ClearResources.Clicked += B_ClearResources_Clicked; //add Click Event(Method)
-            //sl_buttons.Children.Add(b_ClearResources);
-
-            //preset buttons
-            var b_preset1 = new Button { Text = "Preset 1",
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius,
-                FontSize = App._smallButtonFontSize
-
-            };
-            b_preset1.Clicked += B_Preset1_Clicked; //add Click Event(Method)
-            sl_buttons.Children.Add(b_preset1);
-            var b_preset2 = new Button { Text = "Preset 2",
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius,
-                FontSize = App._smallButtonFontSize
-
-            };
-            b_preset2.Clicked += B_Preset2_Clicked; //add Click Event(Method)
-            sl_buttons.Children.Add(b_preset2);
-            var b_preset3 = new Button { Text = "Preset 3",
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius,
-                FontSize = App._smallButtonFontSize
-
-            };
-            b_preset3.Clicked += B_Preset3_Clicked; //add Click Event(Method)
-            sl_buttons.Children.Add(b_preset3);
-
-            stackLayout.Children.Add(sl_buttons);
-
-            var b_Start = new Button { Text = "Start",
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
-
-            };
-            b_Start.Clicked += B_Start_Clicked; //add Click Event(Method)
-            Label l_space3 = new Label { Text = " " };
-            stackLayout.Children.Add(l_space3);
-            stackLayout.Children.Add(b_Start);
+          
         }
 
 
@@ -428,37 +120,6 @@ namespace WertheApp.OS
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 40
             };
-
-            //don't ask. I know it can be done better lol
-            p_p1_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_dvd = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-
-            p_p1_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_usb = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-
-            p_p1_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_bluRay = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-
-            p_p1_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_printer = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-
-            p_p1_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p2_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p3_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p4_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
-            p_p5_ijprinter = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
 
             p_p1_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
             p_p2_printer3D = new Xamarin.Forms.Picker() { WidthRequest = 40, FontSize = App._textFontSize };
@@ -629,132 +290,6 @@ namespace WertheApp.OS
             sl_upcomingRequests.Children.Add(sl_upcomingProcess2);
         }
 
-        /**********************************************************************
-        *********************************************************************/
-        void CreateExistingResourcesUI(StackLayout stackLayout)
-        {
-            var stackLayoutRight = new StackLayout();
-            var stackLayoutLeft = new StackLayout();
-            var stackLayoutRLContainer = new StackLayout() { Orientation = StackOrientation.Horizontal };
-
-            // resource DVD
-            var sl_dvd = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_dvd = new Label { Text = " DVD Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_dvd = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
-            for (int i = 0; i < 10; i++)
-            {
-                p_dvd.Items.Add(i.ToString());
-            }
-            p_dvd.SelectedIndex = 2;
-            p_dvd.SelectedIndexChanged += VectorChanged;
-            p_dvd.SelectedIndexChanged += VectorChanged4;
-            resPickerList.Add(p_dvd);
-
-            sl_dvd.Children.Add(p_dvd);
-            sl_dvd.Children.Add(l_dvd);
-            stackLayoutLeft.Children.Add(sl_dvd);
-
-            // resource Laser printer
-            var sl_printer = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_printer = new Label { Text = " Laser Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_printer = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
-            for (int i = 0; i < 10; i++)
-            {
-                p_printer.Items.Add(i.ToString());
-            }
-            p_printer.SelectedIndex = 2;
-            p_printer.SelectedIndexChanged += VectorChanged;
-            p_printer.SelectedIndexChanged += VectorChanged4;
-            resPickerList.Add(p_printer);
-
-            sl_printer.Children.Add(p_printer);
-            sl_printer.Children.Add(l_printer);
-            stackLayoutLeft.Children.Add(sl_printer);
-
-            // resource USB
-            var sl_usb = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_usb = new Label { Text = " USB Disk Drives", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_usb = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
-            for (int i = 0; i < 10; i++)
-            {
-                p_usb.Items.Add(i.ToString());
-            }
-            p_usb.SelectedIndex = 3;
-            p_usb.SelectedIndexChanged += VectorChanged;
-            p_usb.SelectedIndexChanged += VectorChanged4;
-            resPickerList.Add(p_usb);
-
-            sl_usb.Children.Add(p_usb);
-            sl_usb.Children.Add(l_usb);
-            stackLayoutLeft.Children.Add(sl_usb);
-
-            // resource BluRay
-            var sl_bluRay = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_bluRay = new Label
-            {
-                Text = " BluRay Drives",
-                VerticalOptions = LayoutOptions.Center,
-                FontSize = App._textFontSize
-            };
-            p_bluRay = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
-            for (int i = 0; i < 10; i++)
-            {
-                p_bluRay.Items.Add(i.ToString());
-            }
-            p_bluRay.SelectedIndex = 0;
-            p_bluRay.SelectedIndexChanged += VectorChanged;
-            p_bluRay.SelectedIndexChanged += VectorChanged4;
-            resPickerList.Add(p_bluRay);
-
-            sl_bluRay.Children.Add(p_bluRay);
-            sl_bluRay.Children.Add(l_bluRay);
-            stackLayoutRight.Children.Add(sl_bluRay);
-
-
-            // resource inkjet printer
-            var sl_ijPrinter = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_ijPrinter = new Label
-            {
-                Text = " Inkjet Printers",
-                VerticalOptions = LayoutOptions.Center,
-                FontSize = App._textFontSize
-            };
-            p_ijPrinter = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
-            for (int i = 0; i < 10; i++)
-            {
-                p_ijPrinter.Items.Add(i.ToString());
-            }
-            p_ijPrinter.SelectedIndex = 0;
-            p_ijPrinter.SelectedIndexChanged += VectorChanged;
-            p_ijPrinter.SelectedIndexChanged += VectorChanged4;
-            resPickerList.Add(p_ijPrinter);
-
-            sl_ijPrinter.Children.Add(p_ijPrinter);
-            sl_ijPrinter.Children.Add(l_ijPrinter);
-            stackLayoutRight.Children.Add(sl_ijPrinter);
-
-            // resource 3D printer
-            var sl_printer3D = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_printer3D = new Label { Text = " 3D Printers", VerticalOptions = LayoutOptions.Center, FontSize = App._textFontSize };
-            p_printer3D = new Xamarin.Forms.Picker() { FontSize = App._textFontSize };
-            for (int i = 0; i < 10; i++)
-            {
-                p_printer3D.Items.Add(i.ToString());
-            }
-            p_printer3D.SelectedIndex = 0;
-            p_printer3D.SelectedIndexChanged += VectorChanged;
-            p_printer3D.SelectedIndexChanged += VectorChanged4;
-            resPickerList.Add(p_printer3D);
-
-            sl_printer3D.Children.Add(p_printer3D);
-            sl_printer3D.Children.Add(l_printer3D);
-            stackLayoutRight.Children.Add(sl_printer3D);
-
-            stackLayoutRight.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            stackLayoutRLContainer.Children.Add(stackLayoutLeft);
-            stackLayoutRLContainer.Children.Add(stackLayoutRight);
-            stackLayout.Children.Add(stackLayoutRLContainer);
-        }
 
         /**********************************************************************
         *********************************************************************/
@@ -774,42 +309,6 @@ namespace WertheApp.OS
             p_dvd.SelectedIndex = 2;
             p_printer.SelectedIndex = 2;
             p_usb.SelectedIndex = 3;
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        void B_Preset1_Clicked(object sender, EventArgs e)
-        {
-            /*
-            SetResPickersToZero();
-            SetUpcomingResPickersToZero();
-            SetBusyResPickersToZero();
-
-            preset++;
-            int presetExample = preset % 3;
-            switch (presetExample)
-            {
-                case 0: SetPreset1(); break;
-                case 1: SetPreset1(); break;
-                case 2: SetPreset1(); break;
-            }*/
-
-            Debug.WriteLine("Preset clicked");
-            SetPreset1();
-           
-
-        }
-
-        void B_Preset2_Clicked(object sender, EventArgs e)
-        {
-
-            SetPreset2();
-        }
-
-        void B_Preset3_Clicked(object sender, EventArgs e)
-        {
-
-            SetPreset3();
         }
 
         /**********************************************************************

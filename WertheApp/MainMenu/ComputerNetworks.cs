@@ -7,8 +7,6 @@ namespace WertheApp
     public class ComputerNetworks : ContentPage
     {
         //VARIABLES
-        private double width = 0;
-        private double height = 0;
         List<Button> buttonList;
 
         //CONSTRUCTOR
@@ -90,7 +88,7 @@ namespace WertheApp
                     await Navigation.PushAsync(new CongestionControlSettings());
                     break;
                 case "Pipeline Protocols":
-                    await Navigation.PushAsync(new PipelineProtocolsSettings());
+                    await Navigation.PushAsync(new OldPipelineProtocolsSettings());
                     break;
                 case "Reno Fast Recovery":
                     await Navigation.PushAsync(new RenoFastRecovery());

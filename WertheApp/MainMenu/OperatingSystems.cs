@@ -9,8 +9,6 @@ namespace WertheApp
     public class OperatingSystems : ContentPage
     {
         //VARIABLES
-        private double width = 0;
-        private double height = 0;
         List<Button> buttonList;
 
         //CONSTRUCTOR
@@ -60,6 +58,7 @@ namespace WertheApp
                         "Allocation Strategies",
                         "Buddy System",
                         "Deadlock",
+                        "Deadlock 2",
                         "Page Replacement Strategies"
                     };
             foreach (string appName in appNameList)
@@ -98,6 +97,10 @@ namespace WertheApp
                 case "Deadlock":
                     await Navigation.PushAsync(new DeadlockSettings());
                     break;
+                case "Deadlock 2":
+                    await Navigation.PushAsync(new NewDeadlockSettings());
+                    break;
+
             }
         }
         protected override void OnAppearing()

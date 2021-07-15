@@ -436,7 +436,11 @@ namespace WertheApp.OS
                 Thumbnail = ImageSource.FromResource("WertheApp.png")
 
             };
-            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
+            //TODO:Appindexing bug android
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
+            }
         }
 
         protected override void OnDisappearing()
@@ -447,7 +451,11 @@ namespace WertheApp.OS
 
             // App Linking
             _appLink.IsLinkActive = false;
-            Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
+            //TODO:Appindexing bug android
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                Xamarin.Forms.Application.Current.AppLinks.RegisterLink(_appLink);
+            }
         }
         /**********************************************************************
         *********************************************************************/
