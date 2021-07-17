@@ -19,10 +19,14 @@ using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
  */
 namespace WertheApp.OS
 {
-    public class NewDeadlockSettings: ContentPage
+    public class NewDeadlockSettings : ContentPage
     {
         private Xamarin.Forms.ScrollView scrollView;
         private Dictionary<String, Xamarin.Forms.Picker> resourcesDict = new Dictionary<String, Xamarin.Forms.Picker>();
+        private Dictionary<String, Xamarin.Forms.Picker> busyDict = new Dictionary<String, Xamarin.Forms.Picker>();
+        private Dictionary<String, Xamarin.Forms.Picker> upcomingDict = new Dictionary<String, Xamarin.Forms.Picker>();
+        private Dictionary<String, Xamarin.Forms.StackLayout> busyLayoutDict = new Dictionary<String, Xamarin.Forms.StackLayout>();
+        private Dictionary<String, Xamarin.Forms.StackLayout> upcomingLayoutDict = new Dictionary<String, Xamarin.Forms.StackLayout>();
 
         List<string> resourceNameList = new List<string>{
                         "DVD Drive(s)",
@@ -46,9 +50,16 @@ namespace WertheApp.OS
             On<iOS>().SetUseSafeArea(true);
 
             resourcesDict.Clear();
+            busyDict.Clear();
+            upcomingDict.Clear();
+            busyLayoutDict.Clear();
+            upcomingLayoutDict.Clear();
             Vector.DeleteAll();
+
             CreateContent();
-  
+            ModifyPickers(busyDict);
+            ModifyPickers(upcomingDict);
+
 
         }
 
@@ -58,18 +69,13 @@ namespace WertheApp.OS
         void CreateContent()
         {
             StackLayout layout = CreateLayout();
+
             CreatePresetButtons(layout);
 
             CreateExistingResourcesContent(layout);
-
             CreateRunningProcessesContent(layout);
-
             CreateBusyResourcesContent(layout);
-
-
             CreateAvailableResourcesContent(layout);
-
-
             CreateUpcomingRequestsContent(layout);
 
             CreateStartButton(layout);
@@ -105,7 +111,7 @@ namespace WertheApp.OS
             CreateCaption(layout, "", "B", "usy Resources", Color.Red);
 
             //pickers
-            CreatePickers(layout);
+            CreatePickers(layout, busyDict, busyLayoutDict);
 
             //vector
             CreateVector(layout, "B", Color.Red, 0, 0, 0, -1, -1, -1);
@@ -143,7 +149,7 @@ namespace WertheApp.OS
             CreateCaption(layout, "Up", "c", "oming Requests", Color.Orange);
 
             //pickers
-            CreatePickers(layout);
+            CreatePickers(layout, upcomingDict, upcomingLayoutDict);
 
             //vector
             CreateVector(layout, "C", Color.Orange, 0, 0, 0, -1, -1, -1);
@@ -172,71 +178,6 @@ namespace WertheApp.OS
             layout.Children.Add(l_vector);
         }
 
-        /**********************************************************************
-        *********************************************************************/
-        void CreateCaption(StackLayout layout, String a, String b, String c, Color color)
-        {
-            var formattedStringUpComing = new FormattedString();
-            formattedStringUpComing.Spans.Add(new Span
-            {
-                Text = a,
-                TextDecorations = TextDecorations.Underline
-            });
-            formattedStringUpComing.Spans.Add(new Span
-            {
-                Text = b,
-                ForegroundColor = color,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = App._h3FontSize,
-
-            });
-            formattedStringUpComing.Spans.Add(new Span
-            {
-                Text = c,
-                TextDecorations = TextDecorations.Underline
-            });
-            var l_caption = new Label
-            {
-                FormattedText = formattedStringUpComing,
-                FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                TextDecorations = TextDecorations.Underline
-            };
-            layout.Children.Add(l_caption);
-
-        }
-        /**********************************************************************
-        *********************************************************************/
-        void CreateRunningProcessesContent(StackLayout layout)
-        {
-            //caption
-            var sl_runningProcesses = new StackLayout() { Orientation = StackOrientation.Horizontal };
-            var l_Processes = new Label
-            {
-                Text = "Running Processes",
-                FontSize = App._h3FontSize,
-                VerticalOptions = LayoutOptions.Center,
-                TextDecorations = TextDecorations.Underline
-            };
-            sl_runningProcesses.Children.Add(l_Processes);
-
-            //picker
-            Xamarin.Forms.Picker p_runningprocesses = new Xamarin.Forms.Picker()
-            { FontSize = App._textFontSize };
-            for (int i = 2; i < 6; i++)
-            {
-                p_runningprocesses.Items.Add(i.ToString());
-            }
-            p_runningprocesses.SelectedIndex = 0;
-            p_runningprocesses.SelectedIndexChanged += RunningProcessesChanged;
-
-            sl_runningProcesses.Children.Add(p_runningprocesses);
-            layout.Children.Add(sl_runningProcesses);
-
-            //spacing
-            AddSpace(layout);
-
-        }
 
         /**********************************************************************
         *********************************************************************/
@@ -258,7 +199,7 @@ namespace WertheApp.OS
             foreach (string resourceName in resourceNameList)
             {
                 //layout
-                var sl_picker = new StackLayout(){ Orientation = StackOrientation.Horizontal };
+                var sl_picker = new StackLayout() { Orientation = StackOrientation.Horizontal };
 
                 //picker
                 Xamarin.Forms.Picker p_picker = new Xamarin.Forms.Picker()
@@ -270,11 +211,11 @@ namespace WertheApp.OS
                     p_picker.Items.Add(i.ToString());
                 }
                 p_picker.AutomationId = resourceName;
-                p_picker.SelectedIndex = 0;
                 p_picker.SelectedIndexChanged += ResourceChanged;
+                p_picker.SelectedIndex = 0;
+             
                 sl_picker.Children.Add(p_picker);
                 resourcesDict.Add(resourceName, p_picker);
-
 
                 //label
                 var l_picker = new Label
@@ -286,7 +227,7 @@ namespace WertheApp.OS
                 sl_picker.Children.Add(l_picker);
 
                 // add to left or right layout
-                if (count%2 == 0)
+                if (count < 3)
                 {
                     sl_left.Children.Add(sl_picker);
                 }
@@ -321,17 +262,28 @@ namespace WertheApp.OS
             if (resourcesDict.TryGetValue(p_name, out p))
             {
                 p.SelectedIndex = index;
+                DisplayOrHideLayout(p_name, busyLayoutDict, Convert.ToBoolean(index));
+                DisplayOrHideLayout(p_name, upcomingLayoutDict, Convert.ToBoolean(index));
+
             }
-            
+
         }
 
         /**********************************************************************
         *********************************************************************/
         void ResourceChanged(object sender, EventArgs e)
         {
+  
             var picker = (sender as Xamarin.Forms.Picker);
-            string pickerName = picker.AutomationId;
 
+            ModifyPickers(busyDict);
+            ModifyPickers(upcomingDict);
+
+            DisplayOrHideLayout(picker, busyLayoutDict);
+            DisplayOrHideLayout(picker, upcomingLayoutDict);
+
+
+            /*
             switch (pickerName)
             {
                 case "DVD Drive(s)":
@@ -353,28 +305,53 @@ namespace WertheApp.OS
                 case "3D Printer(s)":
                     //TODO: "3D Printer(s)"
                     break;
+            }*/
+        }
+
+        void DisplayOrHideLayout(Xamarin.Forms.Picker picker, Dictionary<String, StackLayout> layoutDict)
+        {
+            string pickerName = picker.AutomationId;
+
+            StackLayout l;
+            if (layoutDict.TryGetValue(pickerName, out l))
+            {
+                if (picker.SelectedIndex == 0)
+                {
+                    l.IsVisible = false;
+                }
+                else { l.IsVisible = true; }
             }
         }
+
+        void DisplayOrHideLayout(String name, Dictionary<String, StackLayout> layoutDict, bool visible)
+        {
+            Debug.WriteLine(visible);
+            StackLayout l;
+            if (layoutDict.TryGetValue(name, out l))
+            {
+                if (!visible)
+                {
+                    l.IsVisible = false;
+                }
+                else { l.IsVisible = true; }
+            }
+        }
+
         /**********************************************************************
         *********************************************************************/
-        void CreatePickers(StackLayout layout)
+        Dictionary<String, Xamarin.Forms.Picker> CreatePickers(StackLayout layout, Dictionary<String, Xamarin.Forms.Picker> dict, Dictionary<String, Xamarin.Forms.StackLayout> layoutDict)
         {
             // create container stacklayout which will hold all upcoming resource layouts. First add a layout of 5 labels
-            StackLayout containerStackLayout = new StackLayout
-            {
-                Orientation = StackOrientation.Horizontal
-            };
+            StackLayout containerStackLayout = new StackLayout { Orientation = StackOrientation.Horizontal };
 
-            StackLayout labelStackLayout = new StackLayout{BackgroundColor = Color.Aqua};
+            StackLayout labelStackLayout = new StackLayout {/*BackgroundColor = Color.Aqua*/};
             for (int i = 0; i < 5; i++)
             {
                 Label label = new Label
                 {
                     Text = "P" + i + ": ",
                     FontSize = App._textFontSize,
-                    //HorizontalOptions = LayoutOptions.FillAndExpand
                     VerticalOptions = LayoutOptions.EndAndExpand
-                    //WidthRequest = 40
                 };
                 labelStackLayout.Children.Add(label);
             }
@@ -384,36 +361,41 @@ namespace WertheApp.OS
             // create a vertical stacklayout for every resource and add pickers
             foreach (string resourceName in resourceNameList)
             {
-                StackLayout resourceStackLayout = new StackLayout
-                {
-                    Orientation = StackOrientation.Vertical
-                };
+                StackLayout resourceStackLayout = new StackLayout { Orientation = StackOrientation.Vertical };
+                resourceStackLayout.AutomationId = resourceName;
+                layoutDict.Add(resourceName, resourceStackLayout); 
 
                 // add 5 new pickers to the stacklayout
                 for (int i = 0; i < 5; i++)
                 {
+                    String key = resourceName + i;
+
                     Xamarin.Forms.Picker picker = new Xamarin.Forms.Picker()
                     {
-                        //WidthRequest = 40,
                         FontSize = App._textFontSize
                     };
+                    picker.Items.Add("0");
+                    picker.SelectedIndex = 0;
+                    picker.SelectedIndexChanged += PickerChanged;
+                    picker.AutomationId = key;
 
                     resourceStackLayout.Children.Add(picker);
+                    dict.Add(key, picker);
                 }
 
                 //add vertical stacklayouts to horizontal container layout
                 containerStackLayout.Children.Add(resourceStackLayout);
             }
             layout.Children.Add(containerStackLayout);
+            return dict;
         }
 
         /**********************************************************************
         *********************************************************************/
-        void ModifyPickers()
+        void ModifyPickers(Dictionary<String, Xamarin.Forms.Picker> dict)
         {
             foreach (string resourceName in resourceNameList)
             {
-
                 // find out how many instances of each resource exist
                 Xamarin.Forms.Picker p;
                 int selectableItems = -1;
@@ -422,14 +404,234 @@ namespace WertheApp.OS
                     selectableItems = p.SelectedIndex;
                 }
 
-                // modify maximum number of selectable items for each picker of each resource
-                for (int j = 0; j < selectableItems; j++)
+                for (int i = 0; i < 5; i++)
                 {
-                    //TODO:get each picker of each resource
-                    //picker.Items.Add(j.ToString());
+                    String key = resourceName + i;
+                    int selectedIndex = 0;
+                    Xamarin.Forms.Picker p2;
+                    if (dict.TryGetValue(key, out p2))
+                    {
+                        // delete possible items but remember selected index
+                        if (p2.Items.Count > 0)
+                        {
+                            // if selected index is bigger than selectable items, change it to the max possible
+                            if (selectedIndex < selectableItems) { selectedIndex = p2.SelectedIndex; }
+                            else { selectedIndex = selectableItems; }
+                            p2.Items.Clear();
+                        }
+
+                        // modify maximum number of selectable items for each picker of each resource
+                        for (int j = 0; j <= selectableItems; j++)
+                        {
+                            p2.Items.Add(j.ToString());
+                        }
+                        p2.SelectedIndex = selectedIndex;
+                    }
                 }
 
+                // depending on which resources exist
+                DisplayOrHideLayout(resourceName, busyLayoutDict, Convert.ToBoolean(selectableItems));
+                DisplayOrHideLayout(resourceName, upcomingLayoutDict, Convert.ToBoolean(selectableItems));
             }
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        void PickerChanged(object sender, EventArgs e)
+        {
+            //TODO: Vektoren anpassen
+            //Schritt 1: alle Picker zusammenzählen und Vektor neu berechnen
+            //Schritt 2: entsprechende Vekto Objekte finden mit Vector.GetVector(name) und v.ChangeResources(...)
+            //Schritt 3: Vektor Objekte updaten mit neuen Werten
+
+            var picker = (sender as Xamarin.Forms.Picker);
+            string pickerName = picker.AutomationId;
+
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        void B_Preset_Clicked(object sender, EventArgs e)
+        {
+            var button = (sender as Button);
+            string buttonName = button.Text;
+
+            switch (buttonName)
+            {
+                case "Preset 1":
+                    //TODO: Preset 1
+                    break;
+                case "Preset 2":
+                    //TODO: Preset 2
+                    break;
+                case "Preset":
+                    //TODO: Preset 3
+                    break;
+            }
+        }
+
+
+        /**********************************************************************
+        *********************************************************************/
+        void B_Clear_Clicked(object sender, EventArgs e)
+        {
+            var button = (sender as Button);
+            string buttonName = button.Text;
+
+            switch (buttonName)
+            {
+                case "Clear Busy":
+                    foreach (var item in busyDict)
+                    {
+                        item.Value.SelectedIndex = 0;
+                    }
+                    break;
+                case "Clear Upcoming":
+                    foreach (var item in upcomingDict)
+                    {
+                        item.Value.SelectedIndex = 0;
+                    }
+                    break;
+            }
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        void B_Start_Clicked(object sender, EventArgs e)
+        {
+            //TODO:
+
+            /*
+             * await Navigation.PushAsync(new Deadlock());
+
+            // dictionary of individual amount of existing resources
+            //keys: dvd, printer, usb, bluRay, ijPrinter, printer3D
+            Dictionary<string, int> d,
+
+
+            String VE,
+            String VB,
+            String VC,
+            String VA,
+
+            int tProcesses,
+
+            Dictionary<int, String> VBProcesses,
+            Dictionary<int,String> VCProcesses*/
+        }
+
+
+
+
+
+
+
+
+
+        /**********************************************************************
+         * ****************************************************************** *
+         * *                   easy UI                                      * *
+         * ****************************************************************** *
+         *********************************************************************/
+
+        StackLayout CreateLayout()
+        {
+            // Wrap ScrollView around StackLayout to be able to scroll the content
+            scrollView = new Xamarin.Forms.ScrollView
+            {
+                Margin = new Thickness(10)
+            };
+            var stackLayout = new StackLayout();
+            scrollView.Content = stackLayout;
+            this.Content = scrollView;
+
+            return stackLayout;
+        }
+
+        /**********************************************************************
+         *********************************************************************/
+        void CreateCaption(StackLayout layout, String a, String b, String c, Color color)
+        {
+            var formattedStringUpComing = new FormattedString();
+            formattedStringUpComing.Spans.Add(new Span
+            {
+                Text = a,
+                TextDecorations = TextDecorations.Underline
+            });
+            formattedStringUpComing.Spans.Add(new Span
+            {
+                Text = b,
+                ForegroundColor = color,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = App._h3FontSize,
+
+            });
+            formattedStringUpComing.Spans.Add(new Span
+            {
+                Text = c,
+                TextDecorations = TextDecorations.Underline
+            });
+            var l_caption = new Label
+            {
+                FormattedText = formattedStringUpComing,
+                FontSize = App._h3FontSize,
+                VerticalOptions = LayoutOptions.Center,
+                TextDecorations = TextDecorations.Underline
+            };
+            layout.Children.Add(l_caption);
+
+        }
+
+        /**********************************************************************
+         *********************************************************************/
+
+        void AddSpace(StackLayout layout)
+        {
+            Label l_space = new Label { Text = " " };
+            layout.Children.Add(l_space);
+        }
+
+
+        /**********************************************************************
+        *********************************************************************/
+        void CreateClearButton(StackLayout layout, String buttonName)
+        {
+            var b_Clear = new Button
+            {
+                Text = buttonName,
+                FontSize = App._smallButtonFontSize,
+                BackgroundColor = App._buttonBackground,
+                TextColor = App._buttonText,
+                CornerRadius = App._buttonCornerRadius,
+                HorizontalOptions = LayoutOptions.Start
+
+            };
+            b_Clear.Clicked += B_Clear_Clicked;
+            layout.Children.Add(b_Clear);
+        }
+
+        /**********************************************************************
+         *********************************************************************/
+        void CreateStartButton(StackLayout layout)
+        {
+            var b_Start = new Button
+            {
+                Text = "Start",
+                BackgroundColor = App._buttonBackground,
+                TextColor = App._buttonText,
+                CornerRadius = App._buttonCornerRadius,
+                FontSize = App._buttonFontSize
+
+            };
+            b_Start.Clicked += B_Start_Clicked;
+            layout.Children.Add(b_Start);
+        }
+
+        /**********************************************************************
+        *********************************************************************/
+        async void B_Info_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new DeadlockHelp());
         }
 
         /**********************************************************************
@@ -464,136 +666,37 @@ namespace WertheApp.OS
             AddSpace(layout);
         }
 
-
         /**********************************************************************
-        *********************************************************************/
-        void B_Preset_Clicked(object sender, EventArgs e)
+         *********************************************************************/
+        void CreateRunningProcessesContent(StackLayout layout)
         {
-            var button = (sender as Button);
-            string buttonName = button.Text;
-
-            switch (buttonName)
+            //caption
+            var sl_runningProcesses = new StackLayout() { Orientation = StackOrientation.Horizontal };
+            var l_Processes = new Label
             {
-                case "Preset 1":
-                    //TODO: Preset 1
-                    break;
-                case "Preset 2":
-                    //TODO: Preset 2
-                    break;
-                case "Preset":
-                    //TODO: Preset 3
-                    break;
+                Text = "Running Processes",
+                FontSize = App._h3FontSize,
+                VerticalOptions = LayoutOptions.Center,
+                TextDecorations = TextDecorations.Underline
+            };
+            sl_runningProcesses.Children.Add(l_Processes);
+
+            //picker
+            Xamarin.Forms.Picker p_runningprocesses = new Xamarin.Forms.Picker()
+            { FontSize = App._textFontSize };
+            for (int i = 2; i < 6; i++)
+            {
+                p_runningprocesses.Items.Add(i.ToString());
             }
-        }
+            p_runningprocesses.SelectedIndex = 0;
+            p_runningprocesses.SelectedIndexChanged += RunningProcessesChanged;
 
-        /**********************************************************************
-        *********************************************************************/
-        void CreateClearButton(StackLayout layout, String buttonName)
-        {
-            var b_Clear = new Button
-            {
-                Text = buttonName,
-                FontSize = App._smallButtonFontSize,
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius,
-                HorizontalOptions = LayoutOptions.Start
+            sl_runningProcesses.Children.Add(p_runningprocesses);
+            layout.Children.Add(sl_runningProcesses);
 
-            };
-            b_Clear.Clicked += B_Clear_Clicked;
-            layout.Children.Add(b_Clear);
-        }
+            //spacing
+            AddSpace(layout);
 
-        /**********************************************************************
-        *********************************************************************/
-        void B_Clear_Clicked(object sender, EventArgs e)
-        {
-            var button = (sender as Button);
-            string buttonName = button.Text;
-
-            switch (buttonName)
-            {
-                case "Clear Busy":
-                    //TODO: Preset 1
-                    break;
-                case "Clear Upcoming":
-                    //TODO: Preset 2
-                    break;
-            }
-        }
-        /**********************************************************************
-        *********************************************************************/
-        void CreateStartButton(StackLayout layout)
-        {
-            var b_Start = new Button
-            {
-                Text = "Start",
-                BackgroundColor = App._buttonBackground,
-                TextColor = App._buttonText,
-                CornerRadius = App._buttonCornerRadius,
-                FontSize = App._buttonFontSize
-
-            };
-            b_Start.Clicked += B_Start_Clicked;
-            layout.Children.Add(b_Start);
-        }
-
-
-        /**********************************************************************
-        *********************************************************************/
-        void B_Start_Clicked(object sender, EventArgs e)
-        {
-            //TODO:
-
-            /*
-             * await Navigation.PushAsync(new Deadlock());
-
-            // dictionary of individual amount of existing resources
-            //keys: dvd, printer, usb, bluRay, ijPrinter, printer3D
-            Dictionary<string, int> d,
-
-
-            String VE,
-            String VB,
-            String VC,
-            String VA,
-
-            int tProcesses,
-
-            Dictionary<int, String> VBProcesses,
-            Dictionary<int,String> VCProcesses*/
-        }
-
-
-        /**********************************************************************
-        *********************************************************************/
-        StackLayout CreateLayout()
-        {
-            // Wrap ScrollView around StackLayout to be able to scroll the content
-            scrollView = new Xamarin.Forms.ScrollView
-            {
-                Margin = new Thickness(10)
-            };
-            var stackLayout = new StackLayout();
-            scrollView.Content = stackLayout;
-            this.Content = scrollView;
-
-            return stackLayout;
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        void AddSpace(StackLayout layout)
-        {
-            Label l_space = new Label { Text = " " };
-            layout.Children.Add(l_space);
-        }
-
-        /**********************************************************************
-        *********************************************************************/
-        async void B_Info_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new DeadlockHelp());
         }
 
     }
